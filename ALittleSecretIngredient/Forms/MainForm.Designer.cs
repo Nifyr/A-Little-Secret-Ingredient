@@ -1,0 +1,204 @@
+﻿namespace ALittleSecretIngredient.Forms
+{
+    partial class MainForm
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            tableLayoutPanel1 = new TableLayoutPanel();
+            groupBox1 = new GroupBox();
+            saveChangelogCheckBox = new CheckBox();
+            rememberSettingsCheckBox = new CheckBox();
+            randomizeAndExportButton = new Button();
+            groupBox2 = new GroupBox();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            button1 = new Button();
+            button2 = new Button();
+            button3 = new Button();
+            toolTip1 = new ToolTip(components);
+            tableLayoutPanel1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(groupBox2, 1, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(418, 226);
+            tableLayoutPanel1.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(saveChangelogCheckBox);
+            groupBox1.Controls.Add(rememberSettingsCheckBox);
+            groupBox1.Controls.Add(randomizeAndExportButton);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new Point(3, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(194, 220);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Main";
+            // 
+            // saveChangelogCheckBox
+            // 
+            saveChangelogCheckBox.AutoSize = true;
+            saveChangelogCheckBox.Location = new Point(9, 91);
+            saveChangelogCheckBox.Name = "saveChangelogCheckBox";
+            saveChangelogCheckBox.Size = new Size(136, 24);
+            saveChangelogCheckBox.TabIndex = 2;
+            saveChangelogCheckBox.Text = "Save changelog";
+            toolTip1.SetToolTip(saveChangelogCheckBox, "This will result in the creation of a text document that *showcases* all the changes made to the exported mod.");
+            saveChangelogCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // rememberSettingsCheckBox
+            // 
+            rememberSettingsCheckBox.AutoSize = true;
+            rememberSettingsCheckBox.Location = new Point(9, 61);
+            rememberSettingsCheckBox.Name = "rememberSettingsCheckBox";
+            rememberSettingsCheckBox.Size = new Size(159, 24);
+            rememberSettingsCheckBox.TabIndex = 1;
+            rememberSettingsCheckBox.Text = "Remember settings";
+            toolTip1.SetToolTip(rememberSettingsCheckBox, "This *guarantees* that the current settings will persist and be restored the next time the application is launched.");
+            rememberSettingsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // randomizeAndExportButton
+            // 
+            randomizeAndExportButton.Location = new Point(9, 26);
+            randomizeAndExportButton.Name = "randomizeAndExportButton";
+            randomizeAndExportButton.Size = new Size(179, 29);
+            randomizeAndExportButton.TabIndex = 0;
+            randomizeAndExportButton.Text = "Randomize and Export";
+            toolTip1.SetToolTip(randomizeAndExportButton, "Uses the current settings to randomize the game and subsequently *exports* a mod containing the modifications.");
+            randomizeAndExportButton.UseVisualStyleBackColor = true;
+            randomizeAndExportButton.Click += RandomizeAndExportButton_Click;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(flowLayoutPanel1);
+            groupBox2.Dock = DockStyle.Fill;
+            groupBox2.Location = new Point(203, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(212, 220);
+            groupBox2.TabIndex = 1;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Options";
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.Controls.Add(button1);
+            flowLayoutPanel1.Controls.Add(button2);
+            flowLayoutPanel1.Controls.Add(button3);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(3, 23);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(206, 194);
+            flowLayoutPanel1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(3, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(200, 29);
+            button1.TabIndex = 0;
+            button1.Text = "General Emblem Data";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Button1_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(3, 38);
+            button2.Name = "button2";
+            button2.Size = new Size(200, 29);
+            button2.TabIndex = 1;
+            button2.Text = "Bond Level Bonuses";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += Button2_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(3, 73);
+            button3.Name = "button3";
+            button3.Size = new Size(200, 29);
+            button3.TabIndex = 2;
+            button3.Text = "Bond Level Requirements";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += Button3_Click;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
+            // MainForm
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(418, 226);
+            Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "MainForm";
+            Text = "A Little *Secret* Ingredient";
+            FormClosing += MainForm_FormClosing;
+            Load += MainForm_Load;
+            tableLayoutPanel1.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            flowLayoutPanel1.ResumeLayout(false);
+            ResumeLayout(false);
+        }
+
+        #endregion
+
+        private TableLayoutPanel tableLayoutPanel1;
+        private GroupBox groupBox1;
+        private Button randomizeAndExportButton;
+        private GroupBox groupBox2;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Button button1;
+        private CheckBox rememberSettingsCheckBox;
+        private CheckBox saveChangelogCheckBox;
+        private Button button2;
+        private Button button3;
+        private ToolTip toolTip1;
+    }
+}

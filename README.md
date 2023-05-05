@@ -10,4 +10,4 @@
 2. Input your Fire Emblem Engage when prompted.
 3. Configure randomization settings to your \*heart's\* content.
 4. Click the 'Randomize and Export' button.
-5. Load the resulting mod when *next* you play Fire Emblem Engage.
+5. Load the resulting mod when \*next\* you play Fire Emblem Engage.

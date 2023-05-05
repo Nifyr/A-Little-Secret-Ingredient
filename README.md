@@ -11,3 +11,23 @@
 3. Configure randomization settings to your \*heart's\* content.
 4. Click the 'Randomize and Export' button.
 5. Load the resulting mod when \*next\* you play Fire Emblem Engage.
+
+# Currently Available Randomizations
+- Bond Level Exp Requirements
+- Bond Level Bond Fragment Costs
+- Emblem Bond Level Table Assignment
+- Emblem Bond Link Pairings
+- Emblem Bond Link Skills
+- Emblem Engage Attack Skills
+- Emblem Engage Meter Sizes
+- Emblem Engage Skills
+- Emblem Engage Weapons
+- Emblem Engage+ Characters
+- Emblem Engraving Stats
+- Emblem Inheritable Skills
+- Emblem Proficiency Unlocks
+- Emblem Static Sync Stats
+- Emblem Skill Inheritance, Strong Bond and Deep Synergy Unlock Levels
+- Emblem Sync Skills
+- Emblem Sync Stats
+- Emblem Weapon Restrictions

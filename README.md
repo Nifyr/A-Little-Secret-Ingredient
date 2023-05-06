@@ -63,3 +63,8 @@ This one is probably a bit easier to understand. It has to do with randomizing a
 - Redistribution: Swaps items around indiscriminately.
 
 You may have noticed the field named 'Randomization Probability' present in both distribution control windows. This field's purpose is to determine what percentage of the data is to be randomized. A value of 100 indicates that every item/number should be randomized, and a value of 0 is effectively the same as disabling the randomization option altogether as it means that none of the items/numbers should be randomized. What's the point of this? Perhaps you want a "low-heat" randomization in a way that allows for drastic changes, but without the overall result being too insane?
+
+### Support
+This project is mostly a means of recreation for me, and I don't expect payment. That said, a donation would certainly be a welcome surprise!
+
+https://www.gofundme.com/f/ttsby-appreciation-and-support

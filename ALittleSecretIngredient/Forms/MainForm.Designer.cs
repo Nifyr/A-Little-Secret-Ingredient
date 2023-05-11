@@ -41,6 +41,7 @@
             button2 = new Button();
             button3 = new Button();
             toolTip1 = new ToolTip(components);
+            button4 = new Button();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -123,6 +124,7 @@
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.Controls.Add(button4);
             flowLayoutPanel1.Controls.Add(button1);
             flowLayoutPanel1.Controls.Add(button2);
             flowLayoutPanel1.Controls.Add(button3);
@@ -134,7 +136,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(3, 3);
+            button1.Location = new Point(3, 38);
             button1.Name = "button1";
             button1.Size = new Size(200, 29);
             button1.TabIndex = 0;
@@ -144,7 +146,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(3, 38);
+            button2.Location = new Point(3, 73);
             button2.Name = "button2";
             button2.Size = new Size(200, 29);
             button2.TabIndex = 1;
@@ -154,7 +156,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(3, 73);
+            button3.Location = new Point(3, 108);
             button3.Name = "button3";
             button3.Size = new Size(200, 29);
             button3.TabIndex = 2;
@@ -167,6 +169,16 @@
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(3, 3);
+            button4.Name = "button4";
+            button4.Size = new Size(200, 29);
+            button4.TabIndex = 3;
+            button4.Text = "Asset Table";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += Button4_Click;
             // 
             // MainForm
             // 
@@ -200,5 +212,6 @@
         private Button button2;
         private Button button3;
         private ToolTip toolTip1;
+        private Button button4;
     }
 }

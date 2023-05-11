@@ -7,9 +7,17 @@ namespace ALittleSecretIngredient.Structs
     {
         public bool Remember { get; set; } = new();
         public bool SaveChangelog { get; set; } = new();
+
+        public AssetTableSettings AssetTable { get; set; } = new();
         public GodGeneralSettings GodGeneral { get; set; } = new();
         public GrowthTableSettings GrowthTable { get; set; } = new();
         public BondLevelSettings BondLevel { get; set; } = new();
+
+        public class AssetTableSettings
+        {
+            public RandomizerFieldSettings ModelSwap { get; set; } = new();
+        }
+
         public class GodGeneralSettings
         {
             public RandomizerFieldSettings Link { get; set; } = new();

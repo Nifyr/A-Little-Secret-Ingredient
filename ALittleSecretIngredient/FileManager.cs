@@ -8,6 +8,7 @@ namespace ALittleSecretIngredient
         private Dictionary<FileEnum, FileData> Files { get; } = new();
         private readonly (FileEnum fe, string localPath)[] targetFiles = new (FileEnum fe, string localPath)[]
         {
+            (FileEnum.AssetTable, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\assettable.xml.bundle"),
             (FileEnum.God, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\god.xml.bundle"),
             (FileEnum.Item, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\item.xml.bundle"),
             (FileEnum.Job, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\job.xml.bundle"),

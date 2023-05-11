@@ -2,6 +2,7 @@
 {
     internal enum FileEnum
     {
+        AssetTable,
         God,
         Item,
         Job,
@@ -11,6 +12,7 @@
 
     internal enum DataSetEnum
     {
+        Asset,
         GodGeneral,
         GrowthTable,
         BondLevel,

@@ -20,6 +20,7 @@ namespace ALittleSecretIngredient
             Books = new();
             DataParamTypes = new();
             DataSetToSheetName = new();
+            Bind(FileEnum.AssetTable, DataSetEnum.Asset, typeof(Asset), "アセット");
             Bind(FileEnum.God, DataSetEnum.GodGeneral, typeof(GodGeneral), "神将");
             Bind(FileEnum.God, DataSetEnum.GrowthTable, typeof(GrowthTable), "成長表");
             Bind(FileEnum.God, DataSetEnum.BondLevel, typeof(BondLevel), "絆レベル");
@@ -80,7 +81,7 @@ namespace ALittleSecretIngredient
 
         internal static RandomizerSettings? ReadRandomizerSettings()
         {
-            FileStream? fs = FileManager.ReadRandomizerSettings();
+            using FileStream? fs = FileManager.ReadRandomizerSettings();
             if (fs == null)
                 return null;
             XmlDictionaryReader xmldr = XmlDictionaryReader.CreateTextReader(fs, new XmlDictionaryReaderQuotas());

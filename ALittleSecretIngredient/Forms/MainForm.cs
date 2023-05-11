@@ -1,13 +1,12 @@
 using ALittleSecretIngredient.Structs;
 using System.Configuration;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Numerics;
 
 namespace ALittleSecretIngredient.Forms
 {
     public partial class MainForm : Form
     {
         private GlobalData GlobalData { get; }
+        private AssetTableForm AssetTable { get; set; }
         private GodGeneralForm GodGeneral { get; set; }
         private GrowthTableForm GrowthTable { get; set; }
         private BondLevelForm BondLevel { get; set; }
@@ -15,6 +14,7 @@ namespace ALittleSecretIngredient.Forms
         {
             GlobalData = new();
             InitializeComponent();
+            AssetTable = new(GlobalData);
             GodGeneral = new(GlobalData);
             GrowthTable = new(GlobalData);
             BondLevel = new(GlobalData);
@@ -188,6 +188,10 @@ namespace ALittleSecretIngredient.Forms
                     BondLevel.Exp.Get(), Array.Empty<object>());
                 rs.BondLevel.Cost = new(BondLevel.checkBox1.Checked,
                     BondLevel.Cost.Get(), Array.Empty<object>());
+
+                rs.AssetTable.ModelSwap = new(false, null!, new object[] { AssetTable.checkBox20.Checked, AssetTable.checkBox1.Checked,
+                    AssetTable.checkBox2.Checked, AssetTable.checkBox3.Checked, AssetTable.checkBox4.Checked, AssetTable.checkBox5.Checked,
+                    AssetTable.checkBox6.Checked });
                 return rs;
             }
             set
@@ -289,13 +293,25 @@ namespace ALittleSecretIngredient.Forms
                 BondLevel.Exp.Set(value.BondLevel.Exp.Distribution);
                 BondLevel.checkBox1.Checked = value.BondLevel.Cost.Enabled;
                 BondLevel.Cost.Set(value.BondLevel.Cost.Distribution);
+
+                AssetTable.checkBox20.Checked = value.AssetTable.ModelSwap.GetArg<bool>(0);
+                AssetTable.checkBox1.Checked = value.AssetTable.ModelSwap.GetArg<bool>(1);
+                AssetTable.checkBox2.Checked = value.AssetTable.ModelSwap.GetArg<bool>(2);
+                AssetTable.checkBox3.Checked = value.AssetTable.ModelSwap.GetArg<bool>(3);
+                AssetTable.checkBox4.Checked = value.AssetTable.ModelSwap.GetArg<bool>(4);
+                AssetTable.checkBox5.Checked = value.AssetTable.ModelSwap.GetArg<bool>(5);
+                AssetTable.checkBox6.Checked = value.AssetTable.ModelSwap.GetArg<bool>(6);
             }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (!InitFromConfig())
-                InitFromInput();
+                if (!InitFromInput())
+                {
+                    Close();
+                    return;
+                }
             RandomizerSettings? rs = XmlParser.ReadRandomizerSettings();
             if (rs != null)
                 try { RandomizerSettings = rs; }
@@ -312,13 +328,13 @@ namespace ALittleSecretIngredient.Forms
             return GlobalData.FM.TryInitialize(dumpPath, out _);
         }
 
-        private void InitFromInput()
+        private bool InitFromInput()
         {
             if (LoadDumpDialog() == DialogResult.Cancel &&
                 RetryLoadDumpDialog() == DialogResult.No)
             {
                 Close();
-                return;
+                return false;
             }
 
             string? romfsDir;
@@ -336,7 +352,7 @@ namespace ALittleSecretIngredient.Forms
                         continue;
 
                     Close();
-                    return;
+                    return false;
                 }
                 break;
             }
@@ -345,6 +361,7 @@ namespace ALittleSecretIngredient.Forms
             c.AppSettings.Settings["dumpPath"].Value = romfsDir;
             c.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection(c.AppSettings.SectionInformation.Name);
+            return true;
         }
 
         public static void CancelFormClosing(object? sender, FormClosingEventArgs e)
@@ -362,6 +379,7 @@ namespace ALittleSecretIngredient.Forms
             GlobalData.R.Randomize(RandomizerSettings);
             GlobalData.Export();
             ExportSuccessMessage();
+            Close();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -388,6 +406,12 @@ namespace ALittleSecretIngredient.Forms
         {
             BondLevel.Show();
             BondLevel.Activate();
+        }
+
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            AssetTable.Show();
+            AssetTable.Activate();
         }
     }
 }

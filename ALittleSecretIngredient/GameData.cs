@@ -211,7 +211,7 @@
             ("SID_カムイエンゲージ技", "Torrential Roar"), ("SID_カムイエンゲージ技_竜族", "Torrential Roar [Dragon]"),
             ("SID_リュールエンゲージ技", "Dragon Blast"),
             ("SID_リュールエンゲージ技_竜族", "Dragon Blast [Dragon]"), ("SID_リュールエンゲージ技_連携", "Dragon Blast [Backup]"),
-            ("SID_リュールエンゲージ技_魔法", "Dragon Blast [Mystical]"), ("SID_リュールエンゲージ技_気功", "Dragon Blast [Qi Adept]"), 
+            ("SID_リュールエンゲージ技_魔法", "Dragon Blast [Mystical]"), ("SID_リュールエンゲージ技_気功", "Dragon Blast [Qi Adept]"),
             ("SID_切り抜け", "Run Through"),
             ("SID_幻月", "Paraselene"), ("SID_計略_引込の計", "Assembly Gambit"),
             ("SID_計略_猛火計", "Flame Gambit"), ("SID_計略_聖盾の備え", "Shield Gambit"),
@@ -657,6 +657,293 @@
         {
             (0, "None"), (1, "Sword"), (2, "Lance"), (3, "Axe"), (4, "Bow"), (5, "Dagger"), (6, "Tome"), (7, "Staff"),
             (8, "Arts"), (9, "Special")
+        };
+
+        internal enum Gender // Ah yes, the four genders:
+        {
+            Male, Female, Both, Rosado
+        }
+
+        internal struct AssetShuffleEntity
+        {
+            internal string name;
+            internal string id;
+            internal List<string> alternates;
+            internal Gender gender;
+            internal string iconID;
+            internal bool enemyEmblem;
+            internal string nameID;
+            internal string faceIconID;
+            internal string? thumbnail;
+            internal Color hair;
+            internal string? eid;
+
+            internal AssetShuffleEntity(string name, string id, List<string> alternates, Gender gender,
+                string iconID, bool enemyEmblem, string nameID, string faceIconID, string? thumbnail, Color hair, string? eid)
+            {
+                this.name = name;
+                this.id = id;
+                this.alternates = alternates;
+                this.gender = gender;
+                this.iconID = iconID;
+                this.enemyEmblem = enemyEmblem;
+                this.nameID = nameID;
+                this.faceIconID = faceIconID;
+                this.thumbnail = thumbnail;
+                this.hair = hair;
+                this.eid = eid;
+            }
+        }
+
+        internal List<AssetShuffleEntity> ProtagonistAssetShuffleData { get; } = new()
+        {
+            new("Alear", "PID_リュール", new() { "MPID_Lueur_M000", "PID_M000_リュール", "JID_M000_神竜ノ子", "MPID_MorphLueur",
+                "PID_デモ用_神竜王リュール"}, Gender.Both,
+                "001Lueur", false, "MPID_Lueur", "Face_Lueur", "Lueur", Color.FromArgb(97, 184, 231), null)
+        };
+
+        internal List<AssetShuffleEntity> PlayableAssetShuffleData { get; } = new()
+        {
+            new("Vander", "PID_ヴァンドレ", new() { }, Gender.Male,
+                "500Vandre", false, "MPID_Vandre", "Face_DarkEmblem", "Vandre", Color.FromArgb(241, 227, 217), null),
+            new("Clanne", "PID_クラン", new() { }, Gender.Male,
+                "501Clan", false, "MPID_Clan", "Face_DarkEmblem", "Clan", Color.FromArgb(224, 196, 189), null),
+            new("Framme", "PID_フラン", new() { }, Gender.Female,
+                "550Fram", false, "MPID_Fram", "Face_DarkEmblem", "Fram", Color.FromArgb(217, 212, 201), null),
+            new("Alfred", "PID_アルフレッド", new() { "PID_E002_Boss", "PID_E006_Hide1" }, Gender.Male,
+                "100Alfred", false, "MPID_Alfred", "Face_DarkEmblem", "Alfred", Color.FromArgb(241, 238, 199), null),
+            new("Etie", "PID_エーティエ", new() { }, Gender.Female,
+                "152Etie", false, "MPID_Etie", "Face_DarkEmblem", "Etie", Color.FromArgb(250, 170, 104), null),
+            new("Boucheron", "PID_ブシュロン", new() { }, Gender.Male,
+                "101Boucheron", false, "MPID_Boucheron", "Face_DarkEmblem", "Boucheron", Color.FromArgb(184, 134, 75), null),
+            new("Céline", "PID_セリーヌ", new() { "PID_E002_Hide", "PID_E006_Hide2" }, Gender.Female,
+                "150Celine", false, "MPID_Celine", "Face_DarkEmblem", "Celine", Color.FromArgb(236, 220, 181), null),
+            new("Chloé", "PID_クロエ", new() { }, Gender.Female,
+                "153Chloe", false, "MPID_Chloe", "Face_DarkEmblem", "Chloe", Color.FromArgb(90, 180, 180), null),
+            new("Louis", "PID_ルイ", new() { }, Gender.Male,
+                "102Louis", false, "MPID_Louis", "Face_DarkEmblem", "Louis", Color.FromArgb(66, 50, 35), null),
+            new("Yunaka", "PID_ユナカ", new() { }, Gender.Female,
+                "253Yunaka", false, "MPID_Yunaka", "Face_DarkEmblem", "Yunaka", Color.FromArgb(170, 22, 71), null),
+            new("Alcryst", "PID_スタルーク", new() { "PID_E003_Hide", "PID_E006_Hide4" }, Gender.Male,
+                "201Staluke", false, "MPID_Staluke", "Face_DarkEmblem", "Staluke", Color.FromArgb(15, 44, 86), null),
+            new("Citrinne", "PID_シトリニカ", new() { }, Gender.Female,
+                "252Citrinica", false, "MPID_Citrinica", "Face_DarkEmblem", "Citrinica", Color.FromArgb(226, 216, 161), null),
+            new("Lapis", "PID_ラピス", new() { }, Gender.Female,
+                "251Lapis", false, "MPID_Lapis", "Face_DarkEmblem", "Lapis", Color.FromArgb(255, 202, 196), null),
+            new("Diamant", "PID_ディアマンド", new() { "PID_E003_Boss", "PID_E006_Hide3" }, Gender.Male,
+                "200Diamand", false, "MPID_Diamand", "Face_DarkEmblem", "Diamand", Color.FromArgb(124, 42, 42), null),
+            new("Amber", "PID_アンバー", new() { }, Gender.Male,
+                "203Umber", false, "MPID_Umber", "Face_DarkEmblem", "Umber", Color.FromArgb(246, 198, 77), null),
+            new("Jade", "PID_ジェーデ", new() { "PID_ジェーデ_兜あり" }, Gender.Female,
+                "250Jade", false, "MPID_Jade", "Face_DarkEmblem", "Jade", Color.FromArgb(255, 229, 160), null),
+            new("Ivy", "PID_アイビー", new() { "PID_M008_アイビー", "PID_M009_アイビー", "PID_E004_Boss", "PID_E006_Hide5" }, Gender.Female,
+                "350Ivy", false, "MPID_Ivy", "Face_DarkEmblem", "Ivy", Color.FromArgb(132, 37, 108), null),
+            new("Kagetsu", "PID_カゲツ", new() { "PID_M008_カゲツ", "PID_M009_カゲツ" }, Gender.Male,
+                "302Kagetsu", false, "MPID_Kagetsu", "Face_DarkEmblem", "Kagetsu", Color.FromArgb(56, 65, 98), null),
+            new("Zelkov", "PID_ゼルコバ", new() { "PID_M008_ゼルコバ", "PID_M009_ゼルコバ" }, Gender.Male,
+                "301Zelkova", false, "MPID_Zelkova", "Face_DarkEmblem", "Zelkova", Color.FromArgb(62, 61, 72), null),
+            new("Fogado", "PID_フォガート", new() { "PID_E005_Hide2", "PID_E006_Hide8" }, Gender.Male,
+                "400Fogato", false, "MPID_Fogato", "Face_DarkEmblem", "Fogato", Color.FromArgb(60, 33, 19), null),
+            new("Pandreo", "PID_パンドロ", new() { }, Gender.Male,
+                "401Pandoro", false, "MPID_Pandoro", "Face_DarkEmblem", "Pandoro", Color.FromArgb(246, 127, 83), null),
+            new("Bunet", "PID_ボネ", new() { }, Gender.Male,
+                "402Bonet", false, "MPID_Bonet", "Face_DarkEmblem", "Bonet", Color.FromArgb(236, 220, 181), null),
+            new("Timerra", "PID_ミスティラ", new() { "PID_E004_Hide", "PID_E006_Hide7" }, Gender.Female,
+                "450Misutira", false, "MPID_Misutira", "Face_DarkEmblem", "Misutira", Color.FromArgb(60, 33, 19), null),
+            new("Panette", "PID_パネトネ", new() { }, Gender.Female,
+                "453Panetone", false, "MPID_Panetone", "Face_DarkEmblem", "Panetone", Color.FromArgb(245, 90, 51), null),
+            new("Merrin", "PID_メリン", new() { }, Gender.Female,
+                "452Merin", false, "MPID_Merin", "Face_DarkEmblem", "Merin", Color.FromArgb(236, 220, 181), null),
+            new("Hortensia", "PID_オルテンシア", new() { "PID_M014_オルテンシア", "PID_M007_オルテンシア", "PID_M010_オルテンシア",
+                "PID_E005_Hide1", "PID_E006_Hide6" }, Gender.Female,
+                "351Hortensia", false, "MPID_Hortensia", "Face_DarkEmblem", "Hortensia", Color.FromArgb(255, 96, 192), null),
+            new("Seadall", "PID_セアダス", new() { }, Gender.Male,
+                "403Seadas", false, "MPID_Seadas", "Face_DarkEmblem", "Seadas", Color.FromArgb(128, 128, 96), null),
+            new("Rosado", "PID_ロサード", new() { "PID_M007_ロサード", "PID_M010_ロサード" }, Gender.Rosado,
+                "303Rosado", false, "MPID_Rosado", "Face_DarkEmblem", "Rosado", Color.FromArgb(224, 224, 255), null),
+            new("Goldmary", "PID_ゴルドマリー", new() { "PID_M007_ゴルドマリー", "PID_M010_ゴルドマリー" }, Gender.Female,
+                "352Goldmary", false, "MPID_Goldmary", "Face_DarkEmblem", "Goldmary", Color.FromArgb(184, 144, 105), null),
+            new("Lindon", "PID_リンデン", new() { }, Gender.Male,
+                "304Linden", false, "MPID_Linden", "Face_DarkEmblem", "Linden", Color.FromArgb(239, 227, 211), null),
+            new("Saphir", "PID_ザフィーア", new() { }, Gender.Female,
+                "254Saphir", false, "MPID_Saphir", "Face_DarkEmblem", "Saphir", Color.FromArgb(191, 191, 191), null),
+            new("Veyle", "PID_ヴェイル", new() { "PID_ヴェイル_包帯", "PID_ヴェイル_黒_善", "PID_ヴェイル_黒_善_角折れ", "PID_ヴェイル_白_悪",
+                "PID_ヴェイル_黒_悪", "PID_M011_ヴェイル", "PID_M017_ヴェイル", "PID_M021_ヴェイル" }, Gender.Female,
+                "551Veyre", false, "MPID_Veyre", "Face_DarkEmblem", "Veyre", Color.FromArgb(224, 192, 255), null),
+            new("Mauvier", "PID_モーヴ", new() { "PID_M011_モーヴ", "PID_M014_モーヴ", "PID_M017_モーヴ", "PID_M019_モーヴ" }, Gender.Male,
+                "502Mauve", false, "MPID_Mauve", "Face_DarkEmblem", "Mauve", Color.FromArgb(88, 91, 102), null),
+            new("Anna", "PID_アンナ", new() { }, Gender.Female,
+                "552Anna", false, "MPID_Anna", "Face_DarkEmblem", "Anna", Color.FromArgb(196, 85, 81), null),
+            new("Jean", "PID_ジャン", new() { }, Gender.Male,
+                "103Jean", false, "MPID_Jean", "Face_DarkEmblem", "Jean", Color.FromArgb(92, 95, 109), null),
+            new("Rafal", "PID_ラファール", new() { "PID_デモ用_竜石なし_ラファール", "MPID_Il", "PID_E005_Boss", "PID_イル", "PID_E001_イル",
+                "PID_E002_イル", "PID_E003_イル", "PID_E004_イル" }, Gender.Male,
+                "049Il", false, "MPID_Rafale", "Face_DarkEmblem", "Rafale", Color.FromArgb(255, 255, 255), null),
+            new("Nel", "PID_エル", new() { "PID_E001_エル", "PID_E002_エル", "PID_E003_エル", "PID_E004_エル", "PID_E005_エル", "PID_E006_エル" }, Gender.Female,
+                "099El", false, "MPID_El", "Face_DarkEmblem", "El", Color.FromArgb(160, 160, 160), null),
+            new("Zelestia", "PID_セレスティア", new() { "PID_E002_セレスティア", "PID_E003_セレスティア", "PID_E004_セレスティア",
+                "PID_E006_セレスティア" }, Gender.Female,
+                "553Selestia", false, "MPID_Selestia", "Face_DarkEmblem", "Selestia", Color.FromArgb(233, 226, 215), null),
+            new("Gregory", "PID_グレゴリー", new() { "PID_E003_グレゴリー", "PID_E004_グレゴリー", "PID_E006_グレゴリー" }, Gender.Male,
+                "503Gregory", false, "MPID_Gregory", "Face_DarkEmblem", "Gregory", Color.FromArgb(50, 83, 69), null),
+            new("Madeline", "PID_マデリーン", new() { "PID_E004_マデリーン", "PID_E006_マデリーン" }, Gender.Female,
+                "554Madeline", false, "MPID_Madeline", "Face_DarkEmblem", "Madeline", Color.FromArgb(246, 228, 166), null)
+        };
+
+        internal List<AssetShuffleEntity> NamedNPCAssetShuffleData { get; } = new()
+        {
+            new("Lumera", "PID_ルミエル", new() { "PID_M025_ルミエル", "MPID_MorphLumiere", "PID_M002_ルミエル" }, Gender.Female,
+                "555Lumiere", false, "MPID_Lumiere", "Face_DarkEmblem", null, Color.FromArgb(125, 175, 255), null),
+            new("Sombron", "PID_ソンブル", new() { "PID_M000_ソンブル", "PID_M026_ソンブル_人型" }, Gender.Male,
+                "504Sombre", false, "MPID_Sombre", "Face_DarkEmblem", null, Color.FromArgb(96, 32, 96), null),
+            new("Éve", "PID_イヴ", new() { }, Gender.Female,
+                "151Eve", false, "MPID_Eve", "Face_DarkEmblem", null, Color.FromArgb(255, 235, 188), null),
+            new("Morion", "PID_モリオン", new() { }, Gender.Male,
+                "202Morion", false, "MPID_Morion", "Face_DarkEmblem", null, Color.FromArgb(149, 43, 47), null),
+            new("Hyacinth", "PID_ハイアシンス", new() { "MPID_MorphHyacinth", "PID_M010_ハイアシンス", "PID_M017_異形兵_ハイアシンス" }, Gender.Male,
+                "300Hyacinth", false, "MPID_Hyacinth", "Face_DarkEmblem", null, Color.FromArgb(214, 214, 214), null),
+            new("Seforia", "PID_スフォリア", new() { }, Gender.Female,
+                "451Sfoglia", false, "MPID_Sfoglia", "Face_DarkEmblem", null, Color.FromArgb(60, 33, 19), null),
+            new("Zephia", "PID_セピア", new() { "PID_M011_セピア", "PID_M014_セピア", "PID_M017_セピア", "PID_M021_セピア", "PID_M023_セピア" }, Gender.Female,
+                "553Sepia", false, "MPID_Sepia", "Face_DarkEmblem", null, Color.FromArgb(233, 226, 215), null),
+            new("Griss", "PID_グリ", new() { "PID_M011_グリ", "PID_M017_グリ", "PID_M020_グリ", "PID_M021_グリ", "PID_M023_グリ" }, Gender.Male,
+                "503Gris", false, "MPID_Gris", "Face_DarkEmblem", null, Color.FromArgb(50, 83, 69), null),
+            new("Marni", "PID_マロン", new() { "PID_M011_マロン", "PID_M014_マロン", "PID_M017_マロン", "PID_M019_マロン" }, Gender.Female,
+                "554Marron", false, "MPID_Marron", "Face_DarkEmblem", null, Color.FromArgb(246, 228, 166), null),
+            new("Abyme", "PID_M003_イルシオン兵_ボス", new() { "PID_M018_イルシオン兵_ボス" }, Gender.Female,
+                "855Boss", false, "MPID_M003_Boss", "Face_DarkEmblem", null, Color.FromArgb(192, 196, 173), null),
+            new("Rodine", "PID_M004_イルシオン兵_ボス", new() { }, Gender.Male,
+                "811Boss", false, "MPID_M004_Boss", "Face_DarkEmblem", null, Color.FromArgb(201, 183, 159), null),
+            new("Sean", "PID_S001_ジャン_父親", new() { }, Gender.Male,
+                "800VillagerMB", false, "MPID_JeanFather", "Face_DarkEmblem", null, Color.FromArgb(92, 95, 109), null),
+            new("Anje", "PID_S001_ジャン_母親", new() { }, Gender.Female,
+                "850VillagerFB", false, "MPID_JeanMother", "Face_DarkEmblem", null, Color.FromArgb(79, 68, 100), null),
+            new("Nelucce", "PID_M005_Irc_ボス", new() { }, Gender.Male,
+                "812Boss", false, "MPID_M005_Boss", "Face_DarkEmblem", null, Color.FromArgb(255, 255, 255), null),
+            new("Teronda", "PID_M006_ボス", new() { }, Gender.Male,
+                "809Boss", false, "MPID_M006_Boss", "Face_DarkEmblem", null, Color.FromArgb(142, 115, 97), null),
+            new("Mitan", "PID_S002_蛮族_お頭", new() { }, Gender.Female,
+                "810Boss", false, "MPID_S002_Boss", "Face_DarkEmblem", null, Color.FromArgb(73, 73, 73), null),
+            new("Corrupted Morion", "PID_M010_異形兵_モリオン", new() { }, Gender.Male,
+                "202Morion", false, "MPID_MorphMorion", "Face_DarkEmblem", null, Color.FromArgb(149, 43, 47), null),
+            new("Tetchie", "PID_M013_蛮族_お頭Ａ", new() { }, Gender.Male,
+                "807Boss", false, "MPID_M013_BossA", "Face_DarkEmblem", null, Color.FromArgb(25, 25, 25), null),
+            new("Totchie", "PID_M013_蛮族_お頭Ｂ", new() { }, Gender.Male,
+                "808Boss", false, "MPID_M013_BossB", "Face_DarkEmblem", null, Color.FromArgb(25, 25, 25), null),
+            new("Past Alear", "JID_邪竜ノ子", new() { "PID_M024_リュール" }, Gender.Both,
+                "002Lueur", false, "MPID_PastLueur", "Face_Lueur", "Lueur", Color.FromArgb(97, 184, 231), null),
+            new("Durthon", "PID_武器屋", new() { }, Gender.Male,
+                "800VillagerMB", false, "MPID_WeaponShop", "Face_DarkEmblem", null, Color.FromArgb(0, 0, 0), null),
+            new("Anisse", "PID_道具屋", new() { }, Gender.Female,
+                "850VillagerFB", false, "MPID_ItemShop", "Face_DarkEmblem", null, Color.FromArgb(35, 42, 63), null),
+            new("Pinet", "PID_アクセ屋", new() { }, Gender.Male,
+                "800VillagerMB", false, "MPID_AccessoriesShop", "Face_DarkEmblem", null, Color.FromArgb(192, 117, 114), null),
+            new("Calney", "PID_錬成屋", new() { }, Gender.Female,
+                "850VillagerFB", false, "MPID_BlackSmith", "Face_DarkEmblem", null, Color.FromArgb(197, 179, 141), null)
+        };
+
+        internal List<AssetShuffleEntity> AllyEmblemAssetShuffleData { get; } = new()
+        {
+            new("Marth", "GID_マルス", new() { "PID_S014_マルス", "PID_闘技場_マルス", "GID_M000_マルス", "GID_相手マルス" }, Gender.Male,
+                "530Marth", false, "MGID_Marth", "Face_Marth", "Marth", Color.FromArgb(129, 198, 255), "EID_マルス"),
+            new("Sigurd", "GID_シグルド", new() { "PID_S009_シグルド", "PID_闘技場_シグルド", "GID_M002_シグルド", "GID_相手シグルド" }, Gender.Male,
+                "531Siglud", false, "MGID_Siglud", "Face_Siglud", "Siglud", Color.FromArgb(201, 216, 255), "EID_シグルド"),
+            new("Celica", "GID_セリカ", new() { "PID_S013_セリカ", "PID_闘技場_セリカ", "GID_相手セリカ" }, Gender.Female,
+                "580Celica", false, "MGID_Celica", "Face_Celica", "Celica", Color.FromArgb(255, 212, 245), "EID_セリカ"),
+            new("Micaiah", "GID_ミカヤ", new() { "PID_S011_ミカヤ", "PID_闘技場_ミカヤ", "GID_相手ミカヤ" }, Gender.Female,
+                "583Micaiah", false, "MGID_Micaiah", "Face_Micaiah", "Micaiah", Color.FromArgb(255, 240, 197), "EID_ミカヤ"),
+            new("Roy", "GID_ロイ", new() { "PID_S012_ロイ", "PID_闘技場_ロイ", "GID_相手ロイ" }, Gender.Male,
+                "533Roy", false, "MGID_Roy", "Face_Roy", "Roy", Color.FromArgb(254, 200, 140), "EID_ロイ"),
+            new("Leif", "GID_リーフ", new() { "PID_S010_リーフ", "PID_闘技場_リーフ", "GID_相手リーフ" }, Gender.Male,
+                "532Leaf", false, "MGID_Leaf", "Face_Leaf", "Leaf", Color.FromArgb(251, 254, 209), "EID_リーフ"),
+            new("Lucina", "GID_ルキナ", new() { "PID_S003_ルキナ", "PID_闘技場_ルキナ", "GID_相手ルキナ" }, Gender.Female,
+                "584Lucina", false, "MGID_Lucina", "Face_Lucina", "Lucina", Color.FromArgb(182, 234, 255), "EID_ルキナ"),
+            new("Lyn", "GID_リン", new() { "PID_S004_リン", "PID_闘技場_リン", "GID_相手リン" }, Gender.Female,
+                "581Lin", false, "MGID_Lin", "Face_Lin", "Lin", Color.FromArgb(216, 241, 178), "EID_リン"),
+            new("Ike", "GID_アイク", new() { "PID_S005_アイク", "PID_闘技場_アイク", "GID_相手アイク" }, Gender.Male,
+                "534Ike", false, "MGID_Ike", "Face_Ike", "Ike", Color.FromArgb(88, 90, 229), "EID_アイク"),
+            new("Byleth", "GID_ベレト", new() { "PID_S006_ベレト", "PID_闘技場_ベレト", "GID_相手ベレト" }, Gender.Male,
+                "535Byleth", false, "MGID_Byleth", "Face_Byleth", "Byleth", Color.FromArgb(236, 141, 255), "EID_ベレト"),
+            new("Corrin", "GID_カムイ", new() { "PID_S007_カムイ", "PID_M015_カムイ", "PID_闘技場_カムイ", "GID_相手カムイ" }, Gender.Female,
+                "585Kamui", false, "MGID_Kamui", "Face_Kamui", "Kamui", Color.FromArgb(188, 188, 188), "EID_カムイ"),
+            new("Eirika", "GID_エイリーク", new() { "PID_S008_エイリーク", "PID_闘技場_エイリーク", "GID_相手エイリーク" }, Gender.Female,
+                "582Eirik", false, "MGID_Eirik", "Face_Eirik", "Eirik", Color.FromArgb(175, 246, 230), "EID_エイリーク"),
+            new("Ephraim", "GID_エフラム", new() { "GID_相手エフラム" }, Gender.Male,
+                "536Ephraim", false, "MGID_Ephraim", "Face_Ephraim", "Ephraim", Color.FromArgb(175, 246, 230), null),
+            new("Emblem Alear", "GID_リュール", new() { "PID_青リュール", "GID_相手リュール" }, Gender.Both,
+                "001Lueur", false, "MGID_Lueur", "Face_Lueur", "Lueur", Color.FromArgb(97, 184, 231), "EID_リュール"),
+            new("Edelgard", "GID_エーデルガルト", new() { "GID_相手エーデルガルト" }, Gender.Female,
+                "563Edelgard", false, "MGID_Edelgard", "Face_Edelgard", "Edelgard", Color.FromArgb(78, 74, 107), "EID_エーデルガルト"),
+            new("Dimitri", "GID_ディミトリ", new() { "GID_相手ディミトリ" }, Gender.Male,
+                "514Dimitri", false, "MGID_Dimitri", "Face_Dimitri", "Dimitri", Color.FromArgb(78, 74, 107), null),
+            new("Claude", "GID_クロード", new() { "GID_相手クロード" }, Gender.Male,
+                "515Claude", false, "MGID_Claude", "Face_Claude", "Claude", Color.FromArgb(78, 74, 107), null),
+            new("Tiki", "GID_チキ", new() { "PID_G001_チキ", "PID_G001_チキ_特効無効", "GID_相手チキ" }, Gender.Female,
+                "560Tiki", false, "MGID_Tiki", "Face_Tiki", "Tiki", Color.FromArgb(160, 224, 160), "EID_チキ"),
+            new("Hector", "GID_ヘクトル", new() { "GID_相手ヘクトル" }, Gender.Male,
+                "510Hector", false, "MGID_Hector", "Face_Hector", "Hector", Color.FromArgb(46, 51, 143), "EID_ヘクトル"),
+            new("Veronica", "GID_ヴェロニカ", new() { "GID_相手ヴェロニカ" }, Gender.Female,
+                "562Veronica", false, "MGID_Veronica", "Face_Veronica", "Veronica", Color.FromArgb(214, 207, 197), "EID_ヴェロニカ"),
+            new("Soren", "GID_セネリオ", new() { "GID_相手セネリオ" }, Gender.Male,
+                "511Senerio", false, "MGID_Senerio", "Face_Senerio", "Senerio", Color.FromArgb(85, 134, 134), "EID_セネリオ"),
+            new("Camilla", "GID_カミラ", new() { "GID_相手カミラ" }, Gender.Female,
+                "561Camilla", false, "MGID_Camilla", "Face_Camilla", "Camilla", Color.FromArgb(191, 183, 224), "EID_カミラ"),
+            new("Chrom", "GID_クロム", new() { "GID_相手クロム" }, Gender.Male,
+                "512Chrom", false, "MGID_Chrom", "Face_Chrom", "Chrom", Color.FromArgb(48, 92, 129), "EID_クロム"),
+            new("Robin", "PID_ルフレ", new() { }, Gender.Male,
+                "513Robin", false, "MGID_Reflet", "Face_Reflet", "Reflet", Color.FromArgb(48, 92, 129), null),
+        };
+
+        internal List<AssetShuffleEntity> EnemyEmblemAssetShuffleData { get; } = new()
+        {
+            new("Corrupted Marth", "GID_M011_敵マルス", new() { "PID_E003_召喚_マルス", "PID_E006_召喚_マルス", "GID_M017_敵マルス",
+                "GID_M021_敵マルス", "GID_M024_敵マルス" }, Gender.Male,
+                "530Marth", true, "MGID_Marth", "Face_MarthDarkness", "Marth", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Sigurd", "GID_M011_敵シグルド", new() { "PID_E003_召喚_シグルド", "PID_E006_召喚_シグルド", "GID_M017_敵シグルド",
+                "PID_M022_紋章士_シグルド" }, Gender.Male,
+                "531Siglud", true, "MGID_Siglud", "Face_SigludDarkness", "Siglud", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Celica", "GID_M011_敵セリカ", new() { "PID_E003_召喚_セリカ", "PID_E006_召喚_セリカ", "GID_M017_敵セリカ",
+                "GID_M020_敵セリカ", "PID_M022_紋章士_セリカ" }, Gender.Female,
+                "580Celica", true, "MGID_Celica", "Face_CelicaDarkness", "Celica", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Micaiah", "GID_M011_敵ミカヤ", new() { "GID_M017_敵ミカヤ", "GID_M019_敵ミカヤ", "PID_M022_紋章士_ミカヤ" }, Gender.Female,
+                "583Micaiah", true, "MGID_Micaiah", "Face_MicaiahDarkness", "Micaiah", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Roy", "GID_M011_敵ロイ", new() { "PID_E006_召喚_ロイ", "GID_M017_敵ロイ", "GID_M019_敵ロイ", "PID_M022_紋章士_ロイ" }, Gender.Male,
+                "533Roy", true, "MGID_Roy", "Face_RoyDarkness", "Roy", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Leif", "GID_M008_敵リーフ", new() { "PID_E006_召喚_リーフ", "GID_M011_敵リーフ", "GID_M017_敵リーフ",
+                "PID_M022_紋章士_リーフ" }, Gender.Male,
+                "532Leaf", true, "MGID_Leaf", "Face_LeafDarkness", "Leaf", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Lucina", "GID_M007_敵ルキナ", new() { "PID_M022_紋章士_ルキナ" }, Gender.Female,
+                "584Lucina", true, "MGID_Lucina", "Face_LucinaDarkness", "Lucina", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Lyn", "GID_M010_敵リン", new() { "PID_M022_紋章士_リン" }, Gender.Female,
+                "581Lin", true, "MGID_Lin", "Face_LinDarkness", "Lin", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Ike", "PID_M022_紋章士_アイク", new() { }, Gender.Male,
+                "534Ike", true, "MGID_Ike", "Face_IkeDarkness", "Ike", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Byleth", "GID_M010_敵ベレト", new() { "GID_M014_敵ベレト", "PID_M022_紋章士_ベレト" }, Gender.Male,
+                "535Byleth", true, "MGID_Byleth", "Face_BylethDarkness", "Byleth", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Corrin", "PID_M022_紋章士_カムイ", new() { }, Gender.Female,
+                "585Kamui", true, "MGID_Kamui", "Face_KamuiDarkness", "Kamui", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Eirika", "PID_M022_紋章士_エイリーク", new() { }, Gender.Female,
+                "582Eirik", true, "MGID_Eirik", "Face_EirikDarkness", "Eirik", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Edelgard", "GID_E006_敵エーデルガルト", new() { }, Gender.Female,
+                "563Edelgard", true, "MGID_Edelgard", "Face_EdelgardDarkness", "Edelgard", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Dimitri", "GID_E006_敵ディミトリ", new() { }, Gender.Male,
+                "514Dimitri", true, "MGID_Dimitri", "Face_DimitriDarkness", "Dimitri", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Claude", "GID_E006_敵クロード", new() { }, Gender.Male,
+                "515Claude", true, "MGID_Claude", "Face_ClaudeDarkness", "Claude", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Tiki", "GID_E001_敵チキ", new() { "GID_E006_敵チキ" }, Gender.Female,
+                "560Tiki", true, "MGID_Tiki", "Face_TikiDarkness", "Tiki", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Hector", "GID_E002_敵ヘクトル", new() { "GID_E005_敵ヘクトル", "GID_E006_敵ヘクトル" }, Gender.Male,
+                "510Hector", true, "MGID_Hector", "Face_HectorDarkness", "Hector", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Veronica", "GID_E003_敵ヴェロニカ", new() { "GID_E005_敵ヴェロニカ", "GID_E006_敵ヴェロニカ" }, Gender.Female,
+                "562Veronica", true, "MGID_Veronica", "Face_VeronicaDarkness", "Veronica", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Soren", "GID_E004_敵セネリオ", new() { "GID_E006_敵セネリオ" }, Gender.Male,
+                "511Senerio", true, "MGID_Senerio", "Face_SenerioDarkness", "Senerio", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Camilla", "GID_E004_敵カミラ", new() { "GID_E006_敵カミラ" }, Gender.Female,
+                "561Camilla", true, "MGID_Camilla", "Face_CamillaDarkness", "Camilla", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Chrom", "GID_E005_敵クロム", new() { "GID_E006_敵クロム" }, Gender.Male,
+                "512Chrom", true, "MGID_Chrom", "Face_ChromDarkness", "Chrom", Color.FromArgb(255, 0, 0), null),
+            new("Corrupted Robin", "PID_闇ルフレ", new() { }, Gender.Male,
+                "513Robin", true, "MGID_Reflet", "Face_RefletDarkness", "Reflet", Color.FromArgb(255, 0, 0), null),
         };
         #endregion
 

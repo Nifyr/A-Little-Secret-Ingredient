@@ -1,5 +1,4 @@
 ﻿using ALittleSecretIngredient.Structs;
-using System.Collections;
 using System.Text;
 using static ALittleSecretIngredient.Probability;
 
@@ -33,6 +32,7 @@ namespace ALittleSecretIngredient
         {
             StringBuilder innerChangelog = new();
 
+            AddTable(innerChangelog, RandomizeAssetTable(settings.AssetTable));
             AddTable(innerChangelog, RandomizeGodGeneral(settings.GodGeneral));
             AddTable(innerChangelog, RandomizeGrowthTable(settings.GrowthTable));
             AddTable(innerChangelog, RandomizeBondLevel(settings.BondLevel));
@@ -44,6 +44,185 @@ namespace ALittleSecretIngredient
                 changelog.AppendLine(innerChangelog.ToString());
                 Changelog = changelog;
             }
+        }
+
+        private StringBuilder RandomizeAssetTable(RandomizerSettings.AssetTableSettings settings)
+        {
+            List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
+            List<GodGeneral> ggs = GD.Get(DataSetEnum.GodGeneral).Params.Cast<GodGeneral>().ToList();
+            List<Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList();
+            StringBuilder assetShuffleInnertable = new();
+            List<List<GameData.AssetShuffleEntity>> modelSwapLists = new();
+            if (settings.ModelSwap.GetArg<bool>(0))
+            {
+                IEnumerable<GameData.AssetShuffleEntity> list = GD.PlayableAssetShuffleData;
+                if (settings.ModelSwap.GetArg<bool>(1))
+                    list = list.Concat(GD.ProtagonistAssetShuffleData);
+                modelSwapLists.Add(list.ToList());
+            }
+            if (settings.ModelSwap.GetArg<bool>(2))
+                modelSwapLists.Add(GD.NamedNPCAssetShuffleData);
+            if (settings.ModelSwap.GetArg<bool>(3))
+            {
+                IEnumerable<GameData.AssetShuffleEntity> list = GD.AllyEmblemAssetShuffleData;
+                if (settings.ModelSwap.GetArg<bool>(4))
+                    list = list.Concat(GD.EnemyEmblemAssetShuffleData);
+                modelSwapLists.Add(list.ToList());
+            }
+            if (settings.ModelSwap.GetArg<bool>(5))
+                modelSwapLists = new() { modelSwapLists.SelectMany(l => l).ToList() };
+            if (settings.ModelSwap.GetArg<bool>(6))
+            {
+                List<List<GameData.AssetShuffleEntity>> separatedLists = new();
+                foreach (List<GameData.AssetShuffleEntity> list in modelSwapLists)
+                {
+                    List<GameData.AssetShuffleEntity> male = new();
+                    List<GameData.AssetShuffleEntity> female = new();
+                    List<GameData.AssetShuffleEntity> both = new();
+                    male.AddRange(list.Where(ase => ase.gender == GameData.Gender.Male || ase.gender == GameData.Gender.Rosado));
+                    female.AddRange(list.Where(ase => ase.gender == GameData.Gender.Female));
+                    both.AddRange(list.Where(ase => ase.gender == GameData.Gender.Both));
+                    foreach (GameData.AssetShuffleEntity ase in both)
+                        if (50.0.Occur())
+                            male.Insert(0, ase);
+                        else
+                            female.Insert(0, ase);
+                    separatedLists.Add(male);
+                    separatedLists.Add(female);
+                }
+                modelSwapLists = separatedLists;
+            }
+            foreach (List<GameData.AssetShuffleEntity> list in modelSwapLists)
+                ModelSwap(assets, ggs, individuals, assetShuffleInnertable, list);
+
+            StringBuilder assetShuffleTable = new();
+            if (assetShuffleInnertable.Length > 0)
+            {
+                assetShuffleTable.AppendLine("---- Model Swaps ----\n");
+                assetShuffleTable.AppendLine(assetShuffleInnertable.ToString());
+            }
+
+            StringBuilder tables = new();
+            tables.AppendLine(assetShuffleTable.ToString());
+
+            return tables;
+        }
+
+        private void ModelSwap(List<Asset> assets, List<GodGeneral> ggs, List<Individual> individuals,
+            StringBuilder assetShuffleInnertable, IEnumerable<GameData.AssetShuffleEntity> targets)
+        {
+            Dictionary<string, GameData.AssetShuffleEntity> entities = new();
+            foreach (GameData.AssetShuffleEntity e in targets)
+                entities.Add(e.id, e);
+
+            List<string> distinct = entities.Keys.ToList();
+            List<string> shuffle = new(distinct);
+            Redistribution r = new(100);
+            r.Randomize(shuffle);
+            Dictionary<string, string> conditionsMapping = new();
+            for (int i = 0; i < distinct.Count; i++)
+            {
+                GameData.AssetShuffleEntity target = entities[distinct[i]];
+                GameData.AssetShuffleEntity source = entities[shuffle[i]];
+                conditionsMapping.Add(source.id, target.id);
+                for (int j = 0; j < source.alternates.Count; j++)
+                    conditionsMapping.Add(source.alternates[j], target.alternates.Count > 0 ? target.alternates.GetRandom() : target.id);
+
+                List<string> targetIDs = new(target.alternates) { target.id };
+                foreach (string id in targetIDs)
+                    if (id.StartsWith("PID"))
+                        CorrectIndividual(source, individuals.First(i0 => i0.Pid == id));
+                    else if (id.StartsWith("MPID"))
+                        foreach (Individual ind in individuals.Where(i0 => i0.Name == id))
+                            CorrectIndividual(source, ind);
+                    else if (id.StartsWith("GID"))
+                        CorrectGodGeneral(source, ggs.First(gg => gg.Gid == id));
+
+                if (GD.ProtagonistAssetShuffleData.Contains(target))
+                {
+                    Asset? remove = null;
+                    switch (source.gender)
+                    {
+                        case GameData.Gender.Male:
+                        case GameData.Gender.Rosado:
+                            remove = assets.First(a => a.Conditions[0] == "PID_タイトル用_リュール女");
+                            break;
+                        case GameData.Gender.Female:
+                            remove = assets.First(a => a.Conditions[0] == "PID_タイトル用_リュール男");
+                            break;
+                    }
+                    if (remove != null)
+                    {
+                        remove.BodyModel = "uRig_HumnF1";
+                        remove.DressModel = "uBody_Swd0AF_c000";
+                        remove.HeadModel = "uHead_c851";
+                        remove.HairModel = "uHair_h851";
+                    }
+                }
+
+                if (target.eid != null)
+                    foreach (Asset a in assets.Where(a0 => a0.Conditions.Any(s => s.Contains(target.eid))))
+                    {
+                        a.HairR = source.hair.R;
+                        a.HairG = source.hair.G;
+                        a.HairB = source.hair.B;
+                        NormalRelative nr = new(100, 16);
+                        a.GradR = (byte)Math.Clamp(nr.Next(source.hair.R), 0, 255);
+                        a.GradG = (byte)Math.Clamp(nr.Next(source.hair.G), 0, 255);
+                        a.GradB = (byte)Math.Clamp(nr.Next(source.hair.B), 0, 255);
+                    }
+
+                assetShuffleInnertable.AppendLine($"{target.name} → {source.name}");
+            }
+            foreach (Asset a in assets)
+                for (int i = 0; i < a.Conditions.Length; i++)
+                    foreach (string id in a.Conditions[i].Split('|').Select(s => s.Trim(' ', '!')))
+                        if (conditionsMapping.TryGetValue(id, out string? newID))
+                            a.Conditions[i] = a.Conditions[i].Replace(id, newID);
+            GD.SetDirty(DataSetEnum.Asset);
+            GD.SetDirty(DataSetEnum.GodGeneral);
+            GD.SetDirty(DataSetEnum.Individual);
+        }
+
+        private static void CorrectIndividual(GameData.AssetShuffleEntity source, Individual ind)
+        {
+            ind.SetFlag(5, false);
+            switch (source.gender)
+            {
+                case GameData.Gender.Male:
+                    ind.Gender = 1;
+                    break;
+                case GameData.Gender.Female:
+                    ind.Gender = 2;
+                    break;
+                case GameData.Gender.Rosado:
+                    ind.Gender = 1;
+                    ind.SetFlag(5, true);
+                    break;
+            }
+            ind.UnitIconID = source.iconID;
+            ind.Name = source.nameID;
+        }
+
+        private static void CorrectGodGeneral(GameData.AssetShuffleEntity source, GodGeneral gg)
+        {
+            switch (source.gender)
+            {
+                case GameData.Gender.Male:
+                case GameData.Gender.Rosado:
+                    gg.Female = 0;
+                    break;
+                case GameData.Gender.Female:
+                    gg.Female = 1;
+                    break;
+            }
+            gg.UnitIconID = source.iconID;
+            gg.SetCorrupted(source.enemyEmblem);
+            gg.Mid = source.nameID;
+            if (source.thumbnail != null)
+                gg.AsciiName = source.thumbnail;
+            gg.FaceIconName = source.faceIconID;
+            gg.FaceIconNameDarkness = source.faceIconID;
         }
 
         private StringBuilder RandomizeGodGeneral(RandomizerSettings.GodGeneralSettings settings)
@@ -61,9 +240,7 @@ namespace ALittleSecretIngredient
             List<string> playableCharacterIDs = GD.PlayableCharacters.GetIDs();
             List<string> compatibleAsEngageAttackIDs = GD.CompatibleAsEngageAttacks.GetIDs();
             List<string> linkableEmblemIDs = GD.LinkableEmblems.GetIDs();
-
-            Dictionary<GodGeneral, StringBuilder> entries = new();
-            ggs.ForEach(gg => entries.Add(gg, new()));
+            Dictionary<GodGeneral, StringBuilder> entries = CreateStringBuilderDictionary(ggs);
 
             // Pair bond links
             allyEngageableEmblems.ForEach(gg => { if (gg.LinkGid != "") ggs.First(gg0 => gg0.Gid == gg.LinkGid).LinkGid = gg.Gid; });
@@ -111,7 +288,7 @@ namespace ALittleSecretIngredient
                     EngageAttack, out string? value) ? value : "");
                 // Propagate to assosiated emblems
                 Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s);
-                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg. EngageAttackLink = s);
+                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg.EngageAttackLink = s);
                 // Correct AIEngageAttackType field if possible
                 allyEngageableEmblems.ForEach(gg => gg.AIEngageAttackType = GD.EngageAttackToAIEngageAttackType.TryGetValue(gg.
                     EngageAttack, out sbyte value) ? value : (sbyte)0);
@@ -278,6 +455,13 @@ namespace ALittleSecretIngredient
             }
 
             return table;
+        }
+
+        private static Dictionary<T, StringBuilder> CreateStringBuilderDictionary<T>(List<T> objects) where T : notnull
+        {
+            Dictionary<T, StringBuilder> entries = new();
+            objects.ForEach(o => entries.Add(o, new()));
+            return entries;
         }
 
         private StringBuilder RandomizeGrowthTable(RandomizerSettings.GrowthTableSettings settings)
@@ -508,8 +692,7 @@ namespace ALittleSecretIngredient
             List<BondLevel> bls = GD.Get(DataSetEnum.BondLevel).Params.Cast<BondLevel>().ToList();
             List<BondLevel> bondLevelsFromExp = bls.FilterData(bl => bl.Level, GD.BondLevelsFromExp);
 
-            Dictionary<BondLevel, StringBuilder> entries = new();
-            bls.ForEach(bl => entries.Add(bl, new()));
+            Dictionary<BondLevel, StringBuilder> entries = CreateStringBuilderDictionary(bls);
 
             if (settings.Exp.Enabled)
             {

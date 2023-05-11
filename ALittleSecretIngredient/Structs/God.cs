@@ -59,6 +59,12 @@ namespace ALittleSecretIngredient.Structs
             if (value ^ GetWeaponRestricted())
                 Flag ^= 1 << 4;
         }
+        internal bool GetCorrupted() => (Flag & (1 << 2)) > 0;
+        internal void SetCorrupted(bool value)
+        {
+            if (value ^ GetCorrupted())
+                Flag ^= 1 << 2;
+        }
         internal byte NetRankingIndex { get; set; }
         internal sbyte AIEngageAttackType { get; set; }
     }

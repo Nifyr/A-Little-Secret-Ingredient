@@ -106,5 +106,11 @@ namespace ALittleSecretIngredient.Structs
         internal sbyte SummonRank { get; set; }
         internal int SummonRate { get; set; }
         internal string SummonGod { get; set; }
+        internal bool GetFlag(int index) => (Flag & (1 << index)) > 0;
+        internal void SetFlag(int index, bool value)
+        {
+            if (value ^ GetFlag(index))
+                Flag ^= (byte)(1 << index);
+        }
     }
 }

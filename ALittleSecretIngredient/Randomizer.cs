@@ -1,6 +1,7 @@
 ﻿using ALittleSecretIngredient.Structs;
 using System.Text;
 using static ALittleSecretIngredient.Probability;
+using static ALittleSecretIngredient.ColorGenerator;
 
 namespace ALittleSecretIngredient
 {
@@ -51,27 +52,122 @@ namespace ALittleSecretIngredient
             List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
             List<GodGeneral> ggs = GD.Get(DataSetEnum.GodGeneral).Params.Cast<GodGeneral>().ToList();
             List<Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList();
+
             StringBuilder assetShuffleInnertable = new();
+            List<List<GameData.AssetShuffleEntity>> modelSwapLists = GetModelSwapLists(settings.ModelSwap);
+            foreach (List<GameData.AssetShuffleEntity> list in modelSwapLists)
+                ModelSwap(assets, ggs, individuals, assetShuffleInnertable, list);
+
+            StringBuilder assetShuffleTable = new();
+            if (assetShuffleInnertable.Length > 0)
+            {
+                assetShuffleTable.AppendLine("---- Model Swaps ----\n");
+                assetShuffleTable.AppendLine(assetShuffleInnertable.ToString());
+            }
+
+            StringBuilder outfitShuffleInnertable = new();
+            GetOutfitSwapLists(settings.OutfitSwap, out List<List<string>> maleOutfitSwapLists, out List<List<string>> femaleOutfitSwapLists);
+            foreach (List<string> list in maleOutfitSwapLists)
+                OutfitSwap(assets, outfitShuffleInnertable, list);
+            foreach (List<string> list in femaleOutfitSwapLists)
+                OutfitSwap(assets, outfitShuffleInnertable, list);
+
+            StringBuilder outfitShuffleTable = new();
+            if (outfitShuffleInnertable.Length > 0)
+            {
+                outfitShuffleTable.AppendLine("---- Outfit Swaps ----\n");
+                outfitShuffleTable.AppendLine(outfitShuffleInnertable.ToString());
+            }
+
+            StringBuilder tables = new();
+            tables.AppendLine(assetShuffleTable.ToString());
+            tables.AppendLine(outfitShuffleTable.ToString());
+
+            return tables;
+        }
+
+        private void GetOutfitSwapLists(RandomizerFieldSettings settings, out List<List<string>> maleOutfitSwapLists, out List<List<string>> femaleOutfitSwapLists)
+        {
+            maleOutfitSwapLists = new();
+            femaleOutfitSwapLists = new();
+            if (settings.GetArg<bool>(0))
+            {
+                IEnumerable<string> maleList = GD.MaleClassDressModels.GetIDs();
+                IEnumerable<string> femaleList = GD.FemaleClassDressModels.GetIDs();
+                if (settings.GetArg<bool>(1))
+                {
+                    maleList = maleList.Concat(GD.MaleCorruptedClassDressModels.GetIDs());
+                    femaleList = femaleList.Concat(GD.FemaleCorruptedClassDressModels.GetIDs());
+                }
+                maleOutfitSwapLists.Add(maleList.ToList());
+                femaleOutfitSwapLists.Add(femaleList.ToList());
+            }
+            if (settings.GetArg<bool>(2))
+            {
+                maleOutfitSwapLists.Add(GD.MalePersonalDressModels.GetIDs());
+                femaleOutfitSwapLists.Add(GD.FemalePersonalDressModels.GetIDs());
+            }
+            if (settings.GetArg<bool>(3))
+            {
+                maleOutfitSwapLists.Add(GD.MaleEmblemDressModels.GetIDs());
+                femaleOutfitSwapLists.Add(GD.FemaleEmblemDressModels.GetIDs());
+            }
+            if (settings.GetArg<bool>(4))
+            {
+                maleOutfitSwapLists.Add(GD.MaleEngageDressModels.GetIDs());
+                femaleOutfitSwapLists.Add(GD.FemaleEngageDressModels.GetIDs());
+            }
+            if (settings.GetArg<bool>(5))
+            {
+                maleOutfitSwapLists.Add(GD.MaleCommonDressModels.GetIDs());
+                femaleOutfitSwapLists.Add(GD.FemaleCommonDressModels.GetIDs());
+            }
+            if (settings.GetArg<bool>(6))
+            {
+                maleOutfitSwapLists = new() { maleOutfitSwapLists.SelectMany(l => l).ToList() };
+                femaleOutfitSwapLists = new() { femaleOutfitSwapLists.SelectMany(l => l).ToList() };
+            }
+        }
+
+        private void OutfitSwap(List<Asset> assets, StringBuilder outfitShuffleInnertable, List<string> list)
+        {
+            List<string> shuffle = new(list);
+            new Redistribution(100).Randomize(shuffle);
+            Dictionary<string, string> mapping = new();
+            for (int i = 0; i < list.Count; i++)
+            {
+                mapping.Add(list[i], shuffle[i]);
+                outfitShuffleInnertable.AppendLine($"{GD.AllDressModels.IDToName(list[i])} → {GD.AllDressModels.IDToName(shuffle[i])}");
+            }
+            foreach (Asset a in assets)
+                if (mapping.TryGetValue(a.DressModel, out string? newDressModel))
+                    a.DressModel = newDressModel;
+            GD.SetDirty(DataSetEnum.Asset);
+        }
+
+        private List<List<GameData.AssetShuffleEntity>> GetModelSwapLists(RandomizerFieldSettings settings)
+        {
             List<List<GameData.AssetShuffleEntity>> modelSwapLists = new();
-            if (settings.ModelSwap.GetArg<bool>(0))
+
+            if (settings.GetArg<bool>(0))
             {
                 IEnumerable<GameData.AssetShuffleEntity> list = GD.PlayableAssetShuffleData;
-                if (settings.ModelSwap.GetArg<bool>(1))
+                if (settings.GetArg<bool>(1))
                     list = list.Concat(GD.ProtagonistAssetShuffleData);
                 modelSwapLists.Add(list.ToList());
             }
-            if (settings.ModelSwap.GetArg<bool>(2))
+            if (settings.GetArg<bool>(2))
                 modelSwapLists.Add(GD.NamedNPCAssetShuffleData);
-            if (settings.ModelSwap.GetArg<bool>(3))
+            if (settings.GetArg<bool>(3))
             {
                 IEnumerable<GameData.AssetShuffleEntity> list = GD.AllyEmblemAssetShuffleData;
-                if (settings.ModelSwap.GetArg<bool>(4))
+                if (settings.GetArg<bool>(4))
                     list = list.Concat(GD.EnemyEmblemAssetShuffleData);
                 modelSwapLists.Add(list.ToList());
             }
-            if (settings.ModelSwap.GetArg<bool>(5))
+            if (settings.GetArg<bool>(5))
                 modelSwapLists = new() { modelSwapLists.SelectMany(l => l).ToList() };
-            if (settings.ModelSwap.GetArg<bool>(6))
+            if (settings.GetArg<bool>(6))
             {
                 List<List<GameData.AssetShuffleEntity>> separatedLists = new();
                 foreach (List<GameData.AssetShuffleEntity> list in modelSwapLists)
@@ -92,20 +188,8 @@ namespace ALittleSecretIngredient
                 }
                 modelSwapLists = separatedLists;
             }
-            foreach (List<GameData.AssetShuffleEntity> list in modelSwapLists)
-                ModelSwap(assets, ggs, individuals, assetShuffleInnertable, list);
 
-            StringBuilder assetShuffleTable = new();
-            if (assetShuffleInnertable.Length > 0)
-            {
-                assetShuffleTable.AppendLine("---- Model Swaps ----\n");
-                assetShuffleTable.AppendLine(assetShuffleInnertable.ToString());
-            }
-
-            StringBuilder tables = new();
-            tables.AppendLine(assetShuffleTable.ToString());
-
-            return tables;
+            return modelSwapLists;
         }
 
         private void ModelSwap(List<Asset> assets, List<GodGeneral> ggs, List<Individual> individuals,
@@ -117,8 +201,7 @@ namespace ALittleSecretIngredient
 
             List<string> distinct = entities.Keys.ToList();
             List<string> shuffle = new(distinct);
-            Redistribution r = new(100);
-            r.Randomize(shuffle);
+            new Redistribution(100).Randomize(shuffle);
             Dictionary<string, string> conditionsMapping = new();
             for (int i = 0; i < distinct.Count; i++)
             {
@@ -153,10 +236,10 @@ namespace ALittleSecretIngredient
                     }
                     if (remove != null)
                     {
-                        remove.BodyModel = "uRig_HumnF1";
-                        remove.DressModel = "uBody_Swd0AF_c000";
-                        remove.HeadModel = "uHead_c851";
-                        remove.HairModel = "uHair_h851";
+                        remove.BodyModel = "uRig_HumnM1Invisible";
+                        remove.DressModel = "uBody_null";
+                        remove.HeadModel = "uHead_null";
+                        remove.HairModel = "uHair_null";
                     }
                 }
 

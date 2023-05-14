@@ -1,4 +1,5 @@
-﻿namespace ALittleSecretIngredient.Forms
+﻿#pragma warning disable IDE0052
+namespace ALittleSecretIngredient.Forms
 {
     public partial class AssetTableForm : Form
     {
@@ -7,6 +8,7 @@
         {
             GlobalData = globalData;
             InitializeComponent();
+            FormClosing += MainForm.CancelFormClosing;
         }
     }
 }

@@ -78,6 +78,303 @@
             ("PID_マデリーン", "Madeline")
         };
         #endregion
+        #region Dress Model IDs
+        internal List<(string id, string name)> MaleClassDressModels { get; } = new()
+        {
+            ("uBody_Swd0AM_c000", "Male Sword Fighter"), ("uBody_Swd1AM_c699", "Male Swordmaster"),
+            ("uBody_Swd1AM_c000", "Male Enemy Swordmaster"), ("uBody_Swd2AM_c000", "Male Hero"),
+            ("uBody_Lnc0AM_c000", "Male Lance Fighter"), ("uBody_Lnc1AM_c000", "Male Halberdier"),
+            ("uBody_Lnc2BM_c000", "Male Royal Knight"), ("uBody_Axe0AM_c699", "Male Axe Fighter"),
+            ("uBody_Axe0AM_c000", "Male Enemy Axe Fighter"), ("uBody_Axe1AM_c699", "Male Berserker A"),
+            ("uBody_Axe1AM_c699b", "Male Berserker B"), ("uBody_Axe1AM_c699c", "Male Berserker C"),
+            ("uBody_Axe1AM_c699d", "Male Berserker D"), ("uBody_Axe1AM_c000", "Male Enemy Berserker"),
+            ("uBody_Axe2AM_c000", "Male Warrior A"), ("uBody_Axe2AM_c000b", "Male Warrior B"),
+            ("uBody_Axe2AM_c000c", "Male Warrior C"), ("uBody_Axe2AM_c000d", "Male Warrior D"),
+            ("uBody_Amr0AM_c699", "Male Sword/Lance/Axe Armor"), ("uBody_Amr0AM_c000", "Male Enemy Sword/Lance/Axe Armor"),
+            ("uBody_Amr1AM_c699", "Male General"), ("uBody_Amr1AM_c000", "Male Enemy General"),
+            ("uBody_Amr2BM_c699", "Male Great Knight"), ("uBody_Amr2BM_c000", "Male Enemy Great Knight"),
+            ("uBody_Bow0AM_c699", "Male Archer"), ("uBody_Bow0AM_c000", "Male Enemy Archer"),
+            ("uBody_Bow1AM_c699", "Male Sniper"), ("uBody_Bow1AM_c000", "Male Enemy Sniper"),
+            ("uBody_Bow2BM_c000", "Male Bow Knight"), ("uBody_Cav0BM_c000", "Male Sword/Lance/Axe Cavalier"),
+            ("uBody_Cav1BM_c000", "Male Paladin"), ("uBody_Cav2CM_c000", "Male Wolf Knight"),
+            ("uBody_Wng1FM_c000", "Male Griffin Knight"), ("uBody_Wng2DM_c000", "Male Wyvern Knight"),
+            ("uBody_Dge0AM_c699", "Male Thief A"), ("uBody_Dge0AM_c699d", "Male Thief B"),
+            ("uBody_Dge0AM_c000", "Male Enemy Thief"), ("uBody_Mag0AM_c000", "Male Mage"),
+            ("uBody_Mag1AM_c000", "Male Sage A"), ("uBody_Mag1AM_c000b", "Male Sage B"),
+            ("uBody_Mag1AM_c000l", "Male Sage C"), ("uBody_Mag1AM_c000c", "Male Sage D"),
+            ("uBody_Mag1AM_c000d", "Male Sage E"), ("uBody_Mag1AM_c699", "Male Enemy Sage"),
+            ("uBody_Mag2BM_c000", "Male Mage Knight"), ("uBody_Rod0AM_c000", "Male Martial Monk"),
+            ("uBody_Rod1AM_c000", "Male Martial Master A"), ("uBody_Rod1AM_c000b", "Male Martial Master B"),
+            ("uBody_Rod1AM_c000c", "Male Martial Master C"), ("uBody_Rod1AM_c000d", "Male Martial Master D"),
+            ("uBody_Rod2AM_c000", "Male High Priest"), ("uBody_Bbr0AM_c000", "Male Barbarian"),
+            ("uBody_Ect3AM_c000", "Male Enchanter"), ("uBody_Mcn3AM_c000", "Male Mage Cannoneer"),
+            ("uBody_File4M_c809", "Male Firenese Villager"),
+        };
+
+        internal List<(string id, string name)> MaleCorruptedClassDressModels { get; } = new()
+        {
+            ("uBody_Swd0AM_c702", "Male Corrupted Sword Fighter"), ("uBody_Swd1AM_c704", "Male Corrupted Swordmaster"),
+            ("uBody_Swd2AM_c704", "Male Corrupted Hero"), ("uBody_Lnc0AM_c702", "Male Corrupted Lance Fighter"),
+            ("uBody_Lnc1AM_c704", "Male Corrupted Halberdier"), ("uBody_Lnc2BM_c704", "Male Corrupted Royal Knight"),
+            ("uBody_Axe0AM_c702", "Male Corrupted Axe Fighter"), ("uBody_Axe1AM_c704", "Male Corrupted Berserker"),
+            ("uBody_Axe2AM_c704", "Male Corrupted Warrior"), ("uBody_Amr0AM_c702", "Male Corrupted Sword/Lance/Axe Armor"),
+            ("uBody_Amr1AM_c704", "Male Corrupted General"), ("uBody_Amr2BM_c704", "Male Corrupted Great Knight"),
+            ("uBody_Bow0AM_c702", "Male Corrupted Archer"), ("uBody_Bow1AM_c704", "Male Corrupted Sniper"),
+            ("uBody_Bow2BM_c704", "Male Corrupted Bow Knight"), ("uBody_Cav0BM_c702", "Male Corrupted Sword/Lance/Axe Cavalier"),
+            ("uBody_Cav1BM_c704", "Male Corrupted Paladin"), ("uBody_Cav2CM_c704", "Male Corrupted Wolf Knight"),
+            ("uBody_Wng1FM_c704", "Male Corrupted Griffin Knight"), ("uBody_Wng2DM_c704", "Male Corrupted Wyvern Knight"),
+            ("uBody_Dge0AM_c702", "Male Corrupted Thief"), ("uBody_Mag0AM_c702", "Male Corrupted Mage"),
+            ("uBody_Mag1AM_c704", "Male Corrupted Sage"), ("uBody_Mag2BM_c704", "Male Corrupted Mage Knight"),
+            ("uBody_Rod0AM_c702", "Male Corrupted Martial Monk"), ("uBody_Rod1AM_c704", "Male Corrupted Marial Master"),
+            ("uBody_Rod2AM_c704", "Male Corrupted High Priest"), ("uBody_Bbr0AM_c702", "Male Corrupted Barbarian"),
+            ("uBody_Ect3AM_c704", "Male Corrupted Enchanter"), ("uBody_Mcn3AM_c704", "Male Corrupted Mage Cannoneer"),
+        };
+
+        internal List<(string id, string name)> FemaleClassDressModels { get; } = new()
+        {
+            ("uBody_Swd0AF_c699", "Female Sword Fighter"), ("uBody_Swd0AF_c000", "Female Enemy Sword Fighter"),
+            ("uBody_Swd1AF_c699", "Female Swordmaster"), ("uBody_Swd1AF_c000", "Female Enemy Swordmaster"), 
+            ("uBody_Swd2AF_c000", "Female Hero"), ("uBody_Lnc0AF_c000", "Female Lance Fighter"), 
+            ("uBody_Lnc1AF_c000", "Female Halberdier"), ("uBody_Lnc2BF_c000", "Female Royal Knight"),
+            ("uBody_Axe0AF_c699", "Female Axe Fighter"), ("uBody_Axe0AF_c000", "Female Enemy Axe Fighter"),
+            ("uBody_Axe1AF_c699", "Female Berserker A"), ("uBody_Axe1AF_c699b", "Female Berserker B"),
+            ("uBody_Axe1AF_c699c", "Female Berserker C"), ("uBody_Axe1AF_c699d", "Female Berserker D"),
+            ("uBody_Axe1AF_c000", "Female Enemy Berserker"), ("uBody_Axe2AF_c000", "Female Warrior A"),
+            ("uBody_Axe2AF_c000b", "Female Warrior B"), ("uBody_Axe2AF_c000c", "Female Warrior C"),
+            ("uBody_Axe2AF_c000d", "Female Warrior D"), ("uBody_Amr0AF_c699", "Female Sword/Lance/Axe Armor"),
+            ("uBody_Amr0AF_c000", "Female Enemy Sword/Lance/Axe Armor"), ("uBody_Amr1AF_c699", "Female General"),
+            ("uBody_Amr1AF_c000", "Female Enemy General"), ("uBody_Amr2BF_c699", "Female Great Knight"),
+            ("uBody_Amr2BF_c000", "Female Enemy Great Knight"), ("uBody_Bow0AF_c699", "Female Archer"),
+            ("uBody_Bow0AF_c000", "Female Enemy Archer"), ("uBody_Bow1AF_c699", "Female Sniper"),
+            ("uBody_Bow1AF_c000", "Female Enemy Sniper"), ("uBody_Bow2BF_c000", "Female Bow Knight"),
+            ("uBody_Cav0BF_c000", "Female Sword/Lance/Axe Cavalier"), ("uBody_Cav1BF_c000", "Female Paladin"),
+            ("uBody_Cav2CF_c000", "Female Wolf Knight"), ("uBody_Wng0EF_c000", "Female Sword/Lance/Axe Flier"),
+            ("uBody_Wng1FF_c000", "Female Griffin Knight"), ("uBody_Wng2DF_c000", "Female Wyvern Knight"),
+            ("uBody_Dge0AF_c699", "Female Thief A"), ("uBody_Dge0AF_c699d", "Female Thief B"),
+            ("uBody_Dge0AF_c000", "Female Enemy Thief"), ("uBody_Mag0AF_c000", "Female Mage A"),
+            ("uBody_Mag0AF_c000l", "Female Mage B"), ("uBody_Mag1AF_c000", "Female Sage A"),
+            ("uBody_Mag1AF_c000l", "Female Sage B"), ("uBody_Mag1AF_c000b", "Female Sage C"),
+            ("uBody_Mag1AF_c000c", "Female Sage D"), ("uBody_Mag1AF_c000d", "Female Sage E"),
+            ("uBody_Mag1AF_c699", "Female Enemy Sage"), ("uBody_Mag2BF_c000", "Female Mage Knight A"),
+            ("uBody_Mag2BF_c000l", "Female Mage Knight B"), ("uBody_Rod0AF_c000", "Female Martial Monk"),
+            ("uBody_Rod1AF_c000", "Female Martial Master"), ("uBody_Rod2AF_c000", "Female High Priest"),
+            ("uBody_Bbr0AF_c000", "Female Barbarian"), ("uBody_Ect3AF_c000", "Female Enchanter"),
+            ("uBody_Mcn3AF_c000", "Female Mage Cannoneer"),
+        };
+
+        internal List<(string id, string name)> FemaleCorruptedClassDressModels { get; } = new()
+        {
+            ("uBody_Swd0AF_c703", "Female Corrupted Sword Fighter"), ("uBody_Swd1AF_c705", "Female Corrupted Swordmaster"),
+            ("uBody_Swd2AF_c705", "Female Corrupted Hero"), ("uBody_Lnc0AF_c703", "Female Corrupted Lance Fighter"),
+            ("uBody_Lnc1AF_c705", "Female Corrupted Halberdier"), ("uBody_Lnc2BF_c705", "Female Corrupted Royal Knight"),
+            ("uBody_Axe0AF_c703", "Female Corrupted Axe Fighter"), ("uBody_Axe1AF_c705", "Female Corrupted Berserker"),
+            ("uBody_Axe2AF_c705", "Female Corrupted Warrior"), ("uBody_Amr0AF_c703", "Female Corrupted Sword/Lance/Axe Armor"),
+            ("uBody_Amr1AF_c705", "Female Corrupted General"), ("uBody_Amr2BF_c705", "Female Corrupted Great Knight"),
+            ("uBody_Bow0AF_c703", "Female Corrupted Archer"), ("uBody_Bow1AF_c705", "Female Corrupted Sniper"),
+            ("uBody_Bow2BF_c705", "Female Corrupted Bow Knight"), ("uBody_Cav0BF_c703", "Female Corrupted Sword/Lance/Axe Cavalier"),
+            ("uBody_Cav1BF_c705", "Female Corrupted Paladin"), ("uBody_Cav2CF_c705", "Female Corrupted Wolf Knight"),
+            ("uBody_Wng0EF_c703", "Female Corrupted Sword/Lance/Axe Flier"), ("uBody_Wng1FF_c705", "Female Corrupted Griffin Knight"),
+            ("uBody_Wng2DF_c705", "Female Corrupted Wyvern Knight"), ("uBody_Dge0AF_c703", "Female Corrupted Thief"),
+            ("uBody_Mag0AF_c703", "Female Corrupted Mage"), ("uBody_Mag1AF_c705", "Female Corrupted Sage"),
+            ("uBody_Mag2BF_c705", "Female Corrupted Mage Knight"), ("uBody_Rod0AF_c703", "Female Corrupted Marital Monk"),
+            ("uBody_Rod1AF_c705", "Female Corrupted Martial Master"), ("uBody_Rod2AF_c705", "Female Corrupted High Priest"),
+            ("uBody_Bbr0AF_c703", "Female Corrupted Barbarian"), ("uBody_Ect3AF_c705", "Female Corrupted Enchanter"),
+            ("uBody_Mcn3AF_c705", "Female Corrupted Mage Cannoneer"),
+        };
+
+        internal List<(string id, string name)> MalePersonalDressModels { get; } = new()
+        {
+            ("uBody_Drg0AM_c001", "Male Dragon Child"), ("uBody_Drg1AM_c001", "Male Divine Dragon (Alear)"),
+            ("uBody_Drg0AM_c002", "Male Fell Child (Past Alear)"), ("uBody_Sds0AM_c049", "Fell Child (Rafal)"),
+            ("uBody_Avn0BM_c100", "Noble (Alfred)"), ("uBody_Avn1BM_c100", "Avenir"),
+            ("uBody_Axe0AM_c101", "Axe Fighter (Boucheron)"), ("uBody_Amr0AM_c102", "Sword/Lance/Axe Armor (Louis)"),
+            ("uBody_Rod0AM_c103", "Martial Monk (Jean)"), ("uBody_Scs0AM_c200", "Lord (Diamant)"),
+            ("uBody_Scs1AM_c200", "Successeur"), ("uBody_Trl0AM_c201", "Lord (Alcryst)"),
+            ("uBody_Trl1AM_c201", "Tireur d'élite"), ("uBody_Swd2AM_c202", "Morion"),
+            ("uBody_Cav0BM_c203", "Sword/Lance/Axe Cavalier (Amber)"), ("uBody_Rod1AM_c300", "Hyacinth"),
+            ("uBody_Dge0AM_c301", "Thief (Zelkov)"), ("uBody_Swd1AM_c302", "Swordmaster (Kagetsu)"),
+            ("uBody_Mag1AM_c304", "Sage (Lindon)"), ("uBody_Cpd0BM_c400", "Sentinel (Fogado)"),
+            ("uBody_Cpd1BM_c400", "Cupido"), ("uBody_Mag0AM_c400", "Mage (Fogado)"),
+            ("uBody_Dct0AM_c400", "Wolf Knight (Fogado)"), ("uBody_Rod2AM_c401", "High Priest (Pandreo)"),
+            ("uBody_Amr2BM_c402", "Great Knight (Bunet)"), ("uBody_Dnc0AM_c403", "Dancer"),
+            ("uBody_Cav1BM_c500", "Paladin (Vander)"), ("uBody_Mag0AM_c501", "Mage (Clanne)"),
+            ("uBody_Lnc2BM_c502", "Royal Knight (Mauvier)"), ("uBody_Mag1AM_c503", "Sage (Griss)"),
+            ("uBody_Mag1AM_c503b", "Sage (Gregory)"), ("uBody_Amr0AM_c811", "Rodine"),
+            ("uBody_Axe0AM_c812", "Nelucce"),
+            ("uBody_Bbr0AM_c813", "Tetchie"), ("uBody_Bbr0AM_c814", "Totchie"),
+            ("uBody_Rod0AM_c819", "Sean"), ("uBody_File4M_c817", "Durthon"),
+            ("uBody_Brod4M_c818", "Pinet"), ("uBody_WearM_c001", "Male Alear Casual"),
+            ("uBody_WearM_c100", "Alfred Casual"), ("uBody_WearM_c101", "Boucheron Casual"),
+            ("uBody_WearM_c102", "Louis Casual"), ("uBody_WearM_c103", "Jean Casual"),
+            ("uBody_WearM_c200", "Diamant Casual"), ("uBody_WearM_c201", "Alcryst Casual"),
+            ("uBody_WearM_c203", "Amber Casual"), ("uBody_WearM_c301", "Zelkov Casual"),
+            ("uBody_WearM_c302", "Kagetsu Casual"), ("uBody_WearM_c304", "Lindon Casual"),
+            ("uBody_WearM_c400", "Fogado Casual"), ("uBody_WearM_c401", "Pandreo Casual"),
+            ("uBody_WearM_c402", "Bunet Casual"), ("uBody_WearM_c403", "Seadall Casual"),
+            ("uBody_WearM_c500", "Vander Casual"), ("uBody_WearM_c501", "Clanne Casual"),
+            ("uBody_WearM_c502", "Mauvier Casual"), ("uBody_WearM_c049", "Rafal Casual"),
+            ("uBody_WearM_c503", "Gregory Casual"),
+        };
+
+        internal List<(string id, string name)> FemalePersonalDressModels { get; } = new()
+        {
+            ("uBody_Drg0AF_c051", "Female Dragon Child"),
+            ("uBody_Drg1AF_c051", "Female Divine Dragon (Alear)"), ("uBody_Drg0AF_c052", "Female Fell Child (Past Alear)"),
+            ("uBody_Sds0AF_c099", "Fell Child (Nel)"), ("uBody_Flr0AF_c150", "Noble (Céline)"),
+            ("uBody_Flr1AF_c150", "Vidame"), ("uBody_Rod2AF_c151", "Éve"),
+            ("uBody_Bow0AF_c152", "Archer (Etie)"), ("uBody_Wng0EF_c153", "Sword/Lance/Axe Flier (Chloé)"),
+            ("uBody_Amr0AF_c250", "Sword/Lance/Axe Armor (Jade)"), ("uBody_Swd0AF_c251", "Sword Fighter (Lapis)"),
+            ("uBody_Mag0AF_c252", "Mage (Citrinne)"), ("uBody_Dge0AF_c253", "Thief (Yunaka)"),
+            ("uBody_Axe2AF_c254", "Warrior (Saphir)"), ("uBody_Wng2DF_c303", "Wyvern Knight (Rosado)"),
+            ("uBody_Lnd0DF_c350", "Wing Tamer (Ivy)"), ("uBody_Lnd1DF_c350", "Lindwurm"),
+            ("uBody_Slp0EF_c351", "Wing Tamer (Hortensia)"), ("uBody_Slp1EF_c351", "Sleipnir Rider"),
+            ("uBody_Swd2AF_c352", "Hero (Goldmary)"), ("uBody_Pcf0AF_c450", "Sentinel (Timerra)"),
+            ("uBody_Pcf1AF_c450", "Picket"), ("uBody_Cav2CF_c450", "Wolf Knight (Timerra)"),
+            ("uBody_Swd2AF_c450", "Hero (Timerra)"), ("uBody_Wng2DF_c451", "Seforia"),
+            ("uBody_Cav2CF_c452", "Wolf Knight (Merrin)"), ("uBody_Axe1AF_c453", "Berserker (Panette)"),
+            ("uBody_Rod0AF_c550", "Martial Monk (Framme)"), ("uBody_Sdp0AF_c551", "Fell Child (Veyle)"),
+            ("uBody_Sdp0AF_c556", "Dark Veyle"), ("uBody_Sdp0AF_c557", "Hooded Veyle"),
+            ("uBody_Axe0AF_c552", "Axe Fighter (Anna)"), ("uBody_Msn0DF_c553", "Melusine (Zephia)"),
+            ("uBody_Msn0DF_c553b", "Melusine (Zelestia)"), ("uBody_Amr1AF_c554", "General (Marni)"),
+            ("uBody_Amr1AF_c554b", "General (Madeline)"), ("uBody_Drg1AF_c555", "Divine Dragon (Lumera)"),
+            ("uBody_Axe1AF_c855", "Abyme (Chapter 18)"), ("uBody_Bbr0AF_c859", "Mitan"),
+            ("uBody_File4F_c858", "Anje"), ("uBody_File4F_c856", "Anisse"),
+            ("uBody_Brod4F_c857", "Calney"), ("uBody_WearF_c303", "Rosado Casual"),
+            ("uBody_WearF_c051", "Female Alear Casual"), ("uBody_WearF_c150", "Céline Casual"),
+            ("uBody_WearF_c152", "Etie Casual"), ("uBody_WearF_c153", "Chloé Casual"),
+            ("uBody_WearF_c250", "Jade Casual"), ("uBody_WearF_c251", "Lapis Casual"),
+            ("uBody_WearF_c252", "Citrinne Casual"), ("uBody_WearF_c253", "Yunaka Casual"),
+            ("uBody_WearF_c254", "Saphir Casual"), ("uBody_WearF_c350", "Ivy Casual"),
+            ("uBody_WearF_c351", "Hortensia Casual"), ("uBody_WearF_c352", "Goldmary Casual"),
+            ("uBody_WearF_c450", "Timerra Casual"), ("uBody_WearF_c452", "Merrin Casual"),
+            ("uBody_WearF_c453", "Panette Casual"), ("uBody_WearF_c550", "Framme Casual"),
+            ("uBody_WearF_c551", "Veyle Casual"), ("uBody_WearF_c552", "Anna Casual"),
+            ("uBody_WearF_c099", "Nel Casual"), ("uBody_WearF_c553", "Zelestia Casual"),
+            ("uBody_WearF_c554", "Madeline Casual"),
+        };
+
+        internal List<(string id, string name)> MaleEmblemDressModels { get; } = new()
+        {
+            ("uBody_Mar0AM_c530", "Marth"), ("uBody_Mar0AM_c537", "Corrupted Marth"),
+            ("uBody_Sig0BM_c531", "Sigurd"), ("uBody_Sig0BM_c538", "Corrupted Sigurd"),
+            ("uBody_Lei0AM_c532", "Leif"), ("uBody_Lei0AM_c539", "Corrupted Leif"),
+            ("uBody_Roy0AM_c533", "Roy"), ("uBody_Roy0AM_c540", "Corrupted Roy"),
+            ("uBody_Ike0AM_c534", "Ike"), ("uBody_Ike0AM_c541", "Corrupted Ike"),
+            ("uBody_Byl0AM_c535", "Byleth"), ("uBody_Byl0AM_c542", "Corrupted Byleth"),
+            ("uBody_Eph0AM_c536", "Ephraim"), ("uBody_Eph0AM_c543", "Corrupted Ephraim"),
+            ("uBody_Drg0AM_c003", "Male Emblem Alear"), ("uBody_Dim0AM_c514", "Dimitri"),
+            ("uBody_Dim0AM_c521", "Corrupted Dimitri"), ("uBody_Cla0AM_c515", "Claude"),
+            ("uBody_Cla0AM_c522", "Corrupted Claude"), ("uBody_Hec0AM_c510", "Hector"),
+            ("uBody_Hec0AM_c517", "Corrupted Hector"), ("uBody_Sor0AM_c511", "Soren"),
+            ("uBody_Sor0AM_c518", "Corrupted Soren"), ("uBody_Chr0AM_c512", "Chrom"),
+            ("uBody_Chr0AM_c519", "Corrupted Chrom"), ("uBody_Rbi0AM_c513", "Robin"),
+            ("uBody_Rbi0AM_c520", "Corrupted Robin"),
+        };
+
+        internal List<(string id, string name)> FemaleEmblemDressModels { get; } = new()
+        {
+            ("uBody_Cel0AF_c580", "Celica"), ("uBody_Cel0AF_c587", "Corrupted Celica"),
+            ("uBody_Lyn0AF_c581", "Lyn"), ("uBody_Lyn0AF_c588", "Corrupted Lyn"),
+            ("uBody_Eir0AF_c582", "Eirika"), ("uBody_Eir0AF_c589", "Corrupted Eirika"),
+            ("uBody_Mic0AF_c583", "Micaiah"), ("uBody_Mic0AF_c590", "Corrupted Micaiah"),
+            ("uBody_Luc0AF_c584", "Lucina"), ("uBody_Luc0AF_c591", "Corrupted Lucina"),
+            ("uBody_Cor0AF_c585", "Corrin"), ("uBody_Cor0AF_c592", "Corrupted Corrin"),
+            ("uBody_Drg0AF_c053", "Female Emblem Alear"), ("uBody_Tik0AF_c560", "Tiki"),
+            ("uBody_Tik0AF_c567", "Corrupted Tiki"), ("uBody_Ede0AF_c563", "Edelgard"),
+            ("uBody_Ede0AF_c570", "Corrupted Edelgard"), ("uBody_Cmi0DF_c561", "Camilla"),
+            ("uBody_Cmi0DF_c568", "Corrupted Camilla"), ("uBody_Ver0AF_c562", "Veronica"),
+            ("uBody_Ver0AF_c569", "Corrupted Veronica"),
+        };
+
+        internal List<(string id, string name)> MaleEngageDressModels { get; } = new()
+        {
+            ("uBody_Mar1AM_c000", "Male Engaged (Marth)"), ("uBody_Sig1AM_c000", "Male Engaged (Sigurd)"),
+            ("uBody_Lei1AM_c000", "Male Engaged (Leif)"), ("uBody_Roy1AM_c000", "Male Engaged (Roy)"),
+            ("uBody_Ike1AM_c000", "Male Engaged (Ike)"), ("uBody_Byl1AM_c000", "Male Engaged (Byleth)"),
+            ("uBody_Cel1AM_c000", "Male Engaged (Celica)"), ("uBody_Lyn1AM_c000", "Male Engaged (Lyn)"),
+            ("uBody_Eir1AM_c000", "Male Engaged (Eirika)"), ("uBody_Mic1AM_c000", "Male Engaged (Micaiah)"),
+            ("uBody_Luc1AM_c000", "Male Engaged (Lucina)"), ("uBody_Cor1AM_c000", "Male Engaged (Corrin)"),
+            ("uBody_Ler1AM_c000", "Male Engaged (Alear)"),
+            ("uBody_Thr1AM_c000", "Male Engaged (Edelgard)"), ("uBody_Hec1AM_c000", "Male Engaged (Hector)"),
+            ("uBody_Sor1AM_c000", "Male Engaged (Soren)"), ("uBody_Cmi1AM_c000", "Male Engaged (Camilla)"),
+            ("uBody_Ver1AM_c000", "Male Engaged (Veronica)"), ("uBody_Chr1AM_c000", "Male Engaged (Chrom)"),
+        };
+
+        internal List<(string id, string name)> FemaleEngageDressModels { get; } = new()
+        {
+            ("uBody_Mar1AF_c000", "Female Engaged (Marth)"), ("uBody_Sig1AF_c000", "Female Engaged (Sigurd)"),
+            ("uBody_Lei1AF_c000", "Female Engaged (Leif)"), ("uBody_Roy1AF_c000", "Female Engaged (Roy)"),
+            ("uBody_Ike1AF_c000", "Female Engaged (Ike)"), ("uBody_Byl1AF_c000", "Female Engaged (Byleth)"),
+            ("uBody_Cel1AF_c000", "Female Engaged (Celica)"), ("uBody_Lyn1AF_c000", "Female Engaged (Lyn)"),
+            ("uBody_Eir1AF_c000", "Female Engaged (Eirika)"), ("uBody_Mic1AF_c000", "Female Engaged (Micaiah)"),
+            ("uBody_Luc1AF_c000", "Female Engaged (Lucina)"), ("uBody_Cor1AF_c000", "Female Engaged (Corrin)"),
+            ("uBody_Ler1AF_c000", "Female Engaged (Alear)"),
+            ("uBody_Thr1AF_c000", "Female Engaged (Edelgard)"), ("uBody_Hec1AF_c000", "Female Engaged (Hector)"),
+            ("uBody_Sor1AF_c000", "Female Engaged (Soren)"), ("uBody_Cmi1AF_c000", "Female Engaged (Camilla)"),
+            ("uBody_Ver1AF_c000", "Female Engaged (Veronica)"), ("uBody_Chr1AF_c000", "Female Engaged (Chrom)"),
+        };
+
+        internal List<(string id, string name)> MaleCommonDressModels { get; } = new()
+        {
+            ("uBody_File1M_c000", "Male Firene Formal 1"), ("uBody_File2M_c000", "Male Firene Formal 2"),
+            ("uBody_File3M_c000", "Male Firene Formal 3"), ("uBody_File4M_c000", "Male Firene Casual 1"),
+            ("uBody_File5M_c000", "Male Firene Casual 2"), ("uBody_File6M_c000", "Male Firene Casual 3"),
+            ("uBody_Brod1M_c000", "Male Brodia Formal 1"), ("uBody_Brod2M_c000", "Male Brodia Formal 2"),
+            ("uBody_Brod3M_c000", "Male Brodia Formal 3"), ("uBody_Brod4M_c000", "Male Brodia Casual 1"),
+            ("uBody_Brod5M_c000", "Male Brodia Casual 2"), ("uBody_Brod6M_c000", "Male Brodia Casual 3"),
+            ("uBody_Irci1M_c000", "Male Elusia Formal 1"), ("uBody_Irci2M_c000", "Male Elusia Formal 2"),
+            ("uBody_Irci3M_c000", "Male Elusia Formal 3"), ("uBody_Irci4M_c000", "Male Elusia Casual 1"),
+            ("uBody_Irci5M_c000", "Male Elusia Casual 2"), ("uBody_Irci6M_c000", "Male Elusia Casual 3"),
+            ("uBody_Solu1M_c000", "Male Solm Formal 1"), ("uBody_Solu2M_c000", "Male Solm Formal 2"),
+            ("uBody_Solu3M_c000", "Male Solm Formal 3"), ("uBody_Solu4M_c000", "Male Solm Casual 1"),
+            ("uBody_Solu5M_c000", "Male Solm Casual 2"), ("uBody_Solu6M_c000", "Male Solm Casual 3"),
+            ("uBody_Lith1M_c000", "Male Lythos 1"), ("uBody_Lith2M_c000", "Male Lythos 2"),
+            ("uBody_Lith3M_c000", "Male Lythos 3"), ("uBody_SwimM1_c000", "Male Swimwear 1A"),
+            ("uBody_SwimM1_c000b", "Male Swimwear 1B"), ("uBody_SwimM1_c000c", "Male Swimwear 1C"),
+            ("uBody_SwimM1_c000d", "Male Swimwear 1D"), ("uBody_SwimM2_c000", "Male Swimwear 2A"),
+            ("uBody_SwimM2_c000b", "Male Swimwear 2B"), ("uBody_SwimM2_c000c", "Male Swimwear 2C"),
+            ("uBody_SwimM2_c000d", "Male Swimwear 2D"), ("uBody_SwimM3_c000", "Male Swimwear 3A"),
+            ("uBody_SwimM3_c000b", "Male Swimwear 3B"), ("uBody_SwimM3_c000c", "Male Swimwear 3C"),
+            ("uBody_SwimM3_c000d", "Male Swimwear 3D"), ("uBody_ExerM1_c000", "Male Training Wear A"),
+            ("uBody_ExerM1_c000c", "Male Training Wear B"), ("uBody_ExerM1_c000d", "Male Training Wear C"),
+            ("uBody_KimnM_c000", "Male Kimono"), ("uBody_CstmM_c000", "Male Sommie Costume A"),
+            ("uBody_CstmM_c699", "Male Sommie Costume B"), ("uBody_Mar0AM_c000", "Marth Costume"),
+            ("uBody_Sig0BM_c000", "Sigurd Costume"), ("uBody_Roy0AM_c000", "Roy Costume"),
+            ("uBody_Ike0AM_c000", "Ike Costume A"), ("uBody_Ike0AM_c000b", "Ike Costume B"),
+            ("uBody_Lei0AM_c000", "Leif Costume"), ("uBody_Byl0AM_c000", "Byleth Costume"),
+        };
+
+        internal List<(string id, string name)> FemaleCommonDressModels { get; } = new()
+        {
+            ("uBody_File1F_c000", "Female Firene Formal 1"), ("uBody_File2F_c000", "Female Firene Formal 2"),
+            ("uBody_File3F_c000", "Female Firene Formal 3"), ("uBody_File4F_c000", "Female Firene Casual 1"),
+            ("uBody_File5F_c000", "Female Firene Casual 2"), ("uBody_File6F_c000", "Female Firene Casual 3"),
+            ("uBody_Brod1F_c000", "Female Brodia Formal 1"), ("uBody_Brod2F_c000", "Female Brodia Formal 2"),
+            ("uBody_Brod3F_c000", "Female Brodia Formal 3"), ("uBody_Brod4F_c000", "Female Brodia Casual 1"),
+            ("uBody_Brod5F_c000", "Female Brodia Casual 2"), ("uBody_Brod6F_c000", "Female Brodia Casual 3"),
+            ("uBody_Irci1F_c000", "Female Elusia Formal 1"), ("uBody_Irci2F_c000", "Female Elusia Formal 2"),
+            ("uBody_Irci3F_c000", "Female Elusia Formal 3"), ("uBody_Irci4F_c000", "Female Elusia Casual 1"),
+            ("uBody_Irci5F_c000", "Female Elusia Casual 2"), ("uBody_Irci6F_c000", "Female Elusia Casual 3"),
+            ("uBody_Solu1F_c000", "Female Solm Formal 1"), ("uBody_Solu2F_c000", "Female Solm Formal 2"),
+            ("uBody_Solu3F_c000", "Female Solm Formal 3"), ("uBody_Solu4F_c000", "Female Solm Casual 1"),
+            ("uBody_Solu5F_c000", "Female Solm Casual 2"), ("uBody_Solu6F_c000", "Female Solm Casual 3"),
+            ("uBody_Lith1F_c000", "Female Lythos 1"), ("uBody_Lith2F_c000", "Female Lythos 2"),
+            ("uBody_Lith3F_c000", "Female Lythos 3"), ("uBody_SwimF1_c000", "Female Swimwear 1A"),
+            ("uBody_SwimF1_c000b", "Female Swimwear 1B"), ("uBody_SwimF1_c000c", "Female Swimwear 1C"),
+            ("uBody_SwimF1_c000d", "Female Swimwear 1D"), ("uBody_SwimF2_c000", "Female Swimwear 2A"),
+            ("uBody_SwimF2_c000b", "Female Swimwear 2B"), ("uBody_SwimF2_c000c", "Female Swimwear 2C"),
+            ("uBody_SwimF2_c000d", "Female Swimwear 2D"), ("uBody_SwimF3_c000", "Female Swimwear 3A"),
+            ("uBody_SwimF3_c000b", "Female Swimwear 3B"), ("uBody_SwimF3_c000c", "Female Swimwear 3C"),
+            ("uBody_SwimF3_c000d", "Female Swimwear 3D"), ("uBody_ExerF1_c000", "Female Training Wear A"),
+            ("uBody_ExerF1_c000c", "Female Training Wear B"), ("uBody_KimnF_c000", "Female Kimono"),
+            ("uBody_CstmF_c000", "Female Sommie Costume A"), ("uBody_CstmF_c699", "Female Sommie Costume B"),
+            ("uBody_Cel0AF_c000", "Celica Costume"), ("uBody_Mic0AF_c000", "Micaiah Costume"),
+            ("uRig_Lyn0AF", "Lyn Costume"), ("uBody_Luc0AF_c000", "Lucina Costume"),
+            ("uBody_Cor0AF_c000", "Corrin Costume"), ("uBody_Eir0AF_c000", "Eirika Costume"),
+        };
+
+        internal List<(string id, string name)> AllDressModels { get; } = new();
+        #endregion
         #region Emblem IDs
         internal List<(string id, string name)> AlearEmblems { get; } = new()
         {
@@ -955,6 +1252,18 @@
             AllyBondLevelTables.AddRange(InheritableBondLevelTables);
             BondLevelTables.AddRange(AllyBondLevelTables);
             BondLevelTables.AddRange(EnemyBondLevelTables);
+            AllDressModels.AddRange(MaleClassDressModels);
+            AllDressModels.AddRange(FemaleClassDressModels);
+            AllDressModels.AddRange(MaleCorruptedClassDressModels);
+            AllDressModels.AddRange(FemaleCorruptedClassDressModels);
+            AllDressModels.AddRange(MalePersonalDressModels);
+            AllDressModels.AddRange(FemalePersonalDressModels);
+            AllDressModels.AddRange(MaleEmblemDressModels);
+            AllDressModels.AddRange(FemaleEmblemDressModels);
+            AllDressModels.AddRange(MaleEngageDressModels);
+            AllDressModels.AddRange(FemaleEngageDressModels);
+            AllDressModels.AddRange(MaleCommonDressModels);
+            AllDressModels.AddRange(FemaleCommonDressModels);
             AllyEngageableEmblems.AddRange(AlearEmblems);
             AllyEngageableEmblems.AddRange(LinkableEmblems);
             AllySynchableEmblems.AddRange(AllyEngageableEmblems);

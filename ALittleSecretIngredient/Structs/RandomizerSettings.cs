@@ -16,6 +16,7 @@ namespace ALittleSecretIngredient.Structs
         public class AssetTableSettings
         {
             public RandomizerFieldSettings ModelSwap { get; set; } = new();
+            public RandomizerFieldSettings OutfitSwap { get; set; } = new();
         }
 
         public class GodGeneralSettings

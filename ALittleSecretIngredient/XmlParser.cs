@@ -1,4 +1,5 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -294,16 +295,16 @@ namespace ALittleSecretIngredient
             return p.PropertyType.Name switch
             {
                 "Boolean" => s != "" && bool.Parse(s),
-                "SByte" => s == "" ? default : sbyte.Parse(s),
-                "Byte" => s == "" ? default : byte.Parse(s),
-                "Int16" => s == "" ? default : short.Parse(s),
-                "UInt16" => s == "" ? default : ushort.Parse(s),
-                "Int32" => s == "" ? default : int.Parse(s),
-                "Int32[]" => s.Split(';').SkipLast(1).Select(int.Parse).ToArray(),
-                "UInt32" => s == "" ? default : uint.Parse(s),
-                "UInt64" => s == "" ? default : ulong.Parse(s),
-                "Single" => s == "" ? default : float.Parse(s),
-                "Double" => s == "" ? default : float.Parse(s),
+                "SByte" => s == "" ? default : sbyte.Parse(s, CultureInfo.InvariantCulture),
+                "Byte" => s == "" ? default : byte.Parse(s, CultureInfo.InvariantCulture),
+                "Int16" => s == "" ? default : short.Parse(s, CultureInfo.InvariantCulture),
+                "UInt16" => s == "" ? default : ushort.Parse(s, CultureInfo.InvariantCulture),
+                "Int32" => s == "" ? default : int.Parse(s, CultureInfo.InvariantCulture),
+                "Int32[]" => s.Split(';').SkipLast(1).Select(i => int.Parse(i, CultureInfo.InvariantCulture)).ToArray(),
+                "UInt32" => s == "" ? default : uint.Parse(s, CultureInfo.InvariantCulture),
+                "UInt64" => s == "" ? default : ulong.Parse(s, CultureInfo.InvariantCulture),
+                "Single" => s == "" ? default : float.Parse(s, CultureInfo.InvariantCulture),
+                "Double" => s == "" ? default : double.Parse(s, CultureInfo.InvariantCulture),
                 "String" => s,
                 "String[]" => s.Split(';').SkipLast(1).ToArray(),
                 _ => throw new ArgumentException("Unsupported type: " + p.PropertyType.Name),
@@ -314,17 +315,17 @@ namespace ALittleSecretIngredient
         {
             a.Value = o.GetType().Name switch
             {
-                "Boolean" => ((bool)o).ToString(),
-                "SByte" => ((sbyte)o).ToString(),
-                "Byte" => ((byte)o).ToString(),
-                "Int16" => ((short)o).ToString(),
-                "UInt16" => ((ushort)o).ToString(),
-                "Int32" => ((int)o).ToString(),
-                "Int32[]" => string.Concat(((int[])o).Select(i => i + ";")),
-                "UInt32" => ((uint)o).ToString(),
-                "UInt64" => ((ulong)o).ToString(),
-                "Single" => ((float)o).ToString(),
-                "Double" => ((double)o).ToString(),
+                "Boolean" => ((bool)o).ToString(CultureInfo.InvariantCulture),
+                "SByte" => ((sbyte)o).ToString(CultureInfo.InvariantCulture),
+                "Byte" => ((byte)o).ToString(CultureInfo.InvariantCulture),
+                "Int16" => ((short)o).ToString(CultureInfo.InvariantCulture),
+                "UInt16" => ((ushort)o).ToString(CultureInfo.InvariantCulture),
+                "Int32" => ((int)o).ToString(CultureInfo.InvariantCulture),
+                "Int32[]" => string.Concat(((int[])o).Select(i => i.ToString(CultureInfo.InvariantCulture) + ";")),
+                "UInt32" => ((uint)o).ToString(CultureInfo.InvariantCulture),
+                "UInt64" => ((ulong)o).ToString(CultureInfo.InvariantCulture),
+                "Single" => ((float)o).ToString(CultureInfo.InvariantCulture),
+                "Double" => ((double)o).ToString(CultureInfo.InvariantCulture),
                 "String" => (string)o,
                 "String[]" => string.Concat(((string[])o).Select(s => s + ";")),
                 _ => throw new ArgumentException("Unsupported type: " + o.GetType().Name),

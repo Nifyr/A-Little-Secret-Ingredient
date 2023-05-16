@@ -61,6 +61,12 @@ namespace ALittleSecretIngredient.Forms
                 "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private static void NoChangesMessage()
+        {
+            MessageBox.Show("It appears that there are no changes made. Could it be that you forgot to activate any of the *randomization* options?",
+                "No Options Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private RandomizerSettings RandomizerSettings
         {
             get
@@ -195,6 +201,9 @@ namespace ALittleSecretIngredient.Forms
                 rs.AssetTable.OutfitSwap = new(false, null!, new object[] { AssetTable.checkBox13.Checked, AssetTable.checkBox7.Checked,
                     AssetTable.checkBox8.Checked, AssetTable.checkBox9.Checked, AssetTable.checkBox10.Checked, AssetTable.checkBox11.Checked,
                     AssetTable.checkBox12.Checked });
+                rs.AssetTable.ColorPalette = new(AssetTable.checkBox21.Checked, null!, new object[] { AssetTable.checkBox14.Checked });
+                rs.AssetTable.ShuffleRideDressModel = AssetTable.checkBox16.Checked;
+                rs.AssetTable.InfoAnim = new(AssetTable.checkBox15.Checked, null!, new object[] { AssetTable.checkBox17.Checked });
                 return rs;
             }
             set
@@ -311,6 +320,11 @@ namespace ALittleSecretIngredient.Forms
                 AssetTable.checkBox10.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(4);
                 AssetTable.checkBox11.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(5);
                 AssetTable.checkBox12.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(6);
+                AssetTable.checkBox21.Checked = value.AssetTable.ColorPalette.Enabled;
+                AssetTable.checkBox14.Checked = value.AssetTable.ColorPalette.GetArg<bool>(0);
+                AssetTable.checkBox16.Checked = value.AssetTable.ShuffleRideDressModel;
+                AssetTable.checkBox15.Checked = value.AssetTable.InfoAnim.Enabled;
+                AssetTable.checkBox17.Checked = value.AssetTable.InfoAnim.GetArg<bool>(0);
             }
         }
 
@@ -387,9 +401,14 @@ namespace ALittleSecretIngredient.Forms
             else
                 FileManager.DeleteRandomizerSettings();
             GlobalData.R.Randomize(RandomizerSettings);
-            GlobalData.Export();
-            ExportSuccessMessage();
-            Close();
+            bool success = GlobalData.Export();
+            if (success)
+            {
+                ExportSuccessMessage();
+                Close();
+            }
+            else
+                NoChangesMessage();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

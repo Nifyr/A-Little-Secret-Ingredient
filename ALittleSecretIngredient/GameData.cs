@@ -78,6 +78,125 @@
             ("PID_マデリーン", "Madeline")
         };
         #endregion
+        #region Character Select Animation IDs
+        internal List<(string id, string name)> UniqueMaleInfoAnims { get; } = new()
+        {
+            ("AOC_Info_c000", "Default Male"), 
+            ("AOC_Info_c001", "Male Alear"), ("AOC_Info_c001_Eng", "Male Alear Engaged"),
+            ("AOC_Info_c049", "Rafal A"), ("AOC_Info_c049_Eng", "Rafal Engaged"),
+            ("AOC_Info_c049b", "Rafal B"), ("AOC_Info_c049c", "Rafal C"),
+            ("AOC_Info_c100", "Alfred A"), ("AOC_Info_c100_Eng", "Alfred Engaged"),
+            ("AOC_Info_c100b", "Alfred B"), ("AOC_Info_c101", "Boucheron A"),
+            ("AOC_Info_c101b", "Boucheron B"), ("AOC_Info_c101_Eng", "Boucheron Engaged"),
+            ("AOC_Info_c102", "Louis"), ("AOC_Info_c102_Eng", "Louis Engaged"),
+            ("AOC_Info_c103", "Jean"), ("AOC_Info_c103_Eng", "Jean Engaged"),
+            ("AOC_Info_c200", "Diamant A"),
+            ("AOC_Info_c200_Eng", "Diamant Engaged"), ("AOC_Info_c200b", "Diamant B"),
+            ("AOC_Info_c201", "Alcryst A"), ("AOC_Info_c201b", "Alcryst B"),
+            ("AOC_Info_c201_Eng", "Alcryst Engaged"), ("AOC_Info_c201c", "Alcryst C"),
+            ("AOC_Info_c202", "Corrupted Morion"), ("AOC_Info_c203", "Amber"),
+            ("AOC_Info_c203_Eng", "Amber Engaged"), 
+            ("AOC_Info_c300", "Hyacinth"), ("AOC_Info_c301", "Zelkov"),
+            ("AOC_Info_c301_Eng", "Zelkov Engaged"), ("AOC_Info_c302", "Kagetsu"),
+            ("AOC_Info_c302_Eng", "Kagetsu Engaged"), ("AOC_Info_c304", "Lindon"),
+            ("AOC_Info_c304_Eng", "Lindon Engaged"), 
+            ("AOC_Info_c400", "Fogado A"), ("AOC_Info_c400_Eng", "Fogado Engaged"),
+            ("AOC_Info_c400b", "Fogado B"), ("AOC_Info_c401", "Pandreo"),
+            ("AOC_Info_c401_Eng", "Pandreo"), ("AOC_Info_c402", "Bunet"),
+            ("AOC_Info_c402_Eng", "Bunet Engaged"), ("AOC_Info_c403", "Seadall A"),
+            ("AOC_Info_c403b", "Seadall B"), ("AOC_Info_c403_Eng", "Seadall Engaged"),
+            ("AOC_Info_c500", "Vander"),
+            ("AOC_Info_c500_Eng", "Vander Engaged"), ("AOC_Info_c501", "Clanne"),
+            ("AOC_Info_c501_Eng", "Clanne Engaged"), ("AOC_Info_c502", "Mauvier"),
+            ("AOC_Info_c502_Eng", "Mauvier Engaged"), ("AOC_Info_c503", "Griss"),
+            ("AOC_Info_c503b", "Gregory"), ("AOC_Info_c503b_Eng", "Gregory Engaged"),
+            ("AOC_Info_c811", "Rodine"),
+            ("AOC_Info_c812", "Nelucce"), ("AOC_Info_c815", "Teronda"),
+            ("AOC_Info_c813", "Tetchie"), ("AOC_Info_c814", "Totchie"),
+            ("AOC_Info_c530", "Marth"),
+            ("AOC_Info_c531", "Sigurd"), ("AOC_Info_c532", "Leif"),
+            ("AOC_Info_c533", "Roy"), ("AOC_Info_c534", "Ike"),
+            ("AOC_Info_c535", "Byleth"), ("AOC_Info_c536", "Ephraim"),
+            ("AOC_Info_c514", "Dimitri"), ("AOC_Info_c515", "Claude"),
+            ("AOC_Info_c510", "Hector"), ("AOC_Info_c511", "Soren"),
+            ("AOC_Info_c512", "Chrom"), ("AOC_Info_c513", "Robin"),
+        };
+
+        internal List<(string id, string name)> GenericMaleInfoAnims { get; } = new()
+        {
+            ("AOC_Info_c702", "Default Corrupted Male"),
+            ("AOC_Info_c604", "Male Sword Wielder"), ("AOC_Info_c720", "Corrupted Male Sword Wielder"),
+            ("AOC_Info_c610", "Male Lance Wielder"), ("AOC_Info_c722", "Corrupted Male Lance Wielder"),
+            ("AOC_Info_c617", "Male Axe Wielder"), ("AOC_Info_c724", "Corrupted Male Axe Wielder"),
+            ("AOC_Info_c630", "Male Armored"), ("AOC_Info_c728", "Corrupted Male Armored"),
+            ("AOC_Info_c623", "Male Bow Wielder"), ("AOC_Info_c726", "Corrupted Male Bow Wielder"),
+            ("AOC_Info_c637", "Male Cavalry"), ("AOC_Info_c730", "Corrupted Male Cavalry"),
+            ("AOC_Info_c652", "Male Griffin/Wyvern Unit"), ("AOC_Info_c733", "Corrupted Male Griffin/Wyvern Unit"),
+            ("AOC_Info_c657", "Male Dagger Wielder"), ("AOC_Info_c735", "Corrupted Male Dagger Wielder"),
+            ("AOC_Info_c659", "Male Tome Wielder"), ("AOC_Info_c737", "Corrupted Male Tome Wielder"),
+            ("AOC_Info_c666", "Male Arts Wielder"), ("AOC_Info_c739", "Corrupted Male Arts Wielder"),
+            ("AOC_Info_c681", "Male Barbarian"), ("AOC_Info_c697", "Male Enchanter"),
+            ("AOC_Info_c695", "Male Mage Cannoneer"),
+        };
+
+        internal List<(string id, string name)> UniqueFemaleInfoAnims { get; } = new()
+        {
+            ("AOC_Info_c050", "Default Female"),
+            ("AOC_Info_c051", "Female Alear"), ("AOC_Info_c051_Eng", "Female Alear Engaged"),
+            ("AOC_Info_c099", "Nel"), ("AOC_Info_c099_Eng", "Nel Engaged"),
+            ("AOC_Info_c150", "Céline A"), ("AOC_Info_c150_Eng", "Céline Engaged"),
+            ("AOC_Info_c150b", "Céline B"), ("AOC_Info_c152", "Etie"),
+            ("AOC_Info_c152_Eng", "Etie Engaged"), ("AOC_Info_c153", "Chloé"),
+            ("AOC_Info_c153_Eng", "Chloé Engaged"), ("AOC_Info_c250", "Jade"),
+            ("AOC_Info_c250_Eng", "Jade Engaged"), ("AOC_Info_c251", "Lapis A"),
+            ("AOC_Info_c251b", "Lapis B"), ("AOC_Info_c251_Eng", "Lapis Engaged"),
+            ("AOC_Info_c252", "Citrinne"), ("AOC_Info_c252_Eng", "Citrinne Engaged"),
+            ("AOC_Info_c253", "Yunaka"), ("AOC_Info_c253_Eng", "Yunaka Engaged"),
+            ("AOC_Info_c254", "Saphir"), ("AOC_Info_c254_Eng", "Saphir Engaged"),
+            ("AOC_Info_c303", "Rosado"), ("AOC_Info_c303_Eng", "Rosado Engaged"),
+            ("AOC_Info_c350", "Ivy A"),
+            ("AOC_Info_c350b", "Ivy B"), ("AOC_Info_c350_Eng", "Ivy Engaged"),
+            ("AOC_Info_c350c", "Ivy C"), ("AOC_Info_c351", "Hortensia A"),
+            ("AOC_Info_c351_Eng", "Hortensia Engaged"), ("AOC_Info_c351b", "Hortensia B"),
+            ("AOC_Info_c352", "Goldmary"), ("AOC_Info_c352_Eng", "Goldmary Engaged"),
+            ("AOC_Info_c450", "Timerra A"), ("AOC_Info_c450_Eng", "Timerra Engaged"),
+            ("AOC_Info_c450b", "Timerra B"), ("AOC_Info_c452", "Merrin"),
+            ("AOC_Info_c452_Eng", "Merrin Engaged"), ("AOC_Info_c453", "Panette"),
+            ("AOC_Info_c453_Eng", "Panette Engaged"),
+            ("AOC_Info_c550", "Framme"), ("AOC_Info_c550_Eng", "Framme Engaged"),
+            ("AOC_Info_c551", "Veyle A"), ("AOC_Info_c551b", "Veyle B"),
+            ("AOC_Info_c551_Eng", "Veyle Engaged"), ("AOC_Info_c552", "Anna"),
+            ("AOC_Info_c552_Eng", "Anna Engaged"), ("AOC_Info_c553", "Zephia"),
+            ("AOC_Info_c553b", "Zelestia A"), ("AOC_Info_c553c", "Zelestia B"),
+            ("AOC_Info_c553b_Eng", "Zelestia Engaged"), ("AOC_Info_c554", "Marni"),
+            ("AOC_Info_c554b", "Madeline"), ("AOC_Info_c554b_Eng", "Madeline Engaged"),
+            ("AOC_Info_c555", "Lumera"), ("AOC_Info_c558", "Corrupted Lumera"),
+            ("AOC_Info_c855", "Abyme"), ("AOC_Info_c859", "Mitan"),
+            ("AOC_Info_c580", "Celica"), ("AOC_Info_c581", "Lyn"),
+            ("AOC_Info_c582", "Eirika"), ("AOC_Info_c583", "Micaiah"),
+            ("AOC_Info_c584", "Lucina"), ("AOC_Info_c585", "Corrin"),
+            ("AOC_Info_c560", "Tiki"), ("AOC_Info_c563", "Edelgard"),
+            ("AOC_Info_c561", "Camilla"), ("AOC_Info_c562", "Veronica"),
+        };
+
+        internal List<(string id, string name)> GenericFemaleInfoAnims { get; } = new()
+        {
+            ("AOC_Info_c703", "Default Corrupted Female"),
+            ("AOC_Info_c605", "Female Sword Wielder"), ("AOC_Info_c721", "Corrupted Female Sword Wielder"),
+            ("AOC_Info_c611", "Female Lance Wielder"), ("AOC_Info_c723", "Corrupted Female Lance Wielder"),
+            ("AOC_Info_c618", "Female Axe Wielder"), ("AOC_Info_c725", "Corrupted Female Axe Wielder"),
+            ("AOC_Info_c631", "Female Armored"), ("AOC_Info_c729", "Corrupted Female Armored"),
+            ("AOC_Info_c624", "Female Bow Wielder"), ("AOC_Info_c727", "Corrupted Female Bow Wielder"),
+            ("AOC_Info_c638", "Female Cavalry"), ("AOC_Info_c731", "Corrupted Female Cavalry"),
+            ("AOC_Info_c646", "Flier"), ("AOC_Info_c732", "Corrupted Flier"),
+            ("AOC_Info_c653", "Female Griffin/Wyvern Unit"), ("AOC_Info_c734", "Corrupted Female Griffin/Wyvern Unit"),
+            ("AOC_Info_c658", "Female Dagger Wielder"), ("AOC_Info_c736", "Corrupted Female Dagger Wielder"),
+            ("AOC_Info_c660", "Female Tome Wielder"), ("AOC_Info_c738", "Corrupted Female Tome Wielder"),
+            ("AOC_Info_c667", "Female Arts Wielder"), ("AOC_Info_c740", "Corrupted Female Arts Wielder"),
+            ("AOC_Info_c682", "Female Barbarian"), ("AOC_Info_c698", "Female Enchanter"),
+            ("AOC_Info_c696", "Female Mage Cannoneer"),
+        };
+        #endregion
         #region Dress Model IDs
         internal List<(string id, string name)> MaleClassDressModels { get; } = new()
         {
@@ -489,6 +608,37 @@
             ("IID_ヴェロニカ_エリヴァーガル", "Élivágar"), ("IID_セネリオ_サンダーストーム", "Bolting"), ("IID_セネリオ_サンダーストーム_闇", "Corrupted Bolting"), ("IID_セネリオ_マジックシールド", "Reflect"),
             ("IID_セネリオ_レクスカリバー", "Rexcalibur"), ("IID_カミラ_ボルトアクス", "Bolt Axe"), ("IID_カミラ_ライトニング", "Lightning"), ("IID_カミラ_カミラの艶斧", "Camilla's Axe"),
             ("IID_クロム_サンダーソード", "Levin Sword"), ("IID_クロム_トロン", "Thoron"), ("IID_クロム_神剣ファルシオン", "Falchion (Chrom)")
+        };
+        #endregion
+        #region Ride Dress Model IDs
+        internal List<(string id, string name)> HorseRideDressModels { get; } = new()
+        {
+            ("uBody_Lnc2BR_c000", "Royal Knight Horse"), ("uBody_Lnc2BR_c707", "Corrupted Royal Knight Horse"),
+            ("uBody_Amr2BR_c000", "Great Knight Horse"), ("uBody_Amr2BR_c707", "Corrupted Great Knight Horse"),
+            ("uBody_Bow2BR_c000", "Bow Knight Horse"), ("uBody_Bow2BR_c707", "Corrupted Bow Knight Horse"),
+            ("uBody_Cav0BR_c000", "Sword/Lance/Axe Cavalier Horse"), ("uBody_Cav0BR_c707", "Corrupted Sword/Lance/Axe Cavalier Horse"),
+            ("uBody_Cav1BR_c000", "Paladin Horse"), ("uBody_Cav1BR_c707", "Corrupted Paladin Horse"),
+            ("uBody_Mag2BR_c000", "Mage Knight Horse"), ("uBody_Mag2BR_c707", "Corrupted Mage Knight Horse"),
+            ("uBody_Avn0BR_c100", "Avenir Horse"), ("uBody_Cpd0BR_c400", "Cupido Horse"),
+            ("uBody_Sig0BR_c531", "Sigurd's Horse"), ("uBody_Sig0BR_c538", "Corrupted Sigurd's Horse"),
+        };
+        internal List<(string id, string name)> PegasusRideDressModels { get; } = new()
+        {
+            ("uBody_Wng0ER_c000", "Sword/Lance/Axe Flier Pegasus"), ("uBody_Wng0ER_c707", "Corrupted Sword/Lance/Axe Flier Pegasus"),
+            ("uBody_Slp0ER_c351", "Sleipnir Rider Pegasus"),
+        };
+        internal List<(string id, string name)> WolfRideDressModels { get; } = new()
+        {
+            ("uBody_Cav2CR_c000", "Wolf Knight Wolf"), ("uBody_Cav2CR_c707", "Corrupted Wolf Knight Wolf"),
+            ("uBody_Wlf0CT_c707", "Corrupted Wolf"), ("uBody_Wlf0CT_c715", "Phantom Wolf"),
+            ("uBody_Wlf0CT_c751", "Rare Corrupted Wolf"), ("uBody_Cav2CR_c452", "Wolf Knight (Merrin) Wolf"),
+        };
+        internal List<(string id, string name)> WyvernRideDressModels { get; } = new()
+        {
+            ("uBody_Wng2DR_c000", "Wyvern Knight Wyvern"), ("uBody_Wng2DR_c707", "Corrupted Wyvern Knight Wyvern"),
+            ("uBody_Wng2DR_c303", "Wyvern Knight (Rosado) Wyvern"), ("uBody_Lnd0DR_c350", "Lindwurm Wyvern"),
+            ("uBody_Msn0DR_c553", "Melusine (Zephia) Wyvern"), ("uBody_Msn0DR_c553b", "Melusine (Zelestia) Wyvern"),
+            ("uBody_Cmi0DR_c561", "Camilla's Wyvern"), ("uBody_Cmi0DR_c568", "Corrupted Camilla's Wyvern"),
         };
         #endregion
         #region Skill IDs

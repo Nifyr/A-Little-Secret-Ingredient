@@ -91,5 +91,16 @@ namespace ALittleSecretIngredient.Structs
         {
             return $"({PresetName}, {Mode}, {Conditions})";
         }
+
+        internal bool HasMaskColor()
+        {
+            return (MaskColor100R | MaskColor100G | MaskColor100B | MaskColor075R | MaskColor075G | MaskColor075B |
+                MaskColor050R | MaskColor050G | MaskColor050B | MaskColor025R | MaskColor025G | MaskColor025B) > 0;
+        }
+
+        internal bool HasHairColor()
+        {
+            return (HairR | HairG | HairB) > 0;
+        }
     }
 }

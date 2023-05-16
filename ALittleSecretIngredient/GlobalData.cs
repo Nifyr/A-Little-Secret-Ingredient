@@ -22,15 +22,17 @@ namespace ALittleSecretIngredient
             DDS = new(GD);
         }
 
-        internal void Export()
+        internal bool Export()
         {
             FileManager.CleanOutputDir();
             List<FileEnum> changedFiles = FM.DirtyFiles();
+            if (changedFiles.Count == 0) return false;
             XP.Export(changedFiles);
             FileManager.CleanTempDir();
             StringBuilder? changelog = R.PopChangelog();
             if (changelog != null)
                 FileManager.SaveChangelog(changelog);
+            return true;
         }
     }
 }

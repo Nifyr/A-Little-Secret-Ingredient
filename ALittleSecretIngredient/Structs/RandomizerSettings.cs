@@ -17,6 +17,9 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings ModelSwap { get; set; } = new();
             public RandomizerFieldSettings OutfitSwap { get; set; } = new();
+            public RandomizerFieldSettings ColorPalette { get; set; } = new();
+            public bool ShuffleRideDressModel { get; set; } = new();
+            public RandomizerFieldSettings InfoAnim { get; set; } = new();
         }
 
         public class GodGeneralSettings

@@ -79,11 +79,110 @@ namespace ALittleSecretIngredient
                 outfitShuffleTable.AppendLine(outfitShuffleInnertable.ToString());
             }
 
+            foreach (Asset a in assets)
+                RandomizeColors(settings, a);
+
+            StringBuilder mountModelShuffleInnertable = new();
+            if (settings.ShuffleRideDressModel)
+                ShuffleMountModels(assets, mountModelShuffleInnertable);
+
+            StringBuilder mountModelShuffleTable = new();
+            if (mountModelShuffleInnertable.Length > 0)
+            {
+                mountModelShuffleTable.AppendLine("---- Mount Model Swaps ----\n");
+                mountModelShuffleTable.AppendLine(mountModelShuffleInnertable.ToString());
+            }
+
+            StringBuilder infoAnimShuffleInnertable = new();
+            if (settings.InfoAnim.Enabled)
+                ShuffleInfoAnims(assets, infoAnimShuffleInnertable, settings.InfoAnim.GetArg<bool>(0));
+
+            StringBuilder infoAnimShuffleTable = new();
+            if (infoAnimShuffleInnertable.Length > 0)
+            {
+                infoAnimShuffleTable.AppendLine("---- On Select Animation Swaps ----\n");
+                infoAnimShuffleTable.AppendLine(infoAnimShuffleInnertable.ToString());
+            }
+
             StringBuilder tables = new();
-            tables.AppendLine(assetShuffleTable.ToString());
-            tables.AppendLine(outfitShuffleTable.ToString());
+            if (assetShuffleTable.Length > 0)
+                tables.AppendLine(assetShuffleTable.ToString());
+            if (outfitShuffleTable.Length > 0)
+                tables.AppendLine(outfitShuffleTable.ToString());
+            if (mountModelShuffleTable.Length > 0)
+                tables.AppendLine(mountModelShuffleTable.ToString());
+            if (infoAnimShuffleTable.Length > 0)
+                tables.AppendLine(infoAnimShuffleTable.ToString());
 
             return tables;
+        }
+
+        private void ShuffleInfoAnims(List<Asset> assets, StringBuilder infoAnimShuffleInnertable, bool includeGeneric)
+        {
+            Dictionary<string, string> mapping = new();
+            List<(string id, string name)> maleInfoAnims = new(GD.UniqueMaleInfoAnims);
+            List<(string id, string name)> femaleInfoAnims = new(GD.UniqueFemaleInfoAnims);
+            if (includeGeneric)
+            {
+                maleInfoAnims.AddRange(GD.GenericMaleInfoAnims);
+                femaleInfoAnims.AddRange(GD.GenericFemaleInfoAnims);
+            }
+            CreateRandomMapping(infoAnimShuffleInnertable, mapping, maleInfoAnims);
+            CreateRandomMapping(infoAnimShuffleInnertable, mapping, femaleInfoAnims);
+            foreach (Asset a in assets)
+                if (mapping.TryGetValue(a.InfoAnim, out string? newInfoAnim))
+                    a.InfoAnim = newInfoAnim;
+            GD.SetDirty(DataSetEnum.Asset);
+        }
+
+        private void ShuffleMountModels(List<Asset> assets, StringBuilder mountModelShuffleInnertable)
+        {
+            Dictionary<string, string> mapping = new();
+            CreateRandomMapping(mountModelShuffleInnertable, mapping, GD.HorseRideDressModels);
+            CreateRandomMapping(mountModelShuffleInnertable, mapping, GD.PegasusRideDressModels);
+            CreateRandomMapping(mountModelShuffleInnertable, mapping, GD.WolfRideDressModels);
+            CreateRandomMapping(mountModelShuffleInnertable, mapping, GD.WyvernRideDressModels);
+            foreach (Asset a in assets)
+                if (mapping.TryGetValue(a.RideDressModel, out string? newRideDressModel))
+                    a.RideDressModel = newRideDressModel;
+            GD.SetDirty(DataSetEnum.Asset);
+        }
+
+        private void CreateRandomMapping(StringBuilder mountModelShuffleInnertable, Dictionary<string, string> mapping,
+            List<(string id, string name)> entities)
+        {
+            Redistribution r = new(100);
+            List<string> horses = entities.GetIDs();
+            List<string> hShuffle = new(horses);
+            r.Randomize(hShuffle);
+            for (int i = 0; i < horses.Count; i++)
+            {
+                mapping.Add(horses[i], hShuffle[i]);
+                mountModelShuffleInnertable.AppendLine($"{entities.IDToName(horses[i])} → " +
+                    $"{entities.IDToName(hShuffle[i])}");
+            }
+        }
+
+        private void RandomizeColors(RandomizerSettings.AssetTableSettings settings, Asset a)
+        {
+            List<Color> colors = settings.ColorPalette.GetArg<bool>(0) ? RandomPalette(4) : RandomColors(4);
+            new Redistribution(100).Randomize(colors);
+            if (settings.ColorPalette.Enabled && a.HasMaskColor())
+            {
+                a.MaskColor100R = colors[0].R;
+                a.MaskColor100G = colors[0].G;
+                a.MaskColor100B = colors[0].B;
+                a.MaskColor075R = colors[1].R;
+                a.MaskColor075G = colors[1].G;
+                a.MaskColor075B = colors[1].B;
+                a.MaskColor050R = colors[2].R;
+                a.MaskColor050G = colors[2].G;
+                a.MaskColor050B = colors[2].B;
+                a.MaskColor025R = colors[3].R;
+                a.MaskColor025G = colors[3].G;
+                a.MaskColor025B = colors[3].B;
+                GD.SetDirty(DataSetEnum.Asset);
+            }
         }
 
         private void GetOutfitSwapLists(RandomizerFieldSettings settings, out List<List<string>> maleOutfitSwapLists, out List<List<string>> femaleOutfitSwapLists)

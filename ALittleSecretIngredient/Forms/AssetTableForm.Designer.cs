@@ -39,22 +39,36 @@
             checkBox1 = new CheckBox();
             checkBox20 = new CheckBox();
             groupBox1 = new GroupBox();
-            checkBox13 = new CheckBox();
-            checkBox7 = new CheckBox();
-            checkBox8 = new CheckBox();
-            checkBox9 = new CheckBox();
-            checkBox10 = new CheckBox();
-            checkBox11 = new CheckBox();
             checkBox12 = new CheckBox();
+            checkBox11 = new CheckBox();
+            checkBox10 = new CheckBox();
+            checkBox9 = new CheckBox();
+            checkBox8 = new CheckBox();
+            checkBox7 = new CheckBox();
+            checkBox13 = new CheckBox();
+            groupBox2 = new GroupBox();
+            checkBox14 = new CheckBox();
+            checkBox21 = new CheckBox();
+            groupBox3 = new GroupBox();
+            checkBox16 = new CheckBox();
+            groupBox4 = new GroupBox();
+            checkBox15 = new CheckBox();
+            checkBox17 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(groupBox7);
             flowLayoutPanel1.Controls.Add(groupBox1);
+            flowLayoutPanel1.Controls.Add(groupBox2);
+            flowLayoutPanel1.Controls.Add(groupBox3);
+            flowLayoutPanel1.Controls.Add(groupBox4);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -165,20 +179,61 @@
             groupBox1.Controls.Add(checkBox13);
             groupBox1.Location = new Point(209, 3);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(197, 256);
+            groupBox1.Size = new Size(200, 256);
             groupBox1.TabIndex = 14;
             groupBox1.TabStop = false;
             groupBox1.Text = "Outfit Swap";
             // 
-            // checkBox13
+            // checkBox12
             // 
-            checkBox13.AutoSize = true;
-            checkBox13.Location = new Point(6, 26);
-            checkBox13.Name = "checkBox13";
-            checkBox13.Size = new Size(158, 24);
-            checkBox13.TabIndex = 0;
-            checkBox13.Text = "Shuffle class outfits";
-            checkBox13.UseVisualStyleBackColor = true;
+            checkBox12.AutoSize = true;
+            checkBox12.Location = new Point(6, 206);
+            checkBox12.Name = "checkBox12";
+            checkBox12.Size = new Size(105, 24);
+            checkBox12.TabIndex = 6;
+            checkBox12.Text = "Mix groups";
+            checkBox12.UseVisualStyleBackColor = true;
+            // 
+            // checkBox11
+            // 
+            checkBox11.AutoSize = true;
+            checkBox11.Location = new Point(6, 176);
+            checkBox11.Name = "checkBox11";
+            checkBox11.Size = new Size(159, 24);
+            checkBox11.TabIndex = 5;
+            checkBox11.Text = "Shuffle shop outfits";
+            checkBox11.UseVisualStyleBackColor = true;
+            // 
+            // checkBox10
+            // 
+            checkBox10.AutoSize = true;
+            checkBox10.Location = new Point(6, 146);
+            checkBox10.Name = "checkBox10";
+            checkBox10.Size = new Size(177, 24);
+            checkBox10.TabIndex = 4;
+            checkBox10.Text = "Shuffle engage outfits";
+            checkBox10.UseVisualStyleBackColor = true;
+            // 
+            // checkBox9
+            // 
+            checkBox9.AutoSize = true;
+            checkBox9.Location = new Point(6, 116);
+            checkBox9.Name = "checkBox9";
+            checkBox9.Size = new Size(182, 24);
+            checkBox9.TabIndex = 3;
+            checkBox9.Text = "Shuffle emblem outfits";
+            checkBox9.UseVisualStyleBackColor = true;
+            // 
+            // checkBox8
+            // 
+            checkBox8.AutoSize = true;
+            checkBox8.Location = new Point(6, 86);
+            checkBox8.Margin = new Padding(3, 3, 7, 3);
+            checkBox8.Name = "checkBox8";
+            checkBox8.Size = new Size(184, 24);
+            checkBox8.TabIndex = 2;
+            checkBox8.Text = "Shuffle personal outfits";
+            checkBox8.UseVisualStyleBackColor = true;
             // 
             // checkBox7
             // 
@@ -191,56 +246,107 @@
             checkBox7.Text = "Include corrupted";
             checkBox7.UseVisualStyleBackColor = true;
             // 
-            // checkBox8
+            // checkBox13
             // 
-            checkBox8.AutoSize = true;
-            checkBox8.Location = new Point(6, 86);
-            checkBox8.Margin = new Padding(3, 3, 4, 3);
-            checkBox8.Name = "checkBox8";
-            checkBox8.Size = new Size(184, 24);
-            checkBox8.TabIndex = 2;
-            checkBox8.Text = "Shuffle personal outfits";
-            checkBox8.UseVisualStyleBackColor = true;
+            checkBox13.AutoSize = true;
+            checkBox13.Location = new Point(6, 26);
+            checkBox13.Name = "checkBox13";
+            checkBox13.Size = new Size(158, 24);
+            checkBox13.TabIndex = 0;
+            checkBox13.Text = "Shuffle class outfits";
+            checkBox13.UseVisualStyleBackColor = true;
             // 
-            // checkBox9
+            // groupBox2
             // 
-            checkBox9.AutoSize = true;
-            checkBox9.Location = new Point(6, 116);
-            checkBox9.Name = "checkBox9";
-            checkBox9.Size = new Size(182, 24);
-            checkBox9.TabIndex = 3;
-            checkBox9.Text = "Shuffle emblem outfits";
-            checkBox9.UseVisualStyleBackColor = true;
+            groupBox2.AutoSize = true;
+            groupBox2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox2.Controls.Add(checkBox14);
+            groupBox2.Controls.Add(checkBox21);
+            groupBox2.Location = new Point(209, 265);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(200, 106);
+            groupBox2.TabIndex = 15;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Character Color Palette";
             // 
-            // checkBox10
+            // checkBox14
             // 
-            checkBox10.AutoSize = true;
-            checkBox10.Location = new Point(6, 146);
-            checkBox10.Name = "checkBox10";
-            checkBox10.Size = new Size(177, 24);
-            checkBox10.TabIndex = 4;
-            checkBox10.Text = "Shuffle engage outfits";
-            checkBox10.UseVisualStyleBackColor = true;
+            checkBox14.AutoSize = true;
+            checkBox14.Location = new Point(6, 56);
+            checkBox14.Margin = new Padding(3, 3, 17, 3);
+            checkBox14.Name = "checkBox14";
+            checkBox14.Size = new Size(174, 24);
+            checkBox14.TabIndex = 1;
+            checkBox14.Text = "Ensure color harmony";
+            checkBox14.UseVisualStyleBackColor = true;
             // 
-            // checkBox11
+            // checkBox21
             // 
-            checkBox11.AutoSize = true;
-            checkBox11.Location = new Point(6, 176);
-            checkBox11.Name = "checkBox11";
-            checkBox11.Size = new Size(159, 24);
-            checkBox11.TabIndex = 5;
-            checkBox11.Text = "Shuffle shop outfits";
-            checkBox11.UseVisualStyleBackColor = true;
+            checkBox21.AutoSize = true;
+            checkBox21.Location = new Point(6, 26);
+            checkBox21.Name = "checkBox21";
+            checkBox21.Size = new Size(184, 24);
+            checkBox21.TabIndex = 0;
+            checkBox21.Text = "Randomize outfit color";
+            checkBox21.UseVisualStyleBackColor = true;
             // 
-            // checkBox12
+            // groupBox3
             // 
-            checkBox12.AutoSize = true;
-            checkBox12.Location = new Point(6, 206);
-            checkBox12.Name = "checkBox12";
-            checkBox12.Size = new Size(105, 24);
-            checkBox12.TabIndex = 6;
-            checkBox12.Text = "Mix groups";
-            checkBox12.UseVisualStyleBackColor = true;
+            groupBox3.AutoSize = true;
+            groupBox3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox3.Controls.Add(checkBox16);
+            groupBox3.Location = new Point(415, 3);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(200, 76);
+            groupBox3.TabIndex = 16;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Mount Model Swap";
+            // 
+            // checkBox16
+            // 
+            checkBox16.AutoSize = true;
+            checkBox16.Location = new Point(6, 26);
+            checkBox16.Margin = new Padding(3, 3, 14, 3);
+            checkBox16.Name = "checkBox16";
+            checkBox16.Size = new Size(177, 24);
+            checkBox16.TabIndex = 0;
+            checkBox16.Text = "Shuffle mount models";
+            checkBox16.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            groupBox4.AutoSize = true;
+            groupBox4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox4.Controls.Add(checkBox17);
+            groupBox4.Controls.Add(checkBox15);
+            groupBox4.Location = new Point(415, 85);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(200, 106);
+            groupBox4.TabIndex = 17;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "On Select Animation";
+            // 
+            // checkBox15
+            // 
+            checkBox15.AutoSize = true;
+            checkBox15.Location = new Point(6, 26);
+            checkBox15.Margin = new Padding(3, 3, 37, 3);
+            checkBox15.Name = "checkBox15";
+            checkBox15.Size = new Size(154, 24);
+            checkBox15.TabIndex = 0;
+            checkBox15.Text = "Shuffle animations";
+            checkBox15.UseVisualStyleBackColor = true;
+            // 
+            // checkBox17
+            // 
+            checkBox17.AutoSize = true;
+            checkBox17.Location = new Point(21, 56);
+            checkBox17.Margin = new Padding(18, 3, 3, 3);
+            checkBox17.Name = "checkBox17";
+            checkBox17.Size = new Size(132, 24);
+            checkBox17.TabIndex = 2;
+            checkBox17.Text = "Include generic";
+            checkBox17.UseVisualStyleBackColor = true;
             // 
             // AssetTableForm
             // 
@@ -257,6 +363,12 @@
             groupBox7.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -279,5 +391,13 @@
         public CheckBox checkBox10;
         public CheckBox checkBox9;
         public CheckBox checkBox12;
+        private GroupBox groupBox2;
+        public CheckBox checkBox14;
+        public CheckBox checkBox21;
+        private GroupBox groupBox3;
+        public CheckBox checkBox16;
+        private GroupBox groupBox4;
+        public CheckBox checkBox15;
+        public CheckBox checkBox17;
     }
 }

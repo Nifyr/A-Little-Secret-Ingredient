@@ -204,6 +204,7 @@ namespace ALittleSecretIngredient.Forms
                 rs.AssetTable.ColorPalette = new(AssetTable.checkBox21.Checked, null!, new object[] { AssetTable.checkBox14.Checked });
                 rs.AssetTable.ShuffleRideDressModel = AssetTable.checkBox16.Checked;
                 rs.AssetTable.InfoAnim = new(AssetTable.checkBox15.Checked, null!, new object[] { AssetTable.checkBox17.Checked });
+                rs.AssetTable.ShuffleTalkInfo = AssetTable.checkBox19.Checked;
                 return rs;
             }
             set
@@ -325,6 +326,7 @@ namespace ALittleSecretIngredient.Forms
                 AssetTable.checkBox16.Checked = value.AssetTable.ShuffleRideDressModel;
                 AssetTable.checkBox15.Checked = value.AssetTable.InfoAnim.Enabled;
                 AssetTable.checkBox17.Checked = value.AssetTable.InfoAnim.GetArg<bool>(0);
+                AssetTable.checkBox19.Checked = value.AssetTable.ShuffleTalkInfo;
             }
         }
 

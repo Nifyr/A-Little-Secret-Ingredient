@@ -52,8 +52,9 @@
             groupBox3 = new GroupBox();
             checkBox16 = new CheckBox();
             groupBox4 = new GroupBox();
-            checkBox15 = new CheckBox();
+            checkBox19 = new CheckBox();
             checkBox17 = new CheckBox();
+            checkBox15 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -317,25 +318,26 @@
             // 
             groupBox4.AutoSize = true;
             groupBox4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox4.Controls.Add(checkBox19);
             groupBox4.Controls.Add(checkBox17);
             groupBox4.Controls.Add(checkBox15);
             groupBox4.Location = new Point(415, 85);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(200, 106);
+            groupBox4.Size = new Size(189, 136);
             groupBox4.TabIndex = 17;
             groupBox4.TabStop = false;
-            groupBox4.Text = "On Select Animation";
+            groupBox4.Text = "Character Animations";
             // 
-            // checkBox15
+            // checkBox19
             // 
-            checkBox15.AutoSize = true;
-            checkBox15.Location = new Point(6, 26);
-            checkBox15.Margin = new Padding(3, 3, 37, 3);
-            checkBox15.Name = "checkBox15";
-            checkBox15.Size = new Size(154, 24);
-            checkBox15.TabIndex = 0;
-            checkBox15.Text = "Shuffle animations";
-            checkBox15.UseVisualStyleBackColor = true;
+            checkBox19.AutoSize = true;
+            checkBox19.Location = new Point(6, 86);
+            checkBox19.Margin = new Padding(3, 3, 40, 3);
+            checkBox19.Name = "checkBox19";
+            checkBox19.Size = new Size(140, 24);
+            checkBox19.TabIndex = 3;
+            checkBox19.Text = "Shuffle in dialog";
+            checkBox19.UseVisualStyleBackColor = true;
             // 
             // checkBox17
             // 
@@ -347,6 +349,17 @@
             checkBox17.TabIndex = 2;
             checkBox17.Text = "Include generic";
             checkBox17.UseVisualStyleBackColor = true;
+            // 
+            // checkBox15
+            // 
+            checkBox15.AutoSize = true;
+            checkBox15.Location = new Point(6, 26);
+            checkBox15.Margin = new Padding(3, 3, 40, 3);
+            checkBox15.Name = "checkBox15";
+            checkBox15.Size = new Size(134, 24);
+            checkBox15.TabIndex = 0;
+            checkBox15.Text = "Shuffle in menu";
+            checkBox15.UseVisualStyleBackColor = true;
             // 
             // AssetTableForm
             // 
@@ -399,5 +412,6 @@
         private GroupBox groupBox4;
         public CheckBox checkBox15;
         public CheckBox checkBox17;
+        public CheckBox checkBox19;
     }
 }

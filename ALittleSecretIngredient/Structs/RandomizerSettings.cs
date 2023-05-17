@@ -20,6 +20,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings ColorPalette { get; set; } = new();
             public bool ShuffleRideDressModel { get; set; } = new();
             public RandomizerFieldSettings InfoAnim { get; set; } = new();
+            public bool ShuffleTalkInfo { get; set; } = new();
         }
 
         public class GodGeneralSettings

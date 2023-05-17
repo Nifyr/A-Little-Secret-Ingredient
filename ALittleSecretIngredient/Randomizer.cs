@@ -100,8 +100,19 @@ namespace ALittleSecretIngredient
             StringBuilder infoAnimShuffleTable = new();
             if (infoAnimShuffleInnertable.Length > 0)
             {
-                infoAnimShuffleTable.AppendLine("---- On Select Animation Swaps ----\n");
+                infoAnimShuffleTable.AppendLine("---- In Menu Animation Swaps ----\n");
                 infoAnimShuffleTable.AppendLine(infoAnimShuffleInnertable.ToString());
+            }
+
+            StringBuilder talkAnimShuffleInnertable = new();
+            if (settings.ShuffleTalkInfo)
+                ShuffleTalkAnims(assets, talkAnimShuffleInnertable);
+
+            StringBuilder talkAnimShuffleTable = new();
+            if (talkAnimShuffleInnertable.Length > 0)
+            {
+                talkAnimShuffleTable.AppendLine("---- In Dialog Animation Swaps ----\n");
+                talkAnimShuffleTable.AppendLine(talkAnimShuffleInnertable.ToString());
             }
 
             StringBuilder tables = new();
@@ -113,8 +124,21 @@ namespace ALittleSecretIngredient
                 tables.AppendLine(mountModelShuffleTable.ToString());
             if (infoAnimShuffleTable.Length > 0)
                 tables.AppendLine(infoAnimShuffleTable.ToString());
+            if (talkAnimShuffleTable.Length > 0)
+                tables.AppendLine(talkAnimShuffleTable.ToString());
 
             return tables;
+        }
+
+        private void ShuffleTalkAnims(List<Asset> assets, StringBuilder talkAnimShuffleInnertable)
+        {
+            Dictionary<string, string> mapping = new();
+            CreateRandomMapping(talkAnimShuffleInnertable, mapping, GD.MaleTalkAnims);
+            CreateRandomMapping(talkAnimShuffleInnertable, mapping, GD.FemaleTalkAnims);
+            foreach (Asset a in assets)
+                if (mapping.TryGetValue(a.TalkAnim, out string? newTalkAnim))
+                    a.TalkAnim = newTalkAnim;
+            GD.SetDirty(DataSetEnum.Asset);
         }
 
         private void ShuffleInfoAnims(List<Asset> assets, StringBuilder infoAnimShuffleInnertable, bool includeGeneric)
@@ -148,7 +172,7 @@ namespace ALittleSecretIngredient
             GD.SetDirty(DataSetEnum.Asset);
         }
 
-        private void CreateRandomMapping(StringBuilder mountModelShuffleInnertable, Dictionary<string, string> mapping,
+        private static void CreateRandomMapping(StringBuilder mountModelShuffleInnertable, Dictionary<string, string> mapping,
             List<(string id, string name)> entities)
         {
             Redistribution r = new(100);
@@ -339,6 +363,10 @@ namespace ALittleSecretIngredient
                         remove.DressModel = "uBody_null";
                         remove.HeadModel = "uHead_null";
                         remove.HairModel = "uHair_null";
+                        remove.Acc1Locator = "";
+                        remove.Acc1Model = "";
+                        remove.Acc2Locator = "";
+                        remove.Acc2Model = "";
                     }
                 }
 

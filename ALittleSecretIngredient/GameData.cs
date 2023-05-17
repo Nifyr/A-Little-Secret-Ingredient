@@ -78,6 +78,64 @@
             ("PID_マデリーン", "Madeline")
         };
         #endregion
+        #region DemoAnim IDs
+        internal List<(string id, string name)> UniqueMaleDemoAnims { get; } = new()
+        {
+            ("AOC_Demo_c001", "Male Alear"), ("AOC_Demo_c049", "Rafal A"),
+            ("AOC_Demo_c049b", "Rafal B"), ("AOC_Demo_c100", "Alfred"),
+            ("AOC_Demo_c101", "Boucheron"), ("AOC_Demo_c102", "Louis"),
+            ("AOC_Demo_c103", "Jean"), ("AOC_Demo_c200", "Diamant"),
+            ("AOC_Demo_c201", "Alcryst"), ("AOC_Demo_c202", "Morion"),
+            ("AOC_Demo_c203", "Amber"), ("AOC_Demo_c300", "Hyacinth"),
+            ("AOC_Demo_c301", "Zelkov"), ("AOC_Demo_c302", "Kagetsu"),
+            ("AOC_Demo_c304", "Lindon"), ("AOC_Demo_c400", "Fogado"),
+            ("AOC_Demo_c401", "Pandreo"), ("AOC_Demo_c402", "Bunet"),
+            ("AOC_Demo_c403", "Seadall"), ("AOC_Demo_c500", "Vander"),
+            ("AOC_Demo_c501", "Clanne"), ("AOC_Demo_c502", "Mauvier"),
+            ("AOC_Demo_c503", "Griss"), ("AOC_Demo_c503b", "Gregory"),
+            ("AOC_Demo_God0M", "Male Emblem"), ("AOC_Demo_c514", "Dimitri"),
+            ("AOC_Demo_c515", "Claude"), ("AOC_Demo_c510", "Hector"),
+            ("AOC_Demo_c511", "Soren"), ("AOC_Demo_c512", "Chrom"),
+            ("AOC_Demo_c513", "Robin"),
+        };
+
+        internal List<(string id, string name)> GenericMaleDemoAnims { get; } = new()
+        {
+            ("AOC_Demo_Hum0M", "Male A"), ("AOC_Demo_Hum1M", "Male B"),
+            ("AOC_Demo_Hum2M", "Male C"), ("AOC_Demo_c702", "Corrupted Male"),
+            ("AOC_Demo_c809", "Old Man"),
+        };
+
+        internal List<(string id, string name)> UniqueFemaleDemoAnims { get; } = new()
+        {
+            ("AOC_Demo_c051", "Female Alear"), ("AOC_Demo_c099", "Nel"),
+            ("AOC_Demo_c150", "Céline"), ("AOC_Demo_c151", "Éve"),
+            ("AOC_Demo_c152", "Etie"), ("AOC_Demo_c153", "Chloé"),
+            ("AOC_Demo_c250", "Jade"), ("AOC_Demo_c251", "Lapis"),
+            ("AOC_Demo_c252", "Citrinne"), ("AOC_Demo_c253", "Yunaka"),
+            ("AOC_Demo_c254", "Saphir"), ("AOC_Demo_c303", "Rosado"),
+            ("AOC_Demo_c350", "Ivy"), ("AOC_Demo_c351", "Hortensia"),
+            ("AOC_Demo_c352", "Goldmary"), ("AOC_Demo_c450", "Timerra"),
+            ("AOC_Demo_c451", "Seforia"), ("AOC_Demo_c452", "Merrin"),
+            ("AOC_Demo_c453", "Panette"), ("AOC_Demo_c550", "Framme"),
+            ("AOC_Demo_c551", "Veyle"), ("AOC_Demo_c556", "Evil Veyle"),
+            ("AOC_Demo_c552", "Anna"), ("AOC_Demo_c553", "Zephia"),
+            ("AOC_Demo_c553b", "Zelestia"), ("AOC_Demo_c554", "Marni"),
+            ("AOC_Demo_c554b", "Madeline"), ("AOC_Demo_c555", "Lumera"),
+            ("AOC_Demo_God0F", "Female Emblem"), ("AOC_Demo_c560", "Tiki"),
+            ("AOC_Demo_c563", "Edelgard"), ("AOC_Demo_c561", "Camilla"),
+            ("AOC_Demo_c562", "Veronica"),
+        };
+
+        internal List<(string id, string name)> GenericFemaleDemoAnims { get; } = new()
+        {
+            ("AOC_Demo_Hum0F", "Female A"), ("AOC_Demo_Hum1F", "Female B"),
+            ("AOC_Demo_Hum2F", "Female C"), ("AOC_Demo_Hum3F", "Female D"),
+            ("AOC_Demo_Hum0FL", "Female E"), ("AOC_Demo_Hum1FL", "Female F"),
+            ("AOC_Demo_Hum2FL", "Female G"), ("AOC_Demo_Hum3FL", "Female H"),
+            ("AOC_Demo_c703", "Corrupted Female"),
+        };
+        #endregion
         #region Dress Model IDs
         internal List<(string id, string name)> MaleClassDressModels { get; } = new()
         {
@@ -464,7 +522,7 @@
             ("GID_M000_マルス", "Marth (Prologue)"), ("GID_ルフレ", "Robin")
         };
         #endregion
-        #region In Menu Animation IDs
+        #region InfoAnim IDs
         internal List<(string id, string name)> UniqueMaleInfoAnims { get; } = new()
         {
             ("AOC_Info_c000", "Default Male"), 
@@ -581,58 +639,6 @@
             ("AOC_Info_c667", "Female Arts Wielder"), ("AOC_Info_c740", "Corrupted Female Arts Wielder"),
             ("AOC_Info_c682", "Female Barbarian"), ("AOC_Info_c698", "Female Enchanter"),
             ("AOC_Info_c696", "Female Mage Cannoneer"),
-        };
-        #endregion
-        #region In Text Box Animation IDs
-        internal List<(string id, string name)> MaleTalkAnims { get; } = new()
-        {
-            ("AOC_Talk_c000", "Default Male"), ("AOC_Talk_c001", "Male Alear"),
-            ("AOC_Talk_c049", "Rafal"), ("AOC_Talk_c100", "Alfred A"),
-            ("AOC_Talk_c100b", "Alfred B"), ("AOC_Talk_c101", "Boucheron"),
-            ("AOC_Talk_c102", "Louis"), ("AOC_Talk_c103", "Jean"),
-            ("AOC_Talk_c200", "Diamant A"), ("AOC_Talk_c200b", "Diamant B"),
-            ("AOC_Talk_c201", "Alcryst A"), ("AOC_Talk_c201b", "Alcryst B"),
-            ("AOC_Talk_c202", "Morion"), ("AOC_Talk_c203", "Amber"),
-            ("AOC_Talk_c300", "Hyacinth"), ("AOC_Talk_c301", "Zelkov"),
-            ("AOC_Talk_c302", "Kagetsu"), ("AOC_Talk_c304", "Lindon"),
-            ("AOC_Talk_c400", "Fogado A"), ("AOC_Talk_c400b", "Fogado B"),
-            ("AOC_Talk_c401", "Pandreo"), ("AOC_Talk_c402", "Bunet"),
-            ("AOC_Talk_c403", "Seadall"), ("AOC_Talk_c500", "Vander"),
-            ("AOC_Talk_c501", "Clanne"), ("AOC_Talk_c502", "Mauvier"),
-            ("AOC_Talk_c503", "Griss"), ("AOC_Talk_c503b", "Gregory"),
-            ("AOC_Talk_c530", "Marth"), ("AOC_Talk_c531", "Sigurd"),
-            ("AOC_Talk_c532", "Leif"), ("AOC_Talk_c533", "Roy"),
-            ("AOC_Talk_c534", "Ike"), ("AOC_Talk_c535", "Byleth"),
-            ("AOC_Talk_c536", "Ephraim"), ("AOC_Talk_c514", "Dimitri"),
-            ("AOC_Talk_c515", "Claude"), ("AOC_Talk_c510", "Hector"),
-            ("AOC_Talk_c511", "Soren"), ("AOC_Talk_c512", "Chrom"),
-            ("AOC_Talk_c513", "Robin"),
-        };
-
-        internal List<(string id, string name)> FemaleTalkAnims { get; } = new()
-        {
-            ("AOC_Talk_c050", "Default Female"), ("AOC_Talk_c051", "Female Alear"),
-            ("AOC_Talk_c099", "Nel"), ("AOC_Talk_c150", "Céline A"),
-            ("AOC_Talk_c150b", "Céline B"), ("AOC_Talk_c151", "Éve"),
-            ("AOC_Talk_c152", "Etie"), ("AOC_Talk_c153", "Chloé"),
-            ("AOC_Talk_c250", "Jade"), ("AOC_Talk_c251", "Lapis"),
-            ("AOC_Talk_c252", "Citrinne"), ("AOC_Talk_c253", "Yunaka"),
-            ("AOC_Talk_c254", "Saphir"), ("AOC_Talk_c303", "Rosado"),
-            ("AOC_Talk_c350", "Ivy A"), ("AOC_Talk_c350b", "Ivy B"),
-            ("AOC_Talk_c351", "Hortensia A"), ("AOC_Talk_c351b", "Hortensia B"),
-            ("AOC_Talk_c352", "Goldmary"), ("AOC_Talk_c450", "Timerra A"),
-            ("AOC_Talk_c450b", "Timerra B"), ("AOC_Talk_c451", "Seforia"),
-            ("AOC_Talk_c452", "Merrin"), ("AOC_Talk_c453", "Panette"),
-            ("AOC_Talk_c550", "Framme"), ("AOC_Talk_c551", "Veyle"),
-            ("AOC_Talk_c556", "Evil Veyle"), ("AOC_Talk_c552", "Anna"),
-            ("AOC_Talk_c553", "Zephia"), ("AOC_Talk_c553b", "Zelestia"),
-            ("AOC_Talk_c554", "Marni"), ("AOC_Talk_c554b", "Madeline"),
-            ("AOC_Talk_c555", "Lumera"), ("AOC_Talk_c580", "Celica"),
-            ("AOC_Talk_c581", "Lyn"), ("AOC_Talk_c582", "Eirika"),
-            ("AOC_Talk_c583", "Micaiah"), ("AOC_Talk_c584", "Lucina"),
-            ("AOC_Talk_c585", "Corrin"), ("AOC_Talk_c560", "Tiki"),
-            ("AOC_Talk_c563", "Edelgard"), ("AOC_Talk_c561", "Camilla"),
-            ("AOC_Talk_c562", "Veronica"),
         };
         #endregion
         #region Item IDs
@@ -1150,6 +1156,58 @@
         internal enum SynchStat { HP, Str, Dex, Spd, Lck, Def, Mag, Res, Bld, Mov, None }
 
         internal List<List<string>> SynchStatLookup = new();
+        #endregion
+        #region TalkAnim IDs
+        internal List<(string id, string name)> MaleTalkAnims { get; } = new()
+        {
+            ("AOC_Talk_c000", "Default Male"), ("AOC_Talk_c001", "Male Alear"),
+            ("AOC_Talk_c049", "Rafal"), ("AOC_Talk_c100", "Alfred A"),
+            ("AOC_Talk_c100b", "Alfred B"), ("AOC_Talk_c101", "Boucheron"),
+            ("AOC_Talk_c102", "Louis"), ("AOC_Talk_c103", "Jean"),
+            ("AOC_Talk_c200", "Diamant A"), ("AOC_Talk_c200b", "Diamant B"),
+            ("AOC_Talk_c201", "Alcryst A"), ("AOC_Talk_c201b", "Alcryst B"),
+            ("AOC_Talk_c202", "Morion"), ("AOC_Talk_c203", "Amber"),
+            ("AOC_Talk_c300", "Hyacinth"), ("AOC_Talk_c301", "Zelkov"),
+            ("AOC_Talk_c302", "Kagetsu"), ("AOC_Talk_c304", "Lindon"),
+            ("AOC_Talk_c400", "Fogado A"), ("AOC_Talk_c400b", "Fogado B"),
+            ("AOC_Talk_c401", "Pandreo"), ("AOC_Talk_c402", "Bunet"),
+            ("AOC_Talk_c403", "Seadall"), ("AOC_Talk_c500", "Vander"),
+            ("AOC_Talk_c501", "Clanne"), ("AOC_Talk_c502", "Mauvier"),
+            ("AOC_Talk_c503", "Griss"), ("AOC_Talk_c503b", "Gregory"),
+            ("AOC_Talk_c530", "Marth"), ("AOC_Talk_c531", "Sigurd"),
+            ("AOC_Talk_c532", "Leif"), ("AOC_Talk_c533", "Roy"),
+            ("AOC_Talk_c534", "Ike"), ("AOC_Talk_c535", "Byleth"),
+            ("AOC_Talk_c536", "Ephraim"), ("AOC_Talk_c514", "Dimitri"),
+            ("AOC_Talk_c515", "Claude"), ("AOC_Talk_c510", "Hector"),
+            ("AOC_Talk_c511", "Soren"), ("AOC_Talk_c512", "Chrom"),
+            ("AOC_Talk_c513", "Robin"),
+        };
+
+        internal List<(string id, string name)> FemaleTalkAnims { get; } = new()
+        {
+            ("AOC_Talk_c050", "Default Female"), ("AOC_Talk_c051", "Female Alear"),
+            ("AOC_Talk_c099", "Nel"), ("AOC_Talk_c150", "Céline A"),
+            ("AOC_Talk_c150b", "Céline B"), ("AOC_Talk_c151", "Éve"),
+            ("AOC_Talk_c152", "Etie"), ("AOC_Talk_c153", "Chloé"),
+            ("AOC_Talk_c250", "Jade"), ("AOC_Talk_c251", "Lapis"),
+            ("AOC_Talk_c252", "Citrinne"), ("AOC_Talk_c253", "Yunaka"),
+            ("AOC_Talk_c254", "Saphir"), ("AOC_Talk_c303", "Rosado"),
+            ("AOC_Talk_c350", "Ivy A"), ("AOC_Talk_c350b", "Ivy B"),
+            ("AOC_Talk_c351", "Hortensia A"), ("AOC_Talk_c351b", "Hortensia B"),
+            ("AOC_Talk_c352", "Goldmary"), ("AOC_Talk_c450", "Timerra A"),
+            ("AOC_Talk_c450b", "Timerra B"), ("AOC_Talk_c451", "Seforia"),
+            ("AOC_Talk_c452", "Merrin"), ("AOC_Talk_c453", "Panette"),
+            ("AOC_Talk_c550", "Framme"), ("AOC_Talk_c551", "Veyle"),
+            ("AOC_Talk_c556", "Evil Veyle"), ("AOC_Talk_c552", "Anna"),
+            ("AOC_Talk_c553", "Zephia"), ("AOC_Talk_c553b", "Zelestia"),
+            ("AOC_Talk_c554", "Marni"), ("AOC_Talk_c554b", "Madeline"),
+            ("AOC_Talk_c555", "Lumera"), ("AOC_Talk_c580", "Celica"),
+            ("AOC_Talk_c581", "Lyn"), ("AOC_Talk_c582", "Eirika"),
+            ("AOC_Talk_c583", "Micaiah"), ("AOC_Talk_c584", "Lucina"),
+            ("AOC_Talk_c585", "Corrin"), ("AOC_Talk_c560", "Tiki"),
+            ("AOC_Talk_c563", "Edelgard"), ("AOC_Talk_c561", "Camilla"),
+            ("AOC_Talk_c562", "Veronica"),
+        };
         #endregion
         #region Other
         internal List<(int id, string name)> Proficiencies { get; } = new()

@@ -55,6 +55,8 @@
             checkBox19 = new CheckBox();
             checkBox17 = new CheckBox();
             checkBox15 = new CheckBox();
+            checkBox18 = new CheckBox();
+            checkBox22 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -89,6 +91,7 @@
             groupBox7.Controls.Add(checkBox1);
             groupBox7.Controls.Add(checkBox20);
             groupBox7.Location = new Point(3, 3);
+            groupBox7.MinimumSize = new Size(200, 0);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new Size(200, 256);
             groupBox7.TabIndex = 13;
@@ -150,7 +153,7 @@
             // 
             checkBox1.AutoSize = true;
             checkBox1.Location = new Point(21, 56);
-            checkBox1.Margin = new Padding(18, 3, 16, 3);
+            checkBox1.Margin = new Padding(18, 3, 3, 3);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(160, 24);
             checkBox1.TabIndex = 1;
@@ -179,6 +182,7 @@
             groupBox1.Controls.Add(checkBox7);
             groupBox1.Controls.Add(checkBox13);
             groupBox1.Location = new Point(209, 3);
+            groupBox1.MinimumSize = new Size(200, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(200, 256);
             groupBox1.TabIndex = 14;
@@ -229,7 +233,6 @@
             // 
             checkBox8.AutoSize = true;
             checkBox8.Location = new Point(6, 86);
-            checkBox8.Margin = new Padding(3, 3, 7, 3);
             checkBox8.Name = "checkBox8";
             checkBox8.Size = new Size(184, 24);
             checkBox8.TabIndex = 2;
@@ -264,6 +267,7 @@
             groupBox2.Controls.Add(checkBox14);
             groupBox2.Controls.Add(checkBox21);
             groupBox2.Location = new Point(209, 265);
+            groupBox2.MinimumSize = new Size(200, 0);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 106);
             groupBox2.TabIndex = 15;
@@ -274,7 +278,6 @@
             // 
             checkBox14.AutoSize = true;
             checkBox14.Location = new Point(6, 56);
-            checkBox14.Margin = new Padding(3, 3, 17, 3);
             checkBox14.Name = "checkBox14";
             checkBox14.Size = new Size(174, 24);
             checkBox14.TabIndex = 1;
@@ -297,6 +300,7 @@
             groupBox3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox3.Controls.Add(checkBox16);
             groupBox3.Location = new Point(415, 3);
+            groupBox3.MinimumSize = new Size(200, 0);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(200, 76);
             groupBox3.TabIndex = 16;
@@ -307,7 +311,6 @@
             // 
             checkBox16.AutoSize = true;
             checkBox16.Location = new Point(6, 26);
-            checkBox16.Margin = new Padding(3, 3, 14, 3);
             checkBox16.Name = "checkBox16";
             checkBox16.Size = new Size(177, 24);
             checkBox16.TabIndex = 0;
@@ -318,12 +321,15 @@
             // 
             groupBox4.AutoSize = true;
             groupBox4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox4.Controls.Add(checkBox18);
+            groupBox4.Controls.Add(checkBox22);
             groupBox4.Controls.Add(checkBox19);
             groupBox4.Controls.Add(checkBox17);
             groupBox4.Controls.Add(checkBox15);
             groupBox4.Location = new Point(415, 85);
+            groupBox4.MinimumSize = new Size(200, 0);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(189, 136);
+            groupBox4.Size = new Size(200, 196);
             groupBox4.TabIndex = 17;
             groupBox4.TabStop = false;
             groupBox4.Text = "Character Animations";
@@ -360,6 +366,27 @@
             checkBox15.TabIndex = 0;
             checkBox15.Text = "Shuffle in menu";
             checkBox15.UseVisualStyleBackColor = true;
+            // 
+            // checkBox18
+            // 
+            checkBox18.AutoSize = true;
+            checkBox18.Location = new Point(21, 146);
+            checkBox18.Margin = new Padding(18, 3, 3, 3);
+            checkBox18.Name = "checkBox18";
+            checkBox18.Size = new Size(132, 24);
+            checkBox18.TabIndex = 5;
+            checkBox18.Text = "Include generic";
+            checkBox18.UseVisualStyleBackColor = true;
+            // 
+            // checkBox22
+            // 
+            checkBox22.AutoSize = true;
+            checkBox22.Location = new Point(6, 116);
+            checkBox22.Name = "checkBox22";
+            checkBox22.Size = new Size(154, 24);
+            checkBox22.TabIndex = 4;
+            checkBox22.Text = "Shuffle in cutscene";
+            checkBox22.UseVisualStyleBackColor = true;
             // 
             // AssetTableForm
             // 
@@ -413,5 +440,7 @@
         public CheckBox checkBox15;
         public CheckBox checkBox17;
         public CheckBox checkBox19;
+        public CheckBox checkBox18;
+        public CheckBox checkBox22;
     }
 }

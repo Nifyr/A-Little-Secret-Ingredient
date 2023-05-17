@@ -100,7 +100,7 @@ namespace ALittleSecretIngredient
             StringBuilder infoAnimShuffleTable = new();
             if (infoAnimShuffleInnertable.Length > 0)
             {
-                infoAnimShuffleTable.AppendLine("---- In Menu Animation Swaps ----\n");
+                infoAnimShuffleTable.AppendLine("---- Menu Character Animation Swaps ----\n");
                 infoAnimShuffleTable.AppendLine(infoAnimShuffleInnertable.ToString());
             }
 
@@ -111,8 +111,19 @@ namespace ALittleSecretIngredient
             StringBuilder talkAnimShuffleTable = new();
             if (talkAnimShuffleInnertable.Length > 0)
             {
-                talkAnimShuffleTable.AppendLine("---- In Dialog Animation Swaps ----\n");
+                talkAnimShuffleTable.AppendLine("---- Text Box Character Animation Swaps ----\n");
                 talkAnimShuffleTable.AppendLine(talkAnimShuffleInnertable.ToString());
+            }
+
+            StringBuilder demoAnimShuffleInnertable = new();
+            if (settings.DemoAnim.Enabled)
+                ShuffleDemoAnims(assets, demoAnimShuffleInnertable, settings.DemoAnim.GetArg<bool>(0));
+
+            StringBuilder demoAnimShuffleTable = new();
+            if (demoAnimShuffleInnertable.Length > 0)
+            {
+                demoAnimShuffleTable.AppendLine("---- Cutscene Character Animation Swaps ----\n");
+                demoAnimShuffleTable.AppendLine(demoAnimShuffleInnertable.ToString());
             }
 
             StringBuilder tables = new();
@@ -126,8 +137,28 @@ namespace ALittleSecretIngredient
                 tables.AppendLine(infoAnimShuffleTable.ToString());
             if (talkAnimShuffleTable.Length > 0)
                 tables.AppendLine(talkAnimShuffleTable.ToString());
+            if (demoAnimShuffleTable.Length > 0)
+                tables.AppendLine(demoAnimShuffleTable.ToString());
 
             return tables;
+        }
+
+        private void ShuffleDemoAnims(List<Asset> assets, StringBuilder demoAnimShuffleInnertable, bool includeGeneric)
+        {
+            Dictionary<string, string> mapping = new();
+            List<(string id, string name)> maleDemoAnims = new(GD.UniqueMaleDemoAnims);
+            List<(string id, string name)> femaleDemoAnims = new(GD.UniqueFemaleDemoAnims);
+            if (includeGeneric)
+            {
+                maleDemoAnims.AddRange(GD.GenericMaleDemoAnims);
+                femaleDemoAnims.AddRange(GD.GenericFemaleDemoAnims);
+            }
+            CreateRandomMapping(demoAnimShuffleInnertable, mapping, maleDemoAnims);
+            CreateRandomMapping(demoAnimShuffleInnertable, mapping, femaleDemoAnims);
+            foreach (Asset a in assets)
+                if (mapping.TryGetValue(a.DemoAnim, out string? newValue))
+                    a.DemoAnim = newValue;
+            GD.SetDirty(DataSetEnum.Asset);
         }
 
         private void ShuffleTalkAnims(List<Asset> assets, StringBuilder talkAnimShuffleInnertable)
@@ -176,14 +207,14 @@ namespace ALittleSecretIngredient
             List<(string id, string name)> entities)
         {
             Redistribution r = new(100);
-            List<string> horses = entities.GetIDs();
-            List<string> hShuffle = new(horses);
-            r.Randomize(hShuffle);
-            for (int i = 0; i < horses.Count; i++)
+            List<string> distinct = entities.GetIDs();
+            List<string> shuffle = new(distinct);
+            r.Randomize(shuffle);
+            for (int i = 0; i < distinct.Count; i++)
             {
-                mapping.Add(horses[i], hShuffle[i]);
-                mountModelShuffleInnertable.AppendLine($"{entities.IDToName(horses[i])} → " +
-                    $"{entities.IDToName(hShuffle[i])}");
+                mapping.Add(distinct[i], shuffle[i]);
+                mountModelShuffleInnertable.AppendLine($"{entities.IDToName(distinct[i])} → " +
+                    $"{entities.IDToName(shuffle[i])}");
             }
         }
 

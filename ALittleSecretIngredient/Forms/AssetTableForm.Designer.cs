@@ -52,18 +52,40 @@
             groupBox3 = new GroupBox();
             checkBox16 = new CheckBox();
             groupBox4 = new GroupBox();
+            checkBox23 = new CheckBox();
             checkBox18 = new CheckBox();
             checkBox22 = new CheckBox();
             checkBox19 = new CheckBox();
             checkBox17 = new CheckBox();
             checkBox15 = new CheckBox();
-            checkBox23 = new CheckBox();
+            groupBox5 = new GroupBox();
+            button19 = new Button();
+            button17 = new Button();
+            button16 = new Button();
+            button15 = new Button();
+            button14 = new Button();
+            button13 = new Button();
+            button12 = new Button();
+            button11 = new Button();
+            button10 = new Button();
+            button9 = new Button();
+            button8 = new Button();
+            button7 = new Button();
+            button6 = new Button();
+            button5 = new Button();
+            button4 = new Button();
+            button3 = new Button();
+            button2 = new Button();
+            button1 = new Button();
+            button18 = new Button();
+            checkBox24 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
+            groupBox5.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -73,11 +95,12 @@
             flowLayoutPanel1.Controls.Add(groupBox2);
             flowLayoutPanel1.Controls.Add(groupBox3);
             flowLayoutPanel1.Controls.Add(groupBox4);
+            flowLayoutPanel1.Controls.Add(groupBox5);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(836, 433);
+            flowLayoutPanel1.Size = new Size(836, 870);
             flowLayoutPanel1.TabIndex = 7;
             // 
             // groupBox7
@@ -182,7 +205,7 @@
             groupBox1.Controls.Add(checkBox8);
             groupBox1.Controls.Add(checkBox7);
             groupBox1.Controls.Add(checkBox13);
-            groupBox1.Location = new Point(209, 3);
+            groupBox1.Location = new Point(3, 265);
             groupBox1.MinimumSize = new Size(200, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(200, 256);
@@ -267,7 +290,7 @@
             groupBox2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox2.Controls.Add(checkBox14);
             groupBox2.Controls.Add(checkBox21);
-            groupBox2.Location = new Point(209, 265);
+            groupBox2.Location = new Point(3, 527);
             groupBox2.MinimumSize = new Size(200, 0);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 106);
@@ -300,7 +323,7 @@
             groupBox3.AutoSize = true;
             groupBox3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox3.Controls.Add(checkBox16);
-            groupBox3.Location = new Point(415, 3);
+            groupBox3.Location = new Point(3, 639);
             groupBox3.MinimumSize = new Size(200, 0);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(200, 76);
@@ -328,13 +351,24 @@
             groupBox4.Controls.Add(checkBox19);
             groupBox4.Controls.Add(checkBox17);
             groupBox4.Controls.Add(checkBox15);
-            groupBox4.Location = new Point(415, 85);
+            groupBox4.Location = new Point(209, 3);
             groupBox4.MinimumSize = new Size(200, 0);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(200, 226);
             groupBox4.TabIndex = 17;
             groupBox4.TabStop = false;
             groupBox4.Text = "Character Animations";
+            // 
+            // checkBox23
+            // 
+            checkBox23.AutoSize = true;
+            checkBox23.Location = new Point(6, 176);
+            checkBox23.Margin = new Padding(3, 3, 40, 3);
+            checkBox23.Name = "checkBox23";
+            checkBox23.Size = new Size(122, 24);
+            checkBox23.TabIndex = 6;
+            checkBox23.Text = "Shuffle in hub";
+            checkBox23.UseVisualStyleBackColor = true;
             // 
             // checkBox18
             // 
@@ -390,22 +424,243 @@
             checkBox15.Text = "Shuffle in menu";
             checkBox15.UseVisualStyleBackColor = true;
             // 
-            // checkBox23
+            // groupBox5
             // 
-            checkBox23.AutoSize = true;
-            checkBox23.Location = new Point(6, 176);
-            checkBox23.Margin = new Padding(3, 3, 40, 3);
-            checkBox23.Name = "checkBox23";
-            checkBox23.Size = new Size(122, 24);
-            checkBox23.TabIndex = 6;
-            checkBox23.Text = "Shuffle in hub";
-            checkBox23.UseVisualStyleBackColor = true;
+            groupBox5.AutoSize = true;
+            groupBox5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox5.Controls.Add(button19);
+            groupBox5.Controls.Add(button17);
+            groupBox5.Controls.Add(button16);
+            groupBox5.Controls.Add(button15);
+            groupBox5.Controls.Add(button14);
+            groupBox5.Controls.Add(button13);
+            groupBox5.Controls.Add(button12);
+            groupBox5.Controls.Add(button11);
+            groupBox5.Controls.Add(button10);
+            groupBox5.Controls.Add(button9);
+            groupBox5.Controls.Add(button8);
+            groupBox5.Controls.Add(button7);
+            groupBox5.Controls.Add(button6);
+            groupBox5.Controls.Add(button5);
+            groupBox5.Controls.Add(button4);
+            groupBox5.Controls.Add(button3);
+            groupBox5.Controls.Add(button2);
+            groupBox5.Controls.Add(button1);
+            groupBox5.Controls.Add(button18);
+            groupBox5.Controls.Add(checkBox24);
+            groupBox5.Location = new Point(415, 3);
+            groupBox5.MinimumSize = new Size(200, 0);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(200, 741);
+            groupBox5.TabIndex = 18;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Model Shape and Size";
+            // 
+            // button19
+            // 
+            button19.Location = new Point(6, 686);
+            button19.Name = "button19";
+            button19.Size = new Size(188, 29);
+            button19.TabIndex = 20;
+            button19.Text = "Map Scale Wing";
+            button19.UseVisualStyleBackColor = true;
+            button19.Click += Button19_Click;
+            // 
+            // button17
+            // 
+            button17.Location = new Point(6, 651);
+            button17.Name = "button17";
+            button17.Size = new Size(188, 29);
+            button17.TabIndex = 19;
+            button17.Text = "Map Scale Head";
+            button17.UseVisualStyleBackColor = true;
+            button17.Click += Button17_Click;
+            // 
+            // button16
+            // 
+            button16.Location = new Point(6, 616);
+            button16.Name = "button16";
+            button16.Size = new Size(188, 29);
+            button16.TabIndex = 18;
+            button16.Text = "Map Scale All";
+            button16.UseVisualStyleBackColor = true;
+            button16.Click += Button16_Click;
+            // 
+            // button15
+            // 
+            button15.Location = new Point(6, 581);
+            button15.Name = "button15";
+            button15.Size = new Size(188, 29);
+            button15.TabIndex = 17;
+            button15.Text = "Volume Scale Legs";
+            button15.UseVisualStyleBackColor = true;
+            button15.Click += Button15_Click;
+            // 
+            // button14
+            // 
+            button14.Location = new Point(6, 546);
+            button14.Name = "button14";
+            button14.Size = new Size(188, 29);
+            button14.TabIndex = 16;
+            button14.Text = "Volume Scale Arms";
+            button14.UseVisualStyleBackColor = true;
+            button14.Click += Button14_Click;
+            // 
+            // button13
+            // 
+            button13.Location = new Point(6, 511);
+            button13.Name = "button13";
+            button13.Size = new Size(188, 29);
+            button13.TabIndex = 15;
+            button13.Text = "Volume Torso";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += Button13_Click;
+            // 
+            // button12
+            // 
+            button12.Location = new Point(6, 476);
+            button12.Name = "button12";
+            button12.Size = new Size(188, 29);
+            button12.TabIndex = 14;
+            button12.Text = "Volume Abdomen";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += Button12_Click;
+            // 
+            // button11
+            // 
+            button11.Location = new Point(6, 441);
+            button11.Name = "button11";
+            button11.Size = new Size(188, 29);
+            button11.TabIndex = 13;
+            button11.Text = "Volume Bust";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += Button11_Click;
+            // 
+            // button10
+            // 
+            button10.Location = new Point(6, 406);
+            button10.Name = "button10";
+            button10.Size = new Size(188, 29);
+            button10.TabIndex = 12;
+            button10.Text = "Volume Legs";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += Button10_Click;
+            // 
+            // button9
+            // 
+            button9.Location = new Point(6, 371);
+            button9.Name = "button9";
+            button9.Size = new Size(188, 29);
+            button9.TabIndex = 11;
+            button9.Text = "Volume Arms";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += Button9_Click;
+            // 
+            // button8
+            // 
+            button8.Location = new Point(6, 336);
+            button8.Name = "button8";
+            button8.Size = new Size(188, 29);
+            button8.TabIndex = 10;
+            button8.Text = "Scale Feet";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += Button8_Click;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(6, 301);
+            button7.Name = "button7";
+            button7.Size = new Size(188, 29);
+            button7.TabIndex = 9;
+            button7.Text = "Scale Legs";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += Button7_Click;
+            // 
+            // button6
+            // 
+            button6.Location = new Point(6, 266);
+            button6.Name = "button6";
+            button6.Size = new Size(188, 29);
+            button6.TabIndex = 8;
+            button6.Text = "Scale Hands";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += Button6_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(6, 231);
+            button5.Name = "button5";
+            button5.Size = new Size(188, 29);
+            button5.TabIndex = 7;
+            button5.Text = "Scale Arms";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += Button5_Click;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(6, 196);
+            button4.Name = "button4";
+            button4.Size = new Size(188, 29);
+            button4.TabIndex = 6;
+            button4.Text = "Scale Shoulders";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += Button4_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(6, 161);
+            button3.Name = "button3";
+            button3.Size = new Size(188, 29);
+            button3.TabIndex = 5;
+            button3.Text = "Scale Torso";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += Button3_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(6, 126);
+            button2.Name = "button2";
+            button2.Size = new Size(188, 29);
+            button2.TabIndex = 4;
+            button2.Text = "Scale Neck";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += Button2_Click;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(6, 91);
+            button1.Name = "button1";
+            button1.Size = new Size(188, 29);
+            button1.TabIndex = 3;
+            button1.Text = "Scale Head";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Button1_Click;
+            // 
+            // button18
+            // 
+            button18.Location = new Point(6, 56);
+            button18.Name = "button18";
+            button18.Size = new Size(188, 29);
+            button18.TabIndex = 2;
+            button18.Text = "Scale All";
+            button18.UseVisualStyleBackColor = true;
+            button18.Click += Button18_Click;
+            // 
+            // checkBox24
+            // 
+            checkBox24.AutoSize = true;
+            checkBox24.Location = new Point(6, 26);
+            checkBox24.Name = "checkBox24";
+            checkBox24.Size = new Size(106, 24);
+            checkBox24.TabIndex = 0;
+            checkBox24.Text = "Randomize";
+            checkBox24.UseVisualStyleBackColor = true;
             // 
             // AssetTableForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(836, 433);
+            ClientSize = new Size(836, 870);
             Controls.Add(flowLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AssetTableForm";
@@ -422,6 +677,8 @@
             groupBox3.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -456,5 +713,26 @@
         public CheckBox checkBox18;
         public CheckBox checkBox22;
         public CheckBox checkBox23;
+        private GroupBox groupBox5;
+        public CheckBox checkBox24;
+        public Button button19;
+        public Button button17;
+        public Button button16;
+        public Button button15;
+        public Button button14;
+        public Button button13;
+        public Button button12;
+        public Button button11;
+        public Button button10;
+        public Button button9;
+        public Button button8;
+        public Button button7;
+        public Button button6;
+        public Button button5;
+        public Button button4;
+        public Button button3;
+        public Button button2;
+        public Button button1;
+        public Button button18;
     }
 }

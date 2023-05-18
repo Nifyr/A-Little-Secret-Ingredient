@@ -27,6 +27,7 @@ namespace ALittleSecretIngredient.Forms
 
         private GlobalData GlobalData { get; }
         private RandomizerDistribution RD { get; }
+        private bool HasValue { get; set; }
         private bool Initialized { get; set; }
 
         internal NumericDistributionForm(GlobalData globalData, RandomizerDistribution rd, string title)
@@ -121,18 +122,17 @@ namespace ALittleSecretIngredient.Forms
 
         public IDistribution Get()
         {
-            if (!Initialized)
+            if (!HasValue)
                 Initialize(GlobalData.DDS.GetNumericDistributionSetup(RD));
             return distributions[idx];
         }
 
         internal void Set(IDistribution d)
         {
-            if (!Initialized)
-                Initialize(GlobalData.DDS.GetNumericDistributionSetup(RD));
             idx = (int)d.GetConfig()[0];
             if (idx == 8) idx = 6;
             SetCurrent(d);
+            HasValue = true;
         }
 
         private void SetCurrent(IDistribution d)
@@ -142,9 +142,19 @@ namespace ALittleSecretIngredient.Forms
 
         internal void Initialize(NumericDistributionSetup nds)
         {
-            distributions = nds.distributions;
-            idx = nds.idx;
+            if (HasValue)
+            {
+                for (int i = 0; i < distributions.Length; i++)
+                    if (i != idx)
+                        distributions[i] = nds.distributions[i];
+            }
+            else
+            {
+                distributions = nds.distributions;
+                idx = nds.idx;
+            }
             Initialized = true;
+            HasValue = true;
         }
     }
 }

@@ -23,6 +23,26 @@ namespace ALittleSecretIngredient.Structs
             public bool ShuffleTalkAnims { get; set; } = new();
             public RandomizerFieldSettings DemoAnim { get; set; } = new();
             public bool ShuffleHubAnims { get; set; } = new();
+            public bool RandomizeModelParameters { get; set; } = new();
+            public RandomizerFieldSettings ScaleAll { get; set; } = new();
+            public RandomizerFieldSettings ScaleHead { get; set; } = new();
+            public RandomizerFieldSettings ScaleNeck { get; set; } = new();
+            public RandomizerFieldSettings ScaleTorso { get; set; } = new();
+            public RandomizerFieldSettings ScaleShoulders { get; set; } = new();
+            public RandomizerFieldSettings ScaleArms { get; set; } = new();
+            public RandomizerFieldSettings ScaleHands { get; set; } = new();
+            public RandomizerFieldSettings ScaleLegs { get; set; } = new();
+            public RandomizerFieldSettings ScaleFeet { get; set; } = new();
+            public RandomizerFieldSettings VolumeArms { get; set; } = new();
+            public RandomizerFieldSettings VolumeLegs { get; set; } = new();
+            public RandomizerFieldSettings VolumeBust { get; set; } = new();
+            public RandomizerFieldSettings VolumeAbdomen { get; set; } = new();
+            public RandomizerFieldSettings VolumeTorso { get; set; } = new();
+            public RandomizerFieldSettings VolumeScaleArms { get; set; } = new();
+            public RandomizerFieldSettings VolumeScaleLegs { get; set; } = new();
+            public RandomizerFieldSettings MapScaleAll { get; set; } = new();
+            public RandomizerFieldSettings MapScaleHead { get; set; } = new();
+            public RandomizerFieldSettings MapScaleWing { get; set; } = new();
         }
 
         public class GodGeneralSettings

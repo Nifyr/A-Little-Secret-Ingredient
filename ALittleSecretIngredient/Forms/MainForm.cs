@@ -207,6 +207,26 @@ namespace ALittleSecretIngredient.Forms
                 rs.AssetTable.ShuffleTalkAnims = AssetTable.checkBox19.Checked;
                 rs.AssetTable.DemoAnim = new(AssetTable.checkBox22.Checked, null!, new object[] { AssetTable.checkBox18.Checked });
                 rs.AssetTable.ShuffleHubAnims = AssetTable.checkBox23.Checked;
+                rs.AssetTable.RandomizeModelParameters = AssetTable.checkBox24.Checked;
+                rs.AssetTable.ScaleAll = new(false, AssetTable.ScaleAll.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleHead = new(false, AssetTable.ScaleHead.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleNeck = new(false, AssetTable.ScaleNeck.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleTorso = new(false, AssetTable.ScaleTorso.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleShoulders = new(false, AssetTable.ScaleShoulders.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleArms = new(false, AssetTable.ScaleArms.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleHands = new(false, AssetTable.ScaleHands.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleLegs = new(false, AssetTable.ScaleLegs.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleFeet = new(false, AssetTable.ScaleFeet.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeArms = new(false, AssetTable.VolumeArms.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeLegs = new(false, AssetTable.VolumeLegs.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeBust = new(false, AssetTable.VolumeBust.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeAbdomen = new(false, AssetTable.VolumeAbdomen.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeTorso = new(false, AssetTable.VolumeTorso.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeScaleArms = new(false, AssetTable.VolumeScaleArms.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeScaleLegs = new(false, AssetTable.VolumeScaleLegs.Get(), Array.Empty<object>());
+                rs.AssetTable.MapScaleAll = new(false, AssetTable.MapScaleAll.Get(), Array.Empty<object>());
+                rs.AssetTable.MapScaleHead = new(false, AssetTable.MapScaleHead.Get(), Array.Empty<object>());
+                rs.AssetTable.MapScaleWing = new(false, AssetTable.MapScaleWing.Get(), Array.Empty<object>());
                 return rs;
             }
             set
@@ -332,6 +352,26 @@ namespace ALittleSecretIngredient.Forms
                 AssetTable.checkBox22.Checked = value.AssetTable.DemoAnim.Enabled;
                 AssetTable.checkBox18.Checked = value.AssetTable.DemoAnim.GetArg<bool>(0);
                 AssetTable.checkBox23.Checked = value.AssetTable.ShuffleHubAnims;
+                AssetTable.checkBox24.Checked = value.AssetTable.RandomizeModelParameters;
+                AssetTable.ScaleAll.Set(value.AssetTable.ScaleAll.Distribution);
+                AssetTable.ScaleHead.Set(value.AssetTable.ScaleHead.Distribution);
+                AssetTable.ScaleNeck.Set(value.AssetTable.ScaleNeck.Distribution);
+                AssetTable.ScaleTorso.Set(value.AssetTable.ScaleTorso.Distribution);
+                AssetTable.ScaleShoulders.Set(value.AssetTable.ScaleShoulders.Distribution);
+                AssetTable.ScaleArms.Set(value.AssetTable.ScaleArms.Distribution);
+                AssetTable.ScaleHands.Set(value.AssetTable.ScaleHands.Distribution);
+                AssetTable.ScaleLegs.Set(value.AssetTable.ScaleLegs.Distribution);
+                AssetTable.ScaleFeet.Set(value.AssetTable.ScaleFeet.Distribution);
+                AssetTable.VolumeArms.Set(value.AssetTable.VolumeArms.Distribution);
+                AssetTable.VolumeLegs.Set(value.AssetTable.VolumeLegs.Distribution);
+                AssetTable.VolumeBust.Set(value.AssetTable.VolumeBust.Distribution);
+                AssetTable.VolumeAbdomen.Set(value.AssetTable.VolumeAbdomen.Distribution);
+                AssetTable.VolumeTorso.Set(value.AssetTable.VolumeTorso.Distribution);
+                AssetTable.VolumeScaleArms.Set(value.AssetTable.VolumeScaleArms.Distribution);
+                AssetTable.VolumeScaleLegs.Set(value.AssetTable.VolumeScaleLegs.Distribution);
+                AssetTable.MapScaleAll.Set(value.AssetTable.MapScaleAll.Distribution);
+                AssetTable.MapScaleHead.Set(value.AssetTable.MapScaleHead.Distribution);
+                AssetTable.MapScaleWing.Set(value.AssetTable.MapScaleWing.Distribution);
             }
         }
 

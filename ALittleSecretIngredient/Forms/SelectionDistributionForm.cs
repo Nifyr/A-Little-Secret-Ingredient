@@ -7,8 +7,9 @@ namespace ALittleSecretIngredient.Forms
     {
         public IDistribution[] distributions = new IDistribution[]
         {
-                new Empirical(100, (new int[] { 1, 0, 2, 0, 3, 0, 4 }).ToList()),
-                new UniformSelection(100, (new bool[] { true, false, true, false, true, false, true }).ToList())
+            new Empirical(100, (new int[] { 1, 0, 2, 0, 3, 0, 4 }).ToList()),
+            new UniformSelection(100, (new bool[] { true, false, true, false, true, false, true }).ToList()),
+            new Redistribution(100)
         };
         public List<string> itemNames = new(new string[]
         {
@@ -17,7 +18,8 @@ namespace ALittleSecretIngredient.Forms
         });
         public int idx;
 
-        public bool Initialized { get; private set; }
+        private bool HasValue { get; set; }
+        private bool Initialized { get; set; }
         private GlobalData GlobalData { get; }
         private RandomizerDistribution RD { get; }
 
@@ -92,7 +94,7 @@ namespace ALittleSecretIngredient.Forms
         private void CommitEdit(object? sender, EventArgs e)
         {
             DataGridViewRowCollection dgvrc = dataGridView1.Rows;
-            List<Object> data = new();
+            List<object> data = new();
             for (int row = 0; row < dgvrc.Count; row++)
                 data.Add(dgvrc[row].Cells[1].Value);
             List<double> args = new()
@@ -137,15 +139,13 @@ namespace ALittleSecretIngredient.Forms
 
         public IDistribution Get()
         {
-            if (!Initialized)
+            if (!HasValue)
                 Initialize(GlobalData.DDS.GetSelectionDistributionSetup(RD));
             return distributions[idx];
         }
 
         internal void Set(IDistribution d)
         {
-            if (!Initialized)
-                Initialize(GlobalData.DDS.GetSelectionDistributionSetup(RD));
             idx = d.GetConfig()[0] switch
             {
                 6 => 0,
@@ -154,6 +154,7 @@ namespace ALittleSecretIngredient.Forms
                 _ => throw new ArgumentException("Unsupported distribution: " + d.GetType().Name)
             };
             SetCurrent(d);
+            HasValue = true;
         }
 
         public void SetCurrent(IDistribution d)
@@ -166,6 +167,7 @@ namespace ALittleSecretIngredient.Forms
             distributions = sds.distributions;
             itemNames = sds.names;
             idx = sds.idx;
+            HasValue = true;
             Initialized = true;
         }
     }

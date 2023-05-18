@@ -288,7 +288,7 @@ namespace ALittleSecretIngredient
 
             public double Next(double value)
             {
-                return RNG.NextDouble() * 100 < p ? Math.Round(QuantileFunction(RNG.NextDouble(), mean, standardDeviation)) : value;
+                return RNG.NextDouble() * 100 < p ? QuantileFunction(RNG.NextDouble(), mean, standardDeviation) : value;
             }
 
             public List<double> GetConfig()
@@ -319,7 +319,7 @@ namespace ALittleSecretIngredient
 
             public double Next(double value)
             {
-                return RNG.NextDouble() * 100 < p ? Math.Round(QuantileFunction(RNG.NextDouble(), value, standardDeviation)) : value;
+                return RNG.NextDouble() * 100 < p ? QuantileFunction(RNG.NextDouble(), value, standardDeviation) : value;
             }
 
             public List<double> GetConfig()
@@ -349,7 +349,7 @@ namespace ALittleSecretIngredient
 
             public double Next(double value)
             {
-                return RNG.NextDouble() * 100 < p ? Math.Round(QuantileFunction(RNG.NextDouble(), value, standardDeviationX * value)) : value;
+                return RNG.NextDouble() * 100 < p ? QuantileFunction(RNG.NextDouble(), value, standardDeviationX * value) : value;
             }
 
             public List<double> GetConfig()
@@ -534,6 +534,8 @@ namespace ALittleSecretIngredient
                     set(target, n1);
                 else if (get(target) is int x2 && (int)Math.Clamp(x2, min, max) is B n2)
                     set(target, n2);
+                else if (get(target) is float x3 && (float)Math.Clamp(x3, min, max) is B n3)
+                    set(target, n3);
                 else
                     throw new ArgumentException("Unsupported type: " + get(target)!.GetType().Name);
         }
@@ -562,6 +564,8 @@ namespace ALittleSecretIngredient
                         set(targets[i], n1);
                     else if (get(targets[i]) is int x2 && (int)Math.Round(n.Next(x2)) is B n2)
                         set(targets[i], n2);
+                    else if (get(targets[i]) is float x3 && (float)n.Next(x3) is B n3)
+                        set(targets[i], n3);
                     else if (get(targets[i]) != null)
                         throw new ArgumentException("Unsupported type: " + get(targets[i])!.GetType().Name);
                     else

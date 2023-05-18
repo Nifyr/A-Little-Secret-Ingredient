@@ -1602,6 +1602,25 @@
         internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
         internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
         {
+            { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleHead, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleNeck, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleTorso, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleShoulders, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleArms, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleHands, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleLegs, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleFeet, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeArms, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeLegs, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeBust, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeAbdomen, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeTorso, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeScaleArms, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeScaleLegs, DataSetEnum.Asset },
+            { RandomizerDistribution.MapScaleAll, DataSetEnum.Asset },
+            { RandomizerDistribution.MapScaleHead, DataSetEnum.Asset },
+            { RandomizerDistribution.MapScaleWing, DataSetEnum.Asset },
             { RandomizerDistribution.Link, DataSetEnum.GodGeneral },
             { RandomizerDistribution.EngageCount, DataSetEnum.GodGeneral },
             { RandomizerDistribution.EngageAttackAlly, DataSetEnum.GodGeneral },
@@ -1646,7 +1665,7 @@
             { RandomizerDistribution.StrongBondLevel, DataSetEnum.GrowthTable },
             { RandomizerDistribution.DeepSynergyLevel, DataSetEnum.GrowthTable },
             { RandomizerDistribution.Exp, DataSetEnum.BondLevel },
-            { RandomizerDistribution.Cost, DataSetEnum.BondLevel }
+            { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
         };
     }
 

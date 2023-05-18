@@ -36,6 +36,25 @@
 
     internal enum RandomizerDistribution
     {
+        ScaleAll,
+        ScaleHead,
+        ScaleNeck,
+        ScaleTorso,
+        ScaleShoulders,
+        ScaleArms,
+        ScaleHands,
+        ScaleLegs,
+        ScaleFeet,
+        VolumeArms,
+        VolumeLegs,
+        VolumeBust,
+        VolumeAbdomen,
+        VolumeTorso,
+        VolumeScaleArms,
+        VolumeScaleLegs,
+        MapScaleAll,
+        MapScaleHead,
+        MapScaleWing,
         Link,
         EngageCount,
         EngageAttackAlly,
@@ -80,6 +99,6 @@
         StrongBondLevel,
         DeepSynergyLevel,
         Exp,
-        Cost
+        Cost,
     }
 }

@@ -237,6 +237,89 @@ namespace ALittleSecretIngredient
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
+                case DataSetEnum.Asset:
+                    List<Asset> assets = dataSet.Params.Cast<Asset>().ToList();
+                    switch (dfe)
+                    {
+                        case RandomizerDistribution.ScaleAll:
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(assets.Where(a => a.ScaleAll != 0).ToList(), a => a.ScaleAll);
+                            nds0.idx = 3;
+                            return nds0;
+                        case RandomizerDistribution.ScaleHead:
+                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0).ToList(), a => a.ScaleHead);
+                            nds1.idx = 3;
+                            return nds1;
+                        case RandomizerDistribution.ScaleNeck:
+                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0).ToList(), a => a.ScaleNeck);
+                            nds2.idx = 3;
+                            return nds2;
+                        case RandomizerDistribution.ScaleTorso:
+                            NumericDistributionSetup nds3 = GetNumericDistributionSetup(assets.Where(a => a.ScaleTorso != 0).ToList(), a => a.ScaleTorso);
+                            nds3.idx = 3;
+                            return nds3;
+                        case RandomizerDistribution.ScaleShoulders:
+                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(assets.Where(a => a.ScaleShoulders != 0).ToList(), a => a.ScaleShoulders);
+                            nds4.idx = 3;
+                            return nds4;
+                        case RandomizerDistribution.ScaleArms:
+                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(assets.Where(a => a.ScaleArms != 0).ToList(), a => a.ScaleArms);
+                            nds5.idx = 3;
+                            return nds5;
+                        case RandomizerDistribution.ScaleHands:
+                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHands != 0).ToList(), a => a.ScaleHands);
+                            nds6.idx = 3;
+                            return nds6;
+                        case RandomizerDistribution.ScaleLegs:
+                            NumericDistributionSetup nds7 = GetNumericDistributionSetup(assets.Where(a => a.ScaleLegs != 0).ToList(), a => a.ScaleLegs);
+                            nds7.idx = 3;
+                            return nds7;
+                        case RandomizerDistribution.ScaleFeet:
+                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(assets.Where(a => a.ScaleFeet != 0).ToList(), a => a.ScaleFeet);
+                            nds8.idx = 3;
+                            return nds8;
+                        case RandomizerDistribution.VolumeArms:
+                            NumericDistributionSetup nds9 = GetNumericDistributionSetup(assets.Where(a => a.VolumeArms != 0).ToList(), a => a.VolumeArms);
+                            nds9.idx = 3;
+                            return nds9;
+                        case RandomizerDistribution.VolumeLegs:
+                            NumericDistributionSetup nds10 = GetNumericDistributionSetup(assets.Where(a => a.VolumeLegs != 0).ToList(), a => a.VolumeLegs);
+                            nds10.idx = 3;
+                            return nds10;
+                        case RandomizerDistribution.VolumeBust:
+                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(assets.Where(a => a.VolumeBust != 0).ToList(), a => a.VolumeBust);
+                            nds11.idx = 3;
+                            return nds11;
+                        case RandomizerDistribution.VolumeAbdomen:
+                            NumericDistributionSetup nds12 = GetNumericDistributionSetup(assets.Where(a => a.VolumeAbdomen != 0).ToList(), a => a.VolumeAbdomen);
+                            nds12.idx = 3;
+                            return nds12;
+                        case RandomizerDistribution.VolumeTorso:
+                            NumericDistributionSetup nds13 = GetNumericDistributionSetup(assets.Where(a => a.VolumeTorso != 0).ToList(), a => a.VolumeTorso);
+                            nds13.idx = 3;
+                            return nds13;
+                        case RandomizerDistribution.VolumeScaleArms:
+                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(assets.Where(a => a.VolumeScaleArms != 0).ToList(), a => a.VolumeScaleArms);
+                            nds14.idx = 3;
+                            return nds14;
+                        case RandomizerDistribution.VolumeScaleLegs:
+                            NumericDistributionSetup nds15 = GetNumericDistributionSetup(assets.Where(a => a.VolumeScaleLegs != 0).ToList(), a => a.VolumeScaleLegs);
+                            nds15.idx = 3;
+                            return nds15;
+                        case RandomizerDistribution.MapScaleAll:
+                            NumericDistributionSetup nds16 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleAll != 0).ToList(), a => a.MapScaleAll);
+                            nds16.idx = 3;
+                            return nds16;
+                        case RandomizerDistribution.MapScaleHead:
+                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleHead != 0).ToList(), a => a.MapScaleHead);
+                            nds17.idx = 3;
+                            return nds17;
+                        case RandomizerDistribution.MapScaleWing:
+                            NumericDistributionSetup nds18 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleWing != 0).ToList(), a => a.MapScaleWing);
+                            nds18.idx = 3;
+                            return nds18;
+                        default:
+                            throw new ArgumentException("Unsupported data field: " + dfe);
+                    }
                 default:
                     throw new ArgumentException("Unsupported data set: " + dse);
             }

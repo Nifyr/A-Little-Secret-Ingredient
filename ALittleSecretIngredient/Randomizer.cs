@@ -60,7 +60,8 @@ namespace ALittleSecretIngredient
             StringBuilder assetShuffleTable = ApplyTableTitle(assetShuffleInnertable, "Model Swaps");
 
             StringBuilder outfitShuffleInnertable = new();
-            GetOutfitSwapLists(settings.OutfitSwap, out List<List<string>> maleOutfitSwapLists, out List<List<string>> femaleOutfitSwapLists);
+            GetOutfitSwapLists(settings.OutfitSwap, out List<List<string>> maleOutfitSwapLists,
+                out List<List<string>> femaleOutfitSwapLists);
             foreach (List<string> list in maleOutfitSwapLists)
                 OutfitSwap(assets, outfitShuffleInnertable, list);
             foreach (List<string> list in femaleOutfitSwapLists)
@@ -95,6 +96,9 @@ namespace ALittleSecretIngredient
                 ShuffleHubAnims(assets, hubAnimShuffleInnertable);
             StringBuilder hubAnimShuffleTable = ApplyTableTitle(hubAnimShuffleInnertable, "Hub Character Animation Swaps");
 
+            if (settings.RandomizeModelParameters)
+                RandomizeModelParameters(settings, assets);
+
             StringBuilder tables = new();
             if (assetShuffleTable.Length > 0)
                 tables.AppendLine(assetShuffleTable.ToString());
@@ -112,6 +116,49 @@ namespace ALittleSecretIngredient
                 tables.AppendLine(hubAnimShuffleTable.ToString());
 
             return tables;
+        }
+
+        private void RandomizeModelParameters(RandomizerSettings.AssetTableSettings settings, List<Asset> assets)
+        {
+            assets.Where(a => a.ScaleAll != 0).ToList().Randomize(a => a.ScaleAll, (a, f) => a.ScaleAll = f,
+                settings.ScaleAll.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleHead != 0).ToList().Randomize(a => a.ScaleHead, (a, f) => a.ScaleHead = f,
+                settings.ScaleHead.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleNeck != 0).ToList().Randomize(a => a.ScaleNeck, (a, f) => a.ScaleNeck = f,
+                settings.ScaleNeck.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleTorso != 0).ToList().Randomize(a => a.ScaleTorso, (a, f) => a.ScaleTorso = f,
+                settings.ScaleTorso.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleShoulders != 0).ToList().Randomize(a => a.ScaleShoulders, (a, f) => a.ScaleShoulders = f,
+                settings.ScaleShoulders.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleArms != 0).ToList().Randomize(a => a.ScaleArms, (a, f) => a.ScaleArms = f,
+                settings.ScaleArms.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleHands != 0).ToList().Randomize(a => a.ScaleHands, (a, f) => a.ScaleHands = f,
+                settings.ScaleHands.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleLegs != 0).ToList().Randomize(a => a.ScaleLegs, (a, f) => a.ScaleLegs = f,
+                settings.ScaleLegs.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.ScaleFeet != 0).ToList().Randomize(a => a.ScaleFeet, (a, f) => a.ScaleFeet = f,
+                settings.ScaleFeet.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeArms != 0).ToList().Randomize(a => a.VolumeArms, (a, f) => a.VolumeArms = f,
+                settings.VolumeArms.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeLegs != 0).ToList().Randomize(a => a.VolumeLegs, (a, f) => a.VolumeLegs = f,
+                settings.VolumeLegs.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeBust != 0).ToList().Randomize(a => a.VolumeBust, (a, f) => a.VolumeBust = f,
+                settings.VolumeBust.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeAbdomen != 0).ToList().Randomize(a => a.VolumeAbdomen, (a, f) => a.VolumeAbdomen = f,
+                settings.VolumeAbdomen.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeTorso != 0).ToList().Randomize(a => a.VolumeTorso, (a, f) => a.VolumeTorso = f,
+                settings.VolumeTorso.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeScaleArms != 0).ToList().Randomize(a => a.VolumeScaleArms, (a, f) => a.VolumeScaleArms = f,
+                settings.VolumeScaleArms.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.VolumeScaleLegs != 0).ToList().Randomize(a => a.VolumeScaleLegs, (a, f) => a.VolumeScaleLegs = f,
+                settings.VolumeScaleLegs.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.MapScaleAll != 0).ToList().Randomize(a => a.MapScaleAll, (a, f) => a.MapScaleAll = f,
+                settings.MapScaleAll.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.MapScaleHead != 0).ToList().Randomize(a => a.MapScaleHead, (a, f) => a.MapScaleHead = f,
+                settings.MapScaleHead.Distribution, 0, float.MaxValue);
+            assets.Where(a => a.MapScaleWing != 0).ToList().Randomize(a => a.MapScaleWing, (a, f) => a.MapScaleWing = f,
+                settings.MapScaleWing.Distribution, 0, float.MaxValue);
+            GD.SetDirty(DataSetEnum.Asset);
         }
 
         private static StringBuilder ApplyTableTitle(StringBuilder innerTable, string title)
@@ -234,7 +281,8 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private void GetOutfitSwapLists(RandomizerFieldSettings settings, out List<List<string>> maleOutfitSwapLists, out List<List<string>> femaleOutfitSwapLists)
+        private void GetOutfitSwapLists(RandomizerFieldSettings settings, out List<List<string>> maleOutfitSwapLists,
+            out List<List<string>> femaleOutfitSwapLists)
         {
             maleOutfitSwapLists = new();
             femaleOutfitSwapLists = new();
@@ -705,7 +753,8 @@ namespace ALittleSecretIngredient
             List<string> engageWeaponIDs = GD.EngageWeapons.GetIDs();
             List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
             foreach (Skill s in generalSkills)
-                if (s.InheritanceCost == 0 && GD.DefaultSPCost.TryGetValue(GD.GeneralSkills.First(t => t.id == s.Sid).name, out ushort value))
+                if (s.InheritanceCost == 0 && GD.DefaultSPCost.TryGetValue(GD.GeneralSkills.First(t => t.id == s.Sid).name,
+                    out ushort value))
                     s.InheritanceCost = value;
 
             Dictionary<(ParamGroup pg, int gtIdx), StringBuilder> levelEntries = new();
@@ -868,8 +917,8 @@ namespace ALittleSecretIngredient
             void HandleFlag(RandomizerFieldSettings settings, int index, string fieldName)
             {
                 if (!settings.Enabled) return;
-                List<Node<byte>> unlockLevels = inheritableBondLevelTables.Select(pg => new Node<byte>(pg.Group.Cast<GrowthTable>().First(gt =>
-                    gt.GetFlag(index)).Level)).ToList();
+                List<Node<byte>> unlockLevels = inheritableBondLevelTables.Select(pg => new Node<byte>(pg.Group.Cast<GrowthTable>().
+                    First(gt => gt.GetFlag(index)).Level)).ToList();
                 unlockLevels.Randomize(n => n.value, (n, b) => n.value = b, settings.Distribution, 1, 20);
                 for (int pgIdx = 0; pgIdx < inheritableBondLevelTables.Count; pgIdx++)
                     for (int gtIdx = 0; gtIdx < inheritableBondLevelTables[pgIdx].Group.Count; gtIdx++)
@@ -968,7 +1017,8 @@ namespace ALittleSecretIngredient
             return formatted;
         }
 
-        private void WriteAptitudeToChangelog(List<ParamGroup> allyBondLevelTables, Dictionary<(ParamGroup pg, int gtIdx), StringBuilder> levelEntries)
+        private void WriteAptitudeToChangelog(List<ParamGroup> allyBondLevelTables, Dictionary<(ParamGroup pg, int gtIdx),
+            StringBuilder> levelEntries)
         {
             foreach (ParamGroup pg in allyBondLevelTables)
             {
@@ -986,10 +1036,12 @@ namespace ALittleSecretIngredient
             flattened.Randomize(n => n.value, (n, i) => n.value = i, distribution, proficiencyIDs);
             for (int pgIdx = 0; pgIdx < structure.Count; pgIdx++)
                 for (int gtIdx = 0; gtIdx < structure[pgIdx].Count; gtIdx++)
-                    ((GrowthTable)allyBondLevelTables[pgIdx].Group[gtIdx]).SetAptitudes(structure[pgIdx][gtIdx].Select(n => n.value).ToList());
+                    ((GrowthTable)allyBondLevelTables[pgIdx].Group[gtIdx]).SetAptitudes(structure[pgIdx][gtIdx].Select(n =>
+                        n.value).ToList());
         }
 
-        private static void RandomizeAptitudeCounts(IDistribution distribution, List<ParamGroup> allyBondLevelTables, List<int> proficiencyIDs)
+        private static void RandomizeAptitudeCounts(IDistribution distribution, List<ParamGroup> allyBondLevelTables,
+            List<int> proficiencyIDs)
         {
             List<Node<int>> proficiencyCounts = allyBondLevelTables.Select(pg => new Node<int>(pg.Group.Cast<GrowthTable>().Select(gt =>
                                     gt.GetAptitudes().Count).Sum())).ToList();
@@ -1013,7 +1065,8 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private void WriteEngageItemsToChangelog(List<ParamGroup> bondLevelTables, Dictionary<(ParamGroup pg, int gtIdx), StringBuilder> levelEntries)
+        private void WriteEngageItemsToChangelog(List<ParamGroup> bondLevelTables,
+            Dictionary<(ParamGroup pg, int gtIdx), StringBuilder> levelEntries)
         {
             WriteGrowthTableArraysToChangelog(bondLevelTables, gt => gt.EngageItems, levelEntries, GD.EngageWeapons, "Available");
             WriteGrowthTableArraysToChangelog(bondLevelTables, gt => gt.EngageCooperations, levelEntries, GD.EngageWeapons, "For Backups");
@@ -1028,15 +1081,24 @@ namespace ALittleSecretIngredient
 
         private static void RandomizeEngageItems(IDistribution distribution, List<ParamGroup> bondLevelTables, List<string> engageWeaponIDs)
         {
-            AsNodeStructure(bondLevelTables, gt => gt.EngageItems, out List<List<List<Node<string>>>> itemStructure, out List<Node<string>> flattened0);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageCooperations, out List<List<List<Node<string>>>> coopStructure, out List<Node<string>> flattened1);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageHorses, out List<List<List<Node<string>>>> horseStructure, out List<Node<string>> flattened2);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageCoverts, out List<List<List<Node<string>>>> covertStructure, out List<Node<string>> flattened3);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageHeavys, out List<List<List<Node<string>>>> heavyStructure, out List<Node<string>> flattened4);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageFlys, out List<List<List<Node<string>>>> flyStructure, out List<Node<string>> flattened5);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageMagics, out List<List<List<Node<string>>>> magicStructure, out List<Node<string>> flattened6);
-            AsNodeStructure(bondLevelTables, gt => gt.EngagePranas, out List<List<List<Node<string>>>> pranaStructure, out List<Node<string>> flattened7);
-            AsNodeStructure(bondLevelTables, gt => gt.EngageDragons, out List<List<List<Node<string>>>> dragonStructure, out List<Node<string>> flattened8);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageItems, out List<List<List<Node<string>>>> itemStructure,
+                out List<Node<string>> flattened0);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageCooperations, out List<List<List<Node<string>>>> coopStructure,
+                out List<Node<string>> flattened1);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageHorses, out List<List<List<Node<string>>>> horseStructure,
+                out List<Node<string>> flattened2);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageCoverts, out List<List<List<Node<string>>>> covertStructure,
+                out List<Node<string>> flattened3);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageHeavys, out List<List<List<Node<string>>>> heavyStructure,
+                out List<Node<string>> flattened4);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageFlys, out List<List<List<Node<string>>>> flyStructure,
+                out List<Node<string>> flattened5);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageMagics, out List<List<List<Node<string>>>> magicStructure,
+                out List<Node<string>> flattened6);
+            AsNodeStructure(bondLevelTables, gt => gt.EngagePranas, out List<List<List<Node<string>>>> pranaStructure,
+                out List<Node<string>> flattened7);
+            AsNodeStructure(bondLevelTables, gt => gt.EngageDragons, out List<List<List<Node<string>>>> dragonStructure,
+                out List<Node<string>> flattened8);
             List<Node<string>> allItems = flattened0.Concat(flattened1).Concat(flattened2).Concat(flattened3).Concat(flattened4).
                 Concat(flattened5).Concat(flattened6).Concat(flattened7).Concat(flattened8).ToList(); // Super flat. I like it.
             allItems.Randomize(n => n.value, (n, s) => n.value = s, distribution, engageWeaponIDs);
@@ -1147,14 +1209,16 @@ namespace ALittleSecretIngredient
             WriteNodeStructure(pgs, getArray, structure);
         }
 
-        private static void AsNodeStructure<T>(List<ParamGroup> pgs, Func<GrowthTable, T[]> getArray, out List<List<List<Node<T>>>> structure, out List<Node<T>> flattened)
+        private static void AsNodeStructure<T>(List<ParamGroup> pgs, Func<GrowthTable, T[]> getArray,
+            out List<List<List<Node<T>>>> structure, out List<Node<T>> flattened)
         {
             structure = pgs.Select(pg => pg.Group.Select(gp =>
                                             getArray((GrowthTable)gp).Select(s => new Node<T>(s)).ToList()).ToList()).ToList();
             flattened = structure.SelectMany(l => l).SelectMany(l => l).ToList();
         }
 
-        private static void AsNodeStructure(ParamGroup pg, Func<GrowthTable, string[]> getArray, out List<List<Node<string>>> structure, out List<Node<string>> flattened)
+        private static void AsNodeStructure(ParamGroup pg, Func<GrowthTable, string[]> getArray, out List<List<Node<string>>> structure,
+            out List<Node<string>> flattened)
         {
             structure = pg.Group.Select(gp => getArray((GrowthTable)gp).Select(s => new Node<string>(s)).ToList()).ToList();
             flattened = structure.SelectMany(l => l).ToList();
@@ -1178,8 +1242,8 @@ namespace ALittleSecretIngredient
                         structure[gtIdx][skillIdx].value;
         }
 
-        private static void RandomizeGrowthTableArraySizes(IDistribution distribution, List<ParamGroup> pgs, Func<GrowthTable, string[]> getArray,
-            Action<GrowthTable, string[]> setArray, List<string> emergencyPool)
+        private static void RandomizeGrowthTableArraySizes(IDistribution distribution, List<ParamGroup> pgs,
+            Func<GrowthTable, string[]> getArray, Action<GrowthTable, string[]> setArray, List<string> emergencyPool)
         {
             List<Node<int>> skillCounts = pgs.Select(pg => new Node<int>(
                                     pg.Group.Cast<GrowthTable>().Select(gt => getArray(gt).Length).Sum())).ToList();

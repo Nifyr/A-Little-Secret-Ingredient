@@ -57,13 +57,7 @@ namespace ALittleSecretIngredient
             List<List<GameData.AssetShuffleEntity>> modelSwapLists = GetModelSwapLists(settings.ModelSwap);
             foreach (List<GameData.AssetShuffleEntity> list in modelSwapLists)
                 ModelSwap(assets, ggs, individuals, assetShuffleInnertable, list);
-
-            StringBuilder assetShuffleTable = new();
-            if (assetShuffleInnertable.Length > 0)
-            {
-                assetShuffleTable.AppendLine("---- Model Swaps ----\n");
-                assetShuffleTable.AppendLine(assetShuffleInnertable.ToString());
-            }
+            StringBuilder assetShuffleTable = ApplyTableTitle(assetShuffleInnertable, "Model Swaps");
 
             StringBuilder outfitShuffleInnertable = new();
             GetOutfitSwapLists(settings.OutfitSwap, out List<List<string>> maleOutfitSwapLists, out List<List<string>> femaleOutfitSwapLists);
@@ -71,13 +65,7 @@ namespace ALittleSecretIngredient
                 OutfitSwap(assets, outfitShuffleInnertable, list);
             foreach (List<string> list in femaleOutfitSwapLists)
                 OutfitSwap(assets, outfitShuffleInnertable, list);
-
-            StringBuilder outfitShuffleTable = new();
-            if (outfitShuffleInnertable.Length > 0)
-            {
-                outfitShuffleTable.AppendLine("---- Outfit Swaps ----\n");
-                outfitShuffleTable.AppendLine(outfitShuffleInnertable.ToString());
-            }
+            StringBuilder outfitShuffleTable = ApplyTableTitle(outfitShuffleInnertable, "Outfit Swaps");
 
             foreach (Asset a in assets)
                 RandomizeColors(settings, a);
@@ -85,46 +73,27 @@ namespace ALittleSecretIngredient
             StringBuilder mountModelShuffleInnertable = new();
             if (settings.ShuffleRideDressModel)
                 ShuffleMountModels(assets, mountModelShuffleInnertable);
-
-            StringBuilder mountModelShuffleTable = new();
-            if (mountModelShuffleInnertable.Length > 0)
-            {
-                mountModelShuffleTable.AppendLine("---- Mount Model Swaps ----\n");
-                mountModelShuffleTable.AppendLine(mountModelShuffleInnertable.ToString());
-            }
+            StringBuilder mountModelShuffleTable = ApplyTableTitle(mountModelShuffleInnertable, "Mount Model Swaps");
 
             StringBuilder infoAnimShuffleInnertable = new();
             if (settings.InfoAnim.Enabled)
                 ShuffleInfoAnims(assets, infoAnimShuffleInnertable, settings.InfoAnim.GetArg<bool>(0));
-
-            StringBuilder infoAnimShuffleTable = new();
-            if (infoAnimShuffleInnertable.Length > 0)
-            {
-                infoAnimShuffleTable.AppendLine("---- Menu Character Animation Swaps ----\n");
-                infoAnimShuffleTable.AppendLine(infoAnimShuffleInnertable.ToString());
-            }
+            StringBuilder infoAnimShuffleTable = ApplyTableTitle(infoAnimShuffleInnertable, "Menu Character Animation Swaps");
 
             StringBuilder talkAnimShuffleInnertable = new();
-            if (settings.ShuffleTalkInfo)
+            if (settings.ShuffleTalkAnims)
                 ShuffleTalkAnims(assets, talkAnimShuffleInnertable);
-
-            StringBuilder talkAnimShuffleTable = new();
-            if (talkAnimShuffleInnertable.Length > 0)
-            {
-                talkAnimShuffleTable.AppendLine("---- Text Box Character Animation Swaps ----\n");
-                talkAnimShuffleTable.AppendLine(talkAnimShuffleInnertable.ToString());
-            }
+            StringBuilder talkAnimShuffleTable = ApplyTableTitle(talkAnimShuffleInnertable, "Text Box Character Animation Swaps");
 
             StringBuilder demoAnimShuffleInnertable = new();
             if (settings.DemoAnim.Enabled)
                 ShuffleDemoAnims(assets, demoAnimShuffleInnertable, settings.DemoAnim.GetArg<bool>(0));
+            StringBuilder demoAnimShuffleTable = ApplyTableTitle(demoAnimShuffleInnertable, "Cutscene Character Animation Swaps");
 
-            StringBuilder demoAnimShuffleTable = new();
-            if (demoAnimShuffleInnertable.Length > 0)
-            {
-                demoAnimShuffleTable.AppendLine("---- Cutscene Character Animation Swaps ----\n");
-                demoAnimShuffleTable.AppendLine(demoAnimShuffleInnertable.ToString());
-            }
+            StringBuilder hubAnimShuffleInnertable = new();
+            if (settings.ShuffleHubAnims)
+                ShuffleHubAnims(assets, hubAnimShuffleInnertable);
+            StringBuilder hubAnimShuffleTable = ApplyTableTitle(hubAnimShuffleInnertable, "Hub Character Animation Swaps");
 
             StringBuilder tables = new();
             if (assetShuffleTable.Length > 0)
@@ -139,8 +108,33 @@ namespace ALittleSecretIngredient
                 tables.AppendLine(talkAnimShuffleTable.ToString());
             if (demoAnimShuffleTable.Length > 0)
                 tables.AppendLine(demoAnimShuffleTable.ToString());
+            if (hubAnimShuffleTable.Length > 0)
+                tables.AppendLine(hubAnimShuffleTable.ToString());
 
             return tables;
+        }
+
+        private static StringBuilder ApplyTableTitle(StringBuilder innerTable, string title)
+        {
+            StringBuilder assetShuffleTable = new();
+            if (innerTable.Length > 0)
+            {
+                assetShuffleTable.AppendLine($"---- {title} ----\n");
+                assetShuffleTable.AppendLine(innerTable.ToString());
+            }
+
+            return assetShuffleTable;
+        }
+
+        private void ShuffleHubAnims(List<Asset> assets, StringBuilder hubAnimShuffleInnertable)
+        {
+            Dictionary<string, string> mapping = new();
+            CreateRandomMapping(hubAnimShuffleInnertable, mapping, GD.MaleHubAnims);
+            CreateRandomMapping(hubAnimShuffleInnertable, mapping, GD.FemaleHubAnims);
+            foreach (Asset a in assets)
+                if (mapping.TryGetValue(a.HubAnim, out string? newValue))
+                    a.HubAnim = newValue;
+            GD.SetDirty(DataSetEnum.Asset);
         }
 
         private void ShuffleDemoAnims(List<Asset> assets, StringBuilder demoAnimShuffleInnertable, bool includeGeneric)
@@ -680,22 +674,14 @@ namespace ALittleSecretIngredient
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
-            StringBuilder innertable = new();
+            StringBuilder innerTable = new();
             foreach (GodGeneral gg in ggs)
                 if (entries[gg].Length > 0)
                 {
-                    innertable.AppendLine($"\t{GD.Emblems.IDToName(gg.Gid)}:");
-                    innertable.AppendLine(entries[gg].ToString());
+                    innerTable.AppendLine($"\t{GD.Emblems.IDToName(gg.Gid)}:");
+                    innerTable.AppendLine(entries[gg].ToString());
                 }
-
-            StringBuilder table = new();
-            if (innertable.Length > 0)
-            {
-                table.AppendLine("---- Emblems ----\n");
-                table.AppendLine(innertable.ToString());
-            }
-
-            return table;
+            return ApplyTableTitle(innerTable, "Emblems");
         }
 
         private static Dictionary<T, StringBuilder> CreateStringBuilderDictionary<T>(List<T> objects) where T : notnull
@@ -918,14 +904,7 @@ namespace ALittleSecretIngredient
                     innertable.AppendLine(entries[pg].ToString());
                 }
 
-            StringBuilder table = new();
-            if (innertable.Length > 0)
-            {
-                table.AppendLine("---- Bond Level Tables ----\n");
-                table.AppendLine(innertable.ToString());
-            }
-
-            return table;
+            return ApplyTableTitle(innertable, "Bond Level Tables");
         }
 
         private StringBuilder RandomizeBondLevel(RandomizerSettings.BondLevelSettings settings)
@@ -960,14 +939,7 @@ namespace ALittleSecretIngredient
                     innertable.AppendLine(entries[bl].ToString());
                 }
 
-            StringBuilder table = new();
-            if (innertable.Length > 0)
-            {
-                table.AppendLine("---- Bond Levels ----\n");
-                table.AppendLine(innertable.ToString());
-            }
-
-            return table;
+            return ApplyTableTitle(innertable, "Bond Levels");
         }
 
         private static void SortProperties<T>(List<T> list, Func<T, int> get, Action<T, int> set)

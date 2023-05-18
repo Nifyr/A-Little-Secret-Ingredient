@@ -522,6 +522,37 @@
             ("GID_M000_マルス", "Marth (Prologue)"), ("GID_ルフレ", "Robin")
         };
         #endregion
+        #region HubAnim IDs
+        internal List<(string id, string name)> MaleHubAnims { get; } = new()
+        {
+            ("AOC_Hub_Hum0M", "Male A"), ("AOC_Hub_Hum1M", "Male B"),
+            ("AOC_Hub_Hum2M", "Male C"), ("AOC_Hub_c001", "Male Alear"),
+            ("AOC_Hub_c101", "Boucheron"), ("AOC_Hub_c102", "Louis"), 
+            ("AOC_Hub_c302", "Kagetsu"), ("AOC_Hub_c304", "Lindon"),
+            ("AOC_Hub_c400", "Fogado"), ("AOC_Hub_c402", "Bunet"),
+            ("AOC_Hub_c500", "Vander"), ("AOC_Hub_c502", "Mauvier"),
+            ("AOC_Hub_God0M", "Male Emblem"), ("AOC_Hub_Shop1", "Durthon"),
+            ("AOC_Hub_Shop3", "Pinet"), ("AOC_Hub_c809", "Old Man"),
+        };
+
+        internal List<(string id, string name)> FemaleHubAnims { get; } = new()
+        {
+            ("AOC_Hub_Hum0F", "Female A"), ("AOC_Hub_Hum1F", "Female B"),
+            ("AOC_Hub_Hum2F", "Female C"), ("AOC_Hub_Hum3F", "Female D"),
+            ("AOC_Hub_Hum0FL", "Female E"), ("AOC_Hub_Hum1FL", "Female F"),
+            ("AOC_Hub_Hum2FL", "Female G"), ("AOC_Hub_Hum3FL", "Female H"),
+            ("AOC_Hub_Hum1FLyn", "Female I"), ("AOC_Hub_Hum2FLyn", "Female J"),
+            ("AOC_Hub_Hum3FLyn", "Female K"),
+            ("AOC_Hub_c051", "Female Alear"), ("AOC_Hub_c150", "Céline A"),
+            ("AOC_Hub_c150S", "Céline B"), ("AOC_Hub_c150Lyn", "Céline C"),
+            ("AOC_Hub_c250", "Jade"), ("AOC_Hub_c254", "Saphir"),
+            ("AOC_Hub_c351", "Hortensia"), ("AOC_Hub_c352", "Goldmary"),
+            ("AOC_Hub_c452", "Merrin"), ("AOC_Hub_c453", "Panette"),
+            ("AOC_Hub_c551", "Veyle"), ("AOC_Hub_c555", "Lumera"),
+            ("AOC_Hub_God0F", "Female Emblem"), ("AOC_Hub_Shop2", "Anisse"),
+            ("AOC_Hub_Shop4", "Calney"),
+        };
+        #endregion
         #region InfoAnim IDs
         internal List<(string id, string name)> UniqueMaleInfoAnims { get; } = new()
         {

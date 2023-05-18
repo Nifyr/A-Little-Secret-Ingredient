@@ -52,11 +52,12 @@
             groupBox3 = new GroupBox();
             checkBox16 = new CheckBox();
             groupBox4 = new GroupBox();
+            checkBox18 = new CheckBox();
+            checkBox22 = new CheckBox();
             checkBox19 = new CheckBox();
             checkBox17 = new CheckBox();
             checkBox15 = new CheckBox();
-            checkBox18 = new CheckBox();
-            checkBox22 = new CheckBox();
+            checkBox23 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -321,6 +322,7 @@
             // 
             groupBox4.AutoSize = true;
             groupBox4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox4.Controls.Add(checkBox23);
             groupBox4.Controls.Add(checkBox18);
             groupBox4.Controls.Add(checkBox22);
             groupBox4.Controls.Add(checkBox19);
@@ -329,10 +331,31 @@
             groupBox4.Location = new Point(415, 85);
             groupBox4.MinimumSize = new Size(200, 0);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(200, 196);
+            groupBox4.Size = new Size(200, 226);
             groupBox4.TabIndex = 17;
             groupBox4.TabStop = false;
             groupBox4.Text = "Character Animations";
+            // 
+            // checkBox18
+            // 
+            checkBox18.AutoSize = true;
+            checkBox18.Location = new Point(21, 146);
+            checkBox18.Margin = new Padding(18, 3, 3, 3);
+            checkBox18.Name = "checkBox18";
+            checkBox18.Size = new Size(132, 24);
+            checkBox18.TabIndex = 5;
+            checkBox18.Text = "Include generic";
+            checkBox18.UseVisualStyleBackColor = true;
+            // 
+            // checkBox22
+            // 
+            checkBox22.AutoSize = true;
+            checkBox22.Location = new Point(6, 116);
+            checkBox22.Name = "checkBox22";
+            checkBox22.Size = new Size(154, 24);
+            checkBox22.TabIndex = 4;
+            checkBox22.Text = "Shuffle in cutscene";
+            checkBox22.UseVisualStyleBackColor = true;
             // 
             // checkBox19
             // 
@@ -367,26 +390,16 @@
             checkBox15.Text = "Shuffle in menu";
             checkBox15.UseVisualStyleBackColor = true;
             // 
-            // checkBox18
+            // checkBox23
             // 
-            checkBox18.AutoSize = true;
-            checkBox18.Location = new Point(21, 146);
-            checkBox18.Margin = new Padding(18, 3, 3, 3);
-            checkBox18.Name = "checkBox18";
-            checkBox18.Size = new Size(132, 24);
-            checkBox18.TabIndex = 5;
-            checkBox18.Text = "Include generic";
-            checkBox18.UseVisualStyleBackColor = true;
-            // 
-            // checkBox22
-            // 
-            checkBox22.AutoSize = true;
-            checkBox22.Location = new Point(6, 116);
-            checkBox22.Name = "checkBox22";
-            checkBox22.Size = new Size(154, 24);
-            checkBox22.TabIndex = 4;
-            checkBox22.Text = "Shuffle in cutscene";
-            checkBox22.UseVisualStyleBackColor = true;
+            checkBox23.AutoSize = true;
+            checkBox23.Location = new Point(6, 176);
+            checkBox23.Margin = new Padding(3, 3, 40, 3);
+            checkBox23.Name = "checkBox23";
+            checkBox23.Size = new Size(122, 24);
+            checkBox23.TabIndex = 6;
+            checkBox23.Text = "Shuffle in hub";
+            checkBox23.UseVisualStyleBackColor = true;
             // 
             // AssetTableForm
             // 
@@ -442,5 +455,6 @@
         public CheckBox checkBox19;
         public CheckBox checkBox18;
         public CheckBox checkBox22;
+        public CheckBox checkBox23;
     }
 }

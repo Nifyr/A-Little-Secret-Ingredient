@@ -37,11 +37,11 @@
             randomizeAndExportButton = new Button();
             groupBox2 = new GroupBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            button4 = new Button();
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
             toolTip1 = new ToolTip(components);
-            button4 = new Button();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -85,7 +85,7 @@
             saveChangelogCheckBox.Size = new Size(136, 24);
             saveChangelogCheckBox.TabIndex = 2;
             saveChangelogCheckBox.Text = "Save changelog";
-            toolTip1.SetToolTip(saveChangelogCheckBox, "This will result in the creation of a text document that *showcases* all the changes made to the exported mod.");
+            toolTip1.SetToolTip(saveChangelogCheckBox, "This will result in the creation of a text document that *showcases* changes made in the exported mod.");
             saveChangelogCheckBox.UseVisualStyleBackColor = true;
             // 
             // rememberSettingsCheckBox
@@ -134,42 +134,6 @@
             flowLayoutPanel1.Size = new Size(206, 194);
             flowLayoutPanel1.TabIndex = 0;
             // 
-            // button1
-            // 
-            button1.Location = new Point(3, 38);
-            button1.Name = "button1";
-            button1.Size = new Size(200, 29);
-            button1.TabIndex = 0;
-            button1.Text = "General Emblem Data";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += Button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(3, 73);
-            button2.Name = "button2";
-            button2.Size = new Size(200, 29);
-            button2.TabIndex = 1;
-            button2.Text = "Bond Level Bonuses";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += Button2_Click;
-            // 
-            // button3
-            // 
-            button3.Location = new Point(3, 108);
-            button3.Name = "button3";
-            button3.Size = new Size(200, 29);
-            button3.TabIndex = 2;
-            button3.Text = "Bond Level Requirements";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += Button3_Click;
-            // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // button4
             // 
             button4.Location = new Point(3, 3);
@@ -179,6 +143,42 @@
             button4.Text = "Asset Table";
             button4.UseVisualStyleBackColor = true;
             button4.Click += Button4_Click;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(3, 38);
+            button1.Name = "button1";
+            button1.Size = new Size(200, 29);
+            button1.TabIndex = 4;
+            button1.Text = "General Emblem Data";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Button1_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(3, 73);
+            button2.Name = "button2";
+            button2.Size = new Size(200, 29);
+            button2.TabIndex = 5;
+            button2.Text = "Bond Level Bonuses";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += Button2_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(3, 108);
+            button3.Name = "button3";
+            button3.Size = new Size(200, 29);
+            button3.TabIndex = 6;
+            button3.Text = "Bond Level Requirements";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += Button3_Click;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
             // 
             // MainForm
             // 

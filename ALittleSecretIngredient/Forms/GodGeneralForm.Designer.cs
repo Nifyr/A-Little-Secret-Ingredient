@@ -622,7 +622,7 @@
             checkBox12.Size = new Size(188, 24);
             checkBox12.TabIndex = 19;
             checkBox12.Text = "Randomize enemy stats";
-            toolTip1.SetToolTip(checkBox12, "This will alter the stat changes that are continuously in effect while *opponents* are synched with emblems.");
+            toolTip1.SetToolTip(checkBox12, "This will alter the stat changes that are continuously in effect while *opponents* are synced with emblems.");
             checkBox12.UseVisualStyleBackColor = true;
             // 
             // button22
@@ -733,7 +733,7 @@
             checkBox17.Size = new Size(167, 24);
             checkBox17.TabIndex = 0;
             checkBox17.Text = "Randomize ally stats";
-            toolTip1.SetToolTip(checkBox17, "This will alter the stat changes that are continuously in effect while your characters are synched with emblems. These stat changes are typically exclusive to *enemies*.");
+            toolTip1.SetToolTip(checkBox17, "This will alter the stat changes that are continuously in effect while your characters are synced with emblems. These stat changes are typically exclusive to *enemies*.");
             checkBox17.UseVisualStyleBackColor = true;
             // 
             // groupBox9

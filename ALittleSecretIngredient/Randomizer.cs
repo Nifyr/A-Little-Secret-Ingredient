@@ -513,12 +513,12 @@ namespace ALittleSecretIngredient
             List<GodGeneral> ggs = GD.Get(DataSetEnum.GodGeneral).Params.Cast<GodGeneral>().ToList();
             List<GodGeneral> allyEngageableEmblems = ggs.FilterData(gg => gg.Gid, GD.AllyEngageableEmblems);
             List<GodGeneral> enemyEngageableEmblems = ggs.FilterData(gg => gg.Gid, GD.EnemyEngageableEmblems);
-            List<GodGeneral> allySynchableEmblems = ggs.FilterData(gg => gg.Gid, GD.AllySynchableEmblems);
-            List<GodGeneral> enemySynchableEmblems = ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems);
+            List<GodGeneral> allySyncableEmblems = ggs.FilterData(gg => gg.Gid, GD.AllySyncableEmblems);
+            List<GodGeneral> enemySyncableEmblems = ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems);
             List<GodGeneral> linkableEmblems = ggs.FilterData(gg => gg.Gid, GD.LinkableEmblems);
             List<GodGeneral> baseArenaEmblems = ggs.FilterData(gg => gg.Gid, GD.BaseArenaEmblems);
             List<GodGeneral> arenaEmblems = ggs.FilterData(gg => gg.Gid, GD.ArenaEmblems);
-            List<GodGeneral> allyArenaSynchableEmblems = ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems);
+            List<GodGeneral> allyArenaSyncableEmblems = ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems);
             List<GodGeneral> engageableEmblems = ggs.FilterData(gg => gg.Gid, GD.EngageableEmblems);
             List<string> playableCharacterIDs = GD.PlayableCharacters.GetIDs();
             List<string> compatibleAsEngageAttackIDs = GD.CompatibleAsEngageAttacks.GetIDs();
@@ -555,9 +555,9 @@ namespace ALittleSecretIngredient
 
             if (settings.EngageCount.Enabled)
             {
-                allySynchableEmblems.Randomize(gg => gg.EngageCount, (gg, b) => gg.EngageCount = b, settings.EngageCount.
+                allySyncableEmblems.Randomize(gg => gg.EngageCount, (gg, b) => gg.EngageCount = b, settings.EngageCount.
                     Distribution, 1, byte.MaxValue);
-                WriteToChangelog(entries, allySynchableEmblems, gg => gg.EngageCount, "Engage Meter Size");
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.EngageCount, "Engage Meter Size");
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -570,12 +570,12 @@ namespace ALittleSecretIngredient
                 allyEngageableEmblems.ForEach(gg => gg.EngageAttackLink = GD.EngageAttackToBondLinkSkill.TryGetValue(gg.
                     EngageAttack, out string? value) ? value : "");
                 // Propagate to assosiated emblems
-                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s);
-                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg.EngageAttackLink = s);
+                Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s);
+                Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg.EngageAttackLink = s);
                 // Correct AIEngageAttackType field if possible
                 allyEngageableEmblems.ForEach(gg => gg.AIEngageAttackType = GD.EngageAttackToAIEngageAttackType.TryGetValue(gg.
                     EngageAttack, out sbyte value) ? value : (sbyte)0);
-                WriteToChangelog(entries, allySynchableEmblems, gg => gg.EngageAttack, "Engage Attack", GD.CompatibleAsEngageAttacks);
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.EngageAttack, "Engage Attack", GD.CompatibleAsEngageAttacks);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
             if (settings.EngageAttackEnemy.Enabled)
@@ -584,8 +584,8 @@ namespace ALittleSecretIngredient
                 enemyEngageableEmblems.Randomize(gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s, settings.
                     EngageAttackEnemy.Distribution, compatibleAsEngageAttackIDs);
                 // Propagate to assosiated emblems
-                Propagate(enemyEngageableEmblems, enemySynchableEmblems, gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s);
-                WriteToChangelog(entries, enemySynchableEmblems, gg => gg.EngageAttack, "Engage Attack", GD.CompatibleAsEngageAttacks);
+                Propagate(enemyEngageableEmblems, enemySyncableEmblems, gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s);
+                WriteToChangelog(entries, enemySyncableEmblems, gg => gg.EngageAttack, "Engage Attack", GD.CompatibleAsEngageAttacks);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -595,9 +595,9 @@ namespace ALittleSecretIngredient
                 allyEngageableEmblems.Randomize(gg => gg.EngageAttackLink, (gg, s) => gg.EngageAttackLink = s, settings.
                     EngageAttackLink.Distribution, compatibleAsEngageAttackIDs);
                 // Propagate to assosiated emblems
-                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg.
+                Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg.
                     EngageAttackLink = s);
-                WriteToChangelog(entries, allySynchableEmblems, gg => gg.EngageAttackLink, "Bond Link Skill", GD.CompatibleAsEngageAttacks);
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.EngageAttackLink, "Bond Link Skill", GD.CompatibleAsEngageAttacks);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -610,8 +610,8 @@ namespace ALittleSecretIngredient
                 if (settings.LinkGid.GetArg<bool>(0))
                     PairLinkGids(linkableEmblems);
                 // Propagate to assosiated emblems
-                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.LinkGid, (gg, s) => gg.LinkGid = s);
-                WriteToChangelog(entries, allySynchableEmblems, gg => gg.LinkGid, "Bond Link Emblem", GD.LinkableEmblems);
+                Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.LinkGid, (gg, s) => gg.LinkGid = s);
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.LinkGid, "Bond Link Emblem", GD.LinkableEmblems);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -622,9 +622,9 @@ namespace ALittleSecretIngredient
                 // Shuffle arena emblems
                 baseArenaEmblems.Randomize(gg => gg.GrowTable, (gg, s) => gg.GrowTable = s, new Redistribution(100), null!);
                 // Propagate to assosiated emblems
-                Propagate(allyEngageableEmblems, allySynchableEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
+                Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
                 Propagate(baseArenaEmblems, arenaEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
-                WriteToChangelog(entries, allySynchableEmblems, gg => gg.GrowTable, "Bond Level Table", GD.AllyBondLevelTables);
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.GrowTable, "Bond Level Table", GD.AllyBondLevelTables);
                 WriteToChangelog(entries, arenaEmblems, gg => gg.GrowTable, "Bond Level Table", GD.AllyBondLevelTables);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
@@ -633,8 +633,8 @@ namespace ALittleSecretIngredient
                 // Shuffle
                 enemyEngageableEmblems.Randomize(gg => gg.GrowTable, (gg, s) => gg.GrowTable = s, new Redistribution(100), null!);
                 // Propagate to assosiated emblems
-                Propagate(enemyEngageableEmblems, enemySynchableEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
-                WriteToChangelog(entries, enemySynchableEmblems, gg => gg.GrowTable, "Bond Level Table", GD.EnemyBondLevelTables);
+                Propagate(enemyEngageableEmblems, enemySyncableEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
+                WriteToChangelog(entries, enemySyncableEmblems, gg => gg.GrowTable, "Bond Level Table", GD.EnemyBondLevelTables);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -645,8 +645,8 @@ namespace ALittleSecretIngredient
                 void HandleEngraving(RandomizerFieldSettings rfs, Func<GodGeneral, sbyte> get, Action<GodGeneral, sbyte> set, string name)
                 {
                     allyEngageableEmblems.Randomize(get, set, rfs.Distribution, sbyte.MinValue, sbyte.MaxValue);
-                    Propagate(allyEngageableEmblems, allySynchableEmblems, get, set);
-                    allySynchableEmblems.ForEach(o => engravingEntries[o].Append(get(o) + name + ",\t"));
+                    Propagate(allyEngageableEmblems, allySyncableEmblems, get, set);
+                    allySyncableEmblems.ForEach(o => engravingEntries[o].Append(get(o) + name + ",\t"));
                 }
                 HandleEngraving(settings.EngravePower, gg => gg.EngravePower, (gg, i) => gg.EngravePower = i, "Mt");
                 HandleEngraving(settings.EngraveWeight, gg => gg.EngraveWeight, (gg, i) => gg.EngraveWeight = i, "Wt");
@@ -662,14 +662,14 @@ namespace ALittleSecretIngredient
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
-            if (settings.RandomizeAllyStaticSynchStats)
+            if (settings.RandomizeAllyStaticSyncStats)
             {
                 Dictionary<GodGeneral, StringBuilder> statEntries = new();
                 ggs.ForEach(gg => statEntries.Add(gg, new()));
                 void HandleStat(RandomizerFieldSettings rfs, Func<GodGeneral, sbyte> get, Action<GodGeneral, sbyte> set, string name)
                 {
-                    allyArenaSynchableEmblems.Randomize(get, set, rfs.Distribution, sbyte.MinValue, sbyte.MaxValue);
-                    allyArenaSynchableEmblems.ForEach(o => statEntries[o].Append(get(o) + name + ",\t"));
+                    allyArenaSyncableEmblems.Randomize(get, set, rfs.Distribution, sbyte.MinValue, sbyte.MaxValue);
+                    allyArenaSyncableEmblems.ForEach(o => statEntries[o].Append(get(o) + name + ",\t"));
                 }
                 HandleStat(settings.SynchroEnhanceHpAlly, gg => gg.SynchroEnhanceHp, (gg, i) => gg.SynchroEnhanceHp = i, "HP");
                 HandleStat(settings.SynchroEnhanceStrAlly, gg => gg.SynchroEnhanceStr, (gg, i) => gg.SynchroEnhanceStr = i, "Str");
@@ -684,18 +684,18 @@ namespace ALittleSecretIngredient
                 ggs.ForEach(gg =>
                 {
                     if (statEntries[gg].Length > 0)
-                        entries[gg].AppendLine("Static Synch Bonus:\t" + statEntries[gg].ToString()[..^2]);
+                        entries[gg].AppendLine("Static Sync Bonus:\t" + statEntries[gg].ToString()[..^2]);
                 });
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
-            if (settings.RandomizeEnemyStaticSynchStats)
+            if (settings.RandomizeEnemyStaticSyncStats)
             {
                 Dictionary<GodGeneral, StringBuilder> statEntries = new();
                 ggs.ForEach(gg => statEntries.Add(gg, new()));
                 void HandleStat(RandomizerFieldSettings rfs, Func<GodGeneral, sbyte> get, Action<GodGeneral, sbyte> set, string name)
                 {
-                    enemySynchableEmblems.Randomize(get, set, rfs.Distribution, sbyte.MinValue, sbyte.MaxValue);
-                    enemySynchableEmblems.ForEach(o => statEntries[o].Append(get(o) + name + ",\t"));
+                    enemySyncableEmblems.Randomize(get, set, rfs.Distribution, sbyte.MinValue, sbyte.MaxValue);
+                    enemySyncableEmblems.ForEach(o => statEntries[o].Append(get(o) + name + ",\t"));
                 }
                 HandleStat(settings.SynchroEnhanceHpEnemy, gg => gg.SynchroEnhanceHp, (gg, i) => gg.SynchroEnhanceHp = i, "HP");
                 HandleStat(settings.SynchroEnhanceStrEnemy, gg => gg.SynchroEnhanceStr, (gg, i) => gg.SynchroEnhanceStr = i, "Str");
@@ -710,7 +710,7 @@ namespace ALittleSecretIngredient
                 ggs.ForEach(gg =>
                 {
                     if (statEntries[gg].Length > 0)
-                        entries[gg].AppendLine("Static Synch Bonus:\t" + statEntries[gg].ToString()[..^2]);
+                        entries[gg].AppendLine("Static Sync Bonus:\t" + statEntries[gg].ToString()[..^2]);
                 });
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
@@ -748,8 +748,8 @@ namespace ALittleSecretIngredient
             List<ParamGroup> enemyBondLevelTables = pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables);
             List<ParamGroup> bondLevelTables = pgs.FilterData(pg => pg.Name, GD.BondLevelTables);
             List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
-            List<string> synchStatSkillIDs = GD.SynchStatSkills.GetIDs();
-            List<string> synchMovSkillIDs = GD.SynchMovSkills.GetIDs();
+            List<string> syncStatSkillIDs = GD.SyncStatSkills.GetIDs();
+            List<string> syncMovSkillIDs = GD.SyncMovSkills.GetIDs();
             List<string> engageWeaponIDs = GD.EngageWeapons.GetIDs();
             List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
             foreach (Skill s in generalSkills)
@@ -785,22 +785,22 @@ namespace ALittleSecretIngredient
                 // Randomize array sizes if toggled
                 if (settings.SynchroStatSkillsAllyCount.Enabled)
                     RandomizeGrowthTableArraySizes(settings.SynchroStatSkillsAllyCount.Distribution, allyBondLevelTables,
-                        gt => gt.SynchroSkills.Where(synchStatSkillIDs.Contains).ToArray(), (gt, sa) =>
+                        gt => gt.SynchroSkills.Where(syncStatSkillIDs.Contains).ToArray(), (gt, sa) =>
                         {
-                            List<string> skills = gt.SynchroSkills.Where(s => !synchStatSkillIDs.Contains(s)).ToList();
+                            List<string> skills = gt.SynchroSkills.Where(s => !syncStatSkillIDs.Contains(s)).ToList();
                             skills.AddRange(sa);
                             gt.SynchroSkills = skills.ToArray();
-                        }, synchStatSkillIDs);
+                        }, syncStatSkillIDs);
                 // Randomize skills
-                RandomizeGrowthTableArrays(settings.SynchroStatSkillsAlly.Distribution, allyBondLevelTables, synchStatSkillIDs,
-                    gt => gt.SynchroSkills, synchStatSkillIDs.Contains);
+                RandomizeGrowthTableArrays(settings.SynchroStatSkillsAlly.Distribution, allyBondLevelTables, syncStatSkillIDs,
+                    gt => gt.SynchroSkills, syncStatSkillIDs.Contains);
                 // Limit to 3 stats if toggled
                 if (settings.SynchroStatSkillsAlly.GetArg<bool>(0))
-                    LimitSynchStatsTo3(allyBondLevelTables, synchStatSkillIDs, synchMovSkillIDs);
+                    LimitSyncStatsTo3(allyBondLevelTables, syncStatSkillIDs, syncMovSkillIDs);
                 // Sort same stats in increasing order
-                SortSynchStats(allyBondLevelTables);
-                WriteGrowthTableArraysToChangelog(allyBondLevelTables, gt => gt.SynchroSkills.Where(synchStatSkillIDs.Contains),
-                    levelEntries, GD.SynchStatSkills, "While Synched");
+                SortSyncStats(allyBondLevelTables);
+                WriteGrowthTableArraysToChangelog(allyBondLevelTables, gt => gt.SynchroSkills.Where(syncStatSkillIDs.Contains),
+                    levelEntries, GD.SyncStatSkills, "While Synced");
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
             if (settings.SynchroStatSkillsEnemy.Enabled)
@@ -808,22 +808,22 @@ namespace ALittleSecretIngredient
                 // Randomize array sizes if toggled
                 if (settings.SynchroStatSkillsEnemyCount.Enabled)
                     RandomizeGrowthTableArraySizes(settings.SynchroStatSkillsEnemyCount.Distribution, enemyBondLevelTables,
-                        gt => gt.SynchroSkills.Where(synchStatSkillIDs.Contains).ToArray(), (gt, sa) =>
+                        gt => gt.SynchroSkills.Where(syncStatSkillIDs.Contains).ToArray(), (gt, sa) =>
                         {
-                            List<string> skills = gt.SynchroSkills.Where(s => !synchStatSkillIDs.Contains(s)).ToList();
+                            List<string> skills = gt.SynchroSkills.Where(s => !syncStatSkillIDs.Contains(s)).ToList();
                             skills.AddRange(sa);
                             gt.SynchroSkills = skills.ToArray();
-                        }, synchStatSkillIDs);
+                        }, syncStatSkillIDs);
                 // Randomize skills
-                RandomizeGrowthTableArrays(settings.SynchroStatSkillsEnemy.Distribution, enemyBondLevelTables, synchStatSkillIDs,
-                    gt => gt.SynchroSkills, synchStatSkillIDs.Contains);
+                RandomizeGrowthTableArrays(settings.SynchroStatSkillsEnemy.Distribution, enemyBondLevelTables, syncStatSkillIDs,
+                    gt => gt.SynchroSkills, syncStatSkillIDs.Contains);
                 // Limit to 3 stats if toggled
                 if (settings.SynchroStatSkillsAlly.GetArg<bool>(0))
-                    LimitSynchStatsTo3(enemyBondLevelTables, synchStatSkillIDs, synchMovSkillIDs);
+                    LimitSyncStatsTo3(enemyBondLevelTables, syncStatSkillIDs, syncMovSkillIDs);
                 // Sort same stats in increasing order
-                SortSynchStats(enemyBondLevelTables);
-                WriteGrowthTableArraysToChangelog(enemyBondLevelTables, gt => gt.SynchroSkills.Where(synchStatSkillIDs.Contains),
-                    levelEntries, GD.SynchStatSkills, "While Synched");
+                SortSyncStats(enemyBondLevelTables);
+                WriteGrowthTableArraysToChangelog(enemyBondLevelTables, gt => gt.SynchroSkills.Where(syncStatSkillIDs.Contains),
+                    levelEntries, GD.SyncStatSkills, "While Synced");
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
             if (settings.SynchroGeneralSkillsAlly.Enabled)
@@ -841,7 +841,7 @@ namespace ALittleSecretIngredient
                 RandomizeGrowthTableArrays(settings.SynchroGeneralSkillsAlly.Distribution, allyBondLevelTables, generalSkillIDs,
                     gt => gt.SynchroSkills, generalSkillIDs.Contains);
                 WriteGrowthTableArraysToChangelog(allyBondLevelTables, gt => gt.SynchroSkills.Where(generalSkillIDs.Contains),
-                    levelEntries, GD.GeneralSkills, "While Synched");
+                    levelEntries, GD.GeneralSkills, "While Synced");
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
             if (settings.SynchroGeneralSkillsEnemy.Enabled)
@@ -859,7 +859,7 @@ namespace ALittleSecretIngredient
                 RandomizeGrowthTableArrays(settings.SynchroGeneralSkillsEnemy.Distribution, enemyBondLevelTables, generalSkillIDs,
                     gt => gt.SynchroSkills, generalSkillIDs.Contains);
                 WriteGrowthTableArraysToChangelog(enemyBondLevelTables, gt => gt.SynchroSkills.Where(generalSkillIDs.Contains),
-                    levelEntries, GD.GeneralSkills, "While Synched");
+                    levelEntries, GD.GeneralSkills, "While Synced");
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
 
@@ -1144,16 +1144,16 @@ namespace ALittleSecretIngredient
                 }
         }
 
-        private void SortSynchStats(List<ParamGroup> pgs)
+        private void SortSyncStats(List<ParamGroup> pgs)
         {
             foreach (ParamGroup pg in pgs)
             {
                 AsNodeStructure(pg, gt => gt.SynchroSkills, out List<List<Node<string>>> structure, out List<Node<string>> flattened);
-                for (int a = 0; a < GD.SynchStatLookup.Count; a++)
+                for (int a = 0; a < GD.SyncStatLookup.Count; a++)
                 {
-                    List<Node<string>> singleStat = flattened.Where(n => GD.SynchStatLookup[a].Contains(n.value)).ToList();
+                    List<Node<string>> singleStat = flattened.Where(n => GD.SyncStatLookup[a].Contains(n.value)).ToList();
                     List<string> skills = singleStat.Select(n => n.value).ToList();
-                    skills.Sort((s0, s1) => GD.SynchStatLookup[a].IndexOf(s0) - GD.SynchStatLookup[a].IndexOf(s1));
+                    skills.Sort((s0, s1) => GD.SyncStatLookup[a].IndexOf(s0) - GD.SyncStatLookup[a].IndexOf(s1));
                     for (int b = 0; b < singleStat.Count; b++)
                         singleStat[b].value = skills[b];
                 }
@@ -1161,30 +1161,30 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private void LimitSynchStatsTo3(List<ParamGroup> pgs, List<string> synchStatSkillIDs, List<string> synchMovSkillIDs)
+        private void LimitSyncStatsTo3(List<ParamGroup> pgs, List<string> syncStatSkillIDs, List<string> syncMovSkillIDs)
         {
             foreach (ParamGroup pg in pgs)
             {
                 AsNodeStructure(pg, gt => gt.SynchroSkills,
                     out List<List<Node<string>>> structure, out List<Node<string>> flattened);
-                flattened = flattened.Where(n => synchStatSkillIDs.Contains(n.value)).ToList();
+                flattened = flattened.Where(n => syncStatSkillIDs.Contains(n.value)).ToList();
                 List<string> search = flattened.Select(n => n.value).ToList();
                 new Redistribution(100).Randomize(search);
-                List<GameData.SynchStat> stats = new();
+                List<GameData.SyncStat> stats = new();
                 while (stats.Count < 3 && search.Count > 0)
                 {
                     string s = search.Last();
                     search.RemoveAt(search.Count - 1);
-                    GameData.SynchStat stat = GameData.SynchStat.None;
-                    for (int i = 0; stat == GameData.SynchStat.None && i < GD.SynchStatLookup.Count; i++)
-                        if (GD.SynchStatLookup[i].Contains(s))
-                            stat = (GameData.SynchStat)i;
-                    if (!stats.Contains(stat) && stat != GameData.SynchStat.Mov)
+                    GameData.SyncStat stat = GameData.SyncStat.None;
+                    for (int i = 0; stat == GameData.SyncStat.None && i < GD.SyncStatLookup.Count; i++)
+                        if (GD.SyncStatLookup[i].Contains(s))
+                            stat = (GameData.SyncStat)i;
+                    if (!stats.Contains(stat) && stat != GameData.SyncStat.Mov)
                         stats.Add(stat);
                 }
-                List<string> allowedSkills = stats.SelectMany(ss => GD.SynchStatLookup[(int)ss]).ToList();
+                List<string> allowedSkills = stats.SelectMany(ss => GD.SyncStatLookup[(int)ss]).ToList();
                 foreach (Node<string> n in flattened)
-                    if (!allowedSkills.Contains(n.value) && !synchMovSkillIDs.Contains(n.value))
+                    if (!allowedSkills.Contains(n.value) && !syncMovSkillIDs.Contains(n.value))
                         n.value = allowedSkills.GetRandom();
                 WriteNodeStructure(pg, gt => gt.SynchroSkills, structure);
             }

@@ -25,7 +25,7 @@ namespace ALittleSecretIngredient
                     {
                         case RandomizerDistribution.EngageCount:
                             NumericDistributionSetup nds0 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllySynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllySyncableEmblems),
                                 gg => gg.EngageCount);
                             nds0.distributions[3] = new NormalConstant(100, 7, 2);
                             nds0.idx = 3;
@@ -50,110 +50,110 @@ namespace ALittleSecretIngredient
                                 gg.EngraveSecure);
                         case RandomizerDistribution.SynchroEnhanceHpAlly:
                             NumericDistributionSetup nds1 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceHp);
                             nds1.distributions[3] = new NormalConstant(10, 0, 8);
                             nds1.idx = 3;
                             return nds1;
                         case RandomizerDistribution.SynchroEnhanceStrAlly:
                             NumericDistributionSetup nds2 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceStr);
                             nds2.distributions[3] = new NormalConstant(10, 0, 5);
                             nds2.idx = 3;
                             return nds2;
                         case RandomizerDistribution.SynchroEnhanceTechAlly:
                             NumericDistributionSetup nds3 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceTech);
                             nds3.distributions[3] = new NormalConstant(10, 0, 5);
                             nds3.idx = 3;
                             return nds3;
                         case RandomizerDistribution.SynchroEnhanceQuickAlly:
                             NumericDistributionSetup nds4 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceQuick);
                             nds4.distributions[3] = new NormalConstant(10, 0, 5);
                             nds4.idx = 3;
                             return nds4;
                         case RandomizerDistribution.SynchroEnhanceLuckAlly:
                             NumericDistributionSetup nds5 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceLuck);
                             nds5.distributions[3] = new NormalConstant(10, 0, 5);
                             nds5.idx = 3;
                             return nds5;
                         case RandomizerDistribution.SynchroEnhanceDefAlly:
                             NumericDistributionSetup nds6 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceDef);
                             nds6.distributions[3] = new NormalConstant(10, 0, 5);
                             nds6.idx = 3;
                             return nds6;
                         case RandomizerDistribution.SynchroEnhanceMagicAlly:
                             NumericDistributionSetup nds7 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceMagic);
                             nds7.distributions[3] = new NormalConstant(10, 0, 5);
                             nds7.idx = 3;
                             return nds7;
                         case RandomizerDistribution.SynchroEnhanceMdefAlly:
                             NumericDistributionSetup nds8 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceMdef);
                             nds8.distributions[3] = new NormalConstant(10, 0, 5);
                             nds8.idx = 3;
                             return nds8;
                         case RandomizerDistribution.SynchroEnhancePhysAlly:
                             NumericDistributionSetup nds9 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhancePhys);
                             nds9.distributions[3] = new NormalConstant(10, 0, 5);
                             nds9.idx = 3;
                             return nds9;
                         case RandomizerDistribution.SynchroEnhanceMoveAlly:
                             NumericDistributionSetup nds10 = GetNumericDistributionSetup(
-                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSynchableEmblems),
+                                ggs.FilterData(gg => gg.Gid, GD.AllyArenaSyncableEmblems),
                                 gg => gg.SynchroEnhanceMove);
                             nds10.distributions[3] = new NormalConstant(10, 0, 0.5);
                             nds10.idx = 3;
                             return nds10;
                         case RandomizerDistribution.SynchroEnhanceHpEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceHp);
                         case RandomizerDistribution.SynchroEnhanceStrEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceStr);
                         case RandomizerDistribution.SynchroEnhanceTechEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceTech);
                         case RandomizerDistribution.SynchroEnhanceQuickEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceQuick);
                         case RandomizerDistribution.SynchroEnhanceLuckEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceLuck);
                         case RandomizerDistribution.SynchroEnhanceDefEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceDef);
                         case RandomizerDistribution.SynchroEnhanceMagicEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceMagic);
                         case RandomizerDistribution.SynchroEnhanceMdefEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceMdef);
                         case RandomizerDistribution.SynchroEnhancePhysEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhancePhys);
                         case RandomizerDistribution.SynchroEnhanceMoveEnemy:
-                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySynchableEmblems), gg =>
+                            return GetNumericDistributionSetup(ggs.FilterData(gg => gg.Gid, GD.EnemySyncableEmblems), gg =>
                                 gg.SynchroEnhanceMove);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     };
                 case DataSetEnum.GrowthTable:
                     List<ParamGroup> pgs = dataSet.Params.Cast<ParamGroup>().ToList();
-                    List<string> synchStatSkillIDs = GD.SynchStatSkills.GetIDs();
+                    List<string> syncStatSkillIDs = GD.SyncStatSkills.GetIDs();
                     List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
                     switch (dfe)
                     {
@@ -164,12 +164,12 @@ namespace ALittleSecretIngredient
                             return nds0;
                         case RandomizerDistribution.SynchroStatSkillsAlly:
                             NumericDistributionSetup nds1 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables), pg =>
-                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(synchStatSkillIDs.Contains)).Sum());
+                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(syncStatSkillIDs.Contains)).Sum());
                             nds1.idx = 3;
                             return nds1;
                         case RandomizerDistribution.SynchroStatSkillsEnemy:
                             NumericDistributionSetup nds2 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables), pg =>
-                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(synchStatSkillIDs.Contains)).Sum());
+                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(syncStatSkillIDs.Contains)).Sum());
                             nds2.distributions[3] = new NormalConstant(10, 10, 1);
                             nds2.idx = 3;
                             return nds2;
@@ -365,7 +365,7 @@ namespace ALittleSecretIngredient
                     };
                 case DataSetEnum.GrowthTable:
                     List<ParamGroup> pgs = dataSet.Params.Cast<ParamGroup>().ToList();
-                    List<string> synchStatSkillIDs = GD.SynchStatSkills.GetIDs();
+                    List<string> syncStatSkillIDs = GD.SyncStatSkills.GetIDs();
                     List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
                     switch (dfe)
                     {
@@ -376,11 +376,11 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.SynchroStatSkillsAlly:
                             return GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => synchStatSkillIDs.Contains(s))).ToList(), s => s, GD.SynchStatSkills);
+                                gt.SynchroSkills.Where(s => syncStatSkillIDs.Contains(s))).ToList(), s => s, GD.SyncStatSkills);
                         case RandomizerDistribution.SynchroStatSkillsEnemy:
                             SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => synchStatSkillIDs.Contains(s))).ToList(), s => s, GD.SynchStatSkills);
+                                gt.SynchroSkills.Where(s => syncStatSkillIDs.Contains(s))).ToList(), s => s, GD.SyncStatSkills);
                             sds0.idx = 1;
                             return sds0;
                         case RandomizerDistribution.SynchroGeneralSkillsAlly:

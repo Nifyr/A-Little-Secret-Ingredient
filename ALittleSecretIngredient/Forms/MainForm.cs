@@ -106,7 +106,7 @@ namespace ALittleSecretIngredient.Forms
                     GodGeneral.EngraveAvoid.Get(), Array.Empty<object>());
                 rs.GodGeneral.EngraveSecure = new(true,
                     GodGeneral.EngraveSecure.Get(), Array.Empty<object>());
-                rs.GodGeneral.RandomizeAllyStaticSynchStats = GodGeneral.checkBox17.Checked;
+                rs.GodGeneral.RandomizeAllyStaticSyncStats = GodGeneral.checkBox17.Checked;
                 rs.GodGeneral.SynchroEnhanceHpAlly = new(true,
                     GodGeneral.SynchroEnhanceHpAlly.Get(), Array.Empty<object>());
                 rs.GodGeneral.SynchroEnhanceStrAlly = new(true,
@@ -127,7 +127,7 @@ namespace ALittleSecretIngredient.Forms
                     GodGeneral.SynchroEnhancePhysAlly.Get(), Array.Empty<object>());
                 rs.GodGeneral.SynchroEnhanceMoveAlly = new(true,
                     GodGeneral.SynchroEnhanceMoveAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.RandomizeEnemyStaticSynchStats = GodGeneral.checkBox12.Checked;
+                rs.GodGeneral.RandomizeEnemyStaticSyncStats = GodGeneral.checkBox12.Checked;
                 rs.GodGeneral.SynchroEnhanceHpEnemy = new(true,
                     GodGeneral.SynchroEnhanceHpEnemy.Get(), Array.Empty<object>());
                 rs.GodGeneral.SynchroEnhanceStrEnemy = new(true,
@@ -257,7 +257,7 @@ namespace ALittleSecretIngredient.Forms
                 GodGeneral.EngraveCritical.Set(value.GodGeneral.EngraveCritical.Distribution);
                 GodGeneral.EngraveAvoid.Set(value.GodGeneral.EngraveAvoid.Distribution);
                 GodGeneral.EngraveSecure.Set(value.GodGeneral.EngraveSecure.Distribution);
-                GodGeneral.checkBox17.Checked = value.GodGeneral.RandomizeAllyStaticSynchStats;
+                GodGeneral.checkBox17.Checked = value.GodGeneral.RandomizeAllyStaticSyncStats;
                 GodGeneral.SynchroEnhanceHpAlly.Set(value.GodGeneral.SynchroEnhanceHpAlly.Distribution);
                 GodGeneral.SynchroEnhanceStrAlly.Set(value.GodGeneral.SynchroEnhanceStrAlly.Distribution);
                 GodGeneral.SynchroEnhanceTechAlly.Set(value.GodGeneral.SynchroEnhanceTechAlly.Distribution);
@@ -268,7 +268,7 @@ namespace ALittleSecretIngredient.Forms
                 GodGeneral.SynchroEnhanceMdefAlly.Set(value.GodGeneral.SynchroEnhanceMdefAlly.Distribution);
                 GodGeneral.SynchroEnhancePhysAlly.Set(value.GodGeneral.SynchroEnhancePhysAlly.Distribution);
                 GodGeneral.SynchroEnhanceMoveAlly.Set(value.GodGeneral.SynchroEnhanceMoveAlly.Distribution);
-                GodGeneral.checkBox12.Checked = value.GodGeneral.RandomizeEnemyStaticSynchStats;
+                GodGeneral.checkBox12.Checked = value.GodGeneral.RandomizeEnemyStaticSyncStats;
                 GodGeneral.SynchroEnhanceHpEnemy.Set(value.GodGeneral.SynchroEnhanceHpEnemy.Distribution);
                 GodGeneral.SynchroEnhanceStrEnemy.Set(value.GodGeneral.SynchroEnhanceStrEnemy.Distribution);
                 GodGeneral.SynchroEnhanceTechEnemy.Set(value.GodGeneral.SynchroEnhanceTechEnemy.Distribution);

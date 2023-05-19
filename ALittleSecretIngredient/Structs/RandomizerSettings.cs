@@ -62,7 +62,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings EngraveCritical { get; set; } = new();
             public RandomizerFieldSettings EngraveAvoid { get; set; } = new();
             public RandomizerFieldSettings EngraveSecure { get; set; } = new();
-            public bool RandomizeAllyStaticSynchStats { get; set; }
+            public bool RandomizeAllyStaticSyncStats { get; set; }
             public RandomizerFieldSettings SynchroEnhanceHpAlly { get; set; } = new();
             public RandomizerFieldSettings SynchroEnhanceStrAlly { get; set; } = new();
             public RandomizerFieldSettings SynchroEnhanceTechAlly { get; set; } = new();
@@ -73,7 +73,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings SynchroEnhanceMdefAlly { get; set; } = new();
             public RandomizerFieldSettings SynchroEnhancePhysAlly { get; set; } = new();
             public RandomizerFieldSettings SynchroEnhanceMoveAlly { get; set; } = new();
-            public bool RandomizeEnemyStaticSynchStats { get; set; }
+            public bool RandomizeEnemyStaticSyncStats { get; set; }
             public RandomizerFieldSettings SynchroEnhanceHpEnemy { get; set; } = new();
             public RandomizerFieldSettings SynchroEnhanceStrEnemy { get; set; } = new();
             public RandomizerFieldSettings SynchroEnhanceTechEnemy { get; set; } = new();

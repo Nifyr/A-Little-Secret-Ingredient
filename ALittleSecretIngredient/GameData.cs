@@ -450,7 +450,7 @@
 
         internal List<(string id, string name)> AllyEngageableEmblems { get; } = new(); // AlearEmblem + LinkableEmblems
 
-        internal List<(string id, string name)> AllySynchableEmblems { get; } = new() // AllyEngageableEmblems +
+        internal List<(string id, string name)> AllySyncableEmblems { get; } = new() // AllyEngageableEmblems +
         {
             ("GID_エフラム", "Ephraim"), ("GID_ディミトリ", "Dimitri"), ("GID_クロード", "Claude")
         };
@@ -485,7 +485,7 @@
             ("GID_E006_敵エーデルガルト", "Corrupted Edelgard")
         };
 
-        internal List<(string id, string name)> EnemySynchableEmblems { get; } = new() // EnemyEngageableEmblems + 
+        internal List<(string id, string name)> EnemySyncableEmblems { get; } = new() // EnemyEngageableEmblems + 
         {
             ("GID_E006_敵ディミトリ", "Corrupted Dimitri"), ("GID_E006_敵クロード", "Corrupted Claude")
         };
@@ -513,11 +513,11 @@
             ("GID_相手クロード", "Claude (Arena)")
         };
 
-        internal List<(string id, string name)> AllyArenaSynchableEmblems { get; } = new(); // AllySynchableEmblems + ArenaEmblems
+        internal List<(string id, string name)> AllyArenaSyncableEmblems { get; } = new(); // AllySyncableEmblems + ArenaEmblems
 
-        internal List<(string id, string name)> SynchableEmblems { get; } = new(); // AllyArenaSynchableEmblems + EnemySynchableEmblems
+        internal List<(string id, string name)> SyncableEmblems { get; } = new(); // AllyArenaSyncableEmblems + EnemySyncableEmblems
 
-        internal List<(string id, string name)> Emblems { get; } = new() // SynchableEmblems +
+        internal List<(string id, string name)> Emblems { get; } = new() // SyncableEmblems +
         {
             ("GID_M000_マルス", "Marth (Prologue)"), ("GID_ルフレ", "Robin")
         };
@@ -975,66 +975,66 @@
             ("SID_幻影狼連携", "Pack Hunter (Phantom)"),
         };
 
-        internal List<(string id, string name)> SynchHPSkills { get; } = new()
+        internal List<(string id, string name)> SyncHPSkills { get; } = new()
         {
             ("SID_ＨＰ＋３", "HP +3"), ("SID_ＨＰ＋５", "HP +5"), ("SID_ＨＰ＋７", "HP +7"), ("SID_ＨＰ＋１０", "HP +10"),
             ("SID_ＨＰ＋１２", "HP +12"), ("SID_ＨＰ＋１５", "HP +15")
         };
 
-        internal List<(string id, string name)> SynchStrSkills { get; } = new()
+        internal List<(string id, string name)> SyncStrSkills { get; } = new()
         {
             ("SID_力＋１", "Strength +1"), ("SID_力＋２", "Strength +2"), ("SID_力＋３", "Strength +3"), ("SID_力＋４", "Strength +4"),
             ("SID_力＋５", "Strength +5"), ("SID_力＋６", "Strength +6")
         };
 
-        internal List<(string id, string name)> SynchDexSkills { get; } = new()
+        internal List<(string id, string name)> SyncDexSkills { get; } = new()
         {
             ("SID_技＋１", "Dexterity +1"), ("SID_技＋２", "Dexterity +2"), ("SID_技＋３", "Dexterity +3"), ("SID_技＋４", "Dexterity +4 "),
             ("SID_技＋５", "Dexterity +5")
         };
 
-        internal List<(string id, string name)> SynchSpdSkills { get; } = new()
+        internal List<(string id, string name)> SyncSpdSkills { get; } = new()
         {
             ("SID_速さ＋１", "Speed +1"), ("SID_速さ＋２", "Speed +2"), ("SID_速さ＋３", "Speed +3"), ("SID_速さ＋４", "Speed +4"),
             ("SID_速さ＋５", "Speed +5")
         };
 
-        internal List<(string id, string name)> SynchLckSkills { get; } = new()
+        internal List<(string id, string name)> SyncLckSkills { get; } = new()
         {
             ("SID_幸運＋２", "Luck +2"), ("SID_幸運＋４", "Luck +4"), ("SID_幸運＋６", "Luck +6"), ("SID_幸運＋８", "Luck +8"),
             ("SID_幸運＋１０", "Luck +10"), ("SID_幸運＋１２", "Luck +12")
         };
 
-        internal List<(string id, string name)> SynchDefSkills { get; } = new()
+        internal List<(string id, string name)> SyncDefSkills { get; } = new()
         {
             ("SID_守備＋１", "Defense +1"), ("SID_守備＋２", "Defense +2"), ("SID_守備＋３", "Defense +3"), ("SID_守備＋４", "Defense +4"),
             ("SID_守備＋５", "Defense +5")
         };
 
-        internal List<(string id, string name)> SynchMagSkills { get; } = new()
+        internal List<(string id, string name)> SyncMagSkills { get; } = new()
         {
             ("SID_魔力＋１", "Magic +1"), ("SID_魔力＋２", "Magic +2"), ("SID_魔力＋３", "Magic +3"), ("SID_魔力＋４", "Magic +4"),
             ("SID_魔力＋５", "Magic +5")
         };
 
-        internal List<(string id, string name)> SynchResSkills { get; } = new()
+        internal List<(string id, string name)> SyncResSkills { get; } = new()
         {
             ("SID_魔防＋１", "Resistance +1"), ("SID_魔防＋２", "Resistance +2"), ("SID_魔防＋３", "Resistance +3"), ("SID_魔防＋４", "Resistance +4"),
             ("SID_魔防＋５", "Resistance +5")
         };
 
-        internal List<(string id, string name)> SynchBldSkills { get; } = new()
+        internal List<(string id, string name)> SyncBldSkills { get; } = new()
         {
             ("SID_体格＋１", "Build +1"), ("SID_体格＋２", "Build +2"), ("SID_体格＋３", "Build +3"), ("SID_体格＋４", "Build +4"),
             ("SID_体格＋５", "Build +5 ")
         };
 
-        internal List<(string id, string name)> SynchMovSkills { get; } = new()
+        internal List<(string id, string name)> SyncMovSkills { get; } = new()
         {
             ("SID_移動＋１", "Movement +1")
         };
 
-        internal List<(string id, string name)> SynchStatSkills { get; } = new();
+        internal List<(string id, string name)> SyncStatSkills { get; } = new();
 
         internal Dictionary<string, ushort> DefaultSPCost { get; } = new()
         {
@@ -1184,9 +1184,9 @@
             { "SID_クロムエンゲージ技", 1 } // Giga Levin Sword
         };
 
-        internal enum SynchStat { HP, Str, Dex, Spd, Lck, Def, Mag, Res, Bld, Mov, None }
+        internal enum SyncStat { HP, Str, Dex, Spd, Lck, Def, Mag, Res, Bld, Mov, None }
 
-        internal List<List<string>> SynchStatLookup = new();
+        internal List<List<string>> SyncStatLookup = new();
         #endregion
         #region TalkAnim IDs
         internal List<(string id, string name)> MaleTalkAnims { get; } = new()
@@ -1557,40 +1557,40 @@
             AllDressModels.AddRange(FemaleCommonDressModels);
             AllyEngageableEmblems.AddRange(AlearEmblems);
             AllyEngageableEmblems.AddRange(LinkableEmblems);
-            AllySynchableEmblems.AddRange(AllyEngageableEmblems);
-            EnemySynchableEmblems.AddRange(EnemyEngageableEmblems);
+            AllySyncableEmblems.AddRange(AllyEngageableEmblems);
+            EnemySyncableEmblems.AddRange(EnemyEngageableEmblems);
             EngageableEmblems.AddRange(AllyEngageableEmblems);
             EngageableEmblems.AddRange(EnemyEngageableEmblems);
             ArenaEmblems.AddRange(BaseArenaEmblems);
-            AllyArenaSynchableEmblems.AddRange(AllySynchableEmblems);
-            AllyArenaSynchableEmblems.AddRange(ArenaEmblems);
-            SynchableEmblems.AddRange(AllyArenaSynchableEmblems);
-            SynchableEmblems.AddRange(EnemySynchableEmblems);
-            Emblems.AddRange(SynchableEmblems);
+            AllyArenaSyncableEmblems.AddRange(AllySyncableEmblems);
+            AllyArenaSyncableEmblems.AddRange(ArenaEmblems);
+            SyncableEmblems.AddRange(AllyArenaSyncableEmblems);
+            SyncableEmblems.AddRange(EnemySyncableEmblems);
+            Emblems.AddRange(SyncableEmblems);
             CompatibleAsEngageAttacks.AddRange(TriggerAttackSkills);
             GeneralSkills.AddRange(TriggerAttackSkills);
             VisibleSkills.AddRange(GeneralSkills);
-            SynchStatSkills.AddRange(SynchHPSkills);
-            SynchStatSkills.AddRange(SynchStrSkills);
-            SynchStatSkills.AddRange(SynchDexSkills);
-            SynchStatSkills.AddRange(SynchSpdSkills);
-            SynchStatSkills.AddRange(SynchLckSkills);
-            SynchStatSkills.AddRange(SynchDefSkills);
-            SynchStatSkills.AddRange(SynchMagSkills);
-            SynchStatSkills.AddRange(SynchResSkills);
-            SynchStatSkills.AddRange(SynchBldSkills);
-            SynchStatSkills.AddRange(SynchMovSkills);
+            SyncStatSkills.AddRange(SyncHPSkills);
+            SyncStatSkills.AddRange(SyncStrSkills);
+            SyncStatSkills.AddRange(SyncDexSkills);
+            SyncStatSkills.AddRange(SyncSpdSkills);
+            SyncStatSkills.AddRange(SyncLckSkills);
+            SyncStatSkills.AddRange(SyncDefSkills);
+            SyncStatSkills.AddRange(SyncMagSkills);
+            SyncStatSkills.AddRange(SyncResSkills);
+            SyncStatSkills.AddRange(SyncBldSkills);
+            SyncStatSkills.AddRange(SyncMovSkills);
 
-            SynchStatLookup.Add(SynchHPSkills.GetIDs());
-            SynchStatLookup.Add(SynchStrSkills.GetIDs());
-            SynchStatLookup.Add(SynchDexSkills.GetIDs());
-            SynchStatLookup.Add(SynchSpdSkills.GetIDs());
-            SynchStatLookup.Add(SynchLckSkills.GetIDs());
-            SynchStatLookup.Add(SynchDefSkills.GetIDs());
-            SynchStatLookup.Add(SynchMagSkills.GetIDs());
-            SynchStatLookup.Add(SynchResSkills.GetIDs());
-            SynchStatLookup.Add(SynchBldSkills.GetIDs());
-            SynchStatLookup.Add(SynchMovSkills.GetIDs());
+            SyncStatLookup.Add(SyncHPSkills.GetIDs());
+            SyncStatLookup.Add(SyncStrSkills.GetIDs());
+            SyncStatLookup.Add(SyncDexSkills.GetIDs());
+            SyncStatLookup.Add(SyncSpdSkills.GetIDs());
+            SyncStatLookup.Add(SyncLckSkills.GetIDs());
+            SyncStatLookup.Add(SyncDefSkills.GetIDs());
+            SyncStatLookup.Add(SyncMagSkills.GetIDs());
+            SyncStatLookup.Add(SyncResSkills.GetIDs());
+            SyncStatLookup.Add(SyncBldSkills.GetIDs());
+            SyncStatLookup.Add(SyncMovSkills.GetIDs());
         }
     }
 

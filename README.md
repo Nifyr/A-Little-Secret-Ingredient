@@ -15,6 +15,12 @@ Made with artistic passion!
 ## Available Randomizations
 - Bond Level Exp Requirements
 - Bond Level Bond Fragment Costs
+- Character Animation Swap
+- Character Body Shape/Size
+- Character Model Swap
+- Character Mount Model Swap
+- Character Outfit Color Palette
+- Character Outfit Swap
 - Emblem Bond Level Table Assignment
 - Emblem Bond Link Pairings
 - Emblem Bond Link Skills

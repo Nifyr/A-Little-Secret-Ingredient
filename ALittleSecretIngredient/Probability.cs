@@ -536,6 +536,8 @@ namespace ALittleSecretIngredient
                     set(target, n2);
                 else if (get(target) is float x3 && (float)Math.Clamp(x3, min, max) is B n3)
                     set(target, n3);
+                else if (get(target) is short x4 && (short)Math.Clamp(x4, min, max) is B n4)
+                    set(target, n4);
                 else
                     throw new ArgumentException("Unsupported type: " + get(target)!.GetType().Name);
         }
@@ -566,6 +568,8 @@ namespace ALittleSecretIngredient
                         set(targets[i], n2);
                     else if (get(targets[i]) is float x3 && (float)n.Next(x3) is B n3)
                         set(targets[i], n3);
+                    else if (get(targets[i]) is short x4 && (short)Math.Round(n.Next(x4)) is B n4)
+                        set(targets[i], n4);
                     else if (get(targets[i]) != null)
                         throw new ArgumentException("Unsupported type: " + get(targets[i])!.GetType().Name);
                     else

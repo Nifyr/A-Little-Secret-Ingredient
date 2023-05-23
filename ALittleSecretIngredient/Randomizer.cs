@@ -37,6 +37,7 @@ namespace ALittleSecretIngredient
             AddTable(innerChangelog, RandomizeGodGeneral(settings.GodGeneral));
             AddTable(innerChangelog, RandomizeGrowthTable(settings.GrowthTable));
             AddTable(innerChangelog, RandomizeBondLevel(settings.BondLevel));
+            AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
 
             if (settings.SaveChangelog && innerChangelog.Length > 0)
             {
@@ -989,6 +990,69 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Bond Levels");
+        }
+
+        private StringBuilder RandomizeIndividual(RandomizerSettings.IndividualSettings settings)
+        {
+            List<Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList();
+            List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
+            Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
+
+            if (settings.Age.Enabled)
+            {
+                List<Individual> aged = playableCharacters.Where(i => i.Age != -1).ToList();
+                aged.Randomize(i => i.Age, (i, s) => i.Age = s, settings.Age.Distribution, 0, short.MaxValue);
+                WriteToChangelog(entries, aged, i => i.Age, "Age");
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+
+            if (settings.RandomizeBirthday)
+                RandomizeBirthdays(playableCharacters, entries);
+
+            StringBuilder innertable = new();
+            foreach (Individual i in individuals)
+                if (entries[i].Length > 0)
+                {
+                    innertable.AppendLine($"\t{GD.Characters.IDToName(i.Pid)}:");
+                    innertable.AppendLine(entries[i].ToString());
+                }
+
+            return ApplyTableTitle(innertable, "Characters");
+        }
+
+        private void RandomizeBirthdays(List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)
+        {
+            foreach (Individual i in playableCharacters.Where(i => i.BirthMonth != 0))
+            {
+                i.BirthMonth = (byte)new UniformConstant(100, 1, 12).Next(0);
+                UniformConstant dayDist = new();
+                switch (i.BirthMonth)
+                {
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                    case 8:
+                    case 10:
+                    case 12:
+                        dayDist = new(100, 1, 31);
+                        break;
+                    case 4:
+                    case 6:
+                    case 9:
+                    case 11:
+                        dayDist = new(100, 1, 30);
+                        break;
+                    case 2:
+                        dayDist = new(100, 1, 28);
+                        break;
+                    default:
+                        break;
+                }
+                i.BirthDay = (byte)dayDist.Next(0);
+                entries[i].AppendLine($"Birthday:\tDay {i.BirthDay} of month {i.BirthMonth}");
+            }
+            GD.SetDirty(DataSetEnum.Individual);
         }
 
         private static void SortProperties<T>(List<T> list, Func<T, int> get, Action<T, int> set)

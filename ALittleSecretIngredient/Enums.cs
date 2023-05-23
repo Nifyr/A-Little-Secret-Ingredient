@@ -100,5 +100,6 @@
         DeepSynergyLevel,
         Exp,
         Cost,
+        Age,
     }
 }

@@ -42,6 +42,7 @@
             button2 = new Button();
             button3 = new Button();
             toolTip1 = new ToolTip(components);
+            button5 = new Button();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -128,6 +129,7 @@
             flowLayoutPanel1.Controls.Add(button1);
             flowLayoutPanel1.Controls.Add(button2);
             flowLayoutPanel1.Controls.Add(button3);
+            flowLayoutPanel1.Controls.Add(button5);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(3, 23);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -180,6 +182,16 @@
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
             // 
+            // button5
+            // 
+            button5.Location = new Point(3, 143);
+            button5.Name = "button5";
+            button5.Size = new Size(200, 29);
+            button5.TabIndex = 7;
+            button5.Text = "Character Data";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += Button5_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -213,5 +225,6 @@
         private Button button3;
         private ToolTip toolTip1;
         private Button button4;
+        private Button button5;
     }
 }

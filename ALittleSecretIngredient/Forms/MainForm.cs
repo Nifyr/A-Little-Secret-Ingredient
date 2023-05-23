@@ -10,6 +10,7 @@ namespace ALittleSecretIngredient.Forms
         private GodGeneralForm GodGeneral { get; set; }
         private GrowthTableForm GrowthTable { get; set; }
         private BondLevelForm BondLevel { get; set; }
+        private IndividualForm Individual { get; set; }
         public MainForm()
         {
             GlobalData = new();
@@ -18,6 +19,7 @@ namespace ALittleSecretIngredient.Forms
             GodGeneral = new(GlobalData);
             GrowthTable = new(GlobalData);
             BondLevel = new(GlobalData);
+            Individual = new(GlobalData);
         }
         private static DialogResult LoadDumpDialog()
         {
@@ -76,6 +78,40 @@ namespace ALittleSecretIngredient.Forms
                     Remember = rememberSettingsCheckBox.Checked,
                     SaveChangelog = saveChangelogCheckBox.Checked
                 };
+
+                rs.AssetTable.ModelSwap = new(false, null!, new object[] { AssetTable.checkBox20.Checked, AssetTable.checkBox1.Checked,
+                    AssetTable.checkBox2.Checked, AssetTable.checkBox3.Checked, AssetTable.checkBox4.Checked, AssetTable.checkBox5.Checked,
+                    AssetTable.checkBox6.Checked });
+                rs.AssetTable.OutfitSwap = new(false, null!, new object[] { AssetTable.checkBox13.Checked, AssetTable.checkBox7.Checked,
+                    AssetTable.checkBox8.Checked, AssetTable.checkBox9.Checked, AssetTable.checkBox10.Checked, AssetTable.checkBox11.Checked,
+                    AssetTable.checkBox12.Checked });
+                rs.AssetTable.ColorPalette = new(AssetTable.checkBox21.Checked, null!, new object[] { AssetTable.checkBox14.Checked });
+                rs.AssetTable.ShuffleRideDressModel = AssetTable.checkBox16.Checked;
+                rs.AssetTable.InfoAnim = new(AssetTable.checkBox15.Checked, null!, new object[] { AssetTable.checkBox17.Checked });
+                rs.AssetTable.ShuffleTalkAnims = AssetTable.checkBox19.Checked;
+                rs.AssetTable.DemoAnim = new(AssetTable.checkBox22.Checked, null!, new object[] { AssetTable.checkBox18.Checked });
+                rs.AssetTable.ShuffleHubAnims = AssetTable.checkBox23.Checked;
+                rs.AssetTable.RandomizeModelParameters = AssetTable.checkBox24.Checked;
+                rs.AssetTable.ScaleAll = new(false, AssetTable.ScaleAll.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleHead = new(false, AssetTable.ScaleHead.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleNeck = new(false, AssetTable.ScaleNeck.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleTorso = new(false, AssetTable.ScaleTorso.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleShoulders = new(false, AssetTable.ScaleShoulders.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleArms = new(false, AssetTable.ScaleArms.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleHands = new(false, AssetTable.ScaleHands.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleLegs = new(false, AssetTable.ScaleLegs.Get(), Array.Empty<object>());
+                rs.AssetTable.ScaleFeet = new(false, AssetTable.ScaleFeet.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeArms = new(false, AssetTable.VolumeArms.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeLegs = new(false, AssetTable.VolumeLegs.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeBust = new(false, AssetTable.VolumeBust.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeAbdomen = new(false, AssetTable.VolumeAbdomen.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeTorso = new(false, AssetTable.VolumeTorso.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeScaleArms = new(false, AssetTable.VolumeScaleArms.Get(), Array.Empty<object>());
+                rs.AssetTable.VolumeScaleLegs = new(false, AssetTable.VolumeScaleLegs.Get(), Array.Empty<object>());
+                rs.AssetTable.MapScaleAll = new(false, AssetTable.MapScaleAll.Get(), Array.Empty<object>());
+                rs.AssetTable.MapScaleHead = new(false, AssetTable.MapScaleHead.Get(), Array.Empty<object>());
+                rs.AssetTable.MapScaleWing = new(false, AssetTable.MapScaleWing.Get(), Array.Empty<object>());
+
                 rs.GodGeneral.EngageCount = new(GodGeneral.checkBox1.Checked,
                     GodGeneral.EngageCount.Get(), Array.Empty<object>());
                 rs.GodGeneral.Link = new(GodGeneral.checkBox2.Checked,
@@ -195,44 +231,60 @@ namespace ALittleSecretIngredient.Forms
                 rs.BondLevel.Cost = new(BondLevel.checkBox1.Checked,
                     BondLevel.Cost.Get(), Array.Empty<object>());
 
-                rs.AssetTable.ModelSwap = new(false, null!, new object[] { AssetTable.checkBox20.Checked, AssetTable.checkBox1.Checked,
-                    AssetTable.checkBox2.Checked, AssetTable.checkBox3.Checked, AssetTable.checkBox4.Checked, AssetTable.checkBox5.Checked,
-                    AssetTable.checkBox6.Checked });
-                rs.AssetTable.OutfitSwap = new(false, null!, new object[] { AssetTable.checkBox13.Checked, AssetTable.checkBox7.Checked,
-                    AssetTable.checkBox8.Checked, AssetTable.checkBox9.Checked, AssetTable.checkBox10.Checked, AssetTable.checkBox11.Checked,
-                    AssetTable.checkBox12.Checked });
-                rs.AssetTable.ColorPalette = new(AssetTable.checkBox21.Checked, null!, new object[] { AssetTable.checkBox14.Checked });
-                rs.AssetTable.ShuffleRideDressModel = AssetTable.checkBox16.Checked;
-                rs.AssetTable.InfoAnim = new(AssetTable.checkBox15.Checked, null!, new object[] { AssetTable.checkBox17.Checked });
-                rs.AssetTable.ShuffleTalkAnims = AssetTable.checkBox19.Checked;
-                rs.AssetTable.DemoAnim = new(AssetTable.checkBox22.Checked, null!, new object[] { AssetTable.checkBox18.Checked });
-                rs.AssetTable.ShuffleHubAnims = AssetTable.checkBox23.Checked;
-                rs.AssetTable.RandomizeModelParameters = AssetTable.checkBox24.Checked;
-                rs.AssetTable.ScaleAll = new(false, AssetTable.ScaleAll.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleHead = new(false, AssetTable.ScaleHead.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleNeck = new(false, AssetTable.ScaleNeck.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleTorso = new(false, AssetTable.ScaleTorso.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleShoulders = new(false, AssetTable.ScaleShoulders.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleArms = new(false, AssetTable.ScaleArms.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleHands = new(false, AssetTable.ScaleHands.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleLegs = new(false, AssetTable.ScaleLegs.Get(), Array.Empty<object>());
-                rs.AssetTable.ScaleFeet = new(false, AssetTable.ScaleFeet.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeArms = new(false, AssetTable.VolumeArms.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeLegs = new(false, AssetTable.VolumeLegs.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeBust = new(false, AssetTable.VolumeBust.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeAbdomen = new(false, AssetTable.VolumeAbdomen.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeTorso = new(false, AssetTable.VolumeTorso.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeScaleArms = new(false, AssetTable.VolumeScaleArms.Get(), Array.Empty<object>());
-                rs.AssetTable.VolumeScaleLegs = new(false, AssetTable.VolumeScaleLegs.Get(), Array.Empty<object>());
-                rs.AssetTable.MapScaleAll = new(false, AssetTable.MapScaleAll.Get(), Array.Empty<object>());
-                rs.AssetTable.MapScaleHead = new(false, AssetTable.MapScaleHead.Get(), Array.Empty<object>());
-                rs.AssetTable.MapScaleWing = new(false, AssetTable.MapScaleWing.Get(), Array.Empty<object>());
+                rs.Individual.Age = new(Individual.checkBox20.Checked, Individual.Age.Get(), Array.Empty<object>());
+                rs.Individual.RandomizeBirthday = Individual.checkBox1.Checked;
+
                 return rs;
             }
             set
             {
                 rememberSettingsCheckBox.Checked = value.Remember;
                 saveChangelogCheckBox.Checked = value.SaveChangelog;
+
+                AssetTable.checkBox20.Checked = value.AssetTable.ModelSwap.GetArg<bool>(0);
+                AssetTable.checkBox1.Checked = value.AssetTable.ModelSwap.GetArg<bool>(1);
+                AssetTable.checkBox2.Checked = value.AssetTable.ModelSwap.GetArg<bool>(2);
+                AssetTable.checkBox3.Checked = value.AssetTable.ModelSwap.GetArg<bool>(3);
+                AssetTable.checkBox4.Checked = value.AssetTable.ModelSwap.GetArg<bool>(4);
+                AssetTable.checkBox5.Checked = value.AssetTable.ModelSwap.GetArg<bool>(5);
+                AssetTable.checkBox6.Checked = value.AssetTable.ModelSwap.GetArg<bool>(6);
+                AssetTable.checkBox13.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(0);
+                AssetTable.checkBox7.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(1);
+                AssetTable.checkBox8.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(2);
+                AssetTable.checkBox9.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(3);
+                AssetTable.checkBox10.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(4);
+                AssetTable.checkBox11.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(5);
+                AssetTable.checkBox12.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(6);
+                AssetTable.checkBox21.Checked = value.AssetTable.ColorPalette.Enabled;
+                AssetTable.checkBox14.Checked = value.AssetTable.ColorPalette.GetArg<bool>(0);
+                AssetTable.checkBox16.Checked = value.AssetTable.ShuffleRideDressModel;
+                AssetTable.checkBox15.Checked = value.AssetTable.InfoAnim.Enabled;
+                AssetTable.checkBox17.Checked = value.AssetTable.InfoAnim.GetArg<bool>(0);
+                AssetTable.checkBox19.Checked = value.AssetTable.ShuffleTalkAnims;
+                AssetTable.checkBox22.Checked = value.AssetTable.DemoAnim.Enabled;
+                AssetTable.checkBox18.Checked = value.AssetTable.DemoAnim.GetArg<bool>(0);
+                AssetTable.checkBox23.Checked = value.AssetTable.ShuffleHubAnims;
+                AssetTable.checkBox24.Checked = value.AssetTable.RandomizeModelParameters;
+                AssetTable.ScaleAll.Set(value.AssetTable.ScaleAll.Distribution);
+                AssetTable.ScaleHead.Set(value.AssetTable.ScaleHead.Distribution);
+                AssetTable.ScaleNeck.Set(value.AssetTable.ScaleNeck.Distribution);
+                AssetTable.ScaleTorso.Set(value.AssetTable.ScaleTorso.Distribution);
+                AssetTable.ScaleShoulders.Set(value.AssetTable.ScaleShoulders.Distribution);
+                AssetTable.ScaleArms.Set(value.AssetTable.ScaleArms.Distribution);
+                AssetTable.ScaleHands.Set(value.AssetTable.ScaleHands.Distribution);
+                AssetTable.ScaleLegs.Set(value.AssetTable.ScaleLegs.Distribution);
+                AssetTable.ScaleFeet.Set(value.AssetTable.ScaleFeet.Distribution);
+                AssetTable.VolumeArms.Set(value.AssetTable.VolumeArms.Distribution);
+                AssetTable.VolumeLegs.Set(value.AssetTable.VolumeLegs.Distribution);
+                AssetTable.VolumeBust.Set(value.AssetTable.VolumeBust.Distribution);
+                AssetTable.VolumeAbdomen.Set(value.AssetTable.VolumeAbdomen.Distribution);
+                AssetTable.VolumeTorso.Set(value.AssetTable.VolumeTorso.Distribution);
+                AssetTable.VolumeScaleArms.Set(value.AssetTable.VolumeScaleArms.Distribution);
+                AssetTable.VolumeScaleLegs.Set(value.AssetTable.VolumeScaleLegs.Distribution);
+                AssetTable.MapScaleAll.Set(value.AssetTable.MapScaleAll.Distribution);
+                AssetTable.MapScaleHead.Set(value.AssetTable.MapScaleHead.Distribution);
+                AssetTable.MapScaleWing.Set(value.AssetTable.MapScaleWing.Distribution);
+
                 GodGeneral.checkBox1.Checked = value.GodGeneral.EngageCount.Enabled;
                 GodGeneral.EngageCount.Set(value.GodGeneral.EngageCount.Distribution);
                 GodGeneral.checkBox2.Checked = value.GodGeneral.Link.Enabled;
@@ -329,49 +381,9 @@ namespace ALittleSecretIngredient.Forms
                 BondLevel.checkBox1.Checked = value.BondLevel.Cost.Enabled;
                 BondLevel.Cost.Set(value.BondLevel.Cost.Distribution);
 
-                AssetTable.checkBox20.Checked = value.AssetTable.ModelSwap.GetArg<bool>(0);
-                AssetTable.checkBox1.Checked = value.AssetTable.ModelSwap.GetArg<bool>(1);
-                AssetTable.checkBox2.Checked = value.AssetTable.ModelSwap.GetArg<bool>(2);
-                AssetTable.checkBox3.Checked = value.AssetTable.ModelSwap.GetArg<bool>(3);
-                AssetTable.checkBox4.Checked = value.AssetTable.ModelSwap.GetArg<bool>(4);
-                AssetTable.checkBox5.Checked = value.AssetTable.ModelSwap.GetArg<bool>(5);
-                AssetTable.checkBox6.Checked = value.AssetTable.ModelSwap.GetArg<bool>(6);
-                AssetTable.checkBox13.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(0);
-                AssetTable.checkBox7.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(1);
-                AssetTable.checkBox8.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(2);
-                AssetTable.checkBox9.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(3);
-                AssetTable.checkBox10.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(4);
-                AssetTable.checkBox11.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(5);
-                AssetTable.checkBox12.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(6);
-                AssetTable.checkBox21.Checked = value.AssetTable.ColorPalette.Enabled;
-                AssetTable.checkBox14.Checked = value.AssetTable.ColorPalette.GetArg<bool>(0);
-                AssetTable.checkBox16.Checked = value.AssetTable.ShuffleRideDressModel;
-                AssetTable.checkBox15.Checked = value.AssetTable.InfoAnim.Enabled;
-                AssetTable.checkBox17.Checked = value.AssetTable.InfoAnim.GetArg<bool>(0);
-                AssetTable.checkBox19.Checked = value.AssetTable.ShuffleTalkAnims;
-                AssetTable.checkBox22.Checked = value.AssetTable.DemoAnim.Enabled;
-                AssetTable.checkBox18.Checked = value.AssetTable.DemoAnim.GetArg<bool>(0);
-                AssetTable.checkBox23.Checked = value.AssetTable.ShuffleHubAnims;
-                AssetTable.checkBox24.Checked = value.AssetTable.RandomizeModelParameters;
-                AssetTable.ScaleAll.Set(value.AssetTable.ScaleAll.Distribution);
-                AssetTable.ScaleHead.Set(value.AssetTable.ScaleHead.Distribution);
-                AssetTable.ScaleNeck.Set(value.AssetTable.ScaleNeck.Distribution);
-                AssetTable.ScaleTorso.Set(value.AssetTable.ScaleTorso.Distribution);
-                AssetTable.ScaleShoulders.Set(value.AssetTable.ScaleShoulders.Distribution);
-                AssetTable.ScaleArms.Set(value.AssetTable.ScaleArms.Distribution);
-                AssetTable.ScaleHands.Set(value.AssetTable.ScaleHands.Distribution);
-                AssetTable.ScaleLegs.Set(value.AssetTable.ScaleLegs.Distribution);
-                AssetTable.ScaleFeet.Set(value.AssetTable.ScaleFeet.Distribution);
-                AssetTable.VolumeArms.Set(value.AssetTable.VolumeArms.Distribution);
-                AssetTable.VolumeLegs.Set(value.AssetTable.VolumeLegs.Distribution);
-                AssetTable.VolumeBust.Set(value.AssetTable.VolumeBust.Distribution);
-                AssetTable.VolumeAbdomen.Set(value.AssetTable.VolumeAbdomen.Distribution);
-                AssetTable.VolumeTorso.Set(value.AssetTable.VolumeTorso.Distribution);
-                AssetTable.VolumeScaleArms.Set(value.AssetTable.VolumeScaleArms.Distribution);
-                AssetTable.VolumeScaleLegs.Set(value.AssetTable.VolumeScaleLegs.Distribution);
-                AssetTable.MapScaleAll.Set(value.AssetTable.MapScaleAll.Distribution);
-                AssetTable.MapScaleHead.Set(value.AssetTable.MapScaleHead.Distribution);
-                AssetTable.MapScaleWing.Set(value.AssetTable.MapScaleWing.Distribution);
+                Individual.checkBox20.Checked = value.Individual.Age.Enabled;
+                Individual.Age.Set(value.Individual.Age.Distribution);
+                Individual.checkBox1.Checked = value.Individual.RandomizeBirthday;
             }
         }
 
@@ -488,6 +500,12 @@ namespace ALittleSecretIngredient.Forms
         {
             AssetTable.Show();
             AssetTable.Activate();
+        }
+
+        private void Button5_Click(object sender, EventArgs e)
+        {
+            Individual.Show();
+            Individual.Activate();
         }
     }
 }

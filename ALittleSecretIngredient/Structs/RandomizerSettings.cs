@@ -12,17 +12,18 @@ namespace ALittleSecretIngredient.Structs
         public GodGeneralSettings GodGeneral { get; set; } = new();
         public GrowthTableSettings GrowthTable { get; set; } = new();
         public BondLevelSettings BondLevel { get; set; } = new();
+        public IndividualSettings Individual { get; set; } = new();
 
         public class AssetTableSettings
         {
             public RandomizerFieldSettings ModelSwap { get; set; } = new();
             public RandomizerFieldSettings OutfitSwap { get; set; } = new();
             public RandomizerFieldSettings ColorPalette { get; set; } = new();
-            public bool ShuffleRideDressModel { get; set; } = new();
+            public bool ShuffleRideDressModel { get; set; }
             public RandomizerFieldSettings InfoAnim { get; set; } = new();
-            public bool ShuffleTalkAnims { get; set; } = new();
+            public bool ShuffleTalkAnims { get; set; }
             public RandomizerFieldSettings DemoAnim { get; set; } = new();
-            public bool ShuffleHubAnims { get; set; } = new();
+            public bool ShuffleHubAnims { get; set; }
             public bool RandomizeModelParameters { get; set; } = new();
             public RandomizerFieldSettings ScaleAll { get; set; } = new();
             public RandomizerFieldSettings ScaleHead { get; set; } = new();
@@ -112,6 +113,12 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings Exp { get; set; } = new();
             public RandomizerFieldSettings Cost { get; set; } = new();
+        }
+
+        public class IndividualSettings
+        {
+            public RandomizerFieldSettings Age { get; set; } = new();
+            public bool RandomizeBirthday { get; set; }
         }
     }
 

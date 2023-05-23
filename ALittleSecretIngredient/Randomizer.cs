@@ -996,10 +996,12 @@ namespace ALittleSecretIngredient
         {
             List<Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList();
             List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
+            List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
             Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
 
             if (settings.Age.Enabled)
             {
+                // Not all playables have age.
                 List<Individual> aged = playableCharacters.Where(i => i.Age != -1).ToList();
                 aged.Randomize(i => i.Age, (i, s) => i.Age = s, settings.Age.Distribution, 0, short.MaxValue);
                 WriteToChangelog(entries, aged, i => i.Age, "Age");
@@ -1008,6 +1010,16 @@ namespace ALittleSecretIngredient
 
             if (settings.RandomizeBirthday)
                 RandomizeBirthdays(playableCharacters, entries);
+
+            if (settings.Level.Enabled)
+            {
+                playableCharacters.Randomize(i => i.Level, (i, b) => i.Level = b, settings.Level.Distribution, 1, 40);
+                // Ensure level is within their class' range
+                foreach (Individual i in playableCharacters)
+                    i.Level = Math.Min(i.Level, GetTOS(i, toss).MaxLevel);
+                WriteToChangelog(entries, playableCharacters, i => i.Level, "Level");
+                GD.SetDirty(DataSetEnum.Individual);
+            }
 
             StringBuilder innertable = new();
             foreach (Individual i in individuals)
@@ -1019,6 +1031,11 @@ namespace ALittleSecretIngredient
 
             return ApplyTableTitle(innertable, "Characters");
         }
+
+        private static sbyte GetInternalLevel(Individual i, List<TypeOfSoldier> toss) =>
+            i.InternalLevel > 0 ? i.InternalLevel : GetTOS(i, toss).InternalLevel;
+
+        private static TypeOfSoldier GetTOS(Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
 
         private void RandomizeBirthdays(List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)
         {

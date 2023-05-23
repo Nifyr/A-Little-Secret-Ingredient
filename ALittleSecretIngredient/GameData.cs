@@ -2332,6 +2332,7 @@
             { RandomizerDistribution.Exp, DataSetEnum.BondLevel },
             { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
             { RandomizerDistribution.Age, DataSetEnum.Individual },
+            { RandomizerDistribution.Level, DataSetEnum.Individual },
         };
     }
 

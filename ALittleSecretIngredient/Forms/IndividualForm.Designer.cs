@@ -34,18 +34,23 @@
             groupBox7 = new GroupBox();
             button1 = new Button();
             checkBox20 = new CheckBox();
-            toolTip1 = new ToolTip(components);
             groupBox1 = new GroupBox();
             checkBox1 = new CheckBox();
+            groupBox2 = new GroupBox();
+            button2 = new Button();
+            checkBox2 = new CheckBox();
+            toolTip1 = new ToolTip(components);
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(groupBox7);
             flowLayoutPanel1.Controls.Add(groupBox1);
+            flowLayoutPanel1.Controls.Add(groupBox2);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -88,12 +93,6 @@
             toolTip1.SetToolTip(checkBox20, "This pertains to the amount of experience *required* for each bond level.");
             checkBox20.UseVisualStyleBackColor = true;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // groupBox1
             // 
             groupBox1.AutoSize = true;
@@ -118,6 +117,47 @@
             toolTip1.SetToolTip(checkBox1, "This pertains to the amount of experience *required* for each bond level.");
             checkBox1.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            groupBox2.AutoSize = true;
+            groupBox2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox2.Controls.Add(button2);
+            groupBox2.Controls.Add(checkBox2);
+            groupBox2.Location = new Point(3, 202);
+            groupBox2.MinimumSize = new Size(200, 0);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(200, 111);
+            groupBox2.TabIndex = 15;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Starting Level";
+            // 
+            // button2
+            // 
+            button2.Location = new Point(6, 56);
+            button2.Name = "button2";
+            button2.Size = new Size(188, 29);
+            button2.TabIndex = 5;
+            button2.Text = "Starting Level";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += Button2_Click;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(6, 26);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(106, 24);
+            checkBox2.TabIndex = 0;
+            checkBox2.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox2, "This pertains to the amount of experience *required* for each bond level.");
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
             // IndividualForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -133,6 +173,8 @@
             groupBox7.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -145,5 +187,8 @@
         private Button button1;
         private GroupBox groupBox1;
         public CheckBox checkBox1;
+        private GroupBox groupBox2;
+        private Button button2;
+        public CheckBox checkBox2;
     }
 }

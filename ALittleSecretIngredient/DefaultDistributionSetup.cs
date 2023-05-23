@@ -322,10 +322,15 @@ namespace ALittleSecretIngredient
                     }
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
+                    List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters).ToList();
                     switch (dfe)
                     {
                         case RandomizerDistribution.Age:
-                            return GetNumericDistributionSetup(individuals.Where(i => i.Age != -1).ToList(), i => i.Age);
+                            return GetNumericDistributionSetup(playableCharacters.Where(i => i.Age != -1).ToList(), i => i.Age);
+                        case RandomizerDistribution.Level:
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(playableCharacters, i => i.Level);
+                            nds0.idx = 4;
+                            return nds0;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

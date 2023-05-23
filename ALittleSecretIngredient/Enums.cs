@@ -101,5 +101,6 @@
         Exp,
         Cost,
         Age,
+        Level,
     }
 }

@@ -560,15 +560,15 @@ namespace ALittleSecretIngredient
             if (distribution is INumericDistribution n)
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    if (get(targets[i]) is byte x0 && (byte)Math.Round(n.Next(x0)) is B n0)
+                    if (get(targets[i]) is byte x0 && (byte)Math.Round(Math.Clamp(n.Next(x0), byte.MinValue, byte.MaxValue)) is B n0)
                         set(targets[i], n0);
-                    else if (get(targets[i]) is sbyte x1 && (sbyte)Math.Round(n.Next(x1)) is B n1)
+                    else if (get(targets[i]) is sbyte x1 && (sbyte)Math.Round(Math.Clamp(n.Next(x1), sbyte.MinValue, sbyte.MaxValue)) is B n1)
                         set(targets[i], n1);
-                    else if (get(targets[i]) is int x2 && (int)Math.Round(n.Next(x2)) is B n2)
+                    else if (get(targets[i]) is int x2 && (int)Math.Round(Math.Clamp(n.Next(x2), int.MinValue, int.MaxValue)) is B n2)
                         set(targets[i], n2);
-                    else if (get(targets[i]) is float x3 && (float)n.Next(x3) is B n3)
+                    else if (get(targets[i]) is float x3 && (float)Math.Clamp(n.Next(x3), float.MinValue, float.MaxValue) is B n3)
                         set(targets[i], n3);
-                    else if (get(targets[i]) is short x4 && (short)Math.Round(n.Next(x4)) is B n4)
+                    else if (get(targets[i]) is short x4 && (short)Math.Round(Math.Clamp(n.Next(x4), short.MinValue, short.MaxValue)) is B n4)
                         set(targets[i], n4);
                     else if (get(targets[i]) != null)
                         throw new ArgumentException("Unsupported type: " + get(targets[i])!.GetType().Name);

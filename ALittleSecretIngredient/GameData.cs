@@ -1,4 +1,6 @@
-﻿namespace ALittleSecretIngredient
+﻿using ALittleSecretIngredient.Structs;
+
+namespace ALittleSecretIngredient
 {
     internal class GameData
     {
@@ -2265,6 +2267,11 @@
             data.Where(o => entities.Select(t => t.id).Contains(getID(o))).ToList();
         internal static List<T> GetIDs<T>(this List<(T id, string name)> entities) => entities.Select(t => t.id).ToList();
         internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
+
+        internal static sbyte GetInternalLevel(this Individual i, List<TypeOfSoldier> toss) =>
+            i.InternalLevel != 0 ? i.InternalLevel : i.GetTOS(toss).InternalLevel;
+
+        internal static TypeOfSoldier GetTOS(this Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
         internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
         {
             { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },
@@ -2333,6 +2340,7 @@
             { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
             { RandomizerDistribution.Age, DataSetEnum.Individual },
             { RandomizerDistribution.Level, DataSetEnum.Individual },
+            { RandomizerDistribution.InternalLevel, DataSetEnum.Individual },
         };
     }
 

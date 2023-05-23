@@ -234,6 +234,7 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.Age = new(Individual.checkBox20.Checked, Individual.Age.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeBirthday = Individual.checkBox1.Checked;
                 rs.Individual.Level = new(Individual.checkBox2.Checked, Individual.Level.Get(), Array.Empty<object>());
+                rs.Individual.InternalLevel = new(Individual.checkBox3.Checked, Individual.InternalLevel.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -387,6 +388,8 @@ namespace ALittleSecretIngredient.Forms
                 Individual.checkBox1.Checked = value.Individual.RandomizeBirthday;
                 Individual.checkBox2.Checked = value.Individual.Level.Enabled;
                 Individual.Level.Set(value.Individual.Level.Distribution);
+                Individual.checkBox3.Checked = value.Individual.InternalLevel.Enabled;
+                Individual.InternalLevel.Set(value.Individual.InternalLevel.Distribution);
             }
         }
 

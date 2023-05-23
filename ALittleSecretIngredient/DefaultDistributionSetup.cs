@@ -323,6 +323,7 @@ namespace ALittleSecretIngredient
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
                     List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters).ToList();
+                    List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
                     switch (dfe)
                     {
                         case RandomizerDistribution.Age:
@@ -331,6 +332,11 @@ namespace ALittleSecretIngredient
                             NumericDistributionSetup nds0 = GetNumericDistributionSetup(playableCharacters, i => i.Level);
                             nds0.idx = 4;
                             return nds0;
+                        case RandomizerDistribution.InternalLevel:
+                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(playableCharacters, i => i.GetInternalLevel(toss));
+                            nds1.distributions[4] = new NormalRelative(100, 2);
+                            nds1.idx = 4;
+                            return nds1;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

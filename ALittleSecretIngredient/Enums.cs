@@ -102,5 +102,6 @@
         Cost,
         Age,
         Level,
+        InternalLevel,
     }
 }

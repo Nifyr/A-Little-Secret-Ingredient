@@ -120,6 +120,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings Age { get; set; } = new();
             public bool RandomizeBirthday { get; set; }
             public RandomizerFieldSettings Level { get; set; } = new();
+            public RandomizerFieldSettings InternalLevel { get; set; } = new();
         }
     }
 

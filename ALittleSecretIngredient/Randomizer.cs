@@ -1016,8 +1016,16 @@ namespace ALittleSecretIngredient
                 playableCharacters.Randomize(i => i.Level, (i, b) => i.Level = b, settings.Level.Distribution, 1, 40);
                 // Ensure level is within their class' range
                 foreach (Individual i in playableCharacters)
-                    i.Level = Math.Min(i.Level, GetTOS(i, toss).MaxLevel);
+                    i.Level = Math.Min(i.Level, i.GetTOS(toss).MaxLevel);
                 WriteToChangelog(entries, playableCharacters, i => i.Level, "Level");
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+
+            if (settings.InternalLevel.Enabled)
+            {
+                playableCharacters.Randomize(i => i.GetInternalLevel(toss), (i, s) => i.InternalLevel = s,
+                    settings.InternalLevel.Distribution, sbyte.MinValue, sbyte.MaxValue);
+                WriteToChangelog(entries, playableCharacters, i => i.GetInternalLevel(toss), "Internal Level");
                 GD.SetDirty(DataSetEnum.Individual);
             }
 
@@ -1031,11 +1039,6 @@ namespace ALittleSecretIngredient
 
             return ApplyTableTitle(innertable, "Characters");
         }
-
-        private static sbyte GetInternalLevel(Individual i, List<TypeOfSoldier> toss) =>
-            i.InternalLevel > 0 ? i.InternalLevel : GetTOS(i, toss).InternalLevel;
-
-        private static TypeOfSoldier GetTOS(Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
 
         private void RandomizeBirthdays(List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)
         {

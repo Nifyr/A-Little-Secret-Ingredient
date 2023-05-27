@@ -119,8 +119,10 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings Age { get; set; } = new();
             public bool RandomizeBirthday { get; set; }
-            public RandomizerFieldSettings Level { get; set; } = new();
+            public RandomizerFieldSettings LevelAlly { get; set; } = new();
+            public RandomizerFieldSettings LevelEnemy { get; set; } = new();
             public RandomizerFieldSettings InternalLevel { get; set; } = new();
+            public RandomizerFieldSettings SupportCategory { get; set; } = new();
         }
     }
 

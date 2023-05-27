@@ -996,6 +996,8 @@ namespace ALittleSecretIngredient
         {
             List<Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList();
             List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
+            List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters);
+            List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters);
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
             Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
 
@@ -1011,21 +1013,22 @@ namespace ALittleSecretIngredient
             if (settings.RandomizeBirthday)
                 RandomizeBirthdays(playableCharacters, entries);
 
-            if (settings.Level.Enabled)
-            {
-                playableCharacters.Randomize(i => i.Level, (i, b) => i.Level = b, settings.Level.Distribution, 1, 40);
-                // Ensure level is within their class' range
-                foreach (Individual i in playableCharacters)
-                    i.Level = Math.Min(i.Level, i.GetTOS(toss).MaxLevel);
-                WriteToChangelog(entries, playableCharacters, i => i.Level, "Level");
-                GD.SetDirty(DataSetEnum.Individual);
-            }
+            HandleLevel(settings.LevelAlly, allyCharacters, toss, entries);
+            HandleLevel(settings.LevelEnemy, enemyCharacters, toss, entries);
 
             if (settings.InternalLevel.Enabled)
             {
                 playableCharacters.Randomize(i => i.GetInternalLevel(toss), (i, s) => i.InternalLevel = s,
                     settings.InternalLevel.Distribution, sbyte.MinValue, sbyte.MaxValue);
                 WriteToChangelog(entries, playableCharacters, i => i.GetInternalLevel(toss), "Internal Level");
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+
+            if (settings.SupportCategory.Enabled)
+            {
+                playableCharacters.Randomize(i => i.SupportCategory, (i, s) => i.SupportCategory = s, settings.SupportCategory.Distribution,
+                    GD.SupportCategories.GetIDs());
+                WriteToChangelog(entries, playableCharacters, i => i.SupportCategory, "Support Category", GD.SupportCategories);
                 GD.SetDirty(DataSetEnum.Individual);
             }
 
@@ -1038,6 +1041,20 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Characters");
+        }
+
+        private void HandleLevel(RandomizerFieldSettings settings, List<Individual> individuals, List<TypeOfSoldier> toss, Dictionary<Individual, StringBuilder> entries)
+        {
+            if (settings.Enabled)
+            {
+                individuals.Randomize(i => i.Level, (i, b) => i.Level = b, settings.Distribution, 1, 40);
+                // Ensure level is within their class' range
+                foreach (Individual i in individuals)
+                    if (i.Jid != "")
+                        i.Level = Math.Min(i.Level, i.GetTOS(toss).MaxLevel);
+                WriteToChangelog(entries, individuals, i => i.Level, "Level");
+                GD.SetDirty(DataSetEnum.Individual);
+            }
         }
 
         private void RandomizeBirthdays(List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)

@@ -101,7 +101,9 @@
         Exp,
         Cost,
         Age,
-        Level,
+        LevelAlly,
+        LevelEnemy,
         InternalLevel,
+        SupportCategory,
     }
 }

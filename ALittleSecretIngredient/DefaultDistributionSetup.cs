@@ -323,20 +323,28 @@ namespace ALittleSecretIngredient
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
                     List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters).ToList();
+                    List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters).ToList();
+                    List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters).ToList();
                     List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
                     switch (dfe)
                     {
                         case RandomizerDistribution.Age:
                             return GetNumericDistributionSetup(playableCharacters.Where(i => i.Age != -1).ToList(), i => i.Age);
-                        case RandomizerDistribution.Level:
-                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(playableCharacters, i => i.Level);
+                        case RandomizerDistribution.LevelAlly:
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(allyCharacters, i => i.Level);
+                            nds0.distributions[4] = new NormalRelative(100, 1);
                             nds0.idx = 4;
                             return nds0;
-                        case RandomizerDistribution.InternalLevel:
-                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(playableCharacters, i => i.GetInternalLevel(toss));
-                            nds1.distributions[4] = new NormalRelative(100, 2);
+                        case RandomizerDistribution.LevelEnemy:
+                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(enemyCharacters, i => i.Level);
+                            nds1.distributions[4] = new NormalRelative(100, 1);
                             nds1.idx = 4;
                             return nds1;
+                        case RandomizerDistribution.InternalLevel:
+                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(playableCharacters, i => i.GetInternalLevel(toss));
+                            nds2.distributions[4] = new NormalRelative(100, 1);
+                            nds2.idx = 4;
+                            return nds2;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -440,6 +448,15 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.Aptitude:
                             return GetSelectionDistributionSetup(pgs.FilterData(pg => pg.Name, GD.InheritableBondLevelTables).SelectMany(pg =>
                             pg.Group.Cast<GrowthTable>()).SelectMany(gt => gt.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
+                        default:
+                            throw new ArgumentException("Unsupported data field: " + dfe);
+                    }
+                case DataSetEnum.Individual:
+                    List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
+                    switch (dfe)
+                    {
+                        case RandomizerDistribution.SupportCategory:
+                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.SupportCategory, GD.SupportCategories);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

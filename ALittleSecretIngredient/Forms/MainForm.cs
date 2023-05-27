@@ -233,8 +233,10 @@ namespace ALittleSecretIngredient.Forms
 
                 rs.Individual.Age = new(Individual.checkBox20.Checked, Individual.Age.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeBirthday = Individual.checkBox1.Checked;
-                rs.Individual.Level = new(Individual.checkBox2.Checked, Individual.Level.Get(), Array.Empty<object>());
+                rs.Individual.LevelAlly = new(Individual.checkBox2.Checked, Individual.LevelAlly.Get(), Array.Empty<object>());
+                rs.Individual.LevelEnemy = new(Individual.checkBox4.Checked, Individual.LevelEnemy.Get(), Array.Empty<object>());
                 rs.Individual.InternalLevel = new(Individual.checkBox3.Checked, Individual.InternalLevel.Get(), Array.Empty<object>());
+                rs.Individual.SupportCategory = new(Individual.checkBox5.Checked, Individual.SupportCategory.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -386,10 +388,14 @@ namespace ALittleSecretIngredient.Forms
                 Individual.checkBox20.Checked = value.Individual.Age.Enabled;
                 Individual.Age.Set(value.Individual.Age.Distribution);
                 Individual.checkBox1.Checked = value.Individual.RandomizeBirthday;
-                Individual.checkBox2.Checked = value.Individual.Level.Enabled;
-                Individual.Level.Set(value.Individual.Level.Distribution);
+                Individual.checkBox2.Checked = value.Individual.LevelAlly.Enabled;
+                Individual.LevelAlly.Set(value.Individual.LevelAlly.Distribution);
+                Individual.checkBox4.Checked = value.Individual.LevelEnemy.Enabled;
+                Individual.LevelEnemy.Set(value.Individual.LevelEnemy.Distribution);
                 Individual.checkBox3.Checked = value.Individual.InternalLevel.Enabled;
                 Individual.InternalLevel.Set(value.Individual.InternalLevel.Distribution);
+                Individual.checkBox5.Checked = value.Individual.SupportCategory.Enabled;
+                Individual.SupportCategory.Set(value.Individual.SupportCategory.Distribution);
             }
         }
 

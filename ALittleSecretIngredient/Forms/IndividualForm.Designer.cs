@@ -44,16 +44,20 @@
             groupBox3 = new GroupBox();
             button3 = new Button();
             checkBox3 = new CheckBox();
-            toolTip1 = new ToolTip(components);
             groupBox4 = new GroupBox();
             button5 = new Button();
             checkBox5 = new CheckBox();
+            groupBox5 = new GroupBox();
+            button6 = new Button();
+            checkBox6 = new CheckBox();
+            toolTip1 = new ToolTip(components);
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
+            groupBox5.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -63,6 +67,7 @@
             flowLayoutPanel1.Controls.Add(groupBox2);
             flowLayoutPanel1.Controls.Add(groupBox3);
             flowLayoutPanel1.Controls.Add(groupBox4);
+            flowLayoutPanel1.Controls.Add(groupBox5);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -222,12 +227,6 @@
             toolTip1.SetToolTip(checkBox3, "This pertains to the amount of experience *required* for each bond level.");
             checkBox3.UseVisualStyleBackColor = true;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // groupBox4
             // 
             groupBox4.AutoSize = true;
@@ -263,6 +262,47 @@
             toolTip1.SetToolTip(checkBox5, "This pertains to the amount of experience *required* for each bond level.");
             checkBox5.UseVisualStyleBackColor = true;
             // 
+            // groupBox5
+            // 
+            groupBox5.AutoSize = true;
+            groupBox5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox5.Controls.Add(button6);
+            groupBox5.Controls.Add(checkBox6);
+            groupBox5.Location = new Point(209, 237);
+            groupBox5.MinimumSize = new Size(200, 0);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(200, 111);
+            groupBox5.TabIndex = 18;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Skill Points";
+            // 
+            // button6
+            // 
+            button6.Location = new Point(6, 56);
+            button6.Name = "button6";
+            button6.Size = new Size(188, 29);
+            button6.TabIndex = 5;
+            button6.Text = "Starting SP";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += Button6_Click;
+            // 
+            // checkBox6
+            // 
+            checkBox6.AutoSize = true;
+            checkBox6.Location = new Point(6, 26);
+            checkBox6.Name = "checkBox6";
+            checkBox6.Size = new Size(106, 24);
+            checkBox6.TabIndex = 0;
+            checkBox6.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox6, "This pertains to the amount of experience *required* for each bond level.");
+            checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
             // IndividualForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -284,6 +324,8 @@
             groupBox3.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -307,5 +349,8 @@
         private GroupBox groupBox4;
         private Button button5;
         public CheckBox checkBox5;
+        private GroupBox groupBox5;
+        private Button button6;
+        public CheckBox checkBox6;
     }
 }

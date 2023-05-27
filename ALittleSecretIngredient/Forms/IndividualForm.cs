@@ -8,6 +8,7 @@
         internal NumericDistributionForm LevelEnemy { get; set; }
         internal NumericDistributionForm InternalLevel { get; set; }
         internal SelectionDistributionForm SupportCategory { get; set; }
+        internal NumericDistributionForm SkillPoint { get; set; }
         internal IndividualForm(GlobalData globalData)
         {
             GlobalData = globalData;
@@ -16,6 +17,7 @@
             LevelEnemy = new(GlobalData, RandomizerDistribution.LevelEnemy, "Enemy Level");
             InternalLevel = new(GlobalData, RandomizerDistribution.InternalLevel, "Starting Internal Level");
             SupportCategory = new(GlobalData, RandomizerDistribution.SupportCategory, "Support Categories");
+            SkillPoint = new(GlobalData, RandomizerDistribution.SkillPoint, "Starting Skill Points");
             InitializeComponent();
             FormClosing += MainForm.CancelFormClosing;
         }
@@ -48,6 +50,12 @@
         {
             SupportCategory.Show();
             SupportCategory.Activate();
+        }
+
+        private void Button6_Click(object sender, EventArgs e)
+        {
+            SkillPoint.Show();
+            SkillPoint.Activate();
         }
     }
 }

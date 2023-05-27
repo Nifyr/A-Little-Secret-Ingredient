@@ -105,5 +105,6 @@
         LevelEnemy,
         InternalLevel,
         SupportCategory,
+        SkillPoint,
     }
 }

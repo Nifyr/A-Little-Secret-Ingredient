@@ -237,6 +237,7 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.LevelEnemy = new(Individual.checkBox4.Checked, Individual.LevelEnemy.Get(), Array.Empty<object>());
                 rs.Individual.InternalLevel = new(Individual.checkBox3.Checked, Individual.InternalLevel.Get(), Array.Empty<object>());
                 rs.Individual.SupportCategory = new(Individual.checkBox5.Checked, Individual.SupportCategory.Get(), Array.Empty<object>());
+                rs.Individual.SkillPoint = new(Individual.checkBox6.Checked, Individual.SkillPoint.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -396,6 +397,8 @@ namespace ALittleSecretIngredient.Forms
                 Individual.InternalLevel.Set(value.Individual.InternalLevel.Distribution);
                 Individual.checkBox5.Checked = value.Individual.SupportCategory.Enabled;
                 Individual.SupportCategory.Set(value.Individual.SupportCategory.Distribution);
+                Individual.checkBox6.Checked = value.Individual.SkillPoint.Enabled;
+                Individual.SkillPoint.Set(value.Individual.SkillPoint.Distribution);
             }
         }
 

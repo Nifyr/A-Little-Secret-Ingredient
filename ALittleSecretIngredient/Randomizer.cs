@@ -1032,6 +1032,14 @@ namespace ALittleSecretIngredient
                 GD.SetDirty(DataSetEnum.Individual);
             }
 
+            if (settings.SkillPoint.Enabled)
+            {
+                playableCharacters.Randomize(i => i.SkillPoint, (i, i32) => i.SkillPoint = i32, settings.SkillPoint.Distribution,
+                    0, int.MaxValue);
+                WriteToChangelog(entries, playableCharacters, i => i.SkillPoint, "Starting SP");
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+
             StringBuilder innertable = new();
             foreach (Individual i in individuals)
                 if (entries[i].Length > 0)

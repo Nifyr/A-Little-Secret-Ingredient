@@ -2375,6 +2375,7 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.LevelEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.InternalLevel, DataSetEnum.Individual },
             { RandomizerDistribution.SupportCategory, DataSetEnum.Individual },
+            { RandomizerDistribution.SkillPoint, DataSetEnum.Individual },
         };
     }
 

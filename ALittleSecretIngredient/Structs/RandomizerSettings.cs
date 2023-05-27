@@ -123,6 +123,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings LevelEnemy { get; set; } = new();
             public RandomizerFieldSettings InternalLevel { get; set; } = new();
             public RandomizerFieldSettings SupportCategory { get; set; } = new();
+            public RandomizerFieldSettings SkillPoint { get; set; } = new();
         }
     }
 

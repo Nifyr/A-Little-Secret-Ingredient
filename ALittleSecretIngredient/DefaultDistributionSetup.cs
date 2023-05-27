@@ -345,6 +345,10 @@ namespace ALittleSecretIngredient
                             nds2.distributions[4] = new NormalRelative(100, 1);
                             nds2.idx = 4;
                             return nds2;
+                        case RandomizerDistribution.SkillPoint:
+                            NumericDistributionSetup nds3 = GetNumericDistributionSetup(playableCharacters, i => i.SkillPoint);
+                            nds3.idx = 5;
+                            return nds3;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

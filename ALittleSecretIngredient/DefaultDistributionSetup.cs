@@ -196,7 +196,7 @@ namespace ALittleSecretIngredient
                             nds6.distributions[0] = new UniformConstant(10, 2, 4);
                             nds6.idx = 0;
                             return nds6;
-                        case RandomizerDistribution.Aptitude:
+                        case RandomizerDistribution.GrowthTableAptitude:
                             NumericDistributionSetup nds7 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.InheritableBondLevelTables), pg =>
                                 pg.Group.Cast<GrowthTable>().Select(gt => gt.GetAptitudes().Count).Sum());
                             nds7.idx = 3;
@@ -349,6 +349,15 @@ namespace ALittleSecretIngredient
                             NumericDistributionSetup nds3 = GetNumericDistributionSetup(playableCharacters, i => i.SkillPoint);
                             nds3.idx = 5;
                             return nds3;
+                        case RandomizerDistribution.IndividualAptitude:
+                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(playableCharacters, i => i.GetAptitudes().Count);
+                            nds4.distributions[0] = new UniformConstant(10, 0, 2);
+                            nds4.idx = 0;
+                            return nds4;
+                        case RandomizerDistribution.SubAptitude:
+                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(playableCharacters, i => i.GetSubAptitudes().Count);
+                            nds5.idx = 3;
+                            return nds5;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -449,7 +458,7 @@ namespace ALittleSecretIngredient
                                 }).ToList(), s => s, GD.EngageWeapons);
                             sds3.idx = 1;
                             return sds3;
-                        case RandomizerDistribution.Aptitude:
+                        case RandomizerDistribution.GrowthTableAptitude:
                             return GetSelectionDistributionSetup(pgs.FilterData(pg => pg.Name, GD.InheritableBondLevelTables).SelectMany(pg =>
                             pg.Group.Cast<GrowthTable>()).SelectMany(gt => gt.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
                         default:
@@ -461,6 +470,10 @@ namespace ALittleSecretIngredient
                     {
                         case RandomizerDistribution.SupportCategory:
                             return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.SupportCategory, GD.SupportCategories);
+                        case RandomizerDistribution.IndividualAptitude:
+                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters).SelectMany(i => i.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
+                        case RandomizerDistribution.SubAptitude:
+                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters).SelectMany(i => i.GetSubAptitudes()).ToList(), i => i, GD.Proficiencies);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

@@ -2364,7 +2364,7 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.SynchroGeneralSkillsEnemy, DataSetEnum.GrowthTable },
             { RandomizerDistribution.EngageSkills, DataSetEnum.GrowthTable },
             { RandomizerDistribution.EngageItems, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.Aptitude, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.GrowthTableAptitude, DataSetEnum.GrowthTable },
             { RandomizerDistribution.SkillInheritanceLevel, DataSetEnum.GrowthTable },
             { RandomizerDistribution.StrongBondLevel, DataSetEnum.GrowthTable },
             { RandomizerDistribution.DeepSynergyLevel, DataSetEnum.GrowthTable },
@@ -2376,6 +2376,8 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.InternalLevel, DataSetEnum.Individual },
             { RandomizerDistribution.SupportCategory, DataSetEnum.Individual },
             { RandomizerDistribution.SkillPoint, DataSetEnum.Individual },
+            { RandomizerDistribution.IndividualAptitude, DataSetEnum.Individual },
+            { RandomizerDistribution.SubAptitude, DataSetEnum.Individual },
         };
     }
 

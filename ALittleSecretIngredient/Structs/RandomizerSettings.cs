@@ -124,6 +124,10 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings InternalLevel { get; set; } = new();
             public RandomizerFieldSettings SupportCategory { get; set; } = new();
             public RandomizerFieldSettings SkillPoint { get; set; } = new();
+            public RandomizerFieldSettings Aptitude { get; set; } = new();
+            public RandomizerFieldSettings AptitudeCount { get; set; } = new();
+            public RandomizerFieldSettings SubAptitude { get; set; } = new();
+            public RandomizerFieldSettings SubAptitudeCount { get; set; } = new();
         }
     }
 

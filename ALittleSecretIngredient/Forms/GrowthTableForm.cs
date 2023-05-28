@@ -40,8 +40,8 @@
             EngageSkillsCount = new(GlobalData, RandomizerDistribution.EngageSkills, "Engage Skills");
             EngageItems = new(GlobalData, RandomizerDistribution.EngageItems, "Engage Weapons");
             EngageItemsCount = new(GlobalData, RandomizerDistribution.EngageItems, "Engage Weapons");
-            Aptitude = new(GlobalData, RandomizerDistribution.Aptitude, "Proficiency Unlocks");
-            AptitudeCount = new(GlobalData, RandomizerDistribution.Aptitude, "Proficiency Unlocks");
+            Aptitude = new(GlobalData, RandomizerDistribution.GrowthTableAptitude, "Proficiency Unlocks");
+            AptitudeCount = new(GlobalData, RandomizerDistribution.GrowthTableAptitude, "Proficiency Unlocks");
             SkillInheritanceLevel = new(GlobalData, RandomizerDistribution.SkillInheritanceLevel, "Skill Inheritance Unlock Level");
             StrongBondLevel = new(GlobalData, RandomizerDistribution.StrongBondLevel, "Strong Bond Unlock Level");
             DeepSynergyLevel = new(GlobalData, RandomizerDistribution.DeepSynergyLevel, "Deep Synergy Unlock Level");

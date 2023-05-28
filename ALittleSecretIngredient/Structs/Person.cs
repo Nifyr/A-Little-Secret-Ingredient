@@ -112,5 +112,37 @@ namespace ALittleSecretIngredient.Structs
             if (value ^ GetFlag(index))
                 Flag ^= (byte)(1 << index);
         }
+
+        internal List<int> GetAptitudes()
+        {
+            List<int> l = new();
+            for (int i = 0; i < 32; i++)
+                if ((Aptitude & (1 << i)) > 0)
+                    l.Add(i);
+            return l;
+        }
+
+        internal void SetAptitudes(List<int> l)
+        {
+            Aptitude = 0;
+            for (int i = 0; i < l.Count; i++)
+                Aptitude |= (uint)(1 << l[i]);
+        }
+
+        internal List<int> GetSubAptitudes()
+        {
+            List<int> l = new();
+            for (int i = 0; i < 32; i++)
+                if ((SubAptitude & (1 << i)) > 0)
+                    l.Add(i);
+            return l;
+        }
+
+        internal void SetSubAptitudes(List<int> l)
+        {
+            SubAptitude = 0;
+            for (int i = 0; i < l.Count; i++)
+                SubAptitude |= (uint)(1 << l[i]);
+        }
     }
 }

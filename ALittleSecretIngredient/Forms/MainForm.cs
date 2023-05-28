@@ -238,6 +238,10 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.InternalLevel = new(Individual.checkBox3.Checked, Individual.InternalLevel.Get(), Array.Empty<object>());
                 rs.Individual.SupportCategory = new(Individual.checkBox5.Checked, Individual.SupportCategory.Get(), Array.Empty<object>());
                 rs.Individual.SkillPoint = new(Individual.checkBox6.Checked, Individual.SkillPoint.Get(), Array.Empty<object>());
+                rs.Individual.Aptitude = new(Individual.checkBox7.Checked, Individual.Aptitude.Get(), Array.Empty<object>());
+                rs.Individual.AptitudeCount = new(Individual.checkBox8.Checked, Individual.AptitudeCount.Get(), Array.Empty<object>());
+                rs.Individual.SubAptitude = new(Individual.checkBox10.Checked, Individual.SubAptitude.Get(), Array.Empty<object>());
+                rs.Individual.SubAptitudeCount = new(Individual.checkBox9.Checked, Individual.SubAptitudeCount.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -399,6 +403,14 @@ namespace ALittleSecretIngredient.Forms
                 Individual.SupportCategory.Set(value.Individual.SupportCategory.Distribution);
                 Individual.checkBox6.Checked = value.Individual.SkillPoint.Enabled;
                 Individual.SkillPoint.Set(value.Individual.SkillPoint.Distribution);
+                Individual.checkBox7.Checked = value.Individual.Aptitude.Enabled;
+                Individual.Aptitude.Set(value.Individual.Aptitude.Distribution);
+                Individual.checkBox8.Checked = value.Individual.AptitudeCount.Enabled;
+                Individual.AptitudeCount.Set(value.Individual.AptitudeCount.Distribution);
+                Individual.checkBox10.Checked = value.Individual.SubAptitude.Enabled;
+                Individual.SubAptitude.Set(value.Individual.SubAptitude.Distribution);
+                Individual.checkBox9.Checked = value.Individual.SubAptitudeCount.Enabled;
+                Individual.SubAptitudeCount.Set(value.Individual.SubAptitudeCount.Distribution);
             }
         }
 

@@ -94,7 +94,7 @@
         SynchroGeneralSkillsEnemy,
         EngageSkills,
         EngageItems,
-        Aptitude,
+        GrowthTableAptitude,
         SkillInheritanceLevel,
         StrongBondLevel,
         DeepSynergyLevel,
@@ -106,5 +106,7 @@
         InternalLevel,
         SupportCategory,
         SkillPoint,
+        IndividualAptitude,
+        SubAptitude,
     }
 }

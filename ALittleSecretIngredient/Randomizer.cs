@@ -2,6 +2,7 @@
 using System.Text;
 using static ALittleSecretIngredient.Probability;
 using static ALittleSecretIngredient.ColorGenerator;
+using System;
 
 namespace ALittleSecretIngredient
 {
@@ -908,10 +909,10 @@ namespace ALittleSecretIngredient
             {
                 // Randomize counts if toggled
                 if (settings.AptitudeCount.Enabled)
-                    RandomizeAptitudeCounts(settings.AptitudeCount.Distribution, inheritableBondLevelTables, proficiencyIDs);
+                    RandomizeGrowthTableAptitudeCounts(settings.AptitudeCount.Distribution, inheritableBondLevelTables, proficiencyIDs);
                 // Randomize proficiencies
-                RandomizeAptitude(settings.Aptitude.Distribution, inheritableBondLevelTables, proficiencyIDs);
-                WriteAptitudeToChangelog(inheritableBondLevelTables, levelEntries);
+                RandomizeGrowthTableAptitude(settings.Aptitude.Distribution, inheritableBondLevelTables, proficiencyIDs);
+                WriteGrowthTableAptitudeToChangelog(inheritableBondLevelTables, levelEntries);
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
 
@@ -999,6 +1000,7 @@ namespace ALittleSecretIngredient
             List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters);
             List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters);
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
+            List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
             Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
 
             if (settings.Age.Enabled)
@@ -1040,6 +1042,11 @@ namespace ALittleSecretIngredient
                 GD.SetDirty(DataSetEnum.Individual);
             }
 
+            HandleIndividualAptitude(settings.Aptitude, settings.AptitudeCount, playableCharacters, proficiencyIDs, entries,
+                i => i.GetAptitudes(), (i, l) => i.SetAptitudes(l), "Primary Proficiencies");
+            HandleIndividualAptitude(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, proficiencyIDs, entries,
+                i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
+
             StringBuilder innertable = new();
             foreach (Individual i in individuals)
                 if (entries[i].Length > 0)
@@ -1051,7 +1058,70 @@ namespace ALittleSecretIngredient
             return ApplyTableTitle(innertable, "Characters");
         }
 
-        private void HandleLevel(RandomizerFieldSettings settings, List<Individual> individuals, List<TypeOfSoldier> toss, Dictionary<Individual, StringBuilder> entries)
+        private void HandleIndividualAptitude(RandomizerFieldSettings settings, RandomizerFieldSettings countSettings,
+            List<Individual> playableCharacters, List<int> proficiencyIDs, Dictionary<Individual, StringBuilder> entries,
+            Func<Individual, List<int>> getAptitudes, Action<Individual, List<int>> setAptitudes, string fieldName)
+        {
+            if (settings.Enabled)
+            {
+                // Randomize counts if toggled
+                if (countSettings.Enabled)
+                    RandomizeIndividualAptitudeCounts(countSettings.Distribution, playableCharacters, proficiencyIDs,
+                        getAptitudes, setAptitudes);
+                // Randomize proficiencies
+                RandomizeIndividualAptitude(settings.Distribution, playableCharacters, proficiencyIDs,
+                        getAptitudes, setAptitudes);
+                WriteIndividualAptitudeToChangelog(playableCharacters, entries, getAptitudes, fieldName);
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+        }
+
+        private void WriteIndividualAptitudeToChangelog(List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries,
+            Func<Individual, List<int>> getAptitudes, string fieldName)
+        {
+            foreach (Individual i in playableCharacters)
+            {
+                StringBuilder entry = new($"{fieldName}:\t");
+                List<int> proficiencies = getAptitudes(i);
+                foreach (int proficiency in proficiencies)
+                    entry.Append(GD.Proficiencies.IDToName(proficiency) + ",\t");
+                if (proficiencies.Count > 0)
+                    entry = new(entry.ToString()[..^2]);
+                entries[i].AppendLine(entry.ToString());
+            }
+        }
+
+        private static void RandomizeIndividualAptitude(IDistribution distribution, List<Individual> playableCharacters,
+            List<int> proficiencyIDs, Func<Individual, List<int>> getAptitudes, Action<Individual, List<int>> setAptitudes)
+        {
+            AsNodeStructure(playableCharacters, i => getAptitudes(i),
+                                out List<List<Node<int>>> structure, out List<Node<int>> flattened);
+            flattened.Randomize(n => n.value, (n, i) => n.value = i, distribution, proficiencyIDs);
+            for (int iIdx = 0; iIdx < structure.Count; iIdx++)
+                setAptitudes(playableCharacters[iIdx], structure[iIdx].Select(n => n.value).ToList());
+        }
+
+        private static void RandomizeIndividualAptitudeCounts(IDistribution distribution, List<Individual> playableCharacters,
+            List<int> proficiencyIDs, Func<Individual, List<int>> getAptitudes, Action<Individual, List<int>> setAptitudes)
+        {
+            List<Node<int>> proficiencyCounts = playableCharacters.Select(i => new Node<int>(getAptitudes(i).Count)).ToList();
+            proficiencyCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, proficiencyIDs.Count);
+            AsNodeStructure(playableCharacters, i => getAptitudes(i).ToArray(),
+                out List<List<Node<int>>> structure, out List<Node<int>> flattened);
+            for (int iIdx = 0; iIdx < structure.Count; iIdx++)
+            {
+                List<Node<int>> iStructure = structure[iIdx];
+                int newCount = proficiencyCounts[iIdx].value;
+                while (iStructure.Count < newCount)
+                    iStructure.Add(flattened.GetRandom());
+                while (iStructure.Count > newCount)
+                    iStructure.Remove(iStructure.GetRandom());
+                setAptitudes(playableCharacters[iIdx], iStructure.Select(n => n.value).ToList());
+            }
+        }
+
+        private void HandleLevel(RandomizerFieldSettings settings, List<Individual> individuals, List<TypeOfSoldier> toss,
+            Dictionary<Individual, StringBuilder> entries)
         {
             if (settings.Enabled)
             {
@@ -1126,7 +1196,7 @@ namespace ALittleSecretIngredient
             return formatted;
         }
 
-        private void WriteAptitudeToChangelog(List<ParamGroup> allyBondLevelTables, Dictionary<(ParamGroup pg, int gtIdx),
+        private void WriteGrowthTableAptitudeToChangelog(List<ParamGroup> allyBondLevelTables, Dictionary<(ParamGroup pg, int gtIdx),
             StringBuilder> levelEntries)
         {
             foreach (ParamGroup pg in allyBondLevelTables)
@@ -1138,7 +1208,8 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private static void RandomizeAptitude(IDistribution distribution, List<ParamGroup> allyBondLevelTables, List<int> proficiencyIDs)
+        private static void RandomizeGrowthTableAptitude(IDistribution distribution, List<ParamGroup> allyBondLevelTables,
+            List<int> proficiencyIDs)
         {
             AsNodeStructure(allyBondLevelTables, gt => gt.GetAptitudes().ToArray(),
                                 out List<List<List<Node<int>>>> structure, out List<Node<int>> flattened);
@@ -1149,7 +1220,7 @@ namespace ALittleSecretIngredient
                         n.value).ToList());
         }
 
-        private static void RandomizeAptitudeCounts(IDistribution distribution, List<ParamGroup> allyBondLevelTables,
+        private static void RandomizeGrowthTableAptitudeCounts(IDistribution distribution, List<ParamGroup> allyBondLevelTables,
             List<int> proficiencyIDs)
         {
             List<Node<int>> proficiencyCounts = allyBondLevelTables.Select(pg => new Node<int>(pg.Group.Cast<GrowthTable>().Select(gt =>
@@ -1326,10 +1397,17 @@ namespace ALittleSecretIngredient
             flattened = structure.SelectMany(l => l).SelectMany(l => l).ToList();
         }
 
-        private static void AsNodeStructure(ParamGroup pg, Func<GrowthTable, string[]> getArray, out List<List<Node<string>>> structure,
-            out List<Node<string>> flattened)
+        private static void AsNodeStructure<T>(ParamGroup pg, Func<GrowthTable, T[]> getArray, out List<List<Node<T>>> structure,
+            out List<Node<T>> flattened)
         {
-            structure = pg.Group.Select(gp => getArray((GrowthTable)gp).Select(s => new Node<string>(s)).ToList()).ToList();
+            structure = pg.Group.Select(gp => getArray((GrowthTable)gp).Select(s => new Node<T>(s)).ToList()).ToList();
+            flattened = structure.SelectMany(l => l).ToList();
+        }
+
+        private static void AsNodeStructure<T>(List<Individual> individuals, Func<Individual, IEnumerable<T>> getIEnumerable, out List<List<Node<T>>> structure,
+            out List<Node<T>> flattened)
+        {
+            structure = individuals.Select(i => getIEnumerable(i).Select(s => new Node<T>(s)).ToList()).ToList();
             flattened = structure.SelectMany(l => l).ToList();
         }
 

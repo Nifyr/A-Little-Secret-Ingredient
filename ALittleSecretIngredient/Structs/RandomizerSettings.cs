@@ -182,6 +182,18 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings OffsetLSightEnemy { get; set; } = new();
             public RandomizerFieldSettings OffsetLMoveEnemy { get; set; } = new();
             public RandomizerFieldSettings OffsetLTotalEnemy { get; set; } = new();
+            public bool RandomizeStatLimits { get; set; } = new();
+            public RandomizerFieldSettings LimitHp { get; set; } = new();
+            public RandomizerFieldSettings LimitStr { get; set; } = new();
+            public RandomizerFieldSettings LimitTech { get; set; } = new();
+            public RandomizerFieldSettings LimitQuick { get; set; } = new();
+            public RandomizerFieldSettings LimitLuck { get; set; } = new();
+            public RandomizerFieldSettings LimitDef { get; set; } = new();
+            public RandomizerFieldSettings LimitMagic { get; set; } = new();
+            public RandomizerFieldSettings LimitMdef { get; set; } = new();
+            public RandomizerFieldSettings LimitPhys { get; set; } = new();
+            public RandomizerFieldSettings LimitSight { get; set; } = new();
+            public RandomizerFieldSettings LimitMove { get; set; } = new();
 
             internal RandomizerFieldSettings[] GetOffsetNAllySettings()
             {

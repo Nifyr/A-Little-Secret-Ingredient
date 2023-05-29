@@ -296,6 +296,18 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.OffsetLSightEnemy = new(false, Individual.OffsetLSightEnemy.Get(), Array.Empty<object>());
                 rs.Individual.OffsetLMoveEnemy = new(false, Individual.OffsetLMoveEnemy.Get(), Array.Empty<object>());
                 rs.Individual.OffsetLTotalEnemy = new(Individual.checkBox18.Checked, Individual.OffsetLTotalEnemy.Get(), Array.Empty<object>());
+                rs.Individual.RandomizeStatLimits = Individual.checkBox25.Checked;
+                rs.Individual.LimitHp = new(false, Individual.LimitHp.Get(), Array.Empty<object>());
+                rs.Individual.LimitStr = new(false, Individual.LimitStr.Get(), Array.Empty<object>());
+                rs.Individual.LimitTech = new(false, Individual.LimitTech.Get(), Array.Empty<object>());
+                rs.Individual.LimitQuick = new(false, Individual.LimitQuick.Get(), Array.Empty<object>());
+                rs.Individual.LimitLuck = new(false, Individual.LimitLuck.Get(), Array.Empty<object>());
+                rs.Individual.LimitDef = new(false, Individual.LimitDef.Get(), Array.Empty<object>());
+                rs.Individual.LimitMagic = new(false, Individual.LimitMagic.Get(), Array.Empty<object>());
+                rs.Individual.LimitMdef = new(false, Individual.LimitMdef.Get(), Array.Empty<object>());
+                rs.Individual.LimitPhys = new(false, Individual.LimitPhys.Get(), Array.Empty<object>());
+                rs.Individual.LimitSight = new(false, Individual.LimitSight.Get(), Array.Empty<object>());
+                rs.Individual.LimitMove = new(false, Individual.LimitMove.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -523,6 +535,18 @@ namespace ALittleSecretIngredient.Forms
                 Individual.OffsetLMoveEnemy.Set(value.Individual.OffsetLMoveEnemy.Distribution);
                 Individual.checkBox18.Checked = value.Individual.OffsetLTotalEnemy.Enabled;
                 Individual.OffsetLTotalEnemy.Set(value.Individual.OffsetLTotalEnemy.Distribution);
+                Individual.checkBox25.Checked = value.Individual.RandomizeStatLimits;
+                Individual.LimitHp.Set(value.Individual.LimitHp.Distribution);
+                Individual.LimitStr.Set(value.Individual.LimitStr.Distribution);
+                Individual.LimitTech.Set(value.Individual.LimitTech.Distribution);
+                Individual.LimitQuick.Set(value.Individual.LimitQuick.Distribution);
+                Individual.LimitLuck.Set(value.Individual.LimitLuck.Distribution);
+                Individual.LimitDef.Set(value.Individual.LimitDef.Distribution);
+                Individual.LimitMagic.Set(value.Individual.LimitMagic.Distribution);
+                Individual.LimitMdef.Set(value.Individual.LimitMdef.Distribution);
+                Individual.LimitPhys.Set(value.Individual.LimitPhys.Distribution);
+                Individual.LimitSight.Set(value.Individual.LimitSight.Distribution);
+                Individual.LimitMove.Set(value.Individual.LimitMove.Distribution);
             }
         }
 

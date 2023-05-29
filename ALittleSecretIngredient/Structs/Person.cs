@@ -264,5 +264,12 @@ namespace ALittleSecretIngredient.Structs
             OffsetLSight = value[9];
             OffsetLMove = value[10];
         }
+
+        internal sbyte[] GetLimits() => new sbyte[]
+        {
+            LimitHp, LimitStr, LimitTech, LimitQuick,
+            LimitLuck, LimitDef, LimitMagic, LimitMdef,
+            LimitPhys, LimitSight, LimitMove
+        };
     }
 }

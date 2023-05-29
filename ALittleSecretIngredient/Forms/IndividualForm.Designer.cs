@@ -60,23 +60,23 @@
             checkBox9 = new CheckBox();
             button10 = new Button();
             checkBox10 = new CheckBox();
-            toolTip1 = new ToolTip(components);
             groupBox9 = new GroupBox();
+            checkBox21 = new CheckBox();
+            checkBox12 = new CheckBox();
+            button22 = new Button();
+            checkBox13 = new CheckBox();
+            button21 = new Button();
+            button20 = new Button();
+            button19 = new Button();
+            button18 = new Button();
+            button17 = new Button();
+            button16 = new Button();
+            button15 = new Button();
+            button14 = new Button();
+            button13 = new Button();
+            button12 = new Button();
             button11 = new Button();
             checkBox11 = new CheckBox();
-            button12 = new Button();
-            button13 = new Button();
-            button14 = new Button();
-            button15 = new Button();
-            button16 = new Button();
-            button17 = new Button();
-            button18 = new Button();
-            button19 = new Button();
-            button20 = new Button();
-            button21 = new Button();
-            checkBox13 = new CheckBox();
-            button22 = new Button();
-            checkBox12 = new CheckBox();
             groupBox10 = new GroupBox();
             button23 = new Button();
             checkBox15 = new CheckBox();
@@ -122,7 +122,20 @@
             button57 = new Button();
             button58 = new Button();
             checkBox19 = new CheckBox();
-            checkBox21 = new CheckBox();
+            toolTip1 = new ToolTip(components);
+            groupBox13 = new GroupBox();
+            button60 = new Button();
+            button61 = new Button();
+            button62 = new Button();
+            button63 = new Button();
+            button64 = new Button();
+            button65 = new Button();
+            button66 = new Button();
+            button67 = new Button();
+            button68 = new Button();
+            button69 = new Button();
+            button70 = new Button();
+            checkBox25 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -136,6 +149,7 @@
             groupBox10.SuspendLayout();
             groupBox11.SuspendLayout();
             groupBox12.SuspendLayout();
+            groupBox13.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -153,6 +167,7 @@
             flowLayoutPanel1.Controls.Add(groupBox10);
             flowLayoutPanel1.Controls.Add(groupBox11);
             flowLayoutPanel1.Controls.Add(groupBox12);
+            flowLayoutPanel1.Controls.Add(groupBox13);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -487,12 +502,6 @@
             checkBox10.Text = "Randomize";
             checkBox10.UseVisualStyleBackColor = true;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // groupBox9
             // 
             groupBox9.AutoSize = true;
@@ -519,7 +528,147 @@
             groupBox9.Size = new Size(200, 591);
             groupBox9.TabIndex = 21;
             groupBox9.TabStop = false;
-            groupBox9.Text = "Ally Bases";
+            groupBox9.Text = "Ally Stat Base Modifiers";
+            // 
+            // checkBox21
+            // 
+            checkBox21.AutoSize = true;
+            checkBox21.Location = new Point(6, 511);
+            checkBox21.Name = "checkBox21";
+            checkBox21.Size = new Size(169, 24);
+            checkBox21.TabIndex = 20;
+            checkBox21.Text = "Stronger protagonist";
+            checkBox21.UseVisualStyleBackColor = true;
+            // 
+            // checkBox12
+            // 
+            checkBox12.AutoSize = true;
+            checkBox12.Location = new Point(6, 541);
+            checkBox12.Name = "checkBox12";
+            checkBox12.Size = new Size(153, 24);
+            checkBox12.TabIndex = 19;
+            checkBox12.Text = "Stronger ally NPCs";
+            checkBox12.UseVisualStyleBackColor = true;
+            // 
+            // button22
+            // 
+            button22.Location = new Point(6, 476);
+            button22.Name = "button22";
+            button22.Size = new Size(188, 29);
+            button22.TabIndex = 18;
+            button22.Text = "Stat Total";
+            button22.UseVisualStyleBackColor = true;
+            button22.Click += Button22_Click;
+            // 
+            // checkBox13
+            // 
+            checkBox13.AutoSize = true;
+            checkBox13.Location = new Point(6, 441);
+            checkBox13.Name = "checkBox13";
+            checkBox13.Size = new Size(118, 24);
+            checkBox13.TabIndex = 17;
+            checkBox13.Text = "Use stat total";
+            checkBox13.UseVisualStyleBackColor = true;
+            // 
+            // button21
+            // 
+            button21.Location = new Point(6, 406);
+            button21.Name = "button21";
+            button21.Size = new Size(188, 29);
+            button21.TabIndex = 16;
+            button21.Text = "Movement";
+            button21.UseVisualStyleBackColor = true;
+            button21.Click += Button21_Click;
+            // 
+            // button20
+            // 
+            button20.Location = new Point(6, 371);
+            button20.Name = "button20";
+            button20.Size = new Size(188, 29);
+            button20.TabIndex = 15;
+            button20.Text = "Sight";
+            button20.UseVisualStyleBackColor = true;
+            button20.Click += Button20_Click;
+            // 
+            // button19
+            // 
+            button19.Location = new Point(6, 336);
+            button19.Name = "button19";
+            button19.Size = new Size(188, 29);
+            button19.TabIndex = 14;
+            button19.Text = "Build";
+            button19.UseVisualStyleBackColor = true;
+            button19.Click += Button19_Click;
+            // 
+            // button18
+            // 
+            button18.Location = new Point(6, 301);
+            button18.Name = "button18";
+            button18.Size = new Size(188, 29);
+            button18.TabIndex = 13;
+            button18.Text = "Resistance";
+            button18.UseVisualStyleBackColor = true;
+            button18.Click += Button18_Click;
+            // 
+            // button17
+            // 
+            button17.Location = new Point(6, 266);
+            button17.Name = "button17";
+            button17.Size = new Size(188, 29);
+            button17.TabIndex = 12;
+            button17.Text = "Magic";
+            button17.UseVisualStyleBackColor = true;
+            button17.Click += Button17_Click;
+            // 
+            // button16
+            // 
+            button16.Location = new Point(6, 231);
+            button16.Name = "button16";
+            button16.Size = new Size(188, 29);
+            button16.TabIndex = 11;
+            button16.Text = "Defense";
+            button16.UseVisualStyleBackColor = true;
+            button16.Click += Button16_Click;
+            // 
+            // button15
+            // 
+            button15.Location = new Point(6, 196);
+            button15.Name = "button15";
+            button15.Size = new Size(188, 29);
+            button15.TabIndex = 10;
+            button15.Text = "Luck";
+            button15.UseVisualStyleBackColor = true;
+            button15.Click += Button15_Click;
+            // 
+            // button14
+            // 
+            button14.Location = new Point(6, 161);
+            button14.Name = "button14";
+            button14.Size = new Size(188, 29);
+            button14.TabIndex = 9;
+            button14.Text = "Speed";
+            button14.UseVisualStyleBackColor = true;
+            button14.Click += Button14_Click;
+            // 
+            // button13
+            // 
+            button13.Location = new Point(6, 126);
+            button13.Name = "button13";
+            button13.Size = new Size(188, 29);
+            button13.TabIndex = 8;
+            button13.Text = "Dexterity";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += Button13_Click;
+            // 
+            // button12
+            // 
+            button12.Location = new Point(6, 91);
+            button12.Name = "button12";
+            button12.Size = new Size(188, 29);
+            button12.TabIndex = 7;
+            button12.Text = "Strength";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += Button12_Click;
             // 
             // button11
             // 
@@ -540,136 +689,6 @@
             checkBox11.TabIndex = 0;
             checkBox11.Text = "Randomize";
             checkBox11.UseVisualStyleBackColor = true;
-            // 
-            // button12
-            // 
-            button12.Location = new Point(6, 91);
-            button12.Name = "button12";
-            button12.Size = new Size(188, 29);
-            button12.TabIndex = 7;
-            button12.Text = "Strength";
-            button12.UseVisualStyleBackColor = true;
-            button12.Click += Button12_Click;
-            // 
-            // button13
-            // 
-            button13.Location = new Point(6, 126);
-            button13.Name = "button13";
-            button13.Size = new Size(188, 29);
-            button13.TabIndex = 8;
-            button13.Text = "Dexterity";
-            button13.UseVisualStyleBackColor = true;
-            button13.Click += Button13_Click;
-            // 
-            // button14
-            // 
-            button14.Location = new Point(6, 161);
-            button14.Name = "button14";
-            button14.Size = new Size(188, 29);
-            button14.TabIndex = 9;
-            button14.Text = "Speed";
-            button14.UseVisualStyleBackColor = true;
-            button14.Click += Button14_Click;
-            // 
-            // button15
-            // 
-            button15.Location = new Point(6, 196);
-            button15.Name = "button15";
-            button15.Size = new Size(188, 29);
-            button15.TabIndex = 10;
-            button15.Text = "Luck";
-            button15.UseVisualStyleBackColor = true;
-            button15.Click += Button15_Click;
-            // 
-            // button16
-            // 
-            button16.Location = new Point(6, 231);
-            button16.Name = "button16";
-            button16.Size = new Size(188, 29);
-            button16.TabIndex = 11;
-            button16.Text = "Defense";
-            button16.UseVisualStyleBackColor = true;
-            button16.Click += Button16_Click;
-            // 
-            // button17
-            // 
-            button17.Location = new Point(6, 266);
-            button17.Name = "button17";
-            button17.Size = new Size(188, 29);
-            button17.TabIndex = 12;
-            button17.Text = "Magic";
-            button17.UseVisualStyleBackColor = true;
-            button17.Click += Button17_Click;
-            // 
-            // button18
-            // 
-            button18.Location = new Point(6, 301);
-            button18.Name = "button18";
-            button18.Size = new Size(188, 29);
-            button18.TabIndex = 13;
-            button18.Text = "Resistance";
-            button18.UseVisualStyleBackColor = true;
-            button18.Click += Button18_Click;
-            // 
-            // button19
-            // 
-            button19.Location = new Point(6, 336);
-            button19.Name = "button19";
-            button19.Size = new Size(188, 29);
-            button19.TabIndex = 14;
-            button19.Text = "Build";
-            button19.UseVisualStyleBackColor = true;
-            button19.Click += Button19_Click;
-            // 
-            // button20
-            // 
-            button20.Location = new Point(6, 371);
-            button20.Name = "button20";
-            button20.Size = new Size(188, 29);
-            button20.TabIndex = 15;
-            button20.Text = "Sight";
-            button20.UseVisualStyleBackColor = true;
-            button20.Click += Button20_Click;
-            // 
-            // button21
-            // 
-            button21.Location = new Point(6, 406);
-            button21.Name = "button21";
-            button21.Size = new Size(188, 29);
-            button21.TabIndex = 16;
-            button21.Text = "Movement";
-            button21.UseVisualStyleBackColor = true;
-            button21.Click += Button21_Click;
-            // 
-            // checkBox13
-            // 
-            checkBox13.AutoSize = true;
-            checkBox13.Location = new Point(6, 441);
-            checkBox13.Name = "checkBox13";
-            checkBox13.Size = new Size(118, 24);
-            checkBox13.TabIndex = 17;
-            checkBox13.Text = "Use stat total";
-            checkBox13.UseVisualStyleBackColor = true;
-            // 
-            // button22
-            // 
-            button22.Location = new Point(6, 476);
-            button22.Name = "button22";
-            button22.Size = new Size(188, 29);
-            button22.TabIndex = 18;
-            button22.Text = "Stat Total";
-            button22.UseVisualStyleBackColor = true;
-            button22.Click += Button22_Click;
-            // 
-            // checkBox12
-            // 
-            checkBox12.AutoSize = true;
-            checkBox12.Location = new Point(6, 541);
-            checkBox12.Name = "checkBox12";
-            checkBox12.Size = new Size(153, 24);
-            checkBox12.TabIndex = 19;
-            checkBox12.Text = "Stronger ally NPCs";
-            checkBox12.UseVisualStyleBackColor = true;
             // 
             // groupBox10
             // 
@@ -1169,15 +1188,155 @@
             checkBox19.Text = "Randomize";
             checkBox19.UseVisualStyleBackColor = true;
             // 
-            // checkBox21
+            // toolTip1
             // 
-            checkBox21.AutoSize = true;
-            checkBox21.Location = new Point(6, 511);
-            checkBox21.Name = "checkBox21";
-            checkBox21.Size = new Size(169, 24);
-            checkBox21.TabIndex = 20;
-            checkBox21.Text = "Stronger protagonist";
-            checkBox21.UseVisualStyleBackColor = true;
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
+            // groupBox13
+            // 
+            groupBox13.AutoSize = true;
+            groupBox13.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox13.Controls.Add(button60);
+            groupBox13.Controls.Add(button61);
+            groupBox13.Controls.Add(button62);
+            groupBox13.Controls.Add(button63);
+            groupBox13.Controls.Add(button64);
+            groupBox13.Controls.Add(button65);
+            groupBox13.Controls.Add(button66);
+            groupBox13.Controls.Add(button67);
+            groupBox13.Controls.Add(button68);
+            groupBox13.Controls.Add(button69);
+            groupBox13.Controls.Add(button70);
+            groupBox13.Controls.Add(checkBox25);
+            groupBox13.Location = new Point(1445, 3);
+            groupBox13.MinimumSize = new Size(200, 0);
+            groupBox13.Name = "groupBox13";
+            groupBox13.Size = new Size(200, 461);
+            groupBox13.TabIndex = 25;
+            groupBox13.TabStop = false;
+            groupBox13.Text = "Stat Limit Modifiers";
+            // 
+            // button60
+            // 
+            button60.Location = new Point(6, 406);
+            button60.Name = "button60";
+            button60.Size = new Size(188, 29);
+            button60.TabIndex = 16;
+            button60.Text = "Movement";
+            button60.UseVisualStyleBackColor = true;
+            button60.Click += Button60_Click;
+            // 
+            // button61
+            // 
+            button61.Location = new Point(6, 371);
+            button61.Name = "button61";
+            button61.Size = new Size(188, 29);
+            button61.TabIndex = 15;
+            button61.Text = "Sight";
+            button61.UseVisualStyleBackColor = true;
+            button61.Click += Button61_Click;
+            // 
+            // button62
+            // 
+            button62.Location = new Point(6, 336);
+            button62.Name = "button62";
+            button62.Size = new Size(188, 29);
+            button62.TabIndex = 14;
+            button62.Text = "Build";
+            button62.UseVisualStyleBackColor = true;
+            button62.Click += Button62_Click;
+            // 
+            // button63
+            // 
+            button63.Location = new Point(6, 301);
+            button63.Name = "button63";
+            button63.Size = new Size(188, 29);
+            button63.TabIndex = 13;
+            button63.Text = "Resistance";
+            button63.UseVisualStyleBackColor = true;
+            button63.Click += Button63_Click;
+            // 
+            // button64
+            // 
+            button64.Location = new Point(6, 266);
+            button64.Name = "button64";
+            button64.Size = new Size(188, 29);
+            button64.TabIndex = 12;
+            button64.Text = "Magic";
+            button64.UseVisualStyleBackColor = true;
+            button64.Click += Button64_Click;
+            // 
+            // button65
+            // 
+            button65.Location = new Point(6, 231);
+            button65.Name = "button65";
+            button65.Size = new Size(188, 29);
+            button65.TabIndex = 11;
+            button65.Text = "Defense";
+            button65.UseVisualStyleBackColor = true;
+            button65.Click += Button65_Click;
+            // 
+            // button66
+            // 
+            button66.Location = new Point(6, 196);
+            button66.Name = "button66";
+            button66.Size = new Size(188, 29);
+            button66.TabIndex = 10;
+            button66.Text = "Luck";
+            button66.UseVisualStyleBackColor = true;
+            button66.Click += Button66_Click;
+            // 
+            // button67
+            // 
+            button67.Location = new Point(6, 161);
+            button67.Name = "button67";
+            button67.Size = new Size(188, 29);
+            button67.TabIndex = 9;
+            button67.Text = "Speed";
+            button67.UseVisualStyleBackColor = true;
+            button67.Click += Button67_Click;
+            // 
+            // button68
+            // 
+            button68.Location = new Point(6, 126);
+            button68.Name = "button68";
+            button68.Size = new Size(188, 29);
+            button68.TabIndex = 8;
+            button68.Text = "Dexterity";
+            button68.UseVisualStyleBackColor = true;
+            button68.Click += Button68_Click;
+            // 
+            // button69
+            // 
+            button69.Location = new Point(6, 91);
+            button69.Name = "button69";
+            button69.Size = new Size(188, 29);
+            button69.TabIndex = 7;
+            button69.Text = "Strength";
+            button69.UseVisualStyleBackColor = true;
+            button69.Click += Button69_Click;
+            // 
+            // button70
+            // 
+            button70.Location = new Point(6, 56);
+            button70.Name = "button70";
+            button70.Size = new Size(188, 29);
+            button70.TabIndex = 5;
+            button70.Text = "HP";
+            button70.UseVisualStyleBackColor = true;
+            button70.Click += Button70_Click;
+            // 
+            // checkBox25
+            // 
+            checkBox25.AutoSize = true;
+            checkBox25.Location = new Point(6, 26);
+            checkBox25.Name = "checkBox25";
+            checkBox25.Size = new Size(106, 24);
+            checkBox25.TabIndex = 0;
+            checkBox25.Text = "Randomize";
+            checkBox25.UseVisualStyleBackColor = true;
             // 
             // IndividualForm
             // 
@@ -1214,6 +1373,8 @@
             groupBox11.PerformLayout();
             groupBox12.ResumeLayout(false);
             groupBox12.PerformLayout();
+            groupBox13.ResumeLayout(false);
+            groupBox13.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1312,5 +1473,18 @@
         private Button button57;
         private Button button58;
         public CheckBox checkBox19;
+        private GroupBox groupBox13;
+        private Button button60;
+        private Button button61;
+        private Button button62;
+        private Button button63;
+        private Button button64;
+        private Button button65;
+        private Button button66;
+        private Button button67;
+        private Button button68;
+        private Button button69;
+        private Button button70;
+        public CheckBox checkBox25;
     }
 }

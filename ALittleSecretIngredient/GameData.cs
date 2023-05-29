@@ -2432,6 +2432,17 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.OffsetLSightEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.OffsetLMoveEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.OffsetLTotalEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitHp, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitStr, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitTech, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitQuick, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitLuck, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitDef, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitMagic, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitMdef, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitPhys, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitSight, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitMove, DataSetEnum.Individual },
         };
     }
 

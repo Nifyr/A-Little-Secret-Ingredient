@@ -61,6 +61,17 @@
         internal NumericDistributionForm OffsetLSightEnemy { get; set; }
         internal NumericDistributionForm OffsetLMoveEnemy { get; set; }
         internal NumericDistributionForm OffsetLTotalEnemy { get; set; }
+        internal NumericDistributionForm LimitHp { get; set; }
+        internal NumericDistributionForm LimitStr { get; set; }
+        internal NumericDistributionForm LimitTech { get; set; }
+        internal NumericDistributionForm LimitQuick { get; set; }
+        internal NumericDistributionForm LimitLuck { get; set; }
+        internal NumericDistributionForm LimitDef { get; set; }
+        internal NumericDistributionForm LimitMagic { get; set; }
+        internal NumericDistributionForm LimitMdef { get; set; }
+        internal NumericDistributionForm LimitPhys { get; set; }
+        internal NumericDistributionForm LimitSight { get; set; }
+        internal NumericDistributionForm LimitMove { get; set; }
         internal IndividualForm(GlobalData globalData)
         {
             GlobalData = globalData;
@@ -74,54 +85,65 @@
             AptitudeCount = new(GlobalData, RandomizerDistribution.IndividualAptitude, "Primary Proficiencies");
             SubAptitude = new(GlobalData, RandomizerDistribution.SubAptitude, "Secondary Proficiencies");
             SubAptitudeCount = new(GlobalData, RandomizerDistribution.SubAptitude, "Secondary Proficiencies");
-            OffsetNHpAlly = new(GlobalData, RandomizerDistribution.OffsetNHpAlly, "Ally HP Base Stat");
-            OffsetNStrAlly = new(GlobalData, RandomizerDistribution.OffsetNStrAlly, "Ally Strength Base Stat");
-            OffsetNTechAlly = new(GlobalData, RandomizerDistribution.OffsetNTechAlly, "Ally Dexterity Base Stat");
-            OffsetNQuickAlly = new(GlobalData, RandomizerDistribution.OffsetNQuickAlly, "Ally Speed Base Stat");
-            OffsetNLuckAlly = new(GlobalData, RandomizerDistribution.OffsetNLuckAlly, "Ally Luck Base Stat");
-            OffsetNDefAlly = new(GlobalData, RandomizerDistribution.OffsetNDefAlly, "Ally Defense Base Stat");
-            OffsetNMagicAlly = new(GlobalData, RandomizerDistribution.OffsetNMagicAlly, "Ally Magic Base Stat");
-            OffsetNMdefAlly = new(GlobalData, RandomizerDistribution.OffsetNMdefAlly, "Ally Resistance Base Stat");
-            OffsetNPhysAlly = new(GlobalData, RandomizerDistribution.OffsetNPhysAlly, "Ally Build Base Stat");
-            OffsetNSightAlly = new(GlobalData, RandomizerDistribution.OffsetNSightAlly, "Ally Sight Base Stat");
-            OffsetNMoveAlly = new(GlobalData, RandomizerDistribution.OffsetNMoveAlly, "Ally Movement Base Stat");
-            OffsetNTotalAlly = new(GlobalData, RandomizerDistribution.OffsetNTotalAlly, "Ally Base Stat Total");
-            OffsetNHpEnemy = new(GlobalData, RandomizerDistribution.OffsetNHpEnemy, "Enemy Normal HP Base Stat");
-            OffsetNStrEnemy = new(GlobalData, RandomizerDistribution.OffsetNStrEnemy, "Enemy Normal Strength Base Stat");
-            OffsetNTechEnemy = new(GlobalData, RandomizerDistribution.OffsetNTechEnemy, "Enemy Normal Dexterity Base Stat");
-            OffsetNQuickEnemy = new(GlobalData, RandomizerDistribution.OffsetNQuickEnemy, "Enemy Normal Speed Base Stat");
-            OffsetNLuckEnemy = new(GlobalData, RandomizerDistribution.OffsetNLuckEnemy, "Enemy Normal Luck Base Stat");
-            OffsetNDefEnemy = new(GlobalData, RandomizerDistribution.OffsetNDefEnemy, "Enemy Normal Defense Base Stat");
-            OffsetNMagicEnemy = new(GlobalData, RandomizerDistribution.OffsetNMagicEnemy, "Enemy Normal Magic Base Stat");
-            OffsetNMdefEnemy = new(GlobalData, RandomizerDistribution.OffsetNMdefEnemy, "Enemy Normal Resistance Base Stat");
-            OffsetNPhysEnemy = new(GlobalData, RandomizerDistribution.OffsetNPhysEnemy, "Enemy Normal Build Base Stat");
-            OffsetNSightEnemy = new(GlobalData, RandomizerDistribution.OffsetNSightEnemy, "Enemy Normal Sight Base Stat");
-            OffsetNMoveEnemy = new(GlobalData, RandomizerDistribution.OffsetNMoveEnemy, "Enemy Normal Movement Base Stat");
-            OffsetNTotalEnemy = new(GlobalData, RandomizerDistribution.OffsetNTotalEnemy, "Enemy Normal Base Stat Total");
-            OffsetHHpEnemy = new(GlobalData, RandomizerDistribution.OffsetHHpEnemy, "Enemy Hard HP Base Stat");
-            OffsetHStrEnemy = new(GlobalData, RandomizerDistribution.OffsetHStrEnemy, "Enemy Hard Strength Base Stat");
-            OffsetHTechEnemy = new(GlobalData, RandomizerDistribution.OffsetHTechEnemy, "Enemy Hard Dexterity Base Stat");
-            OffsetHQuickEnemy = new(GlobalData, RandomizerDistribution.OffsetHQuickEnemy, "Enemy Hard Speed Base Stat");
-            OffsetHLuckEnemy = new(GlobalData, RandomizerDistribution.OffsetHLuckEnemy, "Enemy Hard Luck Base Stat");
-            OffsetHDefEnemy = new(GlobalData, RandomizerDistribution.OffsetHDefEnemy, "Enemy Hard Defense Base Stat");
-            OffsetHMagicEnemy = new(GlobalData, RandomizerDistribution.OffsetHMagicEnemy, "Enemy Hard Magic Base Stat");
-            OffsetHMdefEnemy = new(GlobalData, RandomizerDistribution.OffsetHMdefEnemy, "Enemy Hard Resistance Base Stat");
-            OffsetHPhysEnemy = new(GlobalData, RandomizerDistribution.OffsetHPhysEnemy, "Enemy Hard Build Base Stat");
-            OffsetHSightEnemy = new(GlobalData, RandomizerDistribution.OffsetHSightEnemy, "Enemy Hard Sight Base Stat");
-            OffsetHMoveEnemy = new(GlobalData, RandomizerDistribution.OffsetHMoveEnemy, "Enemy Hard Movement Base Stat");
-            OffsetHTotalEnemy = new(GlobalData, RandomizerDistribution.OffsetHTotalEnemy, "Enemy Hard Base Stat Total");
-            OffsetLHpEnemy = new(GlobalData, RandomizerDistribution.OffsetLHpEnemy, "Enemy Maddening HP Base Stat");
-            OffsetLStrEnemy = new(GlobalData, RandomizerDistribution.OffsetLStrEnemy, "Enemy Maddening Strength Base Stat");
-            OffsetLTechEnemy = new(GlobalData, RandomizerDistribution.OffsetLTechEnemy, "Enemy Maddening Dexterity Base Stat");
-            OffsetLQuickEnemy = new(GlobalData, RandomizerDistribution.OffsetLQuickEnemy, "Enemy Maddening Speed Base Stat");
-            OffsetLLuckEnemy = new(GlobalData, RandomizerDistribution.OffsetLLuckEnemy, "Enemy Maddening Luck Base Stat");
-            OffsetLDefEnemy = new(GlobalData, RandomizerDistribution.OffsetLDefEnemy, "Enemy Maddening Defense Base Stat");
-            OffsetLMagicEnemy = new(GlobalData, RandomizerDistribution.OffsetLMagicEnemy, "Enemy Maddening Magic Base Stat");
-            OffsetLMdefEnemy = new(GlobalData, RandomizerDistribution.OffsetLMdefEnemy, "Enemy Maddening Resistance Base Stat");
-            OffsetLPhysEnemy = new(GlobalData, RandomizerDistribution.OffsetLPhysEnemy, "Enemy Maddening Build Base Stat");
-            OffsetLSightEnemy = new(GlobalData, RandomizerDistribution.OffsetLSightEnemy, "Enemy Maddening Sight Base Stat");
-            OffsetLMoveEnemy = new(GlobalData, RandomizerDistribution.OffsetLMoveEnemy, "Enemy Maddening Movement Base Stat");
-            OffsetLTotalEnemy = new(GlobalData, RandomizerDistribution.OffsetLTotalEnemy, "Enemy Maddening Base Stat Total");
+            OffsetNHpAlly = new(GlobalData, RandomizerDistribution.OffsetNHpAlly, "Ally HP Base Stat Modifiers");
+            OffsetNStrAlly = new(GlobalData, RandomizerDistribution.OffsetNStrAlly, "Ally Strength Base Stat Modifiers");
+            OffsetNTechAlly = new(GlobalData, RandomizerDistribution.OffsetNTechAlly, "Ally Dexterity Base Stat Modifiers");
+            OffsetNQuickAlly = new(GlobalData, RandomizerDistribution.OffsetNQuickAlly, "Ally Speed Base Stat Modifiers");
+            OffsetNLuckAlly = new(GlobalData, RandomizerDistribution.OffsetNLuckAlly, "Ally Luck Base Stat Modifiers");
+            OffsetNDefAlly = new(GlobalData, RandomizerDistribution.OffsetNDefAlly, "Ally Defense Base Stat Modifiers");
+            OffsetNMagicAlly = new(GlobalData, RandomizerDistribution.OffsetNMagicAlly, "Ally Magic Base Stat Modifiers");
+            OffsetNMdefAlly = new(GlobalData, RandomizerDistribution.OffsetNMdefAlly, "Ally Resistance Base Stat Modifiers");
+            OffsetNPhysAlly = new(GlobalData, RandomizerDistribution.OffsetNPhysAlly, "Ally Build Base Stat Modifiers");
+            OffsetNSightAlly = new(GlobalData, RandomizerDistribution.OffsetNSightAlly, "Ally Sight Base Stat Modifiers");
+            OffsetNMoveAlly = new(GlobalData, RandomizerDistribution.OffsetNMoveAlly, "Ally Movement Base Stat Modifiers");
+            OffsetNTotalAlly = new(GlobalData, RandomizerDistribution.OffsetNTotalAlly, "Ally Base Stat Modifiers Total");
+            OffsetNHpEnemy = new(GlobalData, RandomizerDistribution.OffsetNHpEnemy, "Enemy Normal HP Base Stat Modifiers");
+            OffsetNStrEnemy = new(GlobalData, RandomizerDistribution.OffsetNStrEnemy, "Enemy Normal Strength Base Stat Modifiers");
+            OffsetNTechEnemy = new(GlobalData, RandomizerDistribution.OffsetNTechEnemy, "Enemy Normal Dexterity Base Stat Modifiers");
+            OffsetNQuickEnemy = new(GlobalData, RandomizerDistribution.OffsetNQuickEnemy, "Enemy Normal Speed Base Stat Modifiers");
+            OffsetNLuckEnemy = new(GlobalData, RandomizerDistribution.OffsetNLuckEnemy, "Enemy Normal Luck Base Stat Modifiers");
+            OffsetNDefEnemy = new(GlobalData, RandomizerDistribution.OffsetNDefEnemy, "Enemy Normal Defense Base Stat Modifiers");
+            OffsetNMagicEnemy = new(GlobalData, RandomizerDistribution.OffsetNMagicEnemy, "Enemy Normal Magic Base Stat Modifiers");
+            OffsetNMdefEnemy = new(GlobalData, RandomizerDistribution.OffsetNMdefEnemy, "Enemy Normal Resistance Base Stat Modifiers");
+            OffsetNPhysEnemy = new(GlobalData, RandomizerDistribution.OffsetNPhysEnemy, "Enemy Normal Build Base Stat Modifiers");
+            OffsetNSightEnemy = new(GlobalData, RandomizerDistribution.OffsetNSightEnemy, "Enemy Normal Sight Base Stat Modifiers");
+            OffsetNMoveEnemy = new(GlobalData, RandomizerDistribution.OffsetNMoveEnemy, "Enemy Normal Movement Base Stat Modifiers");
+            OffsetNTotalEnemy = new(GlobalData, RandomizerDistribution.OffsetNTotalEnemy, "Enemy Normal Base Stat Modifiers Total");
+            OffsetHHpEnemy = new(GlobalData, RandomizerDistribution.OffsetHHpEnemy, "Enemy Hard HP Base Stat Modifiers");
+            OffsetHStrEnemy = new(GlobalData, RandomizerDistribution.OffsetHStrEnemy, "Enemy Hard Strength Base Stat Modifiers");
+            OffsetHTechEnemy = new(GlobalData, RandomizerDistribution.OffsetHTechEnemy, "Enemy Hard Dexterity Base Stat Modifiers");
+            OffsetHQuickEnemy = new(GlobalData, RandomizerDistribution.OffsetHQuickEnemy, "Enemy Hard Speed Base Stat Modifiers");
+            OffsetHLuckEnemy = new(GlobalData, RandomizerDistribution.OffsetHLuckEnemy, "Enemy Hard Luck Base Stat Modifiers");
+            OffsetHDefEnemy = new(GlobalData, RandomizerDistribution.OffsetHDefEnemy, "Enemy Hard Defense Base Stat Modifiers");
+            OffsetHMagicEnemy = new(GlobalData, RandomizerDistribution.OffsetHMagicEnemy, "Enemy Hard Magic Base Stat Modifiers");
+            OffsetHMdefEnemy = new(GlobalData, RandomizerDistribution.OffsetHMdefEnemy, "Enemy Hard Resistance Base Stat Modifiers");
+            OffsetHPhysEnemy = new(GlobalData, RandomizerDistribution.OffsetHPhysEnemy, "Enemy Hard Build Base Stat Modifiers");
+            OffsetHSightEnemy = new(GlobalData, RandomizerDistribution.OffsetHSightEnemy, "Enemy Hard Sight Base Stat Modifiers");
+            OffsetHMoveEnemy = new(GlobalData, RandomizerDistribution.OffsetHMoveEnemy, "Enemy Hard Movement Base Stat Modifiers");
+            OffsetHTotalEnemy = new(GlobalData, RandomizerDistribution.OffsetHTotalEnemy, "Enemy Hard Base Stat Modifiers Total");
+            OffsetLHpEnemy = new(GlobalData, RandomizerDistribution.OffsetLHpEnemy, "Enemy Maddening HP Base Stat Modifiers");
+            OffsetLStrEnemy = new(GlobalData, RandomizerDistribution.OffsetLStrEnemy, "Enemy Maddening Strength Base Stat Modifiers");
+            OffsetLTechEnemy = new(GlobalData, RandomizerDistribution.OffsetLTechEnemy, "Enemy Maddening Dexterity Base Stat Modifiers");
+            OffsetLQuickEnemy = new(GlobalData, RandomizerDistribution.OffsetLQuickEnemy, "Enemy Maddening Speed Base Stat Modifiers");
+            OffsetLLuckEnemy = new(GlobalData, RandomizerDistribution.OffsetLLuckEnemy, "Enemy Maddening Luck Base Stat Modifiers");
+            OffsetLDefEnemy = new(GlobalData, RandomizerDistribution.OffsetLDefEnemy, "Enemy Maddening Defense Base Stat Modifiers");
+            OffsetLMagicEnemy = new(GlobalData, RandomizerDistribution.OffsetLMagicEnemy, "Enemy Maddening Magic Base Stat Modifiers");
+            OffsetLMdefEnemy = new(GlobalData, RandomizerDistribution.OffsetLMdefEnemy, "Enemy Maddening Resistance Base Stat Modifiers");
+            OffsetLPhysEnemy = new(GlobalData, RandomizerDistribution.OffsetLPhysEnemy, "Enemy Maddening Build Base Stat Modifiers");
+            OffsetLSightEnemy = new(GlobalData, RandomizerDistribution.OffsetLSightEnemy, "Enemy Maddening Sight Base Stat Modifiers");
+            OffsetLMoveEnemy = new(GlobalData, RandomizerDistribution.OffsetLMoveEnemy, "Enemy Maddening Movement Base Stat Modifiers");
+            OffsetLTotalEnemy = new(GlobalData, RandomizerDistribution.OffsetLTotalEnemy, "Enemy Maddening Base Stat Modifiers Total");
+            LimitHp = new(GlobalData, RandomizerDistribution.LimitHp, "HP Stat Limit Modifiers");
+            LimitStr = new(GlobalData, RandomizerDistribution.LimitStr, "Strength Stat Limit Modifiers");
+            LimitTech = new(GlobalData, RandomizerDistribution.LimitTech, "Dexterity Stat Limit Modifiers");
+            LimitQuick = new(GlobalData, RandomizerDistribution.LimitQuick, "Speed Stat Limit Modifiers");
+            LimitLuck = new(GlobalData, RandomizerDistribution.LimitLuck, "Luck Stat Limit Modifiers");
+            LimitDef = new(GlobalData, RandomizerDistribution.LimitDef, "Defense Stat Limit Modifiers");
+            LimitMagic = new(GlobalData, RandomizerDistribution.LimitMagic, "Magic Stat Limit Modifiers");
+            LimitMdef = new(GlobalData, RandomizerDistribution.LimitMdef, "Resistance Stat Limit Modifiers");
+            LimitPhys = new(GlobalData, RandomizerDistribution.LimitPhys, "Build Stat Limit Modifiers");
+            LimitSight = new(GlobalData, RandomizerDistribution.LimitSight, "Sight Stat Limit Modifiers");
+            LimitMove = new(GlobalData, RandomizerDistribution.LimitMove, "Movement Stat Limit Modifiers");
             InitializeComponent();
             FormClosing += MainForm.CancelFormClosing;
         }
@@ -472,6 +494,72 @@
         {
             OffsetLTotalEnemy.Show();
             OffsetLTotalEnemy.Activate();
+        }
+
+        private void Button70_Click(object sender, EventArgs e)
+        {
+            LimitHp.Show();
+            LimitHp.Activate();
+        }
+
+        private void Button69_Click(object sender, EventArgs e)
+        {
+            LimitStr.Show();
+            LimitStr.Activate();
+        }
+
+        private void Button68_Click(object sender, EventArgs e)
+        {
+            LimitTech.Show();
+            LimitTech.Activate();
+        }
+
+        private void Button67_Click(object sender, EventArgs e)
+        {
+            LimitQuick.Show();
+            LimitQuick.Activate();
+        }
+
+        private void Button66_Click(object sender, EventArgs e)
+        {
+            LimitLuck.Show();
+            LimitLuck.Activate();
+        }
+
+        private void Button65_Click(object sender, EventArgs e)
+        {
+            LimitDef.Show();
+            LimitDef.Activate();
+        }
+
+        private void Button64_Click(object sender, EventArgs e)
+        {
+            LimitMagic.Show();
+            LimitMagic.Activate();
+        }
+
+        private void Button63_Click(object sender, EventArgs e)
+        {
+            LimitMdef.Show();
+            LimitMdef.Activate();
+        }
+
+        private void Button62_Click(object sender, EventArgs e)
+        {
+            LimitPhys.Show();
+            LimitPhys.Activate();
+        }
+
+        private void Button61_Click(object sender, EventArgs e)
+        {
+            LimitSight.Show();
+            LimitSight.Activate();
+        }
+
+        private void Button60_Click(object sender, EventArgs e)
+        {
+            LimitMove.Show();
+            LimitMove.Activate();
         }
     }
 }

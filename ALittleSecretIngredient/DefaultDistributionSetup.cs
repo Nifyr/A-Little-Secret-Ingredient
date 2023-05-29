@@ -486,6 +486,40 @@ namespace ALittleSecretIngredient
                             NumericDistributionSetup nds17 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetL().Select(s => (int)s).Sum());
                             nds17.idx = 4;
                             return nds17;
+                        case RandomizerDistribution.LimitHp:
+                            NumericDistributionSetup nds18 = GetNumericDistributionSetup(playableCharacters, i => i.LimitHp);
+                            nds18.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds18.idx = 0;
+                            return nds18;
+                        case RandomizerDistribution.LimitStr:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitStr);
+                        case RandomizerDistribution.LimitTech:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitTech);
+                        case RandomizerDistribution.LimitQuick:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitQuick);
+                        case RandomizerDistribution.LimitLuck:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitLuck);
+                        case RandomizerDistribution.LimitDef:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitDef);
+                        case RandomizerDistribution.LimitMagic:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitMagic);
+                        case RandomizerDistribution.LimitMdef:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.LimitMdef);
+                        case RandomizerDistribution.LimitPhys:
+                            NumericDistributionSetup nds19 = GetNumericDistributionSetup(playableCharacters, i => i.LimitPhys);
+                            nds19.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds19.idx = 0;
+                            return nds19;
+                        case RandomizerDistribution.LimitSight:
+                            NumericDistributionSetup nds20 = GetNumericDistributionSetup(playableCharacters, i => i.LimitSight);
+                            nds20.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds20.idx = 0;
+                            return nds20;
+                        case RandomizerDistribution.LimitMove:
+                            NumericDistributionSetup nds21 = GetNumericDistributionSetup(playableCharacters, i => i.LimitMove);
+                            nds21.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds21.idx = 0;
+                            return nds21;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

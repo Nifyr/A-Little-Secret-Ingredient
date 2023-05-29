@@ -156,5 +156,16 @@
         OffsetLSightEnemy,
         OffsetLMoveEnemy,
         OffsetLTotalEnemy,
+        LimitHp,
+        LimitStr,
+        LimitTech,
+        LimitQuick,
+        LimitLuck,
+        LimitDef,
+        LimitMagic,
+        LimitMdef,
+        LimitPhys,
+        LimitSight,
+        LimitMove,
     }
 }

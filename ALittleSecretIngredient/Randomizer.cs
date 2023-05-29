@@ -1048,7 +1048,7 @@ namespace ALittleSecretIngredient
                 i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
 
             if (settings.RandomizeAllyBases)
-                RandomizeAllyBaseStats(allyCharacters, entries, settings.GetOffsetNAllySettings(), "Base Stats",
+                RandomizeAllyBaseStats(allyCharacters, entries, settings.GetOffsetNAllySettings(), "Base Stat Modifiers",
                     settings.StrongerProtagonist, settings.StrongerAllyNPCs);
             if (settings.RandomizeEnemyBasesNormal)
                 RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetNEnemySettings(), i => i.GetOffsetN(),
@@ -1059,6 +1059,9 @@ namespace ALittleSecretIngredient
             if (settings.RandomizeEnemyBasesMaddening)
                 RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetLEnemySettings(), i => i.GetOffsetL(),
                     (i, a) => i.SetOffsetL(a), i => i.GetBasicOffsetL(), (i, a) => i.SetBasicOffsetL(a), "Base Stats Maddening");
+
+            if (settings.RandomizeStatLimits)
+                RandomizeStatLimits(settings, playableCharacters, entries);
 
             StringBuilder innertable = new();
             foreach (Individual i in individuals)
@@ -1071,6 +1074,34 @@ namespace ALittleSecretIngredient
             return ApplyTableTitle(innertable, "Characters");
         }
 
+        private void RandomizeStatLimits(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)
+        {
+            playableCharacters.Randomize(i => i.LimitHp, (i, s) => i.LimitHp = s, settings.LimitHp.Distribution,
+                                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitStr, (i, s) => i.LimitStr = s, settings.LimitStr.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitTech, (i, s) => i.LimitTech = s, settings.LimitTech.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitQuick, (i, s) => i.LimitQuick = s, settings.LimitQuick.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitLuck, (i, s) => i.LimitLuck = s, settings.LimitLuck.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitDef, (i, s) => i.LimitDef = s, settings.LimitDef.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitMagic, (i, s) => i.LimitMagic = s, settings.LimitMagic.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitMdef, (i, s) => i.LimitMdef = s, settings.LimitMdef.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitPhys, (i, s) => i.LimitPhys = s, settings.LimitPhys.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitSight, (i, s) => i.LimitSight = s, settings.LimitSight.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            playableCharacters.Randomize(i => i.LimitMove, (i, s) => i.LimitMove = s, settings.LimitMove.Distribution,
+                sbyte.MinValue, sbyte.MaxValue);
+            WriteStatsToChangelog(playableCharacters, entries, i => i.GetLimits(), "Stat Limit Modifiers");
+            GD.SetDirty(DataSetEnum.Individual);
+        }
+
         private void RandomizeEnemyBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
             RandomizerFieldSettings[] settingsFields, Func<Individual, sbyte[]> get, Action<Individual, sbyte[]> set,
             Func<Individual, sbyte[]> getBasic, Action<Individual, sbyte[]> setBasic, string fieldName)
@@ -1079,7 +1110,7 @@ namespace ALittleSecretIngredient
                                 (double)s).Sum())).ToList();
             RandomizeBaseStats(individuals, settingsFields, get, set);
             HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldBaseStatTotals);
-            WriteBaseStatsToChangelog(individuals, entries, get, fieldName);
+            WriteStatsToChangelog(individuals, entries, get, fieldName);
             GD.SetDirty(DataSetEnum.Individual);
         }
 
@@ -1101,11 +1132,11 @@ namespace ALittleSecretIngredient
                 i.SetOffsetH(i.GetOffsetN());
                 i.SetOffsetL(i.GetOffsetN());
             }
-            WriteBaseStatsToChangelog(individuals, entries, i => i.GetOffsetN(), fieldName);
+            WriteStatsToChangelog(individuals, entries, i => i.GetOffsetN(), fieldName);
             GD.SetDirty(DataSetEnum.Individual);
         }
 
-        private static void WriteBaseStatsToChangelog(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+        private static void WriteStatsToChangelog(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
             Func<Individual, sbyte[]> get, string fieldName)
         {
             foreach (Individual i in individuals)

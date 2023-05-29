@@ -144,5 +144,125 @@ namespace ALittleSecretIngredient.Structs
             for (int i = 0; i < l.Count; i++)
                 SubAptitude |= (uint)(1 << l[i]);
         }
+
+        internal sbyte[] GetBasicOffsetN() => new sbyte[]
+        {
+            OffsetNHp, OffsetNStr, OffsetNTech, OffsetNQuick,
+            OffsetNLuck, OffsetNDef, OffsetNMagic, OffsetNMdef,
+        };
+
+        internal sbyte[] GetBasicOffsetH() => new sbyte[]
+        {
+            OffsetHHp, OffsetHStr, OffsetHTech, OffsetHQuick,
+            OffsetHLuck, OffsetHDef, OffsetHMagic, OffsetHMdef,
+        };
+
+        internal sbyte[] GetBasicOffsetL() => new sbyte[]
+        {
+            OffsetLHp, OffsetLStr, OffsetLTech, OffsetLQuick,
+            OffsetLLuck, OffsetLDef, OffsetLMagic, OffsetLMdef,
+        };
+
+        internal void SetBasicOffsetN(sbyte[] value)
+        {
+            OffsetNHp = value[0];
+            OffsetNStr = value[1];
+            OffsetNTech = value[2];
+            OffsetNQuick = value[3];
+            OffsetNLuck = value[4];
+            OffsetNDef = value[5];
+            OffsetNMagic = value[6];
+            OffsetNMdef = value[7];
+        }
+
+        internal void SetBasicOffsetH(sbyte[] value)
+        {
+            OffsetHHp = value[0];
+            OffsetHStr = value[1];
+            OffsetHTech = value[2];
+            OffsetHQuick = value[3];
+            OffsetHLuck = value[4];
+            OffsetHDef = value[5];
+            OffsetHMagic = value[6];
+            OffsetHMdef = value[7];
+        }
+
+        internal void SetBasicOffsetL(sbyte[] value)
+        {
+            OffsetLHp = value[0];
+            OffsetLStr = value[1];
+            OffsetLTech = value[2];
+            OffsetLQuick = value[3];
+            OffsetLLuck = value[4];
+            OffsetLDef = value[5];
+            OffsetLMagic = value[6];
+            OffsetLMdef = value[7];
+        }
+
+        internal sbyte[] GetOffsetN() => new sbyte[]
+        {
+            OffsetNHp, OffsetNStr, OffsetNTech, OffsetNQuick,
+            OffsetNLuck, OffsetNDef, OffsetNMagic, OffsetNMdef,
+            OffsetNPhys, OffsetNSight, OffsetNMove
+        };
+
+        internal sbyte[] GetOffsetH() => new sbyte[]
+        {
+            OffsetHHp, OffsetHStr, OffsetHTech, OffsetHQuick,
+            OffsetHLuck, OffsetHDef, OffsetHMagic, OffsetHMdef,
+            OffsetHPhys, OffsetHSight, OffsetHMove
+        };
+
+        internal sbyte[] GetOffsetL() => new sbyte[]
+        {
+            OffsetLHp, OffsetLStr, OffsetLTech, OffsetLQuick,
+            OffsetLLuck, OffsetLDef, OffsetLMagic, OffsetLMdef,
+            OffsetLPhys, OffsetLSight, OffsetLMove
+        };
+
+        internal void SetOffsetN(sbyte[] value)
+        {
+            OffsetNHp = value[0];
+            OffsetNStr = value[1];
+            OffsetNTech = value[2];
+            OffsetNQuick = value[3];
+            OffsetNLuck = value[4];
+            OffsetNDef = value[5];
+            OffsetNMagic = value[6];
+            OffsetNMdef = value[7];
+            OffsetNPhys = value[8];
+            OffsetNSight = value[9];
+            OffsetNMove = value[10];
+        }
+
+        internal void SetOffsetH(sbyte[] value)
+        {
+            OffsetHHp = value[0];
+            OffsetHStr = value[1];
+            OffsetHTech = value[2];
+            OffsetHQuick = value[3];
+            OffsetHLuck = value[4];
+            OffsetHDef = value[5];
+            OffsetHMagic = value[6];
+            OffsetHMdef = value[7];
+            OffsetHPhys = value[8];
+            OffsetHSight = value[9];
+            OffsetHMove = value[10];
+        }
+
+        internal void SetOffsetL(sbyte[] value)
+        {
+            OffsetLHp = value[0];
+            OffsetLStr = value[1];
+            OffsetLTech = value[2];
+            OffsetLQuick = value[3];
+            OffsetLLuck = value[4];
+            OffsetLDef = value[5];
+            OffsetLMagic = value[6];
+            OffsetLMdef = value[7];
+            OffsetLPhys = value[8];
+            OffsetLSight = value[9];
+            OffsetLMove = value[10];
+        }
     }
 }

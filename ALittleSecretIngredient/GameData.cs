@@ -65,9 +65,14 @@ namespace ALittleSecretIngredient
         internal List<(string id, string name)> BondLevelTables { get; } = new(); // AllyBondLevelTables + EnemyBondLevelTables
         #endregion
         #region Character IDs
-        internal List<(string id, string name)> PlayableCharacters { get; } = new()
+        internal List<(string id, string name)> ProtagonistCharacters { get; } = new()
         {
-            ("PID_リュール", "Alear"), ("PID_ヴァンドレ", "Vander"), ("PID_クラン", "Clanne"), ("PID_フラン", "Framme"),
+            ("PID_リュール", "Alear")
+        };
+
+        internal List<(string id, string name)> PlayableCharacters { get; } = new() // ProtagonistCharacters +
+        {
+            ("PID_ヴァンドレ", "Vander"), ("PID_クラン", "Clanne"), ("PID_フラン", "Framme"),
             ("PID_アルフレッド", "Alfred"), ("PID_エーティエ", "Etie"), ("PID_ブシュロン", "Boucheron"), ("PID_セリーヌ", "Céline"),
             ("PID_クロエ", "Chloé"), ("PID_ルイ", "Louis"), ("PID_ユナカ", "Yunaka"), ("PID_スタルーク", "Alcryst"),
             ("PID_シトリニカ", "Citrinne"), ("PID_ラピス", "Lapis"), ("PID_ディアマンド", "Diamant"), ("PID_アンバー", "Amber"),
@@ -2237,6 +2242,7 @@ namespace ALittleSecretIngredient
             AllyBondLevelTables.AddRange(InheritableBondLevelTables);
             BondLevelTables.AddRange(AllyBondLevelTables);
             BondLevelTables.AddRange(EnemyBondLevelTables);
+            PlayableCharacters.AddRange(ProtagonistCharacters);
             AllyCharacters.AddRange(PlayableCharacters);
             AllyCharacters.AddRange(AllyNPCCharacters);
             Characters.AddRange(AllyCharacters);
@@ -2378,6 +2384,54 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.SkillPoint, DataSetEnum.Individual },
             { RandomizerDistribution.IndividualAptitude, DataSetEnum.Individual },
             { RandomizerDistribution.SubAptitude, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNHpAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNStrAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTechAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNQuickAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNLuckAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNDefAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMagicAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMdefAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNPhysAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNSightAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMoveAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTotalAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNHpEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNStrEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTechEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNQuickEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNLuckEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNDefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMagicEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMdefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNPhysEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNSightEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMoveEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTotalEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHHpEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHStrEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHTechEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHQuickEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHLuckEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHDefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHMagicEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHMdefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHPhysEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHSightEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHMoveEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHTotalEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLHpEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLStrEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLTechEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLQuickEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLLuckEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLDefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLMagicEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLMdefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLPhysEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLSightEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLMoveEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLTotalEnemy, DataSetEnum.Individual },
         };
     }
 

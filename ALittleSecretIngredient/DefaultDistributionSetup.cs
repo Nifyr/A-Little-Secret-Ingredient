@@ -358,6 +358,134 @@ namespace ALittleSecretIngredient
                             NumericDistributionSetup nds5 = GetNumericDistributionSetup(playableCharacters, i => i.GetSubAptitudes().Count);
                             nds5.idx = 3;
                             return nds5;
+                        case RandomizerDistribution.OffsetNHpAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNHp);
+                        case RandomizerDistribution.OffsetNStrAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNStr);
+                        case RandomizerDistribution.OffsetNTechAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNTech);
+                        case RandomizerDistribution.OffsetNQuickAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNQuick);
+                        case RandomizerDistribution.OffsetNLuckAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNLuck);
+                        case RandomizerDistribution.OffsetNDefAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNDef);
+                        case RandomizerDistribution.OffsetNMagicAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNMagic);
+                        case RandomizerDistribution.OffsetNMdefAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNMdef);
+                        case RandomizerDistribution.OffsetNPhysAlly:
+                            return GetNumericDistributionSetup(allyCharacters, i => i.OffsetNPhys);
+                        case RandomizerDistribution.OffsetNSightAlly:
+                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(allyCharacters, i => i.OffsetNSight);
+                            nds6.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds6.idx = 0;
+                            return nds6;
+                        case RandomizerDistribution.OffsetNMoveAlly:
+                            NumericDistributionSetup nds7 = GetNumericDistributionSetup(allyCharacters, i => i.OffsetNMove);
+                            nds7.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds7.idx = 0;
+                            return nds7;
+                        case RandomizerDistribution.OffsetNTotalAlly:
+                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(allyCharacters, i => i.GetBasicOffsetN().Select(s => (int)s).Sum());
+                            nds8.idx = 4;
+                            return nds8;
+                        case RandomizerDistribution.OffsetNHpEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNHp);
+                        case RandomizerDistribution.OffsetNStrEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNStr);
+                        case RandomizerDistribution.OffsetNTechEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNTech);
+                        case RandomizerDistribution.OffsetNQuickEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNQuick);
+                        case RandomizerDistribution.OffsetNLuckEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNLuck);
+                        case RandomizerDistribution.OffsetNDefEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNDef);
+                        case RandomizerDistribution.OffsetNMagicEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNMagic);
+                        case RandomizerDistribution.OffsetNMdefEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNMdef);
+                        case RandomizerDistribution.OffsetNPhysEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNPhys);
+                        case RandomizerDistribution.OffsetNSightEnemy:
+                            NumericDistributionSetup nds9 = GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNSight);
+                            nds9.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds9.idx = 0;
+                            return nds9;
+                        case RandomizerDistribution.OffsetNMoveEnemy:
+                            NumericDistributionSetup nds10 = GetNumericDistributionSetup(enemyCharacters, i => i.OffsetNMove);
+                            nds10.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds10.idx = 0;
+                            return nds10;
+                        case RandomizerDistribution.OffsetNTotalEnemy:
+                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetN().Select(s => (int)s).Sum());
+                            nds11.idx = 4;
+                            return nds11;
+                        case RandomizerDistribution.OffsetHHpEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHHp);
+                        case RandomizerDistribution.OffsetHStrEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHStr);
+                        case RandomizerDistribution.OffsetHTechEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHTech);
+                        case RandomizerDistribution.OffsetHQuickEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHQuick);
+                        case RandomizerDistribution.OffsetHLuckEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHLuck);
+                        case RandomizerDistribution.OffsetHDefEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHDef);
+                        case RandomizerDistribution.OffsetHMagicEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHMagic);
+                        case RandomizerDistribution.OffsetHMdefEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHMdef);
+                        case RandomizerDistribution.OffsetHPhysEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHPhys);
+                        case RandomizerDistribution.OffsetHSightEnemy:
+                            NumericDistributionSetup nds12 = GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHSight);
+                            nds12.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds12.idx = 0;
+                            return nds12;
+                        case RandomizerDistribution.OffsetHMoveEnemy:
+                            NumericDistributionSetup nds13 = GetNumericDistributionSetup(enemyCharacters, i => i.OffsetHMove);
+                            nds13.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds13.idx = 0;
+                            return nds13;
+                        case RandomizerDistribution.OffsetHTotalEnemy:
+                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetH().Select(s => (int)s).Sum());
+                            nds14.idx = 4;
+                            return nds14;
+                        case RandomizerDistribution.OffsetLHpEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLHp);
+                        case RandomizerDistribution.OffsetLStrEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLStr);
+                        case RandomizerDistribution.OffsetLTechEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLTech);
+                        case RandomizerDistribution.OffsetLQuickEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLQuick);
+                        case RandomizerDistribution.OffsetLLuckEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLLuck);
+                        case RandomizerDistribution.OffsetLDefEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLDef);
+                        case RandomizerDistribution.OffsetLMagicEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLMagic);
+                        case RandomizerDistribution.OffsetLMdefEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLMdef);
+                        case RandomizerDistribution.OffsetLPhysEnemy:
+                            return GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLPhys);
+                        case RandomizerDistribution.OffsetLSightEnemy:
+                            NumericDistributionSetup nds15 = GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLSight);
+                            nds15.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds15.idx = 0;
+                            return nds15;
+                        case RandomizerDistribution.OffsetLMoveEnemy:
+                            NumericDistributionSetup nds16 = GetNumericDistributionSetup(enemyCharacters, i => i.OffsetLMove);
+                            nds16.distributions[0] = new UniformConstant(10, -1, 1);
+                            nds16.idx = 0;
+                            return nds16;
+                        case RandomizerDistribution.OffsetLTotalEnemy:
+                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetL().Select(s => (int)s).Sum());
+                            nds17.idx = 4;
+                            return nds17;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

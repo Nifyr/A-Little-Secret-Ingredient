@@ -128,6 +128,100 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings AptitudeCount { get; set; } = new();
             public RandomizerFieldSettings SubAptitude { get; set; } = new();
             public RandomizerFieldSettings SubAptitudeCount { get; set; } = new();
+            public bool RandomizeAllyBases { get; set; } = new();
+            public RandomizerFieldSettings OffsetNHpAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNStrAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNTechAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNQuickAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNLuckAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNDefAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNMagicAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNMdefAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNPhysAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNSightAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNMoveAlly { get; set; } = new();
+            public RandomizerFieldSettings OffsetNTotalAlly { get; set; } = new();
+            public bool StrongerProtagonist { get; set; } = new();
+            public bool StrongerAllyNPCs{ get; set; } = new();
+            public bool RandomizeEnemyBasesNormal { get; set; } = new();
+            public RandomizerFieldSettings OffsetNHpEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNStrEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNTechEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNQuickEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNLuckEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNDefEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNMagicEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNMdefEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNPhysEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNSightEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNMoveEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetNTotalEnemy { get; set; } = new();
+            public bool RandomizeEnemyBasesHard { get; set; } = new();
+            public RandomizerFieldSettings OffsetHHpEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHStrEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHTechEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHQuickEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHLuckEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHDefEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHMagicEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHMdefEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHPhysEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHSightEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHMoveEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetHTotalEnemy { get; set; } = new();
+            public bool RandomizeEnemyBasesMaddening { get; set; } = new();
+            public RandomizerFieldSettings OffsetLHpEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLStrEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLTechEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLQuickEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLLuckEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLDefEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLMagicEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLMdefEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLPhysEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLSightEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLMoveEnemy { get; set; } = new();
+            public RandomizerFieldSettings OffsetLTotalEnemy { get; set; } = new();
+
+            internal RandomizerFieldSettings[] GetOffsetNAllySettings()
+            {
+                return new RandomizerFieldSettings[]
+                {
+                    OffsetNHpAlly, OffsetNStrAlly, OffsetNTechAlly, OffsetNQuickAlly,
+                    OffsetNLuckAlly, OffsetNDefAlly, OffsetNMagicAlly, OffsetNMdefAlly,
+                    OffsetNPhysAlly, OffsetNSightAlly, OffsetNMoveAlly, OffsetNTotalAlly,
+                };
+            }
+
+            internal RandomizerFieldSettings[] GetOffsetNEnemySettings()
+            {
+                return new RandomizerFieldSettings[]
+                {
+                    OffsetNHpEnemy, OffsetNStrEnemy, OffsetNTechEnemy, OffsetNQuickEnemy,
+                    OffsetNLuckEnemy, OffsetNDefEnemy, OffsetNMagicEnemy, OffsetNMdefEnemy,
+                    OffsetNPhysEnemy, OffsetNSightEnemy, OffsetNMoveEnemy, OffsetNTotalEnemy,
+                };
+            }
+
+            internal RandomizerFieldSettings[] GetOffsetHEnemySettings()
+            {
+                return new RandomizerFieldSettings[]
+                {
+                    OffsetHHpEnemy, OffsetHStrEnemy, OffsetHTechEnemy, OffsetHQuickEnemy,
+                    OffsetHLuckEnemy, OffsetHDefEnemy, OffsetHMagicEnemy, OffsetHMdefEnemy,
+                    OffsetHPhysEnemy, OffsetHSightEnemy, OffsetHMoveEnemy, OffsetHTotalEnemy,
+                };
+            }
+
+            internal RandomizerFieldSettings[] GetOffsetLEnemySettings()
+            {
+                return new RandomizerFieldSettings[]
+                {
+                    OffsetLHpEnemy, OffsetLStrEnemy, OffsetLTechEnemy, OffsetLQuickEnemy,
+                    OffsetLLuckEnemy, OffsetLDefEnemy, OffsetLMagicEnemy, OffsetLMdefEnemy,
+                    OffsetLPhysEnemy, OffsetLSightEnemy, OffsetLMoveEnemy, OffsetLTotalEnemy,
+                };
+            }
         }
     }
 

@@ -1047,6 +1047,19 @@ namespace ALittleSecretIngredient
             HandleIndividualAptitude(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, proficiencyIDs, entries,
                 i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
 
+            if (settings.RandomizeAllyBases)
+                RandomizeAllyBaseStats(allyCharacters, entries, settings.GetOffsetNAllySettings(), "Base Stats",
+                    settings.StrongerProtagonist, settings.StrongerAllyNPCs);
+            if (settings.RandomizeEnemyBasesNormal)
+                RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetNEnemySettings(), i => i.GetOffsetN(),
+                    (i, a) => i.SetOffsetN(a), i => i.GetBasicOffsetN(), (i, a) => i.SetBasicOffsetN(a), "Base Stats Normal");
+            if (settings.RandomizeEnemyBasesHard)
+                RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetHEnemySettings(), i => i.GetOffsetH(),
+                    (i, a) => i.SetOffsetH(a), i => i.GetBasicOffsetH(), (i, a) => i.SetBasicOffsetH(a), "Base Stats Hard");
+            if (settings.RandomizeEnemyBasesMaddening)
+                RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetLEnemySettings(), i => i.GetOffsetL(),
+                    (i, a) => i.SetOffsetL(a), i => i.GetBasicOffsetL(), (i, a) => i.SetBasicOffsetL(a), "Base Stats Maddening");
+
             StringBuilder innertable = new();
             foreach (Individual i in individuals)
                 if (entries[i].Length > 0)
@@ -1056,6 +1069,81 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Characters");
+        }
+
+        private void RandomizeEnemyBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+            RandomizerFieldSettings[] settingsFields, Func<Individual, sbyte[]> get, Action<Individual, sbyte[]> set,
+            Func<Individual, sbyte[]> getBasic, Action<Individual, sbyte[]> setBasic, string fieldName)
+        {
+            List<Node<double>> oldBaseStatTotals = individuals.Select(i => new Node<double>(getBasic(i).Select(s =>
+                                (double)s).Sum())).ToList();
+            RandomizeBaseStats(individuals, settingsFields, get, set);
+            HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldBaseStatTotals);
+            WriteBaseStatsToChangelog(individuals, entries, get, fieldName);
+            GD.SetDirty(DataSetEnum.Individual);
+        }
+
+        private void RandomizeAllyBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+            RandomizerFieldSettings[] settingsFields, string fieldName, bool strongerProtagonist, bool strongerAllyNPCs)
+        {
+            List<Node<double>> oldBaseStatTotals = individuals.Select(i => new Node<double>(i.GetBasicOffsetN().Select(s =>
+                                (double)s).Sum())).ToList();
+            RandomizeBaseStats(individuals, settingsFields, i => i.GetOffsetN(), (i, s) => i.SetOffsetN(s));
+            HandleStatTotal(individuals, settingsFields, i => i.GetBasicOffsetN(), (i, s) => i.SetBasicOffsetN(s), oldBaseStatTotals);
+            if (strongerProtagonist)
+                foreach (Individual i in individuals.FilterData(i0 => i0.Pid, GD.ProtagonistCharacters))
+                    i.SetBasicOffsetN(i.GetBasicOffsetN().Select(s => (sbyte)(s + 1)).ToArray());
+            if (strongerAllyNPCs)
+                foreach (Individual i in individuals.FilterData(i0 => i0.Pid, GD.AllyNPCCharacters))
+                    i.SetBasicOffsetN(i.GetBasicOffsetN().Select(s => (sbyte)(s + 5)).ToArray());
+            foreach (Individual i in individuals)
+            {
+                i.SetOffsetH(i.GetOffsetN());
+                i.SetOffsetL(i.GetOffsetN());
+            }
+            WriteBaseStatsToChangelog(individuals, entries, i => i.GetOffsetN(), fieldName);
+            GD.SetDirty(DataSetEnum.Individual);
+        }
+
+        private static void WriteBaseStatsToChangelog(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+            Func<Individual, sbyte[]> get, string fieldName)
+        {
+            foreach (Individual i in individuals)
+            {
+                sbyte[] stats = get(i);
+                entries[i].AppendLine($"{fieldName}:\t{stats[0]} HP,\t{stats[1]} Str,\t{stats[2]} Dex,\t{stats[3]} Spd,\t" +
+                    $"{stats[4]} Lck,\t{stats[5]} Def,\t{stats[6]} Mag,\t{stats[7]} Res,\t" +
+                    $"{stats[8]} Bld,\t{stats[9]} Sig,\t{stats[10]} Mov");
+            }
+        }
+
+        private static void HandleStatTotal(List<Individual> individuals, RandomizerFieldSettings[] settingsFields,
+            Func<Individual, sbyte[]> getBasic, Action<Individual, sbyte[]> setBasic, List<Node<double>> baseStatTotals)
+        {
+            RandomizerFieldSettings totalSettings = settingsFields[11];
+            if (totalSettings.Enabled)
+            {
+                baseStatTotals.Randomize(n => n.value, (n, i) => n.value = i, totalSettings.Distribution,
+                    int.MinValue, int.MaxValue);
+                for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
+                {
+                    sbyte[] basicBaseStats = getBasic(individuals[iIdx]);
+                    int toAdd = (int)Math.Round(baseStatTotals[iIdx].value - basicBaseStats.Select(s => (double)s).Sum());
+                    for (int i = 0; i < basicBaseStats.Length; i++)
+                        basicBaseStats[i] += (sbyte)(toAdd / basicBaseStats.Length);
+                    setBasic(individuals[iIdx], basicBaseStats);
+                }
+            }
+        }
+
+        private static void RandomizeBaseStats(List<Individual> individuals, RandomizerFieldSettings[] settingsFields, Func<Individual, sbyte[]> get, Action<Individual, sbyte[]> set)
+        {
+            List<sbyte[]> baseStats = individuals.Select(get).ToList();
+            for (int sIdx = 0; sIdx < baseStats[0].Length; sIdx++)
+                baseStats.Randomize(a => a[sIdx], (a, s) => a[sIdx] = s, settingsFields[sIdx].Distribution,
+                    sbyte.MinValue, sbyte.MaxValue);
+            for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
+                set(individuals[iIdx], baseStats[iIdx]);
         }
 
         private void HandleIndividualAptitude(RandomizerFieldSettings settings, RandomizerFieldSettings countSettings,

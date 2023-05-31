@@ -20,6 +20,7 @@ namespace ALittleSecretIngredient.Structs
         internal sbyte InternalLevel { get; set; }
         internal ushort Sort { get; set; }
         internal byte Flag { get; set; }
+        // 1→Can reclass into, 2→Available for everyone, 4→Female exclusive, 8→?
         internal sbyte WeaponNone { get; set; }
         internal sbyte WeaponSword { get; set; }
         internal sbyte WeaponLance { get; set; }
@@ -128,6 +129,23 @@ namespace ALittleSecretIngredient.Structs
         internal string LearningSkill { get; set; }
         internal string LunaticSkill { get; set; }
         internal uint Attrs { get; set; }
+
+        internal List<int> GetWeaponRequirements() => new()
+        {
+            WeaponNone, WeaponSword, WeaponLance, WeaponAxe,
+            WeaponBow, WeaponDagger, WeaponMagic, WeaponRod,
+            WeaponFist, WeaponSpecial,
+        };
+
+        internal List<string> GetHighJobs()
+        {
+            List<string> highJobs = new();
+            if (HighJob1 != "")
+                highJobs.Add(HighJob1);
+            if (HighJob2 != "")
+                highJobs.Add(HighJob2);
+            return highJobs;
+        }
     }
 
     internal class FightingStyle : DataParam

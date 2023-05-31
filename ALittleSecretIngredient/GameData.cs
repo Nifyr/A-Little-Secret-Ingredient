@@ -1,4 +1,5 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Diagnostics;
 
 namespace ALittleSecretIngredient
 {
@@ -769,6 +770,69 @@ namespace ALittleSecretIngredient
         };
 
         internal List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
+        internal List<(string id, string name)> NPCBattleCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
+        #endregion
+        #region Class IDs
+        internal List<(string id, string name)> UniversalClasses { get; } = new()
+        {
+            ("JID_神竜ノ子", "Dragon Child"), ("JID_神竜ノ王", "Divine Dragon (Alear)"), ("JID_ソードファイター", "Sword Fighter"), ("JID_ソードマスター", "Swordmaster"),
+            ("JID_ブレイブヒーロー", "Hero"), ("JID_ランスファイター", "Lance Fighter"), ("JID_ハルバーディア", "Halberdier"), ("JID_ロイヤルナイト", "Royal Knight"),
+            ("JID_アクスファイター", "Axe Fighter"), ("JID_ベルセルク", "Berserker"), ("JID_ウォーリアー", "Warrior"), ("JID_アーチャー", "Archer"),
+            ("JID_スナイパー", "Sniper"), ("JID_ボウナイト", "Bow Knight"), ("JID_ソードアーマー", "Sword Armor"), ("JID_ランスアーマー", "Lance Armor"),
+            ("JID_アクスアーマー", "Axe Armor"), ("JID_ジェネラル", "General"), ("JID_グレートナイト", "Great Knight"), ("JID_ソードナイト", "Sword Cavalier"),
+            ("JID_ランスナイト", "Lance Cavalier"), ("JID_アクスナイト", "Axe Cavalier"), ("JID_パラディン", "Paladin"), ("JID_ウルフナイト", "Wolf Knight"),
+            ("JID_マージ", "Mage"), ("JID_セイジ", "Sage"), ("JID_マージナイト", "Mage Knight"), ("JID_モンク", "Martial Monk"),
+            ("JID_マスターモンク", "Martial Master"), ("JID_ハイプリースト", "High Priest"), ("JID_グリフォンナイト", "Griffin Knight"), ("JID_ドラゴンナイト", "Wyvern Knight"),
+            ("JID_シーフ", "Thief"), ("JID_エンチャント", "Enchanter"), ("JID_マージカノン", "Mage Cannoneer"),
+        };
+
+        internal List<(string id, string name)> MaleExclusiveClasses { get; } = new()
+        {
+            ("JID_アヴニール下級", "Noble (Alfred)"), ("JID_アヴニール", "Avenir"), ("JID_スュクセサール下級", "Lord (Diamant)"), ("JID_スュクセサール", "Successeur"),
+            ("JID_ティラユール下級", "Lord (Alcryst)"), ("JID_ティラユール", "Tireur d'élite"), ("JID_クピードー下級", "Sentinel (Fogado)"), ("JID_クピードー", "Cupido"),
+            ("JID_ダンサー", "Dancer"), ("JID_裏邪竜ノ子", "Fell Child (Rafal)"),
+        };
+
+        internal List<(string id, string name)> FemaleExclusiveClasses { get; } = new()
+        {
+            ("JID_邪竜ノ娘", "Fell Child (Veyle)"), ("JID_フロラージュ下級", "Noble (Céline)"), ("JID_フロラージュ", "Vidame"),
+            ("JID_リンドブルム下級", "Wing Tamer (Ivy)"), ("JID_リンドブルム", "Lindwurm"), ("JID_スレイプニル下級", "Wing Tamer (Hortensia)"), ("JID_スレイプニル", "Sleipnir Rider"),
+            ("JID_ピッチフォーク下級", "Sentinel (Timerra)"), ("JID_ピッチフォーク", "Picket"), ("JID_ソードペガサス", "Sword Flier"), ("JID_ランスペガサス", "Lance Flier"),
+            ("JID_アクスペガサス", "Axe Flier"), ("JID_裏邪竜ノ娘", "Fell Child (Nel)"), ("JID_メリュジーヌ_味方", "Melusine (Zelestia)"),
+        };
+
+        internal List<(string id, string name)> NPCExclusiveClasses { get; } = new()
+        {
+            ("JID_邪竜ノ子", "Fell Child (Past Alear)"), ("JID_蛮族", "Barbarian"), ("JID_村人", "Villager"),
+        };
+
+        internal List<(string id, string name)> MaleNPCExclusiveClasses { get; } = new()
+        {
+            ("JID_邪竜ノ王", "Fell Monarch"), ("JID_紋章士_マルス", "Emblem (Marth)"), ("JID_紋章士_シグルド", "Emblem (Sigurd)"), ("JID_紋章士_ロイ", "Emblem (Roy)"),
+            ("JID_紋章士_リーフ", "Emblem (Leif)"), ("JID_紋章士_アイク", "Emblem (Ike)"), ("JID_紋章士_ベレト", "Emblem (Byleth)"), ("JID_裏邪竜ノ子_E1-4", "Fell Child (Xenologue 1-4 Nil)"),
+            ("JID_裏邪竜ノ子_E5", "Fell Child (Xenologue 5 Nil)"), ("JID_アヴニール_E", "Royal (Alfred)"), ("JID_スュクセサール_E", "Warden (Diamant)"), ("JID_ティラユール_E", "Warden (Alcryst)"),
+            ("JID_クピードー_E", "Watcher (Fogado)"), ("JID_紋章士_ディミトリ", "Emblem (Dimitri)"), ("JID_紋章士_クロード", "Emblem (Claude)"), ("JID_紋章士_ヘクトル", "Emblem (Hector)"),
+            ("JID_紋章士_セネリオ", "Emblem (Soren)"), ("JID_紋章士_クロム", "Emblem (Chrom)"), ("JID_紋章士_ルフレ", "Emblem (Robin)"), ("JID_紋章士_ヘクトル_召喚", "Emblem (Hector Summon)"),
+        };
+
+        internal List<(string id, string name)> FemaleNPCExclusiveClasses { get; } = new()
+        {
+            ("JID_M002_神竜ノ王", "Divine Dragon (Lumera)"), ("JID_邪竜ノ娘_敵", "Fell Child (Evil Veyle)"), ("JID_メリュジーヌ", "Melusine (Zephia)"), ("JID_紋章士_セリカ", "Emblem (Celica)"),
+            ("JID_紋章士_ミカヤ", "Emblem (Micaiah)"), ("JID_紋章士_ルキナ", "Emblem (Lucina)"), ("JID_紋章士_リン", "Emblem (Lyn)"), ("JID_紋章士_カムイ", "Emblem (Corrin)"),
+            ("JID_紋章士_エイリーク", "Emblem (Eirika)"), ("JID_フロラージュ_E", "Royal (Céline)"), ("JID_リンドブルム_E", "Trainer (Ivy)"), ("JID_スレイプニル_E", "Trainer (Hortensia)"),
+            ("JID_ピッチフォーク_E", "Watcher (Timerra)"), ("JID_紋章士_エーデルガルト", "Emblem (Edelgard)"), ("JID_紋章士_チキ", "Emblem (Tiki)"), ("JID_紋章士_ヴェロニカ", "Emblem (Veronica)"),
+            ("JID_紋章士_カミラ", "Emblem (Camilla)"), ("JID_紋章士_ルキナ_召喚", "Emblem (Lucina Summon)"),
+        };
+
+        internal List<(string id, string name)> BeastClasses { get; } = new()
+        {
+            ("JID_邪竜", "Great Fell Dragon (Sombron)"), ("JID_異形竜", "Corrupted Wyrm"), ("JID_幻影竜", "Phantom Wyrm"), ("JID_E006ラスボス", "Great Fell Dragon (Nil)"),
+            ("JID_異形狼", "Corrupted Wolf"), ("JID_幻影狼", "Phantom Wolf"), ("JID_異形飛竜", "Corrupted Wyvern"), ("JID_幻影飛竜", "Phantom Wyvern"),
+        };
+
+        internal List<(string id, string name)> PlayableClasses { get; } = new(); // UniversalClasses + MaleExclusiveClasses + FemaleExclusiveClasses
+
+        internal List<(string id, string name)> GeneralClasses { get; } = new(); // PlayableClasses + NPCExclusiveClasses + MaleNPCExclusiveClasses + FemaleNPCExclusiveClasses
         #endregion
         #region DemoAnim IDs
         internal List<(string id, string name)> UniqueMaleDemoAnims { get; } = new()
@@ -2232,6 +2296,33 @@ namespace ALittleSecretIngredient
             new("Corrupted Robin", "PID_闇ルフレ", new() { }, Gender.Male,
                 "513Robin", true, "MGID_Reflet", "Face_RefletDarkness", "Reflet", Color.FromArgb(255, 0, 0), null),
         };
+
+        internal List<string> ExclusiveClassesList { get; } = new()
+        {
+            "JID_神竜ノ子", "JID_神竜ノ王", "JID_邪竜ノ子", "JID_M002_神竜ノ王",
+            "JID_邪竜ノ娘", "JID_邪竜ノ娘_敵", "JID_邪竜ノ王", "JID_アヴニール下級",
+            "JID_アヴニール", "JID_フロラージュ下級", "JID_フロラージュ", "JID_スュクセサール下級",
+            "JID_スュクセサール", "JID_ティラユール下級", "JID_ティラユール", "JID_リンドブルム下級",
+            "JID_リンドブルム", "JID_スレイプニル下級", "JID_スレイプニル", "JID_ピッチフォーク下級",
+            "JID_ピッチフォーク", "JID_クピードー下級", "JID_クピードー", "JID_メリュジーヌ",
+            "JID_ダンサー", "JID_紋章士_マルス", "JID_紋章士_シグルド", "JID_紋章士_セリカ",
+            "JID_紋章士_ミカヤ", "JID_紋章士_ロイ", "JID_紋章士_リーフ", "JID_紋章士_ルキナ",
+            "JID_紋章士_リン", "JID_紋章士_アイク", "JID_紋章士_ベレト", "JID_紋章士_カムイ",
+            "JID_紋章士_エイリーク", "JID_裏邪竜ノ娘", "JID_裏邪竜ノ子", "JID_裏邪竜ノ子_E1-4",
+            "JID_裏邪竜ノ子_E5", "JID_メリュジーヌ_味方", "JID_アヴニール_E", "JID_フロラージュ_E",
+            "JID_スュクセサール_E", "JID_ティラユール_E", "JID_リンドブルム_E", "JID_スレイプニル_E",
+            "JID_ピッチフォーク_E", "JID_クピードー_E", "JID_紋章士_エーデルガルト", "JID_紋章士_ディミトリ",
+            "JID_紋章士_クロード", "JID_紋章士_チキ", "JID_紋章士_ヘクトル", "JID_紋章士_ヴェロニカ",
+            "JID_紋章士_セネリオ", "JID_紋章士_カミラ", "JID_紋章士_クロム", "JID_紋章士_ルフレ",
+            "JID_紋章士_ルキナ_召喚", "JID_紋章士_ヘクトル_召喚"
+        };
+
+        internal List<string> RemoveAccList { get; } = new()
+        {
+            "uAcc_spine2_Hair051", "uAcc_spine2_Hair052", "uAcc_spine2_Hair150", "uAcc_spine2_Hair150k",
+            "uAcc_spine2_Hair201", "uAcc_spine2_Hair201k", "uAcc_spine2_Hair350", "uAcc_spine2_Hair350k",
+            "uAcc_spine2_Hair865"
+        };
         #endregion
 
         internal GameData(XmlParser xp, FileManager fm)
@@ -2248,6 +2339,15 @@ namespace ALittleSecretIngredient
             Characters.AddRange(AllyCharacters);
             Characters.AddRange(EnemyCharacters);
             Characters.AddRange(OtherNPCCharacters);
+            NPCBattleCharacters.AddRange(AllyNPCCharacters);
+            NPCBattleCharacters.AddRange(EnemyCharacters);
+            PlayableClasses.AddRange(UniversalClasses);
+            PlayableClasses.AddRange(MaleExclusiveClasses);
+            PlayableClasses.AddRange(FemaleExclusiveClasses);
+            GeneralClasses.AddRange(PlayableClasses);
+            GeneralClasses.AddRange(NPCExclusiveClasses);
+            GeneralClasses.AddRange(MaleNPCExclusiveClasses);
+            GeneralClasses.AddRange(FemaleNPCExclusiveClasses);
             AllDressModels.AddRange(MaleClassDressModels);
             AllDressModels.AddRange(FemaleClassDressModels);
             AllDressModels.AddRange(MaleCorruptedClassDressModels);
@@ -2305,11 +2405,20 @@ namespace ALittleSecretIngredient
             data.Where(o => entities.Select(t => t.id).Contains(getID(o))).ToList();
         internal static List<T> GetIDs<T>(this List<(T id, string name)> entities) => entities.Select(t => t.id).ToList();
         internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
-
         internal static sbyte GetInternalLevel(this Individual i, List<TypeOfSoldier> toss) =>
             i.InternalLevel != 0 ? i.InternalLevel : i.GetTOS(toss).InternalLevel;
-
         internal static TypeOfSoldier GetTOS(this Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
+        internal static GameData.Gender GetGender(this Individual i)
+        {
+            if (i.Name == "MPID_Lueur" || i.Name == "MPID_PastLueur")
+                return GameData.Gender.Both;
+            if (i.GetFlag(5))
+                return GameData.Gender.Rosado;
+            if (i.Gender == 2)
+                return GameData.Gender.Female;
+            return GameData.Gender.Male;
+        }
+
         internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
         {
             { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },
@@ -2376,6 +2485,8 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.DeepSynergyLevel, DataSetEnum.GrowthTable },
             { RandomizerDistribution.Exp, DataSetEnum.BondLevel },
             { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
+            { RandomizerDistribution.JidAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.JidEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.Age, DataSetEnum.Individual },
             { RandomizerDistribution.LevelAlly, DataSetEnum.Individual },
             { RandomizerDistribution.LevelEnemy, DataSetEnum.Individual },

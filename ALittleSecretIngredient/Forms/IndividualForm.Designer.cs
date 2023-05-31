@@ -31,6 +31,13 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IndividualForm));
             flowLayoutPanel1 = new FlowLayoutPanel();
+            groupBox14 = new GroupBox();
+            checkBox26 = new CheckBox();
+            button71 = new Button();
+            checkBox24 = new CheckBox();
+            checkBox23 = new CheckBox();
+            button59 = new Button();
+            checkBox22 = new CheckBox();
             groupBox7 = new GroupBox();
             button1 = new Button();
             checkBox20 = new CheckBox();
@@ -122,7 +129,6 @@
             button57 = new Button();
             button58 = new Button();
             checkBox19 = new CheckBox();
-            toolTip1 = new ToolTip(components);
             groupBox13 = new GroupBox();
             button60 = new Button();
             button61 = new Button();
@@ -136,7 +142,9 @@
             button69 = new Button();
             button70 = new Button();
             checkBox25 = new CheckBox();
+            toolTip1 = new ToolTip(components);
             flowLayoutPanel1.SuspendLayout();
+            groupBox14.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -155,6 +163,7 @@
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.Controls.Add(groupBox14);
             flowLayoutPanel1.Controls.Add(groupBox7);
             flowLayoutPanel1.Controls.Add(groupBox1);
             flowLayoutPanel1.Controls.Add(groupBox2);
@@ -175,13 +184,91 @@
             flowLayoutPanel1.Size = new Size(836, 433);
             flowLayoutPanel1.TabIndex = 6;
             // 
+            // groupBox14
+            // 
+            groupBox14.AutoSize = true;
+            groupBox14.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox14.Controls.Add(checkBox26);
+            groupBox14.Controls.Add(button71);
+            groupBox14.Controls.Add(checkBox24);
+            groupBox14.Controls.Add(checkBox23);
+            groupBox14.Controls.Add(button59);
+            groupBox14.Controls.Add(checkBox22);
+            groupBox14.Location = new Point(3, 3);
+            groupBox14.MinimumSize = new Size(200, 0);
+            groupBox14.Name = "groupBox14";
+            groupBox14.Size = new Size(200, 236);
+            groupBox14.TabIndex = 26;
+            groupBox14.TabStop = false;
+            groupBox14.Text = "Starting Class";
+            // 
+            // checkBox26
+            // 
+            checkBox26.AutoSize = true;
+            checkBox26.Location = new Point(6, 186);
+            checkBox26.Name = "checkBox26";
+            checkBox26.Size = new Size(133, 24);
+            checkBox26.TabIndex = 9;
+            checkBox26.Text = "Grouped shuffe";
+            checkBox26.UseVisualStyleBackColor = true;
+            // 
+            // button71
+            // 
+            button71.Location = new Point(6, 151);
+            button71.Name = "button71";
+            button71.Size = new Size(188, 29);
+            button71.TabIndex = 8;
+            button71.Text = "Enemy Classes";
+            button71.UseVisualStyleBackColor = true;
+            button71.Click += Button71_Click;
+            // 
+            // checkBox24
+            // 
+            checkBox24.AutoSize = true;
+            checkBox24.Location = new Point(6, 121);
+            checkBox24.Name = "checkBox24";
+            checkBox24.Size = new Size(165, 24);
+            checkBox24.TabIndex = 7;
+            checkBox24.Text = "Randomize enemies";
+            checkBox24.UseVisualStyleBackColor = true;
+            // 
+            // checkBox23
+            // 
+            checkBox23.AutoSize = true;
+            checkBox23.Location = new Point(6, 91);
+            checkBox23.Name = "checkBox23";
+            checkBox23.Size = new Size(160, 24);
+            checkBox23.TabIndex = 6;
+            checkBox23.Text = "Match proficiencies";
+            checkBox23.UseVisualStyleBackColor = true;
+            // 
+            // button59
+            // 
+            button59.Location = new Point(6, 56);
+            button59.Name = "button59";
+            button59.Size = new Size(188, 29);
+            button59.TabIndex = 5;
+            button59.Text = "Ally Classes";
+            button59.UseVisualStyleBackColor = true;
+            button59.Click += Button59_Click;
+            // 
+            // checkBox22
+            // 
+            checkBox22.AutoSize = true;
+            checkBox22.Location = new Point(6, 26);
+            checkBox22.Name = "checkBox22";
+            checkBox22.Size = new Size(144, 24);
+            checkBox22.TabIndex = 0;
+            checkBox22.Text = "Randomize allies";
+            checkBox22.UseVisualStyleBackColor = true;
+            // 
             // groupBox7
             // 
             groupBox7.AutoSize = true;
             groupBox7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox7.Controls.Add(button1);
             groupBox7.Controls.Add(checkBox20);
-            groupBox7.Location = new Point(3, 3);
+            groupBox7.Location = new Point(3, 245);
             groupBox7.MinimumSize = new Size(200, 0);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new Size(200, 111);
@@ -214,7 +301,7 @@
             groupBox1.AutoSize = true;
             groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox1.Controls.Add(checkBox1);
-            groupBox1.Location = new Point(3, 120);
+            groupBox1.Location = new Point(3, 362);
             groupBox1.MinimumSize = new Size(200, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(200, 76);
@@ -240,7 +327,7 @@
             groupBox2.Controls.Add(checkBox4);
             groupBox2.Controls.Add(button2);
             groupBox2.Controls.Add(checkBox2);
-            groupBox2.Location = new Point(3, 202);
+            groupBox2.Location = new Point(209, 3);
             groupBox2.MinimumSize = new Size(200, 0);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 176);
@@ -294,7 +381,7 @@
             groupBox3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox3.Controls.Add(button3);
             groupBox3.Controls.Add(checkBox3);
-            groupBox3.Location = new Point(3, 384);
+            groupBox3.Location = new Point(209, 185);
             groupBox3.MinimumSize = new Size(200, 0);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(200, 111);
@@ -328,7 +415,7 @@
             groupBox4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox4.Controls.Add(button5);
             groupBox4.Controls.Add(checkBox5);
-            groupBox4.Location = new Point(209, 3);
+            groupBox4.Location = new Point(209, 302);
             groupBox4.MinimumSize = new Size(200, 0);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(200, 111);
@@ -362,7 +449,7 @@
             groupBox5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox5.Controls.Add(button6);
             groupBox5.Controls.Add(checkBox6);
-            groupBox5.Location = new Point(209, 120);
+            groupBox5.Location = new Point(209, 419);
             groupBox5.MinimumSize = new Size(200, 0);
             groupBox5.Name = "groupBox5";
             groupBox5.Size = new Size(200, 111);
@@ -398,7 +485,7 @@
             groupBox6.Controls.Add(checkBox8);
             groupBox6.Controls.Add(button7);
             groupBox6.Controls.Add(checkBox7);
-            groupBox6.Location = new Point(209, 237);
+            groupBox6.Location = new Point(415, 3);
             groupBox6.MinimumSize = new Size(200, 0);
             groupBox6.Name = "groupBox6";
             groupBox6.Size = new Size(200, 176);
@@ -454,7 +541,7 @@
             groupBox8.Controls.Add(checkBox9);
             groupBox8.Controls.Add(button10);
             groupBox8.Controls.Add(checkBox10);
-            groupBox8.Location = new Point(415, 3);
+            groupBox8.Location = new Point(415, 185);
             groupBox8.MinimumSize = new Size(200, 0);
             groupBox8.Name = "groupBox8";
             groupBox8.Size = new Size(200, 176);
@@ -1188,12 +1275,6 @@
             checkBox19.Text = "Randomize";
             checkBox19.UseVisualStyleBackColor = true;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // groupBox13
             // 
             groupBox13.AutoSize = true;
@@ -1338,6 +1419,12 @@
             checkBox25.Text = "Randomize";
             checkBox25.UseVisualStyleBackColor = true;
             // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
             // IndividualForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -1349,6 +1436,8 @@
             Text = "Character Settings";
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            groupBox14.ResumeLayout(false);
+            groupBox14.PerformLayout();
             groupBox7.ResumeLayout(false);
             groupBox7.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -1486,5 +1575,12 @@
         private Button button69;
         private Button button70;
         public CheckBox checkBox25;
+        private GroupBox groupBox14;
+        public CheckBox checkBox26;
+        private Button button71;
+        public CheckBox checkBox24;
+        public CheckBox checkBox23;
+        private Button button59;
+        public CheckBox checkBox22;
     }
 }

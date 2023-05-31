@@ -117,6 +117,8 @@ namespace ALittleSecretIngredient.Structs
 
         public class IndividualSettings
         {
+            public RandomizerFieldSettings JidAlly { get; set; } = new();
+            public RandomizerFieldSettings JidEnemy { get; set; } = new();
             public RandomizerFieldSettings Age { get; set; } = new();
             public bool RandomizeBirthday { get; set; }
             public RandomizerFieldSettings LevelAlly { get; set; } = new();

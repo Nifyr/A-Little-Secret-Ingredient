@@ -100,6 +100,8 @@
         DeepSynergyLevel,
         Exp,
         Cost,
+        JidAlly,
+        JidEnemy,
         Age,
         LevelAlly,
         LevelEnemy,

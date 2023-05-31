@@ -1,8 +1,7 @@
 ﻿using ALittleSecretIngredient.Structs;
 using System.Text;
-using static ALittleSecretIngredient.Probability;
 using static ALittleSecretIngredient.ColorGenerator;
-using System;
+using static ALittleSecretIngredient.Probability;
 
 namespace ALittleSecretIngredient
 {
@@ -246,7 +245,7 @@ namespace ALittleSecretIngredient
             GD.SetDirty(DataSetEnum.Asset);
         }
 
-        private static void CreateRandomMapping(StringBuilder mountModelShuffleInnertable, Dictionary<string, string> mapping,
+        private static void CreateRandomMapping(StringBuilder innertable, Dictionary<string, string> mapping,
             List<(string id, string name)> entities)
         {
             Redistribution r = new(100);
@@ -256,9 +255,19 @@ namespace ALittleSecretIngredient
             for (int i = 0; i < distinct.Count; i++)
             {
                 mapping.Add(distinct[i], shuffle[i]);
-                mountModelShuffleInnertable.AppendLine($"{entities.IDToName(distinct[i])} → " +
+                innertable.AppendLine($"{entities.IDToName(distinct[i])} → " +
                     $"{entities.IDToName(shuffle[i])}");
             }
+        }
+
+        private static void CreateRandomMapping(Dictionary<string, string> mapping, List<(string id, string name)> entities)
+        {
+            Redistribution r = new(100);
+            List<string> distinct = entities.GetIDs();
+            List<string> shuffle = new(distinct);
+            r.Randomize(shuffle);
+            for (int i = 0; i < distinct.Count; i++)
+                mapping.Add(distinct[i], shuffle[i]);
         }
 
         private void RandomizeColors(RandomizerSettings.AssetTableSettings settings, Asset a)
@@ -754,6 +763,7 @@ namespace ALittleSecretIngredient
             List<string> syncMovSkillIDs = GD.SyncMovSkills.GetIDs();
             List<string> engageWeaponIDs = GD.EngageWeapons.GetIDs();
             List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
+
             foreach (Skill s in generalSkills)
                 if (s.InheritanceCost == 0 && GD.DefaultSPCost.TryGetValue(GD.GeneralSkills.First(t => t.id == s.Sid).name,
                     out ushort value))
@@ -999,9 +1009,14 @@ namespace ALittleSecretIngredient
             List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
             List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters);
             List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters);
+            List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCBattleCharacters);
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
+            List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
             List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
+            List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
             Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
+
+            UnlockExclusiveClassOutfits(assets);
 
             if (settings.Age.Enabled)
             {
@@ -1047,6 +1062,12 @@ namespace ALittleSecretIngredient
             HandleIndividualAptitude(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, proficiencyIDs, entries,
                 i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
 
+            if (settings.JidAlly.Enabled)
+                RandomizeStartingClasses(settings.JidAlly, playableCharacters, toss, entries);
+
+            if (settings.JidEnemy.Enabled)
+                RandomizeEnemyClasses(settings.JidEnemy, npcCharacters, toss, generalClassIDs, entries);
+
             if (settings.RandomizeAllyBases)
                 RandomizeAllyBaseStats(allyCharacters, entries, settings.GetOffsetNAllySettings(), "Base Stat Modifiers",
                     settings.StrongerProtagonist, settings.StrongerAllyNPCs);
@@ -1072,6 +1093,240 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Characters");
+        }
+
+        private void RandomizeEnemyClasses(RandomizerFieldSettings settings, List<Individual> npcCharacters, List<TypeOfSoldier> toss,
+            List<string> generalClassIDs, Dictionary<Individual, StringBuilder> entries)
+        {
+            List<Individual> npcClassCharacters = npcCharacters.Where(i => generalClassIDs.Contains(i.Jid)).ToList();
+            List<int> totalLevels = npcClassCharacters.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
+            if (settings.GetArg<bool>(0))
+            {
+                Dictionary<string, string> classMapping = new();
+                SplitClassesByRank(toss, GD.UniversalClasses.Concat(GD.NPCExclusiveClasses).ToList(),
+                    out List<(string id, string name)> lowGroup, out List<(string id, string name)> highGroup);
+                CreateRandomMapping(classMapping, lowGroup);
+                CreateRandomMapping(classMapping, highGroup);
+                SplitClassesByRank(toss, GD.MaleExclusiveClasses.Concat(GD.MaleNPCExclusiveClasses).ToList(), out lowGroup, out highGroup);
+                CreateRandomMapping(classMapping, lowGroup);
+                CreateRandomMapping(classMapping, highGroup);
+                SplitClassesByRank(toss, GD.FemaleExclusiveClasses.Concat(GD.FemaleNPCExclusiveClasses).ToList(),
+                    out lowGroup, out highGroup);
+                CreateRandomMapping(classMapping, lowGroup);
+                CreateRandomMapping(classMapping, highGroup);
+                foreach (Individual i in npcClassCharacters)
+                    if (classMapping.TryGetValue(i.Jid, out string? newClass))
+                        i.Jid = newClass;
+            }
+            else
+                npcClassCharacters.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.Distribution, generalClassIDs);
+
+            for (int iIdx = 0; iIdx < npcClassCharacters.Count; iIdx++)
+            {
+                Individual i = npcClassCharacters[iIdx];
+                TypeOfSoldier tos = i.GetTOS(toss);
+                GameData.Gender g = i.GetGender();
+                List<string> legalClassIDs = GD.UniversalClasses.GetIDs();
+                legalClassIDs.AddRange(GD.NPCExclusiveClasses.GetIDs());
+                if (g == GameData.Gender.Male)
+                {
+                    legalClassIDs.AddRange(GD.MaleExclusiveClasses.GetIDs());
+                    legalClassIDs.AddRange(GD.MaleNPCExclusiveClasses.GetIDs());
+                }
+                if (g == GameData.Gender.Female)
+                {
+                    legalClassIDs.AddRange(GD.FemaleExclusiveClasses.GetIDs());
+                    legalClassIDs.AddRange(GD.FemaleNPCExclusiveClasses.GetIDs());
+                }
+                legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
+                    (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
+                EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
+            }
+            WriteToChangelog(entries, npcClassCharacters, i => i.Jid, "Class", GD.GeneralClasses);
+            GD.SetDirty(DataSetEnum.Individual);
+            GD.SetDirty(DataSetEnum.Asset);
+        }
+
+        private static void SplitClassesByRank(List<TypeOfSoldier> toss, List<(string id, string name)> classGroup, out List<(string id, string name)> lowGroup, out List<(string id, string name)> highGroup)
+        {
+            lowGroup = classGroup.Where(e =>
+            {
+                TypeOfSoldier tos = toss.First(tos => tos.Jid == e.id);
+                return tos.Rank == 0 && tos.MaxLevel == 20;
+            }).ToList();
+            highGroup = classGroup.Where(e => toss.First(tos => tos.Jid == e.id).Rank == 1).ToList();
+            foreach ((string id, string name) e in classGroup)
+                if (toss.First(tos => tos.Jid == e.id).MaxLevel == 40)
+                    if (50.0.Occur())
+                        lowGroup.Add(e);
+                    else
+                        highGroup.Add(e);
+        }
+
+        private void RandomizeStartingClasses(RandomizerFieldSettings settings, List<Individual> playableCharacters,
+            List<TypeOfSoldier> toss, Dictionary<Individual, StringBuilder> entries)
+        {
+            List<int> totalLevels = playableCharacters.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
+            playableCharacters.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.Distribution, GD.PlayableClasses.GetIDs());
+            if (settings.GetArg<bool>(0))
+                foreach (Individual i in playableCharacters)
+                {
+                    int maxScore = toss.Select(tos => CalcCompatibility(i, tos)).Max();
+                    if (CalcCompatibility(i, i.GetTOS(toss)) < maxScore)
+                        i.Jid = toss.Where(tos => CalcCompatibility(i, tos) == maxScore).GetRandom().Jid;
+                }
+            int retryCounter = 0;
+            for (int iIdx = 0; iIdx < playableCharacters.Count; iIdx++)
+            {
+                Individual i = playableCharacters[iIdx];
+                TypeOfSoldier tos = i.GetTOS(toss);
+                GameData.Gender g = i.GetGender();
+                List<string> legalClassIDs = GD.UniversalClasses.GetIDs();
+                if (g == GameData.Gender.Male)
+                    legalClassIDs.AddRange(GD.MaleExclusiveClasses.GetIDs());
+                if (g == GameData.Gender.Female)
+                    legalClassIDs.AddRange(GD.FemaleExclusiveClasses.GetIDs());
+                legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
+                    (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
+                EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
+                if (retryCounter < 32 && settings.GetArg<bool>(0) && CalcCompatibility(i, i.GetTOS(toss)) < ushort.MaxValue / 2)
+                {
+                    i.Jid = legalClassIDs.GetRandom();
+                    iIdx--;
+                    retryCounter++;
+                    continue;
+                }
+                retryCounter = 0;
+            }
+            WriteToChangelog(entries, playableCharacters, i => i.Jid, "Starting Class", GD.PlayableClasses);
+            GD.SetDirty(DataSetEnum.Individual);
+            GD.SetDirty(DataSetEnum.Asset);
+        }
+
+        private void UnlockExclusiveClassOutfits(List<Asset> assets)
+        {
+            foreach (Asset a in assets)
+                if (a.Conditions.Any(GD.ExclusiveClassesList.Contains) &&
+                    a.Conditions.Any(s => s.StartsWith("PID") || s.StartsWith("MPID")))
+                {
+                    a.Conditions = a.Conditions.Where(s => !s.StartsWith("PID") && !s.StartsWith("MPID")).ToArray();
+                    if (GD.RemoveAccList.Contains(a.Acc1Model))
+                    {
+                        a.Acc1Locator = "";
+                        a.Acc1Model = "";
+                    }
+                    if (GD.RemoveAccList.Contains(a.Acc2Model))
+                    {
+                        a.Acc2Locator = "";
+                        a.Acc2Model = "";
+                    }
+                    if (GD.RemoveAccList.Contains(a.Acc3Model))
+                    {
+                        a.Acc3Locator = "";
+                        a.Acc3Model = "";
+                    }
+                    a.ScaleAll = 0;
+                    a.ScaleHead = 0;
+                    a.ScaleNeck = 0;
+                    a.ScaleTorso = 0;
+                    a.ScaleShoulders = 0;
+                    a.ScaleArms = 0;
+                    a.ScaleHands = 0;
+                    a.ScaleLegs = 0;
+                    a.ScaleFeet = 0;
+                    a.VolumeArms = 0;
+                    a.VolumeLegs = 0;
+                    a.VolumeBust = 0;
+                    a.VolumeAbdomen = 0;
+                    a.VolumeTorso = 0;
+                    a.VolumeScaleArms = 0;
+                    a.VolumeScaleLegs = 0;
+                    a.Voice = "";
+                }
+        }
+
+        private static void EnsureLegalClass(List<TypeOfSoldier> toss, int totalLevel, Individual i, TypeOfSoldier tos,
+            List<string> legalClassIDs)
+        {
+            if (!legalClassIDs.Contains(i.Jid))
+            {
+                if (tos.MaxLevel == 20 && totalLevel > 20 && tos.Rank == 0)
+                {
+                    List<string> highJobs = tos.GetHighJobs();
+                    if (highJobs.Count > 0)
+                        i.Jid = highJobs.GetRandom();
+                    else
+                        i.Jid = legalClassIDs.GetRandom();
+                }
+                else if (totalLevel <= 20 && tos.Rank == 1)
+                {
+                    if (tos.LowJob != "")
+                    {
+                        IEnumerable<TypeOfSoldier> lowJob = toss.Where(tos0 => tos0.Name == tos.LowJob);
+                        i.Jid = lowJob.Any() ? lowJob.GetRandom().Jid : legalClassIDs.GetRandom();
+                    }
+                    else
+                        i.Jid = legalClassIDs.GetRandom();
+                }
+                if (!legalClassIDs.Contains(i.Jid))
+                    i.Jid = legalClassIDs.GetRandom();
+            }
+            i.Level = (byte)(totalLevel - (i.GetTOS(toss).Rank == 1 ? 20 : 0));
+        }
+
+        private static int CalcCompatibility(Individual i, TypeOfSoldier tos)
+        {
+            List<int> proficiencies = i.GetAptitudes();
+            proficiencies.AddRange(i.GetSubAptitudes());
+            proficiencies = proficiencies.Distinct().ToList();
+            int primaryTotal = 0;
+            int secondaryTotal = 0;
+            int tertiaryTotal = 0;
+            foreach (int req in tos.GetWeaponRequirements())
+                switch (req)
+                {
+                    case 1:
+                        primaryTotal++;
+                        break;
+                    case 2:
+                        secondaryTotal++;
+                        break;
+                    case 3:
+                        tertiaryTotal++;
+                        break;
+                }
+            if (primaryTotal == 0 && secondaryTotal == 0 && tertiaryTotal == 0)
+                return 0;
+            int primaryMatches = 0;
+            int secondaryMatches = 0;
+            int tertiaryMatches = 0;
+            foreach (int i32 in proficiencies)
+            {
+                sbyte req = i32 switch
+                {
+                    0 => tos.WeaponNone,
+                    1 => tos.WeaponSword,
+                    2 => tos.WeaponLance,
+                    3 => tos.WeaponAxe,
+                    4 => tos.WeaponBow,
+                    5 => tos.WeaponDagger,
+                    6 => tos.WeaponMagic,
+                    7 => tos.WeaponRod,
+                    8 => tos.WeaponFist,
+                    9 => tos.WeaponSpecial,
+                    _ => throw new NotImplementedException("Illegal proficiency ID: " + i32),
+                };
+                if (req == 1)
+                    primaryMatches++;
+                if (req == 2)
+                    secondaryMatches++;
+                if (req == 3)
+                    tertiaryMatches++;
+            }
+
+            return ushort.MaxValue * (primaryMatches + Math.Min(secondaryMatches, 1) + Math.Min(tertiaryMatches, 2)) /
+                (primaryTotal + Math.Min(secondaryTotal, 1) + Math.Min(tertiaryTotal, 2)) +
+                primaryMatches + Math.Min(secondaryMatches, 1) - secondaryTotal + Math.Min(tertiaryMatches, 2) - tertiaryTotal;
         }
 
         private void RandomizeStatLimits(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)

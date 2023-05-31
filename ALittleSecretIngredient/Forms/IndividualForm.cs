@@ -3,6 +3,8 @@
     public partial class IndividualForm : Form
     {
         private GlobalData GlobalData { get; }
+        internal SelectionDistributionForm JidAlly { get; set; }
+        internal SelectionDistributionForm JidEnemy { get; set; }
         internal NumericDistributionForm Age { get; set; }
         internal NumericDistributionForm LevelAlly { get; set; }
         internal NumericDistributionForm LevelEnemy { get; set; }
@@ -75,6 +77,8 @@
         internal IndividualForm(GlobalData globalData)
         {
             GlobalData = globalData;
+            JidAlly = new(GlobalData, RandomizerDistribution.JidAlly, "Ally Starting Classes");
+            JidEnemy = new(GlobalData, RandomizerDistribution.JidEnemy, "Enemy Classes");
             Age = new(GlobalData, RandomizerDistribution.Age, "Character Age");
             LevelAlly = new(GlobalData, RandomizerDistribution.LevelAlly, "Ally Starting Level");
             LevelEnemy = new(GlobalData, RandomizerDistribution.LevelEnemy, "Enemy Level");
@@ -146,6 +150,18 @@
             LimitMove = new(GlobalData, RandomizerDistribution.LimitMove, "Movement Stat Limit Modifiers");
             InitializeComponent();
             FormClosing += MainForm.CancelFormClosing;
+        }
+
+        private void Button59_Click(object sender, EventArgs e)
+        {
+            JidAlly.Show();
+            JidAlly.Activate();
+        }
+
+        private void Button71_Click(object sender, EventArgs e)
+        {
+            JidEnemy.Show();
+            JidEnemy.Activate();
         }
 
         private void Button1_Click(object sender, EventArgs e)

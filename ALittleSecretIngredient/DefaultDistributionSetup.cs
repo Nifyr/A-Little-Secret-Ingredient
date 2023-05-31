@@ -630,6 +630,12 @@ namespace ALittleSecretIngredient
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
                     switch (dfe)
                     {
+                        case RandomizerDistribution.JidAlly:
+                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.Jid, GD.PlayableClasses);
+                        case RandomizerDistribution.JidEnemy:
+                            List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
+                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.NPCBattleCharacters).Where(i =>
+                                generalClassIDs.Contains(i.Jid)).ToList(), i => i.Jid, GD.GeneralClasses);
                         case RandomizerDistribution.SupportCategory:
                             return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.SupportCategory, GD.SupportCategories);
                         case RandomizerDistribution.IndividualAptitude:

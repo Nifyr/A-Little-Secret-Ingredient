@@ -231,6 +231,8 @@ namespace ALittleSecretIngredient.Forms
                 rs.BondLevel.Cost = new(BondLevel.checkBox1.Checked,
                     BondLevel.Cost.Get(), Array.Empty<object>());
 
+                rs.Individual.JidAlly = new(Individual.checkBox22.Checked, Individual.JidAlly.Get(), new object[] { Individual.checkBox23.Checked });
+                rs.Individual.JidEnemy = new(Individual.checkBox24.Checked, Individual.JidEnemy.Get(), new object[] { Individual.checkBox26.Checked });
                 rs.Individual.Age = new(Individual.checkBox20.Checked, Individual.Age.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeBirthday = Individual.checkBox1.Checked;
                 rs.Individual.LevelAlly = new(Individual.checkBox2.Checked, Individual.LevelAlly.Get(), Array.Empty<object>());
@@ -456,6 +458,12 @@ namespace ALittleSecretIngredient.Forms
                 BondLevel.checkBox1.Checked = value.BondLevel.Cost.Enabled;
                 BondLevel.Cost.Set(value.BondLevel.Cost.Distribution);
 
+                Individual.checkBox22.Checked = value.Individual.JidAlly.Enabled;
+                Individual.JidAlly.Set(value.Individual.JidAlly.Distribution);
+                Individual.checkBox23.Checked = value.Individual.JidAlly.GetArg<bool>(0);
+                Individual.checkBox24.Checked = value.Individual.JidEnemy.Enabled;
+                Individual.JidEnemy.Set(value.Individual.JidEnemy.Distribution);
+                Individual.checkBox26.Checked = value.Individual.JidEnemy.GetArg<bool>(0);
                 Individual.checkBox20.Checked = value.Individual.Age.Enabled;
                 Individual.Age.Set(value.Individual.Age.Distribution);
                 Individual.checkBox1.Checked = value.Individual.RandomizeBirthday;

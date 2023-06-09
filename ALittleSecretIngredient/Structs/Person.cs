@@ -1,7 +1,7 @@
 ﻿#pragma warning disable CS8618
 namespace ALittleSecretIngredient.Structs
 {
-    internal class Individual : DataParam
+    internal class Individual : DataParam, ICloneable
     {
         internal string Out { get; set; }
         internal string Pid { get; set; }
@@ -271,5 +271,59 @@ namespace ALittleSecretIngredient.Structs
             LimitLuck, LimitDef, LimitMagic, LimitMdef,
             LimitPhys, LimitSight, LimitMove
         };
+
+        internal byte[] GetBasicGrowths() => new byte[]
+        {
+            GrowHp, GrowStr, GrowTech, GrowQuick,
+            GrowLuck, GrowDef, GrowMagic, GrowMdef,
+        };
+
+        internal void SetBasicGrowths(byte[] value)
+        {
+            GrowHp = value[0];
+            GrowStr = value[1];
+            GrowTech = value[2];
+            GrowQuick = value[3];
+            GrowLuck = value[4];
+            GrowDef = value[5];
+            GrowMagic = value[6];
+            GrowMdef = value[7];
+        }
+
+        internal byte[] GetGrowths() => new byte[]
+        {
+            GrowHp, GrowStr, GrowTech, GrowQuick,
+            GrowLuck, GrowDef, GrowMagic, GrowMdef,
+            GrowPhys, GrowSight, GrowMove,
+        };
+
+        internal void SetGrowths(byte[] value)
+        {
+            GrowHp = value[0];
+            GrowStr = value[1];
+            GrowTech = value[2];
+            GrowQuick = value[3];
+            GrowLuck = value[4];
+            GrowDef = value[5];
+            GrowMagic = value[6];
+            GrowMdef = value[7];
+            GrowPhys = value[8];
+            GrowSight = value[9];
+            GrowMove = value[10];
+        }
+
+        internal bool HasGrowths() => GetGrowths().Any(b => b > 0);
+
+        public object Clone()
+        {
+            Individual i = (Individual)MemberwiseClone();
+            i.Items = (string[])Items.Clone();
+            i.CommonSids = (string[])CommonSids.Clone();
+            i.NormalSids = (string[])NormalSids.Clone();
+            i.HardSids = (string[])HardSids.Clone();
+            i.LunaticSids = (string[])LunaticSids.Clone();
+            i.NotLvUpTalkPids = (string[])NotLvUpTalkPids.Clone();
+            return i;
+        }
     }
 }

@@ -140,7 +140,7 @@ namespace ALittleSecretIngredient
             internal void Write(XmlNode n)
             {
                 n.Attributes!["Name"]!.Value = Name;
-                n.Attributes["Count"]!.Value = Count;
+                n.Attributes["Count"]!.Value = Data.ParamCount().ToString();
                 Header.Write(n["Header"]!);
                 Data.Write(n["Data"]!);
             }
@@ -204,6 +204,8 @@ namespace ALittleSecretIngredient
 
         private bool GroupedParams() => Params.Count > 0 && (Params[0] is GroupedParam || Params[0] is ParamGroup);
 
+        internal int ParamCount() => GroupedParams() ? Params.Select(dp => ((ParamGroup)dp).Group.Count + 1).Sum() : Params.Count;
+
         private void Group()
         {
             List<ParamGroup> groups = new();
@@ -236,7 +238,11 @@ namespace ALittleSecretIngredient
             if (GroupedParams())
                 UnGroup();
             for (int i = 0; i < Params.Count; i++)
+            {
+                if (i >= n.ChildNodes.Count)
+                    n.AppendChild(n.FirstChild!.Clone());
                 Params[i].Write(n.ChildNodes[i]!);
+            }
             if (GroupedParams())
                 Group();
         }

@@ -119,8 +119,9 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings JidAlly { get; set; } = new();
             public RandomizerFieldSettings JidEnemy { get; set; } = new();
+            public bool ForceUsableWeapon { get; set; } = new();
             public RandomizerFieldSettings Age { get; set; } = new();
-            public bool RandomizeBirthday { get; set; }
+            public bool RandomizeBirthday { get; set; } = new();
             public RandomizerFieldSettings LevelAlly { get; set; } = new();
             public RandomizerFieldSettings LevelEnemy { get; set; } = new();
             public RandomizerFieldSettings InternalLevel { get; set; } = new();
@@ -196,6 +197,20 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings LimitPhys { get; set; } = new();
             public RandomizerFieldSettings LimitSight { get; set; } = new();
             public RandomizerFieldSettings LimitMove { get; set; } = new();
+            public bool RandomizeAllyStatGrowths { get; set; } = new();
+            public RandomizerFieldSettings GrowHp { get; set; } = new();
+            public RandomizerFieldSettings GrowStr { get; set; } = new();
+            public RandomizerFieldSettings GrowTech { get; set; } = new();
+            public RandomizerFieldSettings GrowQuick { get; set; } = new();
+            public RandomizerFieldSettings GrowLuck { get; set; } = new();
+            public RandomizerFieldSettings GrowDef { get; set; } = new();
+            public RandomizerFieldSettings GrowMagic { get; set; } = new();
+            public RandomizerFieldSettings GrowMdef { get; set; } = new();
+            public RandomizerFieldSettings GrowPhys { get; set; } = new();
+            public RandomizerFieldSettings GrowSight { get; set; } = new();
+            public RandomizerFieldSettings GrowMove { get; set; } = new();
+            public RandomizerFieldSettings GrowTotal { get; set; } = new();
+            public bool RandomizeEnemyStatGrowths { get; set; } = new();
 
             internal RandomizerFieldSettings[] GetOffsetNAllySettings()
             {
@@ -234,6 +249,16 @@ namespace ALittleSecretIngredient.Structs
                     OffsetLHpEnemy, OffsetLStrEnemy, OffsetLTechEnemy, OffsetLQuickEnemy,
                     OffsetLLuckEnemy, OffsetLDefEnemy, OffsetLMagicEnemy, OffsetLMdefEnemy,
                     OffsetLPhysEnemy, OffsetLSightEnemy, OffsetLMoveEnemy, OffsetLTotalEnemy,
+                };
+            }
+
+            internal RandomizerFieldSettings[] GetGrowthSettings()
+            {
+                return new RandomizerFieldSettings[]
+                {
+                    GrowHp, GrowStr, GrowTech, GrowQuick,
+                    GrowLuck, GrowDef, GrowMagic, GrowMdef,
+                    GrowPhys, GrowSight, GrowMove, GrowTotal,
                 };
             }
         }

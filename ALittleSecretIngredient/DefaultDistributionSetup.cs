@@ -243,11 +243,11 @@ namespace ALittleSecretIngredient
                     {
                         case RandomizerDistribution.ScaleAll:
                             NumericDistributionSetup nds0 = GetNumericDistributionSetup(assets.Where(a => a.ScaleAll != 0).ToList(), a => a.ScaleAll);
-                            nds0.idx = 3;
+                            nds0.idx = 4;
                             return nds0;
                         case RandomizerDistribution.ScaleHead:
                             NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0).ToList(), a => a.ScaleHead);
-                            nds1.idx = 3;
+                            nds1.idx = 4;
                             return nds1;
                         case RandomizerDistribution.ScaleNeck:
                             NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0).ToList(), a => a.ScaleNeck);
@@ -307,11 +307,11 @@ namespace ALittleSecretIngredient
                             return nds15;
                         case RandomizerDistribution.MapScaleAll:
                             NumericDistributionSetup nds16 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleAll != 0).ToList(), a => a.MapScaleAll);
-                            nds16.idx = 3;
+                            nds16.idx = 4;
                             return nds16;
                         case RandomizerDistribution.MapScaleHead:
                             NumericDistributionSetup nds17 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleHead != 0).ToList(), a => a.MapScaleHead);
-                            nds17.idx = 3;
+                            nds17.idx = 4;
                             return nds17;
                         case RandomizerDistribution.MapScaleWing:
                             NumericDistributionSetup nds18 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleWing != 0).ToList(), a => a.MapScaleWing);
@@ -520,6 +520,38 @@ namespace ALittleSecretIngredient
                             nds21.distributions[0] = new UniformConstant(10, -1, 1);
                             nds21.idx = 0;
                             return nds21;
+                        case RandomizerDistribution.GrowHp:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowHp);
+                        case RandomizerDistribution.GrowStr:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowStr);
+                        case RandomizerDistribution.GrowTech:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowTech);
+                        case RandomizerDistribution.GrowQuick:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowQuick);
+                        case RandomizerDistribution.GrowLuck:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowLuck);
+                        case RandomizerDistribution.GrowDef:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowDef);
+                        case RandomizerDistribution.GrowMagic:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowMagic);
+                        case RandomizerDistribution.GrowMdef:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowMdef);
+                        case RandomizerDistribution.GrowPhys:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GrowPhys);
+                        case RandomizerDistribution.GrowSight:
+                            NumericDistributionSetup nds22 = GetNumericDistributionSetup(playableCharacters, i => i.GrowSight);
+                            nds22.distributions[0] = new UniformConstant(10, 0, 5);
+                            nds22.idx = 0;
+                            return nds22;
+                        case RandomizerDistribution.GrowMove:
+                            NumericDistributionSetup nds23 = GetNumericDistributionSetup(playableCharacters, i => i.GrowMove);
+                            nds23.distributions[0] = new UniformConstant(10, 0, 5);
+                            nds23.idx = 0;
+                            return nds23;
+                        case RandomizerDistribution.GrowTotal:
+                            NumericDistributionSetup nds24 = GetNumericDistributionSetup(playableCharacters, i => i.GetBasicGrowths().Select(b => (int)b).Sum());
+                            nds24.idx = 4;
+                            return nds24;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -634,7 +666,7 @@ namespace ALittleSecretIngredient
                             return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.Jid, GD.PlayableClasses);
                         case RandomizerDistribution.JidEnemy:
                             List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
-                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.NPCBattleCharacters).Where(i =>
+                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.NPCCharacters).Where(i =>
                                 generalClassIDs.Contains(i.Jid)).ToList(), i => i.Jid, GD.GeneralClasses);
                         case RandomizerDistribution.SupportCategory:
                             return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.SupportCategory, GD.SupportCategories);

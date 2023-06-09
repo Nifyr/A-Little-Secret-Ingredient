@@ -10,6 +10,8 @@ namespace ALittleSecretIngredient
         private GameData GD { get; }
 
         private StringBuilder? _changelog;
+
+        private Dictionary<string, string> CharacterNameMapping { get; set; }
         private StringBuilder Changelog
         {
             set
@@ -27,17 +29,22 @@ namespace ALittleSecretIngredient
         internal Randomizer(GameData gd)
         {
             GD = gd;
+            CharacterNameMapping = GD.Characters.Concat(GD.Emblems).Select(t => t.name).ToDictionary(s => s);
         }
 
         internal void Randomize(RandomizerSettings settings)
         {
             StringBuilder innerChangelog = new();
 
+            DataPreAdjustment();
+
             AddTable(innerChangelog, RandomizeAssetTable(settings.AssetTable));
             AddTable(innerChangelog, RandomizeGodGeneral(settings.GodGeneral));
             AddTable(innerChangelog, RandomizeGrowthTable(settings.GrowthTable));
             AddTable(innerChangelog, RandomizeBondLevel(settings.BondLevel));
             AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
+
+            DataPostAdjustment();
 
             if (settings.SaveChangelog && innerChangelog.Length > 0)
             {
@@ -46,6 +53,57 @@ namespace ALittleSecretIngredient
                 changelog.AppendLine(innerChangelog.ToString());
                 Changelog = changelog;
             }
+        }
+
+        private void DataPreAdjustment()
+        {
+            // Unlock dragon stuff for fell child classes
+            List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
+            foreach (Asset a in assets)
+                switch(string.Join(';', a.Conditions))
+                {
+                    case "竜化;MPID_El":
+                        a.Conditions = new string[] { "竜化", "JID_裏邪竜ノ娘" };
+                        continue;
+                    case "エンゲージ中;MPID_El;JID_裏邪竜ノ娘;竜石":
+                        a.Conditions = new string[] { "エンゲージ中", "JID_裏邪竜ノ娘", "竜石" };
+                        continue; 
+                    case "竜化;MPID_Il|MPID_Rafale":
+                        a.Conditions = new string[] { "竜化", "JID_E006ラスボス|JID_裏邪竜ノ子" };
+                        continue;
+                    case "エンゲージ中;MPID_Rafale;JID_裏邪竜ノ子;竜石":
+                        a.Conditions = new string[] { "エンゲージ中", "JID_裏邪竜ノ子", "竜石" };
+                        continue;
+                }
+        }
+
+        private void DataPostAdjustment()
+        {
+            // Create dragon individuals
+            DataSet individualDataSet = GD.Get(DataSetEnum.Individual);
+            List<Individual> individuals = individualDataSet.Params.Cast<Individual>().ToList();
+            for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
+                if (!individuals[iIdx].Pid.EndsWith("_竜化") && !individuals.Any(i => i.Pid == individuals[iIdx].Pid + "_竜化"))
+                    switch (individuals[iIdx].Jid)
+                    {
+                        case "JID_裏邪竜ノ娘":
+                            Individual newI0 = (Individual)individuals[iIdx].Clone();
+                            newI0.Pid = individuals[iIdx].Pid + "_竜化";
+                            newI0.Fid = individuals[iIdx].Pid + "_竜化";
+                            newI0.Aid = "AID_エル竜化";
+                            newI0.Items = Array.Empty<string>();
+                            individuals.Add(newI0);
+                            continue;
+                        case "JID_裏邪竜ノ子":
+                            Individual newI1 = (Individual)individuals[iIdx].Clone();
+                            newI1.Pid = individuals[iIdx].Pid + "_竜化";
+                            newI1.Fid = individuals[iIdx].Pid + "_竜化";
+                            newI1.Aid = "AID_ラファール竜化";
+                            newI1.Items = Array.Empty<string>();
+                            individuals.Add(newI1);
+                            continue;
+                    }
+            individualDataSet.Params = individuals.Cast<DataParam>().ToList();
         }
 
         private StringBuilder RandomizeAssetTable(RandomizerSettings.AssetTableSettings settings)
@@ -344,13 +402,22 @@ namespace ALittleSecretIngredient
             for (int i = 0; i < list.Count; i++)
             {
                 mapping.Add(list[i], shuffle[i]);
+                mapping.Add(ToOBody(list[i]), ToOBody(shuffle[i]));
                 outfitShuffleInnertable.AppendLine($"{GD.AllDressModels.IDToName(list[i])} → {GD.AllDressModels.IDToName(shuffle[i])}");
             }
+            HashSet<string> bodyModels = assets.Select(a => a.BodyModel).Distinct().Order().ToHashSet();
             foreach (Asset a in assets)
+            {
                 if (mapping.TryGetValue(a.DressModel, out string? newDressModel))
                     a.DressModel = newDressModel;
+                mapping.TryGetValue(a.BodyModel, out string? newBodyModel);
+                if (newBodyModel != null && bodyModels.Contains(newBodyModel))
+                    a.BodyModel = newBodyModel;
+            }
             GD.SetDirty(DataSetEnum.Asset);
         }
+
+        private static string ToOBody(string s) => s.Replace("uBody", "oBody");
 
         private List<List<GameData.AssetShuffleEntity>> GetModelSwapLists(RandomizerFieldSettings settings)
         {
@@ -467,6 +534,7 @@ namespace ALittleSecretIngredient
                     }
 
                 assetShuffleInnertable.AppendLine($"{target.name} → {source.name}");
+                CharacterNameMapping[target.name] = source.name;
             }
             foreach (Asset a in assets)
                 for (int i = 0; i < a.Conditions.Length; i++)
@@ -551,7 +619,7 @@ namespace ALittleSecretIngredient
                 foreach (GodGeneral gg in linkableEmblems)
                     if (!randomizeSelection.Contains(gg))
                         gg.Link = "";
-                WriteToChangelog(entries, linkableEmblems, gg => gg.Link, "Engage+ Link", GD.PlayableCharacters);
+                WriteToChangelog(entries, linkableEmblems, gg => gg.Link, "Engage+ Link", MapNames(GD.PlayableCharacters));
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
             if (settings.Link.Enabled)
@@ -560,7 +628,7 @@ namespace ALittleSecretIngredient
                 List<GodGeneral> alearEmblems = ggs.Where(gg => GD.AlearEmblems.Select(t => t.id).Contains(gg.Gid)).ToList();
                 // Randomize
                 alearEmblems.Randomize(gg => gg.Link, (gg, s) => gg.Link = s, settings.Link.Distribution, playableCharacterIDs);
-                WriteToChangelog(entries, alearEmblems, gg => gg.Link, "Engage+ Link", GD.PlayableCharacters);
+                WriteToChangelog(entries, alearEmblems, gg => gg.Link, "Engage+ Link", MapNames(GD.PlayableCharacters));
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -622,7 +690,7 @@ namespace ALittleSecretIngredient
                     PairLinkGids(linkableEmblems);
                 // Propagate to assosiated emblems
                 Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.LinkGid, (gg, s) => gg.LinkGid = s);
-                WriteToChangelog(entries, allySyncableEmblems, gg => gg.LinkGid, "Bond Link Emblem", GD.LinkableEmblems);
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.LinkGid, "Bond Link Emblem", MapNames(GD.LinkableEmblems));
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -635,8 +703,8 @@ namespace ALittleSecretIngredient
                 // Propagate to assosiated emblems
                 Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
                 Propagate(baseArenaEmblems, arenaEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
-                WriteToChangelog(entries, allySyncableEmblems, gg => gg.GrowTable, "Bond Level Table", GD.AllyBondLevelTables);
-                WriteToChangelog(entries, arenaEmblems, gg => gg.GrowTable, "Bond Level Table", GD.AllyBondLevelTables);
+                WriteToChangelog(entries, allySyncableEmblems, gg => gg.GrowTable, "Bond Level Table", MapNames(GD.AllyBondLevelTables));
+                WriteToChangelog(entries, arenaEmblems, gg => gg.GrowTable, "Bond Level Table", MapNames(GD.AllyBondLevelTables));
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
             if (settings.ShuffleGrowTableEnemy)
@@ -645,7 +713,7 @@ namespace ALittleSecretIngredient
                 enemyEngageableEmblems.Randomize(gg => gg.GrowTable, (gg, s) => gg.GrowTable = s, new Redistribution(100), null!);
                 // Propagate to assosiated emblems
                 Propagate(enemyEngageableEmblems, enemySyncableEmblems, gg => gg.GrowTable, (gg, s) => gg.GrowTable = s);
-                WriteToChangelog(entries, enemySyncableEmblems, gg => gg.GrowTable, "Bond Level Table", GD.EnemyBondLevelTables);
+                WriteToChangelog(entries, enemySyncableEmblems, gg => gg.GrowTable, "Bond Level Table", MapNames(GD.EnemyBondLevelTables));
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
 
@@ -734,14 +802,18 @@ namespace ALittleSecretIngredient
             }
 
             StringBuilder innerTable = new();
+            List<(string id, string name)> mappedNames = MapNames(GD.Emblems);
             foreach (GodGeneral gg in ggs)
                 if (entries[gg].Length > 0)
                 {
-                    innerTable.AppendLine($"\t{GD.Emblems.IDToName(gg.Gid)}:");
+                    innerTable.AppendLine($"\t{mappedNames.IDToName(gg.Gid)}:");
                     innerTable.AppendLine(entries[gg].ToString());
                 }
             return ApplyTableTitle(innerTable, "Emblems");
         }
+
+        private List<(string id, string name)> MapNames(IEnumerable<(string id, string name)> characters) =>
+            characters.Select(t => (t.id, CharacterNameMapping[t.name])).ToList();
 
         private static Dictionary<T, StringBuilder> CreateStringBuilderDictionary<T>(List<T> objects) where T : notnull
         {
@@ -958,10 +1030,11 @@ namespace ALittleSecretIngredient
                     }
 
             StringBuilder innertable = new();
+            List<(string id, string name)> mappedNames = MapNames(GD.BondLevelTables);
             foreach (ParamGroup pg in pgs)
                 if (entries[pg].Length > 0)
                 {
-                    innertable.AppendLine($"\t{GD.BondLevelTables.IDToName(pg.Name)}:");
+                    innertable.AppendLine($"\t{mappedNames.IDToName(pg.Name)}:");
                     innertable.AppendLine(entries[pg].ToString());
                 }
 
@@ -1009,14 +1082,26 @@ namespace ALittleSecretIngredient
             List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
             List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters);
             List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters);
-            List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCBattleCharacters);
+            List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters);
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
             List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
             List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
             List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
+            List<string> weaponIDs = GD.NormalWeapons.GetIDs();
             Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
 
             UnlockExclusiveClassOutfits(assets);
+
+            HandleIndividualAptitude(settings.Aptitude, settings.AptitudeCount, playableCharacters, proficiencyIDs, entries,
+                i => i.GetAptitudes(), (i, l) => i.SetAptitudes(l), "Primary Proficiencies");
+            HandleIndividualAptitude(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, proficiencyIDs, entries,
+                i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
+
+            if (settings.JidAlly.Enabled)
+                RandomizeStartingClasses(settings, playableCharacters, toss, weaponIDs, entries);
+
+            if (settings.JidEnemy.Enabled)
+                RandomizeEnemyClasses(settings, npcCharacters, toss, generalClassIDs, weaponIDs, entries);
 
             if (settings.Age.Enabled)
             {
@@ -1057,53 +1142,53 @@ namespace ALittleSecretIngredient
                 GD.SetDirty(DataSetEnum.Individual);
             }
 
-            HandleIndividualAptitude(settings.Aptitude, settings.AptitudeCount, playableCharacters, proficiencyIDs, entries,
-                i => i.GetAptitudes(), (i, l) => i.SetAptitudes(l), "Primary Proficiencies");
-            HandleIndividualAptitude(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, proficiencyIDs, entries,
-                i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
-
-            if (settings.JidAlly.Enabled)
-                RandomizeStartingClasses(settings.JidAlly, playableCharacters, toss, entries);
-
-            if (settings.JidEnemy.Enabled)
-                RandomizeEnemyClasses(settings.JidEnemy, npcCharacters, toss, generalClassIDs, entries);
-
             if (settings.RandomizeAllyBases)
                 RandomizeAllyBaseStats(allyCharacters, entries, settings.GetOffsetNAllySettings(), "Base Stat Modifiers",
                     settings.StrongerProtagonist, settings.StrongerAllyNPCs);
             if (settings.RandomizeEnemyBasesNormal)
-                RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetNEnemySettings(), i => i.GetOffsetN(),
+                RandomizeBaseStats(enemyCharacters, entries, settings.GetOffsetNEnemySettings(), i => i.GetOffsetN(),
                     (i, a) => i.SetOffsetN(a), i => i.GetBasicOffsetN(), (i, a) => i.SetBasicOffsetN(a), "Base Stats Normal");
             if (settings.RandomizeEnemyBasesHard)
-                RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetHEnemySettings(), i => i.GetOffsetH(),
+                RandomizeBaseStats(enemyCharacters, entries, settings.GetOffsetHEnemySettings(), i => i.GetOffsetH(),
                     (i, a) => i.SetOffsetH(a), i => i.GetBasicOffsetH(), (i, a) => i.SetBasicOffsetH(a), "Base Stats Hard");
             if (settings.RandomizeEnemyBasesMaddening)
-                RandomizeEnemyBaseStats(enemyCharacters, entries, settings.GetOffsetLEnemySettings(), i => i.GetOffsetL(),
+                RandomizeBaseStats(enemyCharacters, entries, settings.GetOffsetLEnemySettings(), i => i.GetOffsetL(),
                     (i, a) => i.SetOffsetL(a), i => i.GetBasicOffsetL(), (i, a) => i.SetBasicOffsetL(a), "Base Stats Maddening");
 
             if (settings.RandomizeStatLimits)
                 RandomizeStatLimits(settings, playableCharacters, entries);
 
+            if (settings.RandomizeAllyStatGrowths)
+                RandomizeBaseStats(playableCharacters.Where(i => i.HasGrowths()).ToList(), entries, settings.GetGrowthSettings(),
+                    i => i.GetGrowths(), (i, a) => i.SetGrowths(a), i => i.GetBasicGrowths(), (i, a) => i.SetBasicGrowths(a),
+                    "Stat Growths");
+
+            if (settings.RandomizeEnemyStatGrowths)
+                RandomizeBaseStats(npcCharacters.Where(i => i.HasGrowths()).ToList(), entries, settings.GetGrowthSettings(),
+                    i => i.GetGrowths(), (i, a) => i.SetGrowths(a), i => i.GetBasicGrowths(), (i, a) => i.SetBasicGrowths(a),
+                    "Stat Growths");
+
             StringBuilder innertable = new();
+            List<(string id, string name)> mappedNames = MapNames(GD.Characters);
             foreach (Individual i in individuals)
                 if (entries[i].Length > 0)
                 {
-                    innertable.AppendLine($"\t{GD.Characters.IDToName(i.Pid)}:");
+                    innertable.AppendLine($"\t{mappedNames.IDToName(i.Pid)}:");
                     innertable.AppendLine(entries[i].ToString());
                 }
 
             return ApplyTableTitle(innertable, "Characters");
         }
 
-        private void RandomizeEnemyClasses(RandomizerFieldSettings settings, List<Individual> npcCharacters, List<TypeOfSoldier> toss,
-            List<string> generalClassIDs, Dictionary<Individual, StringBuilder> entries)
+        private void RandomizeEnemyClasses(RandomizerSettings.IndividualSettings settings, List<Individual> individuals,
+            List<TypeOfSoldier> toss, List<string> generalClassIDs, List<string> weaponIDs, Dictionary<Individual, StringBuilder> entries)
         {
-            List<Individual> npcClassCharacters = npcCharacters.Where(i => generalClassIDs.Contains(i.Jid)).ToList();
+            List<Individual> npcClassCharacters = individuals.Where(i => generalClassIDs.Contains(i.Jid)).ToList();
             List<int> totalLevels = npcClassCharacters.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
-            if (settings.GetArg<bool>(0))
+            if (settings.JidEnemy.GetArg<bool>(0))
             {
                 Dictionary<string, string> classMapping = new();
-                SplitClassesByRank(toss, GD.UniversalClasses.Concat(GD.NPCExclusiveClasses).ToList(),
+                SplitClassesByRank(toss, GD.UniversalClasses.Concat(GD.MixedNPCExclusiveClasses).ToList(),
                     out List<(string id, string name)> lowGroup, out List<(string id, string name)> highGroup);
                 CreateRandomMapping(classMapping, lowGroup);
                 CreateRandomMapping(classMapping, highGroup);
@@ -1119,7 +1204,7 @@ namespace ALittleSecretIngredient
                         i.Jid = newClass;
             }
             else
-                npcClassCharacters.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.Distribution, generalClassIDs);
+                npcClassCharacters.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.JidEnemy.Distribution, generalClassIDs);
 
             for (int iIdx = 0; iIdx < npcClassCharacters.Count; iIdx++)
             {
@@ -1127,7 +1212,7 @@ namespace ALittleSecretIngredient
                 TypeOfSoldier tos = i.GetTOS(toss);
                 GameData.Gender g = i.GetGender();
                 List<string> legalClassIDs = GD.UniversalClasses.GetIDs();
-                legalClassIDs.AddRange(GD.NPCExclusiveClasses.GetIDs());
+                legalClassIDs.AddRange(GD.MixedNPCExclusiveClasses.GetIDs());
                 if (g == GameData.Gender.Male)
                 {
                     legalClassIDs.AddRange(GD.MaleExclusiveClasses.GetIDs());
@@ -1141,13 +1226,116 @@ namespace ALittleSecretIngredient
                 legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
+                EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon);
             }
             WriteToChangelog(entries, npcClassCharacters, i => i.Jid, "Class", GD.GeneralClasses);
             GD.SetDirty(DataSetEnum.Individual);
             GD.SetDirty(DataSetEnum.Asset);
         }
 
-        private static void SplitClassesByRank(List<TypeOfSoldier> toss, List<(string id, string name)> classGroup, out List<(string id, string name)> lowGroup, out List<(string id, string name)> highGroup)
+        private void EnsureUsableWeapons(List<TypeOfSoldier> toss, List<string> weaponIDs, Individual i, bool force)
+        {
+            List<string> legalWeapons = GetLegalWeapons(i, toss);
+            if (legalWeapons.Count == 0)
+                return;
+            if (force && i.Items.Length == 0)
+                i.Items = new string[] { legalWeapons.GetRandom() };
+            for (int itemIdx = 0; itemIdx < i.Items.Length; itemIdx++)
+                if (weaponIDs.Contains(i.Items[itemIdx]) && !legalWeapons.Contains(i.Items[itemIdx]))
+                    i.Items[itemIdx] = legalWeapons.GetRandom();
+        }
+
+        private List<string> GetLegalWeapons(Individual i, List<TypeOfSoldier> toss)
+        {
+            string[] maxWeaponLevels = i.GetTOS(toss).GetMaxWeaponLevels();
+            List<GameData.ProficiencyLevel> proficiencyLevels = maxWeaponLevels.Select(ToProficiencyLevel).ToList();
+            foreach (int pIdx in i.GetAptitudes())
+                proficiencyLevels[pIdx] = proficiencyLevels[pIdx] == GameData.ProficiencyLevel.S ? GameData.ProficiencyLevel.S :
+                    (GameData.ProficiencyLevel)(((int)proficiencyLevels[pIdx]) + 1);
+            List<string> legalWeapons = new();
+            for (int pIdx = 0; pIdx < proficiencyLevels.Count; pIdx++)
+                legalWeapons.AddRange(GetLegalWeapons((GameData.Proficiency)pIdx, proficiencyLevels[pIdx]));
+
+            if ((i.Pid == "PID_リュール" || i.Pid == "PID_M002_ルミエル") &&
+                (int)proficiencyLevels[(int)GameData.Proficiency.Sword] >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(GD.LiberationWeapons.GetIDs());
+            if ((i.Pid == "PID_リュール" || i.Pid == "PID_M025_ルミエル") &&
+                (int)proficiencyLevels[(int)GameData.Proficiency.Sword] >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(GD.WilleGlanzWeapons.GetIDs());
+            string[] misericordePids = new string[]
+            {
+                "PID_ヴェイル", "PID_ヴェイル_フード", "PID_ヴェイル_包帯", "PID_ヴェイル_フード_顔出し",
+                "PID_ヴェイル_白_悪", "PID_ヴェイル_黒_悪", "PID_ヴェイル_黒_善", "PID_ヴェイル_黒_善_角折れ",
+                "PID_M011_ヴェイル", "PID_M017_ヴェイル", "PID_M021_ヴェイル",
+            };
+            if (misericordePids.Contains(i.Pid) &&
+                (int)proficiencyLevels[(int)GameData.Proficiency.Dagger] >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(GD.MisericordeWeapons.GetIDs());
+            string[] obscuritePids = new string[]
+            {
+                "PID_ヴェイル", "PID_ヴェイル_フード", "PID_ヴェイル_包帯", "PID_ヴェイル_フード_顔出し",
+                "PID_ヴェイル_白_悪", "PID_ヴェイル_黒_悪", "PID_ヴェイル_黒_善", "PID_ヴェイル_黒_善_角折れ",
+                "PID_M011_ヴェイル", "PID_M017_ヴェイル", "PID_M021_ヴェイル", "PID_M026_ソンブル_人型",
+                "PID_エル", "PID_ラファール"
+            };
+            if (obscuritePids.Contains(i.Pid) &&
+                (int)proficiencyLevels[(int)GameData.Proficiency.Tome] >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(GD.ObscuriteWeapons.GetIDs());
+            string[] dragonStonePids = new string[]
+            {
+                "PID_E001_Boss", "PID_E006_Hide8"
+            };
+            string[] dragonStoneJids = new string[]
+            {
+                "JID_裏邪竜ノ娘", "JID_裏邪竜ノ子", "JID_裏邪竜ノ子_E1-4", "JID_裏邪竜ノ子_E5",
+            };
+            if ((dragonStonePids.Contains(i.Pid) || dragonStoneJids.Contains(i.Jid)) &&
+                (int)proficiencyLevels[(int)GameData.Proficiency.Special] >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(GD.DragonStones.GetIDs());
+            if (i.Jid == "JID_マージカノン" &&
+                (int)proficiencyLevels[(int)GameData.Proficiency.Special] >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(GD.Cannonballs.GetIDs());
+
+            return legalWeapons;
+        }
+
+        private List<string> GetLegalWeapons(GameData.Proficiency p, GameData.ProficiencyLevel pl)
+        {
+            List<string> legalWeapons = new();
+            List<List<(string id, string name)>> weapons = GD.WeaponTypeLookup[p]; 
+            if ((int)pl >= (int)GameData.ProficiencyLevel.D)
+                legalWeapons.AddRange(weapons[0].GetIDs());
+            if ((int)pl >= (int)GameData.ProficiencyLevel.C)
+                legalWeapons.AddRange(weapons[1].GetIDs());
+            if ((int)pl >= (int)GameData.ProficiencyLevel.B)
+                legalWeapons.AddRange(weapons[2].GetIDs());
+            if ((int)pl >= (int)GameData.ProficiencyLevel.A)
+                legalWeapons.AddRange(weapons[3].GetIDs());
+            if ((int)pl >= (int)GameData.ProficiencyLevel.S)
+                legalWeapons.AddRange(weapons[4].GetIDs());
+            if ((int)pl >= (int)GameData.ProficiencyLevel.S)
+                legalWeapons.AddRange(weapons[5].GetIDs());
+            return legalWeapons;
+        }
+
+        private static GameData.ProficiencyLevel ToProficiencyLevel(string s) => s switch
+        {
+            "N" => GameData.ProficiencyLevel.N,
+            "N+" => GameData.ProficiencyLevel.Np,
+            "D" => GameData.ProficiencyLevel.D,
+            "D+" => GameData.ProficiencyLevel.Dp,
+            "C" => GameData.ProficiencyLevel.C,
+            "C+" => GameData.ProficiencyLevel.Cp,
+            "B" => GameData.ProficiencyLevel.B,
+            "B+" => GameData.ProficiencyLevel.Bp,
+            "A" => GameData.ProficiencyLevel.A,
+            "A+" => GameData.ProficiencyLevel.Ap,
+            "S" => GameData.ProficiencyLevel.S,
+            _ => throw new ArgumentException("Unsupported proficiency level: " + s)
+        };
+
+        private static void SplitClassesByRank(List<TypeOfSoldier> toss, List<(string id, string name)> classGroup,
+            out List<(string id, string name)> lowGroup, out List<(string id, string name)> highGroup)
         {
             lowGroup = classGroup.Where(e =>
             {
@@ -1163,22 +1351,22 @@ namespace ALittleSecretIngredient
                         highGroup.Add(e);
         }
 
-        private void RandomizeStartingClasses(RandomizerFieldSettings settings, List<Individual> playableCharacters,
-            List<TypeOfSoldier> toss, Dictionary<Individual, StringBuilder> entries)
+        private void RandomizeStartingClasses(RandomizerSettings.IndividualSettings settings, List<Individual> individuals,
+            List<TypeOfSoldier> toss, List<string> weaponIDs, Dictionary<Individual, StringBuilder> entries)
         {
-            List<int> totalLevels = playableCharacters.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
-            playableCharacters.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.Distribution, GD.PlayableClasses.GetIDs());
-            if (settings.GetArg<bool>(0))
-                foreach (Individual i in playableCharacters)
+            List<int> totalLevels = individuals.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
+            individuals.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.JidEnemy.Distribution, GD.PlayableClasses.GetIDs());
+            if (settings.JidEnemy.GetArg<bool>(0))
+                foreach (Individual i in individuals)
                 {
                     int maxScore = toss.Select(tos => CalcCompatibility(i, tos)).Max();
                     if (CalcCompatibility(i, i.GetTOS(toss)) < maxScore)
                         i.Jid = toss.Where(tos => CalcCompatibility(i, tos) == maxScore).GetRandom().Jid;
                 }
             int retryCounter = 0;
-            for (int iIdx = 0; iIdx < playableCharacters.Count; iIdx++)
+            for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
             {
-                Individual i = playableCharacters[iIdx];
+                Individual i = individuals[iIdx];
                 TypeOfSoldier tos = i.GetTOS(toss);
                 GameData.Gender g = i.GetGender();
                 List<string> legalClassIDs = GD.UniversalClasses.GetIDs();
@@ -1189,7 +1377,8 @@ namespace ALittleSecretIngredient
                 legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
-                if (retryCounter < 32 && settings.GetArg<bool>(0) && CalcCompatibility(i, i.GetTOS(toss)) < ushort.MaxValue / 2)
+                tos = i.GetTOS(toss);
+                if (retryCounter < 32 && settings.JidEnemy.GetArg<bool>(0) && CalcCompatibility(i, tos) < ushort.MaxValue / 2)
                 {
                     i.Jid = legalClassIDs.GetRandom();
                     iIdx--;
@@ -1197,8 +1386,9 @@ namespace ALittleSecretIngredient
                     continue;
                 }
                 retryCounter = 0;
+                EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon);
             }
-            WriteToChangelog(entries, playableCharacters, i => i.Jid, "Starting Class", GD.PlayableClasses);
+            WriteToChangelog(entries, individuals, i => i.Jid, "Starting Class", GD.PlayableClasses);
             GD.SetDirty(DataSetEnum.Individual);
             GD.SetDirty(DataSetEnum.Asset);
         }
@@ -1271,6 +1461,9 @@ namespace ALittleSecretIngredient
                 if (!legalClassIDs.Contains(i.Jid))
                     i.Jid = legalClassIDs.GetRandom();
             }
+            // This is specifically to avoid placing non-fliers on flier terrain in early rout maps.
+            if (i.Pid == "PID_M003_イルシオン兵_ランスペガサス" || i.Pid == "PID_M003_イルシオン兵_ランスペガサス_イベント")
+                i.Jid = "JID_ランスペガサス";
             i.Level = (byte)(totalLevel - (i.GetTOS(toss).Rank == 1 ? 20 : 0));
         }
 
@@ -1357,14 +1550,26 @@ namespace ALittleSecretIngredient
             GD.SetDirty(DataSetEnum.Individual);
         }
 
-        private void RandomizeEnemyBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+        private void RandomizeBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
             RandomizerFieldSettings[] settingsFields, Func<Individual, sbyte[]> get, Action<Individual, sbyte[]> set,
             Func<Individual, sbyte[]> getBasic, Action<Individual, sbyte[]> setBasic, string fieldName)
         {
-            List<Node<double>> oldBaseStatTotals = individuals.Select(i => new Node<double>(getBasic(i).Select(s =>
+            List<Node<double>> oldStatTotals = individuals.Select(i => new Node<double>(getBasic(i).Select(s =>
                                 (double)s).Sum())).ToList();
             RandomizeBaseStats(individuals, settingsFields, get, set);
-            HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldBaseStatTotals);
+            HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldStatTotals);
+            WriteStatsToChangelog(individuals, entries, get, fieldName);
+            GD.SetDirty(DataSetEnum.Individual);
+        }
+
+        private void RandomizeBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+            RandomizerFieldSettings[] settingsFields, Func<Individual, byte[]> get, Action<Individual, byte[]> set,
+            Func<Individual, byte[]> getBasic, Action<Individual, byte[]> setBasic, string fieldName)
+        {
+            List<Node<double>> oldStatTotals = individuals.Select(i => new Node<double>(getBasic(i).Select(s =>
+                                (double)s).Sum())).ToList();
+            RandomizeBaseStats(individuals, settingsFields, get, set);
+            HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldStatTotals);
             WriteStatsToChangelog(individuals, entries, get, fieldName);
             GD.SetDirty(DataSetEnum.Individual);
         }
@@ -1391,12 +1596,12 @@ namespace ALittleSecretIngredient
             GD.SetDirty(DataSetEnum.Individual);
         }
 
-        private static void WriteStatsToChangelog(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
-            Func<Individual, sbyte[]> get, string fieldName)
+        private static void WriteStatsToChangelog<T>(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
+            Func<Individual, T[]> get, string fieldName)
         {
             foreach (Individual i in individuals)
             {
-                sbyte[] stats = get(i);
+                T[] stats = get(i);
                 entries[i].AppendLine($"{fieldName}:\t{stats[0]} HP,\t{stats[1]} Str,\t{stats[2]} Dex,\t{stats[3]} Spd,\t" +
                     $"{stats[4]} Lck,\t{stats[5]} Def,\t{stats[6]} Mag,\t{stats[7]} Res,\t" +
                     $"{stats[8]} Bld,\t{stats[9]} Sig,\t{stats[10]} Mov");
@@ -1416,7 +1621,26 @@ namespace ALittleSecretIngredient
                     sbyte[] basicBaseStats = getBasic(individuals[iIdx]);
                     int toAdd = (int)Math.Round(baseStatTotals[iIdx].value - basicBaseStats.Select(s => (double)s).Sum());
                     for (int i = 0; i < basicBaseStats.Length; i++)
-                        basicBaseStats[i] += (sbyte)(toAdd / basicBaseStats.Length);
+                        basicBaseStats[i] = (sbyte)Math.Clamp(basicBaseStats[i] + toAdd / basicBaseStats.Length, sbyte.MinValue, sbyte.MaxValue);
+                    setBasic(individuals[iIdx], basicBaseStats);
+                }
+            }
+        }
+
+        private static void HandleStatTotal(List<Individual> individuals, RandomizerFieldSettings[] settingsFields,
+            Func<Individual, byte[]> getBasic, Action<Individual, byte[]> setBasic, List<Node<double>> baseStatTotals)
+        {
+            RandomizerFieldSettings totalSettings = settingsFields[11];
+            if (totalSettings.Enabled)
+            {
+                baseStatTotals.Randomize(n => n.value, (n, i) => n.value = i, totalSettings.Distribution,
+                    int.MinValue, int.MaxValue);
+                for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
+                {
+                    byte[] basicBaseStats = getBasic(individuals[iIdx]);
+                    int toAdd = (int)Math.Round(baseStatTotals[iIdx].value - basicBaseStats.Select(s => (double)s).Sum());
+                    for (int i = 0; i < basicBaseStats.Length; i++)
+                        basicBaseStats[i] = (byte)Math.Clamp(basicBaseStats[i] + toAdd / basicBaseStats.Length, byte.MinValue, byte.MaxValue);
                     setBasic(individuals[iIdx], basicBaseStats);
                 }
             }
@@ -1428,6 +1652,16 @@ namespace ALittleSecretIngredient
             for (int sIdx = 0; sIdx < baseStats[0].Length; sIdx++)
                 baseStats.Randomize(a => a[sIdx], (a, s) => a[sIdx] = s, settingsFields[sIdx].Distribution,
                     sbyte.MinValue, sbyte.MaxValue);
+            for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
+                set(individuals[iIdx], baseStats[iIdx]);
+        }
+
+        private static void RandomizeBaseStats(List<Individual> individuals, RandomizerFieldSettings[] settingsFields, Func<Individual, byte[]> get, Action<Individual, byte[]> set)
+        {
+            List<byte[]> baseStats = individuals.Select(get).ToList();
+            for (int sIdx = 0; sIdx < baseStats[0].Length; sIdx++)
+                baseStats.Randomize(a => a[sIdx], (a, s) => a[sIdx] = s, settingsFields[sIdx].Distribution,
+                    byte.MinValue, byte.MaxValue);
             for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
                 set(individuals[iIdx], baseStats[iIdx]);
         }

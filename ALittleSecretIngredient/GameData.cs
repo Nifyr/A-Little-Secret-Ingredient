@@ -1,5 +1,9 @@
 ﻿using ALittleSecretIngredient.Structs;
 using System.Diagnostics;
+using System.Runtime.InteropServices.JavaScript;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace ALittleSecretIngredient
 {
@@ -36,13 +40,13 @@ namespace ALittleSecretIngredient
 
         internal List<(string id, string name)> AllyBondLevelTables { get; } = new() // InheritableBondLevelTables +
         {
-            ("GGID_リュール", "Alear")
+            ("GGID_リュール", "Emblem Alear")
         };
 
         internal List<(string id, string name)> EnemyBondLevelTables { get; } = new()
         {
             ("GGID_M002_シグルド", "Sigurd (Chapter 2)"), ("GGID_M007_敵ルキナ", "Corrupted Lucina"),
-            ("GGID_M007_敵ルキナ", "Corrupted Lucina"), ("GGID_M008_敵リーフ", "Corrupted Leif (Chapter 8)"),
+            ("GGID_M008_敵リーフ", "Corrupted Leif (Chapter 8)"),
             ("GGID_M010_敵ベレト", "Corrupted Byleth (Chapter 10)"), ("GGID_M010_敵リン", "Corrupted Lyn"),
             ("GGID_M011_敵マルス", "Corrupted Marth (Chapter 11)"), ("GGID_M011_敵シグルド", "Corrupted Sigurd (Chapter 11)"),
             ("GGID_M011_敵セリカ", "Corrupted Celica (Chapter 11)"), ("GGID_M011_敵ミカヤ", "Corrupted Micaiah (Chapter 11)"),
@@ -665,7 +669,7 @@ namespace ALittleSecretIngredient
             ("PID_不明", "Null"), ("PID_ルミエル", "Lumera"),
             ("PID_ソンブル", "Sombron"), ("PID_イヴ", "Éve"),
             ("PID_モリオン", "Morion"), ("PID_ハイアシンス", "Hyacinth"),
-            ("PID_スフォリア", "Seforia"), ("PID_ヴェイル", "Veyle"),
+            ("PID_スフォリア", "Seforia"),
             ("PID_ヴェイル_フード", "Hooded Veyle"), ("PID_ヴェイル_包帯", "Bandaged Veyle"),
             ("PID_ヴェイル_フード_顔出し", "Veyle Face Reveal"), ("PID_ヴェイル_白_悪", "Evil Veyle"),
             ("PID_ヴェイル_黒_悪", "Black Evil Veyle"), ("PID_ヴェイル_黒_善", "Black Veyle"),
@@ -765,12 +769,12 @@ namespace ALittleSecretIngredient
             ("PID_ソルム兵士_マージ4", "Solmic Mage 4"), ("PID_ソルム兵士_アーチャー1", "Solmic Archer 1"),
             ("PID_ソルム兵士_アーチャー2", "Solmic Archer 2"), ("PID_ソルム兵士_アーチャー3", "Solmic Archer 3"),
             ("PID_ソルム兵士_アーチャー4", "Solmic Archer 4"), ("PID_エル_竜化", "Transformed Nel"),
-            ("PID_ラファール_竜化", "Transformed Rafal"), ("PID_ルフレ", "Robin"),
+            ("PID_ラファール_竜化", "Transformed Rafal"), ("PID_ルフレ", "Robin (Character)"),
             ("PID_闇ルフレ", "Corrupted Robin"), 
         };
 
         internal List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
-        internal List<(string id, string name)> NPCBattleCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
+        internal List<(string id, string name)> NPCCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
         #endregion
         #region Class IDs
         internal List<(string id, string name)> UniversalClasses { get; } = new()
@@ -801,7 +805,7 @@ namespace ALittleSecretIngredient
             ("JID_アクスペガサス", "Axe Flier"), ("JID_裏邪竜ノ娘", "Fell Child (Nel)"), ("JID_メリュジーヌ_味方", "Melusine (Zelestia)"),
         };
 
-        internal List<(string id, string name)> NPCExclusiveClasses { get; } = new()
+        internal List<(string id, string name)> MixedNPCExclusiveClasses { get; } = new()
         {
             ("JID_邪竜ノ子", "Fell Child (Past Alear)"), ("JID_蛮族", "Barbarian"), ("JID_村人", "Villager"),
         };
@@ -1183,7 +1187,7 @@ namespace ALittleSecretIngredient
             ("uBody_ExerF1_c000c", "Female Training Wear B"), ("uBody_KimnF_c000", "Female Kimono"),
             ("uBody_CstmF_c000", "Female Sommie Costume A"), ("uBody_CstmF_c699", "Female Sommie Costume B"),
             ("uBody_Cel0AF_c000", "Celica Costume"), ("uBody_Mic0AF_c000", "Micaiah Costume"),
-            ("uRig_Lyn0AF", "Lyn Costume"), ("uBody_Luc0AF_c000", "Lucina Costume"),
+            ("uBody_Lyn0AF_c000", "Lyn Costume"), ("uBody_Luc0AF_c000", "Lucina Costume"),
             ("uBody_Cor0AF_c000", "Corrin Costume"), ("uBody_Eir0AF_c000", "Eirika Costume"),
         };
 
@@ -1192,7 +1196,7 @@ namespace ALittleSecretIngredient
         #region Emblem IDs
         internal List<(string id, string name)> AlearEmblems { get; } = new()
         {
-            ("GID_リュール", "Alear")
+            ("GID_リュール", "Emblem Alear")
         };
 
         internal List<(string id, string name)> LinkableEmblems { get; } = new()
@@ -1214,7 +1218,7 @@ namespace ALittleSecretIngredient
         internal List<(string id, string name)> EnemyEngageableEmblems { get; } = new()
         {
             ("GID_M002_シグルド", "Sigurd (Chapter 2)"), ("GID_M007_敵ルキナ", "Corrupted Lucina"),
-            ("GID_M007_敵ルキナ", "Corrupted Lucina"), ("GID_M008_敵リーフ", "Corrupted Leif (Chapter 8)"),
+            ("GID_M008_敵リーフ", "Corrupted Leif (Chapter 8)"),
             ("GID_M010_敵ベレト", "Corrupted Byleth (Chapter 10)"), ("GID_M010_敵リン", "Corrupted Lyn"),
             ("GID_M011_敵マルス", "Corrupted Marth (Chapter 11)"), ("GID_M011_敵シグルド", "Corrupted Sigurd (Chapter 11)"),
             ("GID_M011_敵セリカ", "Corrupted Celica (Chapter 11)"), ("GID_M011_敵ミカヤ", "Corrupted Micaiah (Chapter 11)"),
@@ -1454,6 +1458,351 @@ namespace ALittleSecretIngredient
             ("IID_セネリオ_レクスカリバー", "Rexcalibur"), ("IID_カミラ_ボルトアクス", "Bolt Axe"), ("IID_カミラ_ライトニング", "Lightning"), ("IID_カミラ_カミラの艶斧", "Camilla's Axe"),
             ("IID_クロム_サンダーソード", "Levin Sword"), ("IID_クロム_トロン", "Thoron"), ("IID_クロム_神剣ファルシオン", "Falchion (Chrom)")
         };
+
+        internal List<(string id, string name)> DSwordWeapons { get; } = new()
+        {
+            ("IID_ほそみの剣", "Slim Sword"), ("IID_鉄の剣", "Iron Sword"), ("IID_フォルクヴァング", "Fólkvangr"), ("IID_チョコレート剣", "Biting Blade"),
+        };
+        
+        internal List<(string id, string name)> CSwordWeapons { get; } = new()
+        {
+            ("IID_鋼の剣", "Steel Sword"), ("IID_アーマーキラー", "Armorslayer"), ("IID_キルソード", "Killing Edge"), ("IID_いかづちの剣", "Levin Sword"),
+            ("IID_鉄の大剣", "Iron Blade"),
+        };
+ 
+        internal List<(string id, string name)> BSwordWeapons { get; } = new()
+        {
+            ("IID_銀の剣", "Silver Sword"), ("IID_倭刀", "Wo Dao"), ("IID_ドラゴンキラー", "Wyrmslayer"), ("IID_鋼の大剣", "Steel Blade"),
+        };
+
+        internal List<(string id, string name)> ASwordWeapons { get; } = new()
+        {
+            ("IID_勇者の剣", "Brave Sword"), ("IID_銀の大剣", "Silver Blade"),
+        };
+
+        internal List<(string id, string name)> SSwordWeapons { get; } = new()
+        {
+            ("IID_クラドホルグ", "Caladbolg"), ("IID_ゲオルギオス", "Georgios"),
+        };
+
+        internal List<(string id, string name)> DLanceWeapons { get; } = new()
+        {
+            ("IID_ほそみの槍", "Slim Lance"), ("IID_鉄の槍", "Iron Lance"), ("IID_手槍", "Javelin"), ("IID_ナイトキラー", "Ridersbane"),
+            ("IID_フェンサリル", "Fensalir"), ("IID_ソフトクリーム槍", "Swirlance"),
+        };
+         
+ 
+        internal List<(string id, string name)> CLanceWeapons { get; } = new()
+        {
+            ("IID_鋼の槍", "Steel Lance"), ("IID_キラーランス", "Killer Lance"), ("IID_ほのおの槍", "Flame Lance"), ("IID_鉄の大槍", "Iron Greatlance"),
+        };
+
+        internal List<(string id, string name)> BLanceWeapons { get; } = new()
+        {
+            ("IID_銀の槍", "Silver Lance"), ("IID_スレンドスピア", "Spear"), ("IID_鋼の大槍", "Steel Greatlance"),
+        };
+
+        internal List<(string id, string name)> ALanceWeapons { get; } = new()
+        {
+            ("IID_勇者の槍", "Brave Lance"), ("IID_銀の大槍", "Silver Greatlance"), ("IID_トライゾン", "Représailles"),
+        };
+
+        internal List<(string id, string name)> SLanceWeapons { get; } = new()
+        {
+            ("IID_ブリューナク", "Brionac"), ("IID_ヴェノマス", "Venomous"),
+        };
+
+        internal List<(string id, string name)> DAxeWeapons { get; } = new()
+        {
+            ("IID_ショートアクス", "Compact Axe"), ("IID_鉄の斧", "Iron Axe"), ("IID_手斧", "Hand Axe"), ("IID_ハンマー", "Hammer"),
+            ("IID_ポールアクス", "Poleaxe"), ("IID_ノーアトゥーン", "Nóatún"), ("IID_ロリポップ斧", "Lollichop"),
+        };
+     
+        internal List<(string id, string name)> CAxeWeapons { get; } = new()
+        {
+            ("IID_鋼の斧", "Steel Axe"), ("IID_キラーアクス", "Killer Axe"), ("IID_鉄の大斧", "Iron Greataxe"),
+        };
+
+        internal List<(string id, string name)> BAxeWeapons { get; } = new()
+        {
+            ("IID_銀の斧", "Silver Axe"), ("IID_トマホーク", "Tomahawk"), ("IID_鋼の大斧", "Steel Greataxe"), ("IID_かぜの大斧", "Hurricane Axe"),
+        };
+
+        internal List<(string id, string name)> AAxeWeapons { get; } = new()
+        {
+            ("IID_勇者の斧", "Brave Axe"), ("IID_銀の大斧", "Silver Greataxe"), ("IID_ルヴァンシュ", "Revanche"), ("IID_ルヴァンシュ_E005", "Revanche (Xenologue 5)"),
+        };
+         
+ 
+        internal List<(string id, string name)> SAxeWeapons { get; } = new()
+        {
+            ("IID_フラガラッハ", "Fragarach"), ("IID_ウコンバサラ", "Ukonvasara"),
+        };
+
+        internal List<(string id, string name)> DBowWeapons { get; } = new()
+        {
+            ("IID_ショートボウ", "Mini Bow"), ("IID_鉄の弓", "Iron Bow"), ("IID_クロワッサン弓", "Croissbow"),
+        };
+ 
+        internal List<(string id, string name)> CBowWeapons { get; } = new()
+        {
+            ("IID_鋼の弓", "Steel Bow"), ("IID_長弓", "Longbow"), ("IID_キラーボウ", "Killer Bow"), ("IID_光の弓", "Radiant Bow"),
+        };
+ 
+        internal List<(string id, string name)> BBowWeapons { get; } = new()
+        {
+            ("IID_銀の弓", "Silver Bow"),
+        };
+
+        internal List<(string id, string name)> ABowWeapons { get; } = new()
+        {
+            ("IID_勇者の弓", "Brave Bow"),
+        };
+
+        internal List<(string id, string name)> SBowWeapons { get; } = new()
+        {
+            ("IID_レンダウィル", "Lendabair"),
+        };
+
+        internal List<(string id, string name)> DDaggerWeapons { get; } = new()
+        {
+            ("IID_ショートナイフ", "Short Knife"), ("IID_鉄のナイフ", "Iron Dagger"), ("IID_おだんご短剣", "Confectioknife"),
+        };
+ 
+        internal List<(string id, string name)> CDaggerWeapons { get; } = new()
+        {
+            ("IID_鋼のナイフ", "Steel Dagger"), ("IID_カルド", "Kard"),
+        };
+
+        internal List<(string id, string name)> BDaggerWeapons { get; } = new()
+        {
+            ("IID_銀のナイフ", "Silver Dagger"), ("IID_スティレット", "Stiletto"),
+        };
+
+        internal List<(string id, string name)> ADaggerWeapons { get; } = new()
+        {
+            ("IID_ペシュカド", "Peshkatz"),
+        };
+
+        internal List<(string id, string name)> SDaggerWeapons { get; } = new()
+        {
+            ("IID_シンクエディア", "Cinquedea"), ("IID_カルンウェナン", "Carnwenhan"),
+        };
+ 
+        internal List<(string id, string name)> DTomeWeapons { get; } = new()
+        {
+            ("IID_サージ", "Surge"), ("IID_ファイアー", "Fire"), ("IID_サンダー", "Thunder"), ("IID_ティラミス魔道書", "Tiramistorm"),
+        };
+ 
+        internal List<(string id, string name)> CTomeWeapons { get; } = new()
+        {
+            ("IID_ウィンド", "Wind"), ("IID_エルサージ", "Elsurge"), ("IID_エルファイアー", "Elfire"),
+        };
+ 
+        internal List<(string id, string name)> BTomeWeapons { get; } = new()
+        {
+            ("IID_エルサンダー", "Elthunder"), ("IID_エルウィンド", "Elwind"),
+        };
+ 
+        internal List<(string id, string name)> ATomeWeapons { get; } = new()
+        {
+            ("IID_ボルガノン", "Bolganone"), ("IID_トロン", "Thoron"), ("IID_エクスカリバー", "Excalibur"),
+        };
+ 
+        internal List<(string id, string name)> STomeWeapons { get; } = new()
+        {
+            ("IID_ノヴァ", "Nova"),
+        };
+
+        internal List<(string id, string name)> DStaves { get; } = new()
+        {
+            ("IID_ライブ", "Heal"), ("IID_リライブ", "Mend"), ("IID_トーチ", "Illume"), ("IID_アイスロック", "Obstruct"),
+            ("IID_カップケーキ杖", "Treat"),
+        };
+ 
+        internal List<(string id, string name)> CStaves { get; } = new()
+        {
+            ("IID_リブロー", "Physic"), ("IID_リブロー_G004", "Physic (Soren Paralogue)"), ("IID_レスト", "Restore"), ("IID_リワープ", "Rewarp"),
+            ("IID_フリーズ", "Freeze"), ("IID_サイレス", "Silence"),
+        };
+
+        internal List<(string id, string name)> BStaves { get; } = new()
+        {
+            ("IID_リカバー", "Recover"), ("IID_ワープ", "Warp"), ("IID_レスキュー", "Rescue"), ("IID_コラプス", "Fracture"),
+        };
+
+        internal List<(string id, string name)> AStaves { get; } = new()
+        {
+            ("IID_リザーブ", "Fortify"), ("IID_ドロー", "Entrap"),
+        };
+
+        internal List<(string id, string name)> SStaves { get; } = new()
+        {
+            ("IID_ノードゥス", "Nodus"),
+        };
+
+        internal List<(string id, string name)> DArtWeapons { get; } = new()
+        {
+            ("IID_初心の法", "Initiate Art"), ("IID_鉄身の法", "Iron-Body Art"), ("IID_ロールケーキ体術", "Scrollcake"),
+        };
+                
+       
+        internal List<(string id, string name)> CArtWeapons { get; } = new()
+        {
+            ("IID_鋼身の法", "Steel-Hand Art"), ("IID_護身の法", "Shielding Art"),
+        };
+
+        internal List<(string id, string name)> BArtWeapons { get; } = new()
+        {
+            ("IID_銀身の法", "Silver-Spirit Art"),
+        };
+
+        internal List<(string id, string name)> AArtWeapons { get; } = new()
+        {
+            ("IID_閃進の法", "Flashing Fist Art"),
+        };
+
+        internal List<(string id, string name)> SArtWeapons { get; } = new()
+        {
+            ("IID_覇神の法", "Divine Fist Art"),
+        };
+
+        internal List<(string id, string name)> LiberationWeapons { get; } = new()
+        {
+            ("IID_リベラシオン", "Libération"), ("IID_リベラシオン改", "Libération (Xenologue 6)"), ("IID_リベラシオン改_ノーマル", "Libération (Xenologue 6 Normal)"),
+        };
+
+        internal List<(string id, string name)> WilleGlanzWeapons { get; } = new()
+        {
+            ("IID_ヴィレグランツ", "Wille Glanz"),
+        };
+
+        internal List<(string id, string name)> MisericordeWeapons { get; } = new()
+        {
+            ("IID_ミセリコルデ", "Misericorde"),
+        };
+
+        internal List<(string id, string name)> ObscuriteWeapons { get; } = new()
+        {
+            ("IID_オヴスキュリテ", "Obscurité"),
+        };
+
+        internal List<(string id, string name)> DragonStones { get; } = new()
+        {
+            ("IID_邪竜石", "Fell Stone"), ("IID_真邪竜石", "Fell Ruinstone"), ("IID_邪竜石_魔法攻撃", "Fell Magicstone"), ("IID_邪竜石_騎馬特効", "Fell Slaystone"),
+            ("IID_邪竜石_飛行特効", "Fell Weightstone"), ("IID_邪竜石_E", "Fell Spark"), ("IID_邪竜石_E005", "Fell Spark (Xenologue 5)"), ("IID_邪竜石_魔法攻撃_E", "Fell Arcana"),
+        };
+
+        internal List<(string id, string name)> Cannonballs { get; } = new()
+        {
+            ("IID_弾_物理", "Standard Blast"), ("IID_弾_魔法", "Magic Blast"), ("IID_弾_フリーズ", "Freeze Blast"), ("IID_弾_サイレス", "Silence Blast"),
+            ("IID_弾_ブレイク", "Break Blast"), ("IID_弾_毒", "Venom Blast"), ("IID_弾_飛行特効", "Tornado Blast"), ("IID_弾_重装特効", "Armor Blast"),
+            ("IID_弾_騎馬特効", "Rider Blast"), ("IID_弾_竜特効", "Wyrm Blast"), ("IID_弾_異形特効", "Holy Blast"), ("IID_弾_物理_強", "Mighty Blast"),
+            ("IID_弾_魔法_強", "Eldritch Blast"), ("IID_弾_防御無視", "Piercing Blast"),
+        };
+
+        internal List<(string id, string name)> NormalEngageSwordWeapons { get; } = new()
+        {
+            ("IID_マルス_レイピア_通常", "Rapier (Marth)"), ("IID_マルス_メリクルソード_通常", "Mercurius"), ("IID_マルス_ファルシオン_通常", "Falchion (Marth)"), ("IID_シグルド_ティルフィング_通常", "Tyrfing"),
+            ("IID_ロイ_ランスバスター_通常", "Lancereaver"), ("IID_ロイ_ドラゴンキラー_通常", "Wyrmslayer (Roy)"), ("IID_ロイ_封印の剣_通常", "Binding Blade"), ("IID_リーフ_ひかりの剣_通常", "Light Brand"),
+            ("IID_ルキナ_ノーブルレイピア_通常", "Noble Rapier"), ("IID_ルキナ_裏剣ファルシオン_通常", "Parallel Falchion"), ("IID_リン_マーニ・カティ_通常", "Mani Katti"), ("IID_アイク_ラグネル_通常", "Ragnell"),
+            ("IID_ベレト_ブルトガング_通常", "Blutgang"), ("IID_ベレト_天帝の覇剣_通常", "Sword of the Creator"), ("IID_カムイ_逆刀_通常", "Dual Katana"), ("IID_カムイ_飛刀_通常", "Wakizashi"),
+            ("IID_カムイ_夜刀神_通常", "Yato"), ("IID_エイリーク_レイピア_通常", "Rapier (Eirika)"), ("IID_エイリーク_かぜの剣_通常", "Wind Sword"), ("IID_エイリーク_ジークリンデ_通常", "Sieglinde"),
+            ("IID_リュール_オリゴルディア_通常", "Oligoludia"), ("IID_リュール_ライラシオン_通常", "Lyrátion"), ("IID_ヘクトル_ルーンソード_通常", "Runesword"), ("IID_ヘクトル_ルーンソード_通常_G002_最弱", "Runesword A (Hector Paralogue)"),
+            ("IID_ヘクトル_ルーンソード_通常_G002_弱", "Runesword B (Hector Paralogue)"), ("IID_ヘクトル_ルーンソード_通常_G002_強", "Runesword C (Hector Paralogue)"), ("IID_ヘクトル_ルーンソード_通常_G002_最強", "Runesword D (Hector Paralogue)"), ("IID_クロム_サンダーソード_通常", "Levin Sword (Chrom)"),
+            ("IID_クロム_サンダーソード_通常_G005_弱", "Levin Sword A (Chrom Paralogue)"), ("IID_クロム_サンダーソード_通常_G005_最弱", "Levin Sword B (Chrom Paralogue)"), ("IID_クロム_神剣ファルシオン_通常", "Falchion (Chrom)"), ("IID_クロム_神剣ファルシオン_通常_G006_微弱", "Falchion A (Chrom Paralogue)"),
+            ("IID_クロム_神剣ファルシオン_通常_G006_弱", "Falchion B (Chrom Paralogue)"), ("IID_クロム_神剣ファルシオン_通常_G006_最弱", "Falchion C (Chrom Paralogue)"), ("IID_リーフ_ひかりの剣＋_通常", "Light Brand+"), ("IID_リーフ_ひかりの剣＋＋_通常", "Light Brand++"),
+            ("IID_ルキナ_裏剣ファルシオン＋_通常", "Parallel Falchion+"), ("IID_リン_マーニ・カティ＋_通常", "Mani Katti+"), ("IID_リン_マーニ・カティ＋＋_通常", "Mani Katti++"), ("IID_ベレト_ブルトガング＋_通常", "Blutgang+"),
+            ("IID_ヘクトル_ルーンソード＋_通常", "Runesword+"), ("IID_クロム_サンダーソード＋_通常", "Levin Sword+ (Chrom)"),
+        };
+
+        internal List<(string id, string name)> NormalEngageLanceWeapons { get; } = new()
+        {
+            ("IID_シグルド_ナイトキラー_通常", "Ridersbane (Sigurd)"), ("IID_シグルド_ゆうしゃのやり_通常", "Brave Lance (Sigurd)"), ("IID_リーフ_マスターランス_通常", "Master Lance"), ("IID_三級長_アラドヴァル_通常", "Areadbhar"),
+            ("IID_シグルド_ゆうしゃのやり＋_通常", "Brave Lance+ (Sigurd)"), ("IID_リーフ_マスターランス＋_通常", "Master Lance+"), ("IID_リーフ_マスターランス＋＋_通常", "Master Lance++"),
+        };
+
+        internal List<(string id, string name)> NormalEngageAxeWeapons { get; } = new()
+        {
+            ("IID_リーフ_キラーアクス_通常", "Killer Axe (Leif)"), ("IID_アイク_ハンマー_通常", "Hammer (Ike)"), ("IID_アイク_ウルヴァン_通常", "Urvan"), ("IID_三級長_アイムール_通常", "Aymr"),
+            ("IID_ヘクトル_ヴォルフバイル_通常", "Wolf Beil"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_低命中", "Wolf Beil A (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_最弱_低命中", "Wolf Beil B (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_最弱", "Wolf Beil C (Hector Paralogue)"),
+            ("IID_ヘクトル_ヴォルフバイル_通常_G002_弱_低命中", "Wolf Beil D (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_弱", "Wolf Beil E (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_強", "Wolf Beil F (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_最強", "Wolf Beil G (Hector Paralogue)"),
+            ("IID_ヘクトル_アルマーズ_通常", "Armads"), ("IID_ヘクトル_アルマーズ_通常_G002_最弱_低命中", "Armads A (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_最弱", "Armads B (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_弱_低命中", "Armads C (Hector Paralogue)"),
+            ("IID_ヘクトル_アルマーズ_通常_G002_弱", "Armads D (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_微弱_低命中", "Armads E (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_微弱", "Armads F (Hector Paralogue)"), ("IID_カミラ_ボルトアクス_通常", "Bolt Axe"),
+            ("IID_カミラ_ボルトアクス_通常", "Bolt Axe A (Camilla Paralogue)"), ("IID_カミラ_ボルトアクス_通常_G005", "Bolt Axe B (Camilla Paralogue)"), ("IID_カミラ_ボルトアクス_通常_G005_弱", "Bolt Axe C (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常", "Camilla's Axe"),
+            ("IID_カミラ_カミラの艶斧_通常_G005_微弱", "Camilla's Axe A (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常_G005_弱", "Camilla's Axe B (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常_G005_最弱", "Camilla's Axe C (Camilla Paralogue)"), ("IID_リーフ_キラーアクス＋_通常", "Killer Axe+ (Leif)"),
+            ("IID_リーフ_キラーアクス＋＋_通常", "Killer Axe++ (Leif)"), ("IID_ヘクトル_ヴォルフバイル＋_通常", "Wolf Beil+"),
+        };
+
+        internal List<(string id, string name)> NormalEngageBowWeapons { get; } = new()
+        {
+            ("IID_ルキナ_パルティア_通常", "Parthia"), ("IID_リン_キラーボウ_通常", "Killer Bow (Lyn)"), ("IID_リン_ミュルグレ_通常", "Mulagir"), ("IID_三級長_フェイルノート_通常", "Failnaught"),
+            ("IID_リン_キラーボウ＋_通常", "Killer Bow+ (Lyn)"), ("IID_リン_キラーボウ＋＋_通常", "Killer Bow++ (Lyn)"),
+        };
+
+        internal List<(string id, string name)> NormalEngageDaggerWeapons { get; } = new()
+        {
+
+        };
+
+        internal List<(string id, string name)> NormalEngageTomeWeapons { get; } = new()
+        {
+            ("IID_セリカ_エンジェル_通常", "Seraphim"), ("IID_セリカ_ライナロック_通常", "Ragnarok"), ("IID_ミカヤ_シャイン_通常", "Shine"), ("IID_ミカヤ_リザイア_通常", "Nosferatu"),
+            ("IID_ミカヤ_セイニー_通常", "Thani"), ("IID_ヴェロニカ_フリズスキャルヴ_通常", "Hliðskjálf"), ("IID_ヴェロニカ_フリズスキャルヴ_通常_G003_最弱", "Hliðskjálf A (Veronica Paralogue)"), ("IID_ヴェロニカ_フリズスキャルヴ_通常_G003_弱", "Hliðskjálf B (Veronica Paralogue)"),
+            ("IID_ヴェロニカ_フリズスキャルヴ_通常_G003_微弱", "Hliðskjálf C (Veronica Paralogue)"), ("IID_ヴェロニカ_フリズスキャルヴ_通常_G003_強", "Hliðskjálf D (Veronica Paralogue)"), ("IID_ヴェロニカ_エリヴァーガル_通常", "Élivágar"), ("IID_ヴェロニカ_エリヴァーガル_通常_G003_最弱", "Élivágar A (Veronica Paralogue)"),
+            ("IID_ヴェロニカ_エリヴァーガル_通常_G003_弱", "Élivágar B (Veronica Paralogue)"), ("IID_ヴェロニカ_エリヴァーガル_通常_G003_微弱", "Élivágar C (Veronica Paralogue)"), ("IID_ヴェロニカ_エリヴァーガル_通常_G003_微強", "Élivágar D (Veronica Paralogue)"), ("IID_ヴェロニカ_エリヴァーガル_通常_G003_強", "Élivágar E (Veronica Paralogue)"),
+            ("IID_セネリオ_サンダーストーム_通常", "Bolting"), ("IID_セネリオ_サンダーストーム_通常_G004_弱", "Bolting A (Soren Paralogue)"), ("IID_セネリオ_サンダーストーム_通常_G004_最弱", "Bolting B (Soren Paralogue)"), ("IID_セネリオ_レクスカリバー_通常", "Rexcalibur"),
+            ("IID_セネリオ_レクスカリバー_通常_G004_微弱", "Rexcalibur A (Soren Paralogue)"), ("IID_セネリオ_レクスカリバー_通常_G004_弱", "Rexcalibur B (Soren Paralogue)"), ("IID_セネリオ_レクスカリバー_通常_G004_最弱", "Rexcalibur C (Soren Paralogue)"), ("IID_カミラ_ライトニング_通常", "Lightning"),
+            ("IID_カミラ_ライトニング_通常_G005_弱", "Lightning (Camilla Paralogue)"), ("IID_クロム_トロン_通常", "Thoron (Chrom)"), ("IID_クロム_トロン_通常_G006_微弱", "Thoron A (Chrom Paralogue)"), ("IID_クロム_トロン_通常_G006_弱", "Thoron B (Chrom Paralogue)"),
+            ("IID_クロム_トロン_通常_G006_最弱", "Thoron C (Chrom Paralogue)"), ("IID_カミラ_ライトニング＋_通常", "Lightning+"), ("IID_クロム_トロン＋_通常", "Thoron+ (Chrom)"),
+        };
+
+        internal List<(string id, string name)> NormalEngageStaves { get; } = new()
+        {
+            ("IID_セリカ_リカバー_通常", "Recover (Celica)"), ("IID_ヴェロニカ_リザーブ＋_通常", "Fortify+"), ("IID_セネリオ_マジックシールド_通常", "Reflect"),
+        };
+
+        internal List<(string id, string name)> NormalEngageArtWeapons { get; } = new()
+        {
+            ("IID_ベレト_ヴァジュラ_通常", "Vajra-Mushti"), ("IID_リュール_竜神の法_通常", "Dragon's Fist"), ("IID_ベレト_ヴァジュラ＋_通常", "Vajra-Mushti+"),
+        };
+
+        internal List<(string id, string name)> NormalEngageSpecialWeapons { get; } = new()
+        {
+            ("IID_チキ_つめ_通常", "Eternal Claw"), ("IID_チキ_つめ_通常_G001_最弱", "Eternal Claw A (Tiki Paralogue)"), ("IID_チキ_つめ_通常_G001_弱", "Eternal Claw B (Tiki Paralogue)"), ("IID_チキ_つめ_通常_G001_微弱", "Eternal Claw C (Tiki Paralogue)"),
+            ("IID_チキ_つめ_通常_G001_強", "Eternal Claw D (Tiki Paralogue)"), ("IID_チキ_つめ_通常_G001_最強", "Eternal Claw E (Tiki Paralogue)"), ("IID_チキ_しっぽ_通常", "Tail Smash"), ("IID_チキ_しっぽ_通常_G001_最弱", "Tail Smash A (Tiki Paralogue)"),
+            ("IID_チキ_しっぽ_通常_G001_弱", "Tail Smash B (Tiki Paralogue)"), ("IID_チキ_しっぽ_通常_G001_微強", "Tail Smash C (Tiki Paralogue)"), ("IID_チキ_しっぽ_通常_G001_強", "Tail Smash D (Tiki Paralogue)"), ("IID_チキ_しっぽ_通常_G001_最強", "Tail Smash E (Tiki Paralogue)"),
+            ("IID_チキ_ブレス_通常", "Fog Breath"), ("IID_チキ_ブレス_通常_G001_最弱", "Fog Breath A (Tiki Paralogue)"), ("IID_チキ_ブレス_通常_G001_弱", "Fog Breath B (Tiki Paralogue)"), ("IID_チキ_ブレス_通常_G001_強", "Fog Breath C (Tiki Paralogue)"),
+            ("IID_チキ_ブレス_通常_G001_最強", "Fog Breath D (Tiki Paralogue)"),
+        };
+
+        internal List<(string id, string name)> NormalWeapons { get; } = new();
+
+        internal List<(string id, string name)> BattleItems { get; } = new()
+        {
+            ("IID_傷薬", "Vulnerary"), ("IID_毒消し", "Antitoxin"), ("IID_特効薬", "Elixir"), ("IID_聖水", "Pure Water"),
+            ("IID_たいまつ", "Torch"), ("IID_天使の衣", "Seraph Robe"), ("IID_力のしずく", "Energy Drop"), ("IID_精霊の粉", "Spirit Dust"),
+            ("IID_秘伝の書", "Secret Book"), ("IID_はやての羽", "Speedwing"), ("IID_女神の像", "Goddess Icon"), ("IID_竜の盾", "Dracoshield"),
+            ("IID_魔よけ", "Talisman"), ("IID_ブーツ", "Boots"), ("IID_スキルの書・守", "Novice Book"), ("IID_スキルの書・破", "Adept Book"),
+            ("IID_スキルの書・離", "Expert Book"), ("IID_HPの薬", "HP Tonic"), ("IID_力の薬", "Strength Tonic"), ("IID_技の薬", "Dexterity Tonic"),
+            ("IID_速さの薬", "Speed Tonic"), ("IID_幸運の薬", "Luck Tonic"), ("IID_守備の薬", "Defense Tonic"), ("IID_魔力の薬", "Magic Tonic"),
+            ("IID_魔防の薬", "Resistance Tonic"), ("IID_マスタープルフ", "Master Seal"), ("IID_チェンジプルフ", "Second Seal"), ("IID_エンチャント専用プルフ", "Mystic Satchel"),
+            ("IID_マージカノン専用プルフ", "Mage Cannon"),
+        };
+
+        internal List<(string id, string name)> AllItems { get; } = new();
+
+        internal enum Proficiency
+        {
+            None, Sword, Lance, Axe, Bow, Dagger, Tome, Staff, Arts, Special
+        }
+
+        internal enum ProficiencyLevel
+        {
+            N, Np, D, Dp, C, Cp, B, Bp, A, Ap, S 
+        }
+
+        internal Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponTypeLookup = new();
         #endregion
         #region Ride Dress Model IDs
         internal List<(string id, string name)> HorseRideDressModels { get; } = new()
@@ -2166,9 +2515,9 @@ namespace ALittleSecretIngredient
             new("Rodine", "PID_M004_イルシオン兵_ボス", new() { }, Gender.Male,
                 "811Boss", false, "MPID_M004_Boss", "Face_DarkEmblem", null, Color.FromArgb(201, 183, 159), null),
             new("Sean", "PID_S001_ジャン_父親", new() { }, Gender.Male,
-                "800VillagerMB", false, "MPID_JeanFather", "Face_DarkEmblem", null, Color.FromArgb(92, 95, 109), null),
+                "", false, "MPID_JeanFather", "Face_DarkEmblem", null, Color.FromArgb(92, 95, 109), null),
             new("Anje", "PID_S001_ジャン_母親", new() { }, Gender.Female,
-                "850VillagerFB", false, "MPID_JeanMother", "Face_DarkEmblem", null, Color.FromArgb(79, 68, 100), null),
+                "", false, "MPID_JeanMother", "Face_DarkEmblem", null, Color.FromArgb(79, 68, 100), null),
             new("Nelucce", "PID_M005_Irc_ボス", new() { }, Gender.Male,
                 "812Boss", false, "MPID_M005_Boss", "Face_DarkEmblem", null, Color.FromArgb(255, 255, 255), null),
             new("Teronda", "PID_M006_ボス", new() { }, Gender.Male,
@@ -2184,13 +2533,13 @@ namespace ALittleSecretIngredient
             new("Past Alear", "JID_邪竜ノ子", new() { "PID_M024_リュール" }, Gender.Both,
                 "002Lueur", false, "MPID_PastLueur", "Face_Lueur", "Lueur", Color.FromArgb(97, 184, 231), null),
             new("Durthon", "PID_武器屋", new() { }, Gender.Male,
-                "800VillagerMB", false, "MPID_WeaponShop", "Face_DarkEmblem", null, Color.FromArgb(0, 0, 0), null),
+                "", false, "MPID_WeaponShop", "Face_DarkEmblem", null, Color.FromArgb(0, 0, 0), null),
             new("Anisse", "PID_道具屋", new() { }, Gender.Female,
-                "850VillagerFB", false, "MPID_ItemShop", "Face_DarkEmblem", null, Color.FromArgb(35, 42, 63), null),
+                "", false, "MPID_ItemShop", "Face_DarkEmblem", null, Color.FromArgb(35, 42, 63), null),
             new("Pinet", "PID_アクセ屋", new() { }, Gender.Male,
-                "800VillagerMB", false, "MPID_AccessoriesShop", "Face_DarkEmblem", null, Color.FromArgb(192, 117, 114), null),
+                "", false, "MPID_AccessoriesShop", "Face_DarkEmblem", null, Color.FromArgb(192, 117, 114), null),
             new("Calney", "PID_錬成屋", new() { }, Gender.Female,
-                "850VillagerFB", false, "MPID_BlackSmith", "Face_DarkEmblem", null, Color.FromArgb(197, 179, 141), null)
+                "", false, "MPID_BlackSmith", "Face_DarkEmblem", null, Color.FromArgb(197, 179, 141), null),
         };
 
         internal List<AssetShuffleEntity> AllyEmblemAssetShuffleData { get; } = new()
@@ -2339,13 +2688,13 @@ namespace ALittleSecretIngredient
             Characters.AddRange(AllyCharacters);
             Characters.AddRange(EnemyCharacters);
             Characters.AddRange(OtherNPCCharacters);
-            NPCBattleCharacters.AddRange(AllyNPCCharacters);
-            NPCBattleCharacters.AddRange(EnemyCharacters);
+            NPCCharacters.AddRange(AllyNPCCharacters);
+            NPCCharacters.AddRange(EnemyCharacters);
             PlayableClasses.AddRange(UniversalClasses);
             PlayableClasses.AddRange(MaleExclusiveClasses);
             PlayableClasses.AddRange(FemaleExclusiveClasses);
             GeneralClasses.AddRange(PlayableClasses);
-            GeneralClasses.AddRange(NPCExclusiveClasses);
+            GeneralClasses.AddRange(MixedNPCExclusiveClasses);
             GeneralClasses.AddRange(MaleNPCExclusiveClasses);
             GeneralClasses.AddRange(FemaleNPCExclusiveClasses);
             AllDressModels.AddRange(MaleClassDressModels);
@@ -2372,6 +2721,64 @@ namespace ALittleSecretIngredient
             SyncableEmblems.AddRange(AllyArenaSyncableEmblems);
             SyncableEmblems.AddRange(EnemySyncableEmblems);
             Emblems.AddRange(SyncableEmblems);
+            NormalWeapons.AddRange(DSwordWeapons);
+            NormalWeapons.AddRange(CSwordWeapons);
+            NormalWeapons.AddRange(BSwordWeapons);
+            NormalWeapons.AddRange(ASwordWeapons);
+            NormalWeapons.AddRange(SSwordWeapons);
+            NormalWeapons.AddRange(DLanceWeapons);
+            NormalWeapons.AddRange(CLanceWeapons);
+            NormalWeapons.AddRange(BLanceWeapons);
+            NormalWeapons.AddRange(ALanceWeapons);
+            NormalWeapons.AddRange(SLanceWeapons);
+            NormalWeapons.AddRange(DAxeWeapons);
+            NormalWeapons.AddRange(CAxeWeapons);
+            NormalWeapons.AddRange(BAxeWeapons);
+            NormalWeapons.AddRange(AAxeWeapons);
+            NormalWeapons.AddRange(SAxeWeapons);
+            NormalWeapons.AddRange(DBowWeapons);
+            NormalWeapons.AddRange(CBowWeapons);
+            NormalWeapons.AddRange(BBowWeapons);
+            NormalWeapons.AddRange(ABowWeapons);
+            NormalWeapons.AddRange(SBowWeapons);
+            NormalWeapons.AddRange(DDaggerWeapons);
+            NormalWeapons.AddRange(CDaggerWeapons);
+            NormalWeapons.AddRange(BDaggerWeapons);
+            NormalWeapons.AddRange(ADaggerWeapons);
+            NormalWeapons.AddRange(SDaggerWeapons);
+            NormalWeapons.AddRange(DTomeWeapons);
+            NormalWeapons.AddRange(CTomeWeapons);
+            NormalWeapons.AddRange(BTomeWeapons);
+            NormalWeapons.AddRange(ATomeWeapons);
+            NormalWeapons.AddRange(STomeWeapons);
+            NormalWeapons.AddRange(DStaves);
+            NormalWeapons.AddRange(CStaves);
+            NormalWeapons.AddRange(BStaves);
+            NormalWeapons.AddRange(AStaves);
+            NormalWeapons.AddRange(SStaves);
+            NormalWeapons.AddRange(DArtWeapons);
+            NormalWeapons.AddRange(CArtWeapons);
+            NormalWeapons.AddRange(BArtWeapons);
+            NormalWeapons.AddRange(AArtWeapons);
+            NormalWeapons.AddRange(SArtWeapons);
+            NormalWeapons.AddRange(LiberationWeapons);
+            NormalWeapons.AddRange(WilleGlanzWeapons);
+            NormalWeapons.AddRange(MisericordeWeapons);
+            NormalWeapons.AddRange(ObscuriteWeapons);
+            NormalWeapons.AddRange(DragonStones);
+            NormalWeapons.AddRange(Cannonballs);
+            NormalWeapons.AddRange(NormalEngageSwordWeapons);
+            NormalWeapons.AddRange(NormalEngageLanceWeapons);
+            NormalWeapons.AddRange(NormalEngageAxeWeapons);
+            NormalWeapons.AddRange(NormalEngageBowWeapons);
+            NormalWeapons.AddRange(NormalEngageDaggerWeapons);
+            NormalWeapons.AddRange(NormalEngageTomeWeapons);
+            NormalWeapons.AddRange(NormalEngageStaves);
+            NormalWeapons.AddRange(NormalEngageArtWeapons);
+            NormalWeapons.AddRange(NormalEngageSpecialWeapons);
+            AllItems.AddRange(NormalWeapons);
+            AllItems.AddRange(BattleItems);
+            AllItems.AddRange(EngageWeapons);
             CompatibleAsEngageAttacks.AddRange(TriggerAttackSkills);
             GeneralSkills.AddRange(TriggerAttackSkills);
             VisibleSkills.AddRange(GeneralSkills);
@@ -2386,6 +2793,16 @@ namespace ALittleSecretIngredient
             SyncStatSkills.AddRange(SyncBldSkills);
             SyncStatSkills.AddRange(SyncMovSkills);
 
+            WeaponTypeLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
+            WeaponTypeLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
+            WeaponTypeLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
+            WeaponTypeLookup.Add(Proficiency.Axe, new() { DAxeWeapons, CAxeWeapons, BAxeWeapons, AAxeWeapons, SAxeWeapons, NormalEngageAxeWeapons });
+            WeaponTypeLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
+            WeaponTypeLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
+            WeaponTypeLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons, ATomeWeapons, STomeWeapons, NormalEngageTomeWeapons });
+            WeaponTypeLookup.Add(Proficiency.Staff, new() { DStaves, CStaves, BStaves, AStaves, SStaves, NormalEngageStaves });
+            WeaponTypeLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
+            WeaponTypeLookup.Add(Proficiency.Special, new() { new(), new(), new(), new(), new(), NormalEngageSpecialWeapons });
             SyncStatLookup.Add(SyncHPSkills.GetIDs());
             SyncStatLookup.Add(SyncStrSkills.GetIDs());
             SyncStatLookup.Add(SyncDexSkills.GetIDs());
@@ -2554,6 +2971,18 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.LimitPhys, DataSetEnum.Individual },
             { RandomizerDistribution.LimitSight, DataSetEnum.Individual },
             { RandomizerDistribution.LimitMove, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowHp, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowStr, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowTech, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowQuick, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowLuck, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowDef, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowMagic, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowMdef, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowPhys, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowSight, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowMove, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowTotal, DataSetEnum.Individual },
         };
     }
 

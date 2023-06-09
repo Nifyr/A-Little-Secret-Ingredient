@@ -233,6 +233,7 @@ namespace ALittleSecretIngredient.Forms
 
                 rs.Individual.JidAlly = new(Individual.checkBox22.Checked, Individual.JidAlly.Get(), new object[] { Individual.checkBox23.Checked });
                 rs.Individual.JidEnemy = new(Individual.checkBox24.Checked, Individual.JidEnemy.Get(), new object[] { Individual.checkBox26.Checked });
+                rs.Individual.ForceUsableWeapon = Individual.checkBox30.Checked;
                 rs.Individual.Age = new(Individual.checkBox20.Checked, Individual.Age.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeBirthday = Individual.checkBox1.Checked;
                 rs.Individual.LevelAlly = new(Individual.checkBox2.Checked, Individual.LevelAlly.Get(), Array.Empty<object>());
@@ -310,6 +311,20 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.LimitPhys = new(false, Individual.LimitPhys.Get(), Array.Empty<object>());
                 rs.Individual.LimitSight = new(false, Individual.LimitSight.Get(), Array.Empty<object>());
                 rs.Individual.LimitMove = new(false, Individual.LimitMove.Get(), Array.Empty<object>());
+                rs.Individual.RandomizeAllyStatGrowths = Individual.checkBox28.Checked;
+                rs.Individual.GrowHp = new(false, Individual.GrowHp.Get(), Array.Empty<object>());
+                rs.Individual.GrowStr = new(false, Individual.GrowStr.Get(), Array.Empty<object>());
+                rs.Individual.GrowTech = new(false, Individual.GrowTech.Get(), Array.Empty<object>());
+                rs.Individual.GrowQuick = new(false, Individual.GrowQuick.Get(), Array.Empty<object>());
+                rs.Individual.GrowLuck = new(false, Individual.GrowLuck.Get(), Array.Empty<object>());
+                rs.Individual.GrowDef = new(false, Individual.GrowDef.Get(), Array.Empty<object>());
+                rs.Individual.GrowMagic = new(false, Individual.GrowMagic.Get(), Array.Empty<object>());
+                rs.Individual.GrowMdef = new(false, Individual.GrowMdef.Get(), Array.Empty<object>());
+                rs.Individual.GrowPhys = new(false, Individual.GrowPhys.Get(), Array.Empty<object>());
+                rs.Individual.GrowSight = new(false, Individual.GrowSight.Get(), Array.Empty<object>());
+                rs.Individual.GrowMove = new(false, Individual.GrowMove.Get(), Array.Empty<object>());
+                rs.Individual.GrowTotal = new(Individual.checkBox27.Checked, Individual.GrowTotal.Get(), Array.Empty<object>());
+                rs.Individual.RandomizeEnemyStatGrowths = Individual.checkBox29.Checked;
 
                 return rs;
             }
@@ -465,6 +480,7 @@ namespace ALittleSecretIngredient.Forms
                 Individual.JidEnemy.Set(value.Individual.JidEnemy.Distribution);
                 Individual.checkBox26.Checked = value.Individual.JidEnemy.GetArg<bool>(0);
                 Individual.checkBox20.Checked = value.Individual.Age.Enabled;
+                Individual.checkBox30.Checked = value.Individual.ForceUsableWeapon;
                 Individual.Age.Set(value.Individual.Age.Distribution);
                 Individual.checkBox1.Checked = value.Individual.RandomizeBirthday;
                 Individual.checkBox2.Checked = value.Individual.LevelAlly.Enabled;
@@ -555,6 +571,21 @@ namespace ALittleSecretIngredient.Forms
                 Individual.LimitPhys.Set(value.Individual.LimitPhys.Distribution);
                 Individual.LimitSight.Set(value.Individual.LimitSight.Distribution);
                 Individual.LimitMove.Set(value.Individual.LimitMove.Distribution);
+                Individual.checkBox28.Checked = value.Individual.RandomizeAllyStatGrowths;
+                Individual.GrowHp.Set(value.Individual.GrowHp.Distribution);
+                Individual.GrowStr.Set(value.Individual.GrowStr.Distribution);
+                Individual.GrowTech.Set(value.Individual.GrowTech.Distribution);
+                Individual.GrowQuick.Set(value.Individual.GrowQuick.Distribution);
+                Individual.GrowLuck.Set(value.Individual.GrowLuck.Distribution);
+                Individual.GrowDef.Set(value.Individual.GrowDef.Distribution);
+                Individual.GrowMagic.Set(value.Individual.GrowMagic.Distribution);
+                Individual.GrowMdef.Set(value.Individual.GrowMdef.Distribution);
+                Individual.GrowPhys.Set(value.Individual.GrowPhys.Distribution);
+                Individual.GrowSight.Set(value.Individual.GrowSight.Distribution);
+                Individual.GrowMove.Set(value.Individual.GrowMove.Distribution);
+                Individual.checkBox27.Checked = value.Individual.GrowTotal.Enabled;
+                Individual.GrowTotal.Set(value.Individual.GrowTotal.Distribution);
+                Individual.checkBox29.Checked = value.Individual.RandomizeEnemyStatGrowths;
             }
         }
 

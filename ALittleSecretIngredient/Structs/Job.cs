@@ -146,6 +146,13 @@ namespace ALittleSecretIngredient.Structs
                 highJobs.Add(HighJob2);
             return highJobs;
         }
+
+        internal string[] GetMaxWeaponLevels() => new string[]
+        {
+            MaxWeaponLevelNone, MaxWeaponLevelSword, MaxWeaponLevelLance, MaxWeaponLevelAxe,
+            MaxWeaponLevelBow, MaxWeaponLevelDagger, MaxWeaponLevelMagic, MaxWeaponLevelRod,
+            MaxWeaponLevelFist, MaxWeaponLevelSpecial,
+        };
     }
 
     internal class FightingStyle : DataParam

@@ -142,7 +142,24 @@
             button69 = new Button();
             button70 = new Button();
             checkBox25 = new CheckBox();
+            groupBox15 = new GroupBox();
+            checkBox29 = new CheckBox();
+            button72 = new Button();
+            checkBox27 = new CheckBox();
+            button73 = new Button();
+            button74 = new Button();
+            button75 = new Button();
+            button76 = new Button();
+            button77 = new Button();
+            button78 = new Button();
+            button79 = new Button();
+            button80 = new Button();
+            button81 = new Button();
+            button82 = new Button();
+            button83 = new Button();
+            checkBox28 = new CheckBox();
             toolTip1 = new ToolTip(components);
+            checkBox30 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox14.SuspendLayout();
             groupBox7.SuspendLayout();
@@ -158,6 +175,7 @@
             groupBox11.SuspendLayout();
             groupBox12.SuspendLayout();
             groupBox13.SuspendLayout();
+            groupBox15.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -177,6 +195,7 @@
             flowLayoutPanel1.Controls.Add(groupBox11);
             flowLayoutPanel1.Controls.Add(groupBox12);
             flowLayoutPanel1.Controls.Add(groupBox13);
+            flowLayoutPanel1.Controls.Add(groupBox15);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -188,6 +207,7 @@
             // 
             groupBox14.AutoSize = true;
             groupBox14.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox14.Controls.Add(checkBox30);
             groupBox14.Controls.Add(checkBox26);
             groupBox14.Controls.Add(button71);
             groupBox14.Controls.Add(checkBox24);
@@ -197,7 +217,7 @@
             groupBox14.Location = new Point(3, 3);
             groupBox14.MinimumSize = new Size(200, 0);
             groupBox14.Name = "groupBox14";
-            groupBox14.Size = new Size(200, 236);
+            groupBox14.Size = new Size(200, 266);
             groupBox14.TabIndex = 26;
             groupBox14.TabStop = false;
             groupBox14.Text = "Starting Class";
@@ -205,7 +225,7 @@
             // checkBox26
             // 
             checkBox26.AutoSize = true;
-            checkBox26.Location = new Point(6, 186);
+            checkBox26.Location = new Point(6, 216);
             checkBox26.Name = "checkBox26";
             checkBox26.Size = new Size(133, 24);
             checkBox26.TabIndex = 9;
@@ -214,7 +234,7 @@
             // 
             // button71
             // 
-            button71.Location = new Point(6, 151);
+            button71.Location = new Point(6, 181);
             button71.Name = "button71";
             button71.Size = new Size(188, 29);
             button71.TabIndex = 8;
@@ -225,7 +245,7 @@
             // checkBox24
             // 
             checkBox24.AutoSize = true;
-            checkBox24.Location = new Point(6, 121);
+            checkBox24.Location = new Point(6, 151);
             checkBox24.Name = "checkBox24";
             checkBox24.Size = new Size(165, 24);
             checkBox24.TabIndex = 7;
@@ -268,7 +288,7 @@
             groupBox7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox7.Controls.Add(button1);
             groupBox7.Controls.Add(checkBox20);
-            groupBox7.Location = new Point(3, 245);
+            groupBox7.Location = new Point(3, 275);
             groupBox7.MinimumSize = new Size(200, 0);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new Size(200, 111);
@@ -301,7 +321,7 @@
             groupBox1.AutoSize = true;
             groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox1.Controls.Add(checkBox1);
-            groupBox1.Location = new Point(3, 362);
+            groupBox1.Location = new Point(3, 392);
             groupBox1.MinimumSize = new Size(200, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(200, 76);
@@ -1419,11 +1439,198 @@
             checkBox25.Text = "Randomize";
             checkBox25.UseVisualStyleBackColor = true;
             // 
+            // groupBox15
+            // 
+            groupBox15.AutoSize = true;
+            groupBox15.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox15.Controls.Add(checkBox29);
+            groupBox15.Controls.Add(button72);
+            groupBox15.Controls.Add(checkBox27);
+            groupBox15.Controls.Add(button73);
+            groupBox15.Controls.Add(button74);
+            groupBox15.Controls.Add(button75);
+            groupBox15.Controls.Add(button76);
+            groupBox15.Controls.Add(button77);
+            groupBox15.Controls.Add(button78);
+            groupBox15.Controls.Add(button79);
+            groupBox15.Controls.Add(button80);
+            groupBox15.Controls.Add(button81);
+            groupBox15.Controls.Add(button82);
+            groupBox15.Controls.Add(button83);
+            groupBox15.Controls.Add(checkBox28);
+            groupBox15.Location = new Point(1651, 3);
+            groupBox15.MinimumSize = new Size(200, 0);
+            groupBox15.Name = "groupBox15";
+            groupBox15.Size = new Size(200, 561);
+            groupBox15.TabIndex = 27;
+            groupBox15.TabStop = false;
+            groupBox15.Text = "Stat Growths";
+            // 
+            // checkBox29
+            // 
+            checkBox29.AutoSize = true;
+            checkBox29.Location = new Point(6, 511);
+            checkBox29.Name = "checkBox29";
+            checkBox29.Size = new Size(138, 24);
+            checkBox29.TabIndex = 19;
+            checkBox29.Text = "Include enemies";
+            checkBox29.UseVisualStyleBackColor = true;
+            // 
+            // button72
+            // 
+            button72.Location = new Point(6, 476);
+            button72.Name = "button72";
+            button72.Size = new Size(188, 29);
+            button72.TabIndex = 18;
+            button72.Text = "Total Growth";
+            button72.UseVisualStyleBackColor = true;
+            button72.Click += Button72_Click;
+            // 
+            // checkBox27
+            // 
+            checkBox27.AutoSize = true;
+            checkBox27.Location = new Point(6, 441);
+            checkBox27.Name = "checkBox27";
+            checkBox27.Size = new Size(141, 24);
+            checkBox27.TabIndex = 17;
+            checkBox27.Text = "Use total growth";
+            checkBox27.UseVisualStyleBackColor = true;
+            // 
+            // button73
+            // 
+            button73.Location = new Point(6, 406);
+            button73.Name = "button73";
+            button73.Size = new Size(188, 29);
+            button73.TabIndex = 16;
+            button73.Text = "Movement";
+            button73.UseVisualStyleBackColor = true;
+            button73.Click += Button73_Click;
+            // 
+            // button74
+            // 
+            button74.Location = new Point(6, 371);
+            button74.Name = "button74";
+            button74.Size = new Size(188, 29);
+            button74.TabIndex = 15;
+            button74.Text = "Sight";
+            button74.UseVisualStyleBackColor = true;
+            button74.Click += Button74_Click;
+            // 
+            // button75
+            // 
+            button75.Location = new Point(6, 336);
+            button75.Name = "button75";
+            button75.Size = new Size(188, 29);
+            button75.TabIndex = 14;
+            button75.Text = "Build";
+            button75.UseVisualStyleBackColor = true;
+            button75.Click += Button75_Click;
+            // 
+            // button76
+            // 
+            button76.Location = new Point(6, 301);
+            button76.Name = "button76";
+            button76.Size = new Size(188, 29);
+            button76.TabIndex = 13;
+            button76.Text = "Resistance";
+            button76.UseVisualStyleBackColor = true;
+            button76.Click += Button76_Click;
+            // 
+            // button77
+            // 
+            button77.Location = new Point(6, 266);
+            button77.Name = "button77";
+            button77.Size = new Size(188, 29);
+            button77.TabIndex = 12;
+            button77.Text = "Magic";
+            button77.UseVisualStyleBackColor = true;
+            button77.Click += Button77_Click;
+            // 
+            // button78
+            // 
+            button78.Location = new Point(6, 231);
+            button78.Name = "button78";
+            button78.Size = new Size(188, 29);
+            button78.TabIndex = 11;
+            button78.Text = "Defense";
+            button78.UseVisualStyleBackColor = true;
+            button78.Click += Button78_Click;
+            // 
+            // button79
+            // 
+            button79.Location = new Point(6, 196);
+            button79.Name = "button79";
+            button79.Size = new Size(188, 29);
+            button79.TabIndex = 10;
+            button79.Text = "Luck";
+            button79.UseVisualStyleBackColor = true;
+            button79.Click += Button79_Click;
+            // 
+            // button80
+            // 
+            button80.Location = new Point(6, 161);
+            button80.Name = "button80";
+            button80.Size = new Size(188, 29);
+            button80.TabIndex = 9;
+            button80.Text = "Speed";
+            button80.UseVisualStyleBackColor = true;
+            button80.Click += Button80_Click;
+            // 
+            // button81
+            // 
+            button81.Location = new Point(6, 126);
+            button81.Name = "button81";
+            button81.Size = new Size(188, 29);
+            button81.TabIndex = 8;
+            button81.Text = "Dexterity";
+            button81.UseVisualStyleBackColor = true;
+            button81.Click += Button81_Click;
+            // 
+            // button82
+            // 
+            button82.Location = new Point(6, 91);
+            button82.Name = "button82";
+            button82.Size = new Size(188, 29);
+            button82.TabIndex = 7;
+            button82.Text = "Strength";
+            button82.UseVisualStyleBackColor = true;
+            button82.Click += Button82_Click;
+            // 
+            // button83
+            // 
+            button83.Location = new Point(6, 56);
+            button83.Name = "button83";
+            button83.Size = new Size(188, 29);
+            button83.TabIndex = 5;
+            button83.Text = "HP";
+            button83.UseVisualStyleBackColor = true;
+            button83.Click += Button83_Click;
+            // 
+            // checkBox28
+            // 
+            checkBox28.AutoSize = true;
+            checkBox28.Location = new Point(6, 26);
+            checkBox28.Name = "checkBox28";
+            checkBox28.Size = new Size(144, 24);
+            checkBox28.TabIndex = 0;
+            checkBox28.Text = "Randomize allies";
+            checkBox28.UseVisualStyleBackColor = true;
+            // 
             // toolTip1
             // 
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
+            // 
+            // checkBox30
+            // 
+            checkBox30.AutoSize = true;
+            checkBox30.Location = new Point(6, 121);
+            checkBox30.Name = "checkBox30";
+            checkBox30.Size = new Size(171, 24);
+            checkBox30.TabIndex = 10;
+            checkBox30.Text = "Force usable weapon";
+            checkBox30.UseVisualStyleBackColor = true;
             // 
             // IndividualForm
             // 
@@ -1464,6 +1671,8 @@
             groupBox12.PerformLayout();
             groupBox13.ResumeLayout(false);
             groupBox13.PerformLayout();
+            groupBox15.ResumeLayout(false);
+            groupBox15.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1582,5 +1791,22 @@
         public CheckBox checkBox23;
         private Button button59;
         public CheckBox checkBox22;
+        private GroupBox groupBox15;
+        private Button button72;
+        public CheckBox checkBox27;
+        private Button button73;
+        private Button button74;
+        private Button button75;
+        private Button button76;
+        private Button button77;
+        private Button button78;
+        private Button button79;
+        private Button button80;
+        private Button button81;
+        private Button button82;
+        private Button button83;
+        public CheckBox checkBox28;
+        public CheckBox checkBox29;
+        public CheckBox checkBox30;
     }
 }

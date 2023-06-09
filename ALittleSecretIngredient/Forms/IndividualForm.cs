@@ -74,6 +74,18 @@
         internal NumericDistributionForm LimitPhys { get; set; }
         internal NumericDistributionForm LimitSight { get; set; }
         internal NumericDistributionForm LimitMove { get; set; }
+        internal NumericDistributionForm GrowHp { get; set; }
+        internal NumericDistributionForm GrowStr { get; set; }
+        internal NumericDistributionForm GrowTech { get; set; }
+        internal NumericDistributionForm GrowQuick { get; set; }
+        internal NumericDistributionForm GrowLuck { get; set; }
+        internal NumericDistributionForm GrowDef { get; set; }
+        internal NumericDistributionForm GrowMagic { get; set; }
+        internal NumericDistributionForm GrowMdef { get; set; }
+        internal NumericDistributionForm GrowPhys { get; set; }
+        internal NumericDistributionForm GrowSight { get; set; }
+        internal NumericDistributionForm GrowMove { get; set; }
+        internal NumericDistributionForm GrowTotal { get; set; }
         internal IndividualForm(GlobalData globalData)
         {
             GlobalData = globalData;
@@ -148,6 +160,18 @@
             LimitPhys = new(GlobalData, RandomizerDistribution.LimitPhys, "Build Stat Limit Modifiers");
             LimitSight = new(GlobalData, RandomizerDistribution.LimitSight, "Sight Stat Limit Modifiers");
             LimitMove = new(GlobalData, RandomizerDistribution.LimitMove, "Movement Stat Limit Modifiers");
+            GrowHp = new(GlobalData, RandomizerDistribution.GrowHp, "HP Stat Growths");
+            GrowStr = new(GlobalData, RandomizerDistribution.GrowStr, "Strength Stat Growths");
+            GrowTech = new(GlobalData, RandomizerDistribution.GrowTech, "Dexterity Stat Growths");
+            GrowQuick = new(GlobalData, RandomizerDistribution.GrowQuick, "Speed Stat Growths");
+            GrowLuck = new(GlobalData, RandomizerDistribution.GrowLuck, "Luck Stat Growths");
+            GrowDef = new(GlobalData, RandomizerDistribution.GrowDef, "Defense Stat Growths");
+            GrowMagic = new(GlobalData, RandomizerDistribution.GrowMagic, "Magic Stat Growths");
+            GrowMdef = new(GlobalData, RandomizerDistribution.GrowMdef, "Resistance Stat Growths");
+            GrowPhys = new(GlobalData, RandomizerDistribution.GrowPhys, "Build Stat Growths");
+            GrowSight = new(GlobalData, RandomizerDistribution.GrowSight, "Sight Stat Growths");
+            GrowMove = new(GlobalData, RandomizerDistribution.GrowMove, "Movement Stat Growths");
+            GrowTotal = new(GlobalData, RandomizerDistribution.GrowTotal, "Stat Growth Totals");
             InitializeComponent();
             FormClosing += MainForm.CancelFormClosing;
         }
@@ -576,6 +600,78 @@
         {
             LimitMove.Show();
             LimitMove.Activate();
+        }
+
+        private void Button83_Click(object sender, EventArgs e)
+        {
+            GrowHp.Show();
+            GrowHp.Activate();
+        }
+
+        private void Button82_Click(object sender, EventArgs e)
+        {
+            GrowStr.Show();
+            GrowStr.Activate();
+        }
+
+        private void Button81_Click(object sender, EventArgs e)
+        {
+            GrowTech.Show();
+            GrowTech.Activate();
+        }
+
+        private void Button80_Click(object sender, EventArgs e)
+        {
+            GrowQuick.Show();
+            GrowQuick.Activate();
+        }
+
+        private void Button79_Click(object sender, EventArgs e)
+        {
+            GrowLuck.Show();
+            GrowLuck.Activate();
+        }
+
+        private void Button78_Click(object sender, EventArgs e)
+        {
+            GrowDef.Show();
+            GrowDef.Activate();
+        }
+
+        private void Button77_Click(object sender, EventArgs e)
+        {
+            GrowMagic.Show();
+            GrowMagic.Activate();
+        }
+
+        private void Button76_Click(object sender, EventArgs e)
+        {
+            GrowMdef.Show();
+            GrowMdef.Activate();
+        }
+
+        private void Button75_Click(object sender, EventArgs e)
+        {
+            GrowPhys.Show();
+            GrowPhys.Activate();
+        }
+
+        private void Button74_Click(object sender, EventArgs e)
+        {
+            GrowSight.Show();
+            GrowSight.Activate();
+        }
+
+        private void Button73_Click(object sender, EventArgs e)
+        {
+            GrowMove.Show();
+            GrowMove.Activate();
+        }
+
+        private void Button72_Click(object sender, EventArgs e)
+        {
+            GrowTotal.Show();
+            GrowTotal.Activate();
         }
     }
 }

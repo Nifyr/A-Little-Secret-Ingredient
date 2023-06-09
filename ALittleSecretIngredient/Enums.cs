@@ -169,5 +169,17 @@
         LimitPhys,
         LimitSight,
         LimitMove,
+        GrowHp,
+        GrowStr,
+        GrowTech,
+        GrowQuick,
+        GrowLuck,
+        GrowDef,
+        GrowMagic,
+        GrowMdef,
+        GrowPhys,
+        GrowSight,
+        GrowMove,
+        GrowTotal,
     }
 }

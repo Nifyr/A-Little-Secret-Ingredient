@@ -181,5 +181,10 @@
         GrowSight,
         GrowMove,
         GrowTotal,
+        ItemsWeapons,
+        ItemsItems,
+        AttrsAlly,
+        AttrsEnemy,
+        CommonSids,
     }
 }

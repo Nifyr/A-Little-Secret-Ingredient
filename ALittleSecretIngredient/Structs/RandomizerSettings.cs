@@ -211,6 +211,17 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings GrowMove { get; set; } = new();
             public RandomizerFieldSettings GrowTotal { get; set; } = new();
             public bool RandomizeEnemyStatGrowths { get; set; } = new();
+            public RandomizerFieldSettings ItemsWeapons { get; set; } = new();
+            public RandomizerFieldSettings ItemsWeaponCount { get; set; } = new();
+            public RandomizerFieldSettings ItemsItems { get; set; } = new();
+            public RandomizerFieldSettings ItemsItemCount { get; set; } = new();
+            public bool RandomizeEnemyInventories { get; set; } = new();
+            public RandomizerFieldSettings AttrsAlly { get; set; } = new();
+            public RandomizerFieldSettings AttrsAllyCount { get; set; } = new();
+            public RandomizerFieldSettings AttrsEnemy { get; set; } = new();
+            public RandomizerFieldSettings AttrsEnemyCount { get; set; } = new();
+            public RandomizerFieldSettings CommonSids { get; set; } = new();
+            public RandomizerFieldSettings CommonSidsCount { get; set; } = new();
 
             internal RandomizerFieldSettings[] GetOffsetNAllySettings()
             {

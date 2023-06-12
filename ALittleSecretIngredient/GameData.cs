@@ -2672,6 +2672,13 @@ namespace ALittleSecretIngredient
             "uAcc_spine2_Hair201", "uAcc_spine2_Hair201k", "uAcc_spine2_Hair350", "uAcc_spine2_Hair350k",
             "uAcc_spine2_Hair865"
         };
+
+        internal List<(int id, string name)> Attributes { get; } = new()
+        {
+            (0, "Infantry"), (1, "Cavalry"), (2, "Armored"), (3, "Flying"), (4, "Dragon"), (5, "Fell Dragon"), (6, "Corrupted"), (7, "Medeus"),
+            (8, "Duma"), (9, "Loptous"), (10, "Veld"), (11, "Idunn"), (12, "Nergal"), (13, "Fomortiis"), (14, "Ashnard"), (15, "Ashera"),
+            (16, "Grima"), (17, "Anankos"), (18, "Nemesis"),
+        };
         #endregion
 
         internal GameData(XmlParser xp, FileManager fm)
@@ -2983,6 +2990,11 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.GrowSight, DataSetEnum.Individual },
             { RandomizerDistribution.GrowMove, DataSetEnum.Individual },
             { RandomizerDistribution.GrowTotal, DataSetEnum.Individual },
+            { RandomizerDistribution.ItemsWeapons, DataSetEnum.Individual },
+            { RandomizerDistribution.ItemsItems, DataSetEnum.Individual },
+            { RandomizerDistribution.AttrsAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.AttrsEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.CommonSids, DataSetEnum.Individual },
         };
     }
 

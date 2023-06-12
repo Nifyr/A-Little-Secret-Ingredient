@@ -314,6 +314,22 @@ namespace ALittleSecretIngredient.Structs
 
         internal bool HasGrowths() => GetGrowths().Any(b => b > 0);
 
+        internal List<int> GetAttributes()
+        {
+            List<int> l = new();
+            for (int i = 0; i < 32; i++)
+                if ((Attrs & (1 << i)) > 0)
+                    l.Add(i);
+            return l;
+        }
+
+        internal void SetAttributes(List<int> l)
+        {
+            Attrs = 0;
+            for (int i = 0; i < l.Count; i++)
+                Attrs |= (uint)(1 << l[i]);
+        }
+
         public object Clone()
         {
             Individual i = (Individual)MemberwiseClone();

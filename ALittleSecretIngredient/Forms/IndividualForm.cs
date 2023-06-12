@@ -86,6 +86,16 @@
         internal NumericDistributionForm GrowSight { get; set; }
         internal NumericDistributionForm GrowMove { get; set; }
         internal NumericDistributionForm GrowTotal { get; set; }
+        internal SelectionDistributionForm ItemsWeapons { get; set; }
+        internal NumericDistributionForm ItemsWeaponCount { get; set; }
+        internal SelectionDistributionForm ItemsItems { get; set; }
+        internal NumericDistributionForm ItemsItemCount { get; set; }
+        internal SelectionDistributionForm AttrsAlly { get; set; }
+        internal NumericDistributionForm AttrsAllyCount { get; set; }
+        internal SelectionDistributionForm AttrsEnemy { get; set; }
+        internal NumericDistributionForm AttrsEnemyCount { get; set; }
+        internal SelectionDistributionForm CommonSids { get; set; }
+        internal NumericDistributionForm CommonSidsCount { get; set; }
         internal IndividualForm(GlobalData globalData)
         {
             GlobalData = globalData;
@@ -172,6 +182,16 @@
             GrowSight = new(GlobalData, RandomizerDistribution.GrowSight, "Sight Stat Growths");
             GrowMove = new(GlobalData, RandomizerDistribution.GrowMove, "Movement Stat Growths");
             GrowTotal = new(GlobalData, RandomizerDistribution.GrowTotal, "Stat Growth Totals");
+            ItemsWeapons = new(GlobalData, RandomizerDistribution.ItemsWeapons, "Static Starting Weapons");
+            ItemsWeaponCount = new(GlobalData, RandomizerDistribution.ItemsWeapons, "Static Starting Weapons");
+            ItemsItems = new(GlobalData, RandomizerDistribution.ItemsItems, "Static Starting Items");
+            ItemsItemCount = new(GlobalData, RandomizerDistribution.ItemsItems, "Static Starting Items");
+            AttrsAlly = new(GlobalData, RandomizerDistribution.AttrsAlly, "Ally Character Attributes");
+            AttrsAllyCount = new(GlobalData, RandomizerDistribution.AttrsAlly, "Ally Character Attributes");
+            AttrsEnemy = new(GlobalData, RandomizerDistribution.AttrsEnemy, "Enemy Character Attributes");
+            AttrsEnemyCount = new(GlobalData, RandomizerDistribution.AttrsEnemy, "Enemy Character Attributes");
+            CommonSids = new(GlobalData, RandomizerDistribution.CommonSids, "Personal Skills");
+            CommonSidsCount = new(GlobalData, RandomizerDistribution.CommonSids, "Personal Skills");
             InitializeComponent();
             FormClosing += MainForm.CancelFormClosing;
         }
@@ -672,6 +692,66 @@
         {
             GrowTotal.Show();
             GrowTotal.Activate();
+        }
+
+        private void Button84_Click(object sender, EventArgs e)
+        {
+            ItemsWeapons.Show();
+            ItemsWeapons.Activate();
+        }
+
+        private void Button86_Click(object sender, EventArgs e)
+        {
+            ItemsWeaponCount.Show();
+            ItemsWeaponCount.Activate();
+        }
+
+        private void Button85_Click(object sender, EventArgs e)
+        {
+            ItemsItems.Show();
+            ItemsItems.Activate();
+        }
+
+        private void Button87_Click(object sender, EventArgs e)
+        {
+            ItemsItemCount.Show();
+            ItemsItemCount.Activate();
+        }
+
+        private void Button89_Click(object sender, EventArgs e)
+        {
+            AttrsAlly.Show();
+            AttrsAlly.Activate();
+        }
+
+        private void Button88_Click(object sender, EventArgs e)
+        {
+            AttrsAllyCount.Show();
+            AttrsAllyCount.Activate();
+        }
+
+        private void Button91_Click(object sender, EventArgs e)
+        {
+            AttrsEnemy.Show();
+            AttrsEnemy.Activate();
+        }
+
+        private void Button90_Click(object sender, EventArgs e)
+        {
+            AttrsEnemyCount.Show();
+            AttrsEnemyCount.Activate();
+        }
+
+        private void Button93_Click(object sender, EventArgs e)
+        {
+            CommonSids.Show();
+            CommonSids.Activate();
+        }
+
+        private void Button92_Click(object sender, EventArgs e)
+        {
+            CommonSidsCount.Show();
+            CommonSidsCount.Activate();
         }
     }
 }

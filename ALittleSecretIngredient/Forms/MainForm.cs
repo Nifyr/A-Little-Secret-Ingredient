@@ -325,6 +325,19 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.GrowMove = new(false, Individual.GrowMove.Get(), Array.Empty<object>());
                 rs.Individual.GrowTotal = new(Individual.checkBox27.Checked, Individual.GrowTotal.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeEnemyStatGrowths = Individual.checkBox29.Checked;
+                rs.Individual.ItemsWeapons = new(Individual.checkBox31.Checked, Individual.ItemsWeapons.Get(),
+                    new object[] { Individual.checkBox33.Checked });
+                rs.Individual.ItemsWeaponCount = new(Individual.checkBox34.Checked, Individual.ItemsWeaponCount.Get(), Array.Empty<object>());
+                rs.Individual.ItemsItems = new(Individual.checkBox32.Checked, Individual.ItemsItems.Get(), Array.Empty<object>());
+                rs.Individual.ItemsItemCount = new(Individual.checkBox35.Checked, Individual.ItemsItemCount.Get(), Array.Empty<object>());
+                rs.Individual.RandomizeEnemyInventories = Individual.checkBox36.Checked;
+                rs.Individual.AttrsAlly = new(Individual.checkBox38.Checked, Individual.AttrsAlly.Get(), Array.Empty<object>());
+                rs.Individual.AttrsAllyCount = new(Individual.checkBox37.Checked, Individual.AttrsAllyCount.Get(), Array.Empty<object>());
+                rs.Individual.AttrsEnemy = new(Individual.checkBox40.Checked, Individual.AttrsEnemy.Get(), Array.Empty<object>());
+                rs.Individual.AttrsEnemyCount = new(Individual.checkBox39.Checked, Individual.AttrsEnemyCount.Get(), Array.Empty<object>());
+                rs.Individual.CommonSids = new(Individual.checkBox42.Checked, Individual.CommonSids.Get(),
+                    new object[] { Individual.checkBox43.Checked });
+                rs.Individual.CommonSidsCount = new(Individual.checkBox41.Checked, Individual.CommonSidsCount.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -586,6 +599,29 @@ namespace ALittleSecretIngredient.Forms
                 Individual.checkBox27.Checked = value.Individual.GrowTotal.Enabled;
                 Individual.GrowTotal.Set(value.Individual.GrowTotal.Distribution);
                 Individual.checkBox29.Checked = value.Individual.RandomizeEnemyStatGrowths;
+                Individual.checkBox31.Checked = value.Individual.ItemsWeapons.Enabled;
+                Individual.ItemsWeapons.Set(value.Individual.ItemsWeapons.Distribution);
+                Individual.checkBox34.Checked = value.Individual.ItemsWeaponCount.Enabled;
+                Individual.ItemsWeaponCount.Set(value.Individual.ItemsWeaponCount.Distribution);
+                Individual.checkBox33.Checked = value.Individual.ItemsWeapons.GetArg<bool>(0);
+                Individual.checkBox32.Checked = value.Individual.ItemsItems.Enabled;
+                Individual.ItemsItems.Set(value.Individual.ItemsItems.Distribution);
+                Individual.checkBox35.Checked = value.Individual.ItemsItemCount.Enabled;
+                Individual.ItemsItemCount.Set(value.Individual.ItemsItemCount.Distribution);
+                Individual.checkBox36.Checked = value.Individual.RandomizeEnemyInventories;
+                Individual.checkBox38.Checked = value.Individual.AttrsAlly.Enabled;
+                Individual.AttrsAlly.Set(value.Individual.AttrsAlly.Distribution);
+                Individual.checkBox37.Checked = value.Individual.AttrsAllyCount.Enabled;
+                Individual.AttrsAllyCount.Set(value.Individual.AttrsAllyCount.Distribution);
+                Individual.checkBox40.Checked = value.Individual.AttrsEnemy.Enabled;
+                Individual.AttrsEnemy.Set(value.Individual.AttrsEnemy.Distribution);
+                Individual.checkBox39.Checked = value.Individual.AttrsEnemyCount.Enabled;
+                Individual.AttrsEnemyCount.Set(value.Individual.AttrsEnemyCount.Distribution);
+                Individual.checkBox42.Checked = value.Individual.CommonSids.Enabled;
+                Individual.CommonSids.Set(value.Individual.CommonSids.Distribution);
+                Individual.checkBox41.Checked = value.Individual.CommonSidsCount.Enabled;
+                Individual.CommonSidsCount.Set(value.Individual.CommonSidsCount.Distribution);
+                Individual.checkBox43.Checked = value.Individual.CommonSids.GetArg<bool>(0);
             }
         }
 

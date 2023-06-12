@@ -1,4 +1,5 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Linq;
 using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
@@ -34,6 +35,11 @@ namespace ALittleSecretIngredient
 
         internal void Randomize(RandomizerSettings settings)
         {
+            // This calls a function called with a function that returns a function called with a function called with a function that returns a
+            // function called with a function called with a function that does nothing as argument as argument as argument as argument as argument.
+            // Use in case of emergency.
+            ((Action<Func<Action<Action<Func<Action<Action<Action>>>>>>>)(f => f()(f => f()(f => f()))))(() => f => f(() => f => f(() => { })));
+
             StringBuilder innerChangelog = new();
 
             DataPreAdjustment();
@@ -1085,16 +1091,16 @@ namespace ALittleSecretIngredient
             List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters);
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
             List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
-            List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
             List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
             List<string> weaponIDs = GD.NormalWeapons.GetIDs();
+            List<string> itemIDs = GD.BattleItems.GetIDs();
             Dictionary<Individual, StringBuilder> entries = CreateStringBuilderDictionary(individuals);
 
             UnlockExclusiveClassOutfits(assets);
 
-            HandleIndividualAptitude(settings.Aptitude, settings.AptitudeCount, playableCharacters, proficiencyIDs, entries,
+            HandleFlagSet(settings.Aptitude, settings.AptitudeCount, playableCharacters, GD.Proficiencies, entries,
                 i => i.GetAptitudes(), (i, l) => i.SetAptitudes(l), "Primary Proficiencies");
-            HandleIndividualAptitude(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, proficiencyIDs, entries,
+            HandleFlagSet(settings.SubAptitude, settings.SubAptitudeCount, playableCharacters, GD.Proficiencies, entries,
                 i => i.GetSubAptitudes(), (i, l) => i.SetSubAptitudes(l), "Secondary Proficiencies");
 
             if (settings.JidAlly.Enabled)
@@ -1168,6 +1174,16 @@ namespace ALittleSecretIngredient
                     i => i.GetGrowths(), (i, a) => i.SetGrowths(a), i => i.GetBasicGrowths(), (i, a) => i.SetBasicGrowths(a),
                     "Stat Growths");
 
+            HandleInventory(settings, playableCharacters, npcCharacters, toss, weaponIDs, itemIDs, entries);
+
+            HandleFlagSet(settings.AttrsAlly, settings.AttrsAllyCount, playableCharacters, GD.Attributes, entries,
+                i => i.GetAttributes(), (i, l) => i.SetAttributes(l), "Attributes", false);
+            HandleFlagSet(settings.AttrsEnemy, settings.AttrsEnemyCount, npcCharacters, GD.Attributes, entries,
+                i => i.GetAttributes(), (i, l) => i.SetAttributes(l), "Attributes", false);
+
+            if (settings.CommonSids.Enabled)
+                RandomizePersonalSkills(settings, playableCharacters, npcCharacters, entries);
+
             StringBuilder innertable = new();
             List<(string id, string name)> mappedNames = MapNames(GD.Characters);
             foreach (Individual i in individuals)
@@ -1178,6 +1194,91 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Characters");
+        }
+
+        private void RandomizePersonalSkills(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters, List<Individual> npcCharacters, Dictionary<Individual, StringBuilder> entries)
+        {
+            List<Individual> targets = playableCharacters;
+            if (settings.CommonSids.GetArg<bool>(0))
+            {
+                targets = playableCharacters.Concat(npcCharacters).ToList();
+                targets.ForEach(i => i.CommonSids =
+                    i.CommonSids.Concat(i.NormalSids).Concat(i.HardSids).Concat(i.LunaticSids).Distinct().ToArray());
+            }
+            List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
+            if (settings.CommonSidsCount.Enabled)
+                RandomizeArraySizes(targets, i => i.CommonSids, (i, a) => i.CommonSids = a, settings.CommonSidsCount.Distribution,
+                   generalSkillIDs);
+            RandomizeArrayContents(targets, i => i.CommonSids, (i, a) => i.CommonSids = a, settings.CommonSids.Distribution, generalSkillIDs);
+            WriteToChangelog(entries, targets, i => i.CommonSids.Where(generalSkillIDs.Contains), "Personal Skills", GD.GeneralSkills, true);
+            GD.SetDirty(DataSetEnum.Individual);
+        }
+
+        private void HandleInventory(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters,
+            List<Individual> npcCharacters, List<TypeOfSoldier> toss, List<string> weaponIDs, List<string> itemIDs,
+            Dictionary<Individual, StringBuilder> entries)
+        {
+            List<Individual> inventoryTargets = settings.RandomizeEnemyInventories ? playableCharacters.Concat(npcCharacters).ToList() :
+                            playableCharacters;
+            if (settings.ItemsWeapons.Enabled)
+            {
+                if (settings.ItemsWeaponCount.Enabled)
+                    RandomizeArraySizes(inventoryTargets, i => i.Items, (i, a) => i.Items = a, settings.ItemsWeaponCount.Distribution, weaponIDs);
+                RandomizeArrayContents(inventoryTargets, i => i.Items, (i, a) => i.Items = a, settings.ItemsWeapons.Distribution, weaponIDs);
+                if (settings.ItemsWeapons.GetArg<bool>(0))
+                    foreach (Individual i in inventoryTargets)
+                        EnsureUsableWeapons(toss, weaponIDs, i, false);
+            }
+            if (settings.ItemsItems.Enabled)
+            {
+                if (settings.ItemsItemCount.Enabled)
+                    RandomizeArraySizes(inventoryTargets, i => i.Items, (i, a) => i.Items = a, settings.ItemsItemCount.Distribution, itemIDs);
+                RandomizeArrayContents(inventoryTargets, i => i.Items, (i, a) => i.Items = a, settings.ItemsItems.Distribution, itemIDs);
+            }
+            if (settings.ItemsWeapons.Enabled || settings.ItemsItems.Enabled)
+            {
+                HashSet<string> allItems = GD.AllItems.GetIDs().ToHashSet();
+                WriteToChangelog(entries, inventoryTargets, i => i.Items.Where(allItems.Contains), "Static Inventory", GD.AllItems);
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+        }
+
+        private static void RandomizeArrayContents<T>(List<T> targets, Func<T, string[]> get, Action<T, string[]> set, IDistribution distribution,
+            List<string> pool)
+        {
+            AsNodeStructure(targets, t => get(t), out List<List<Node<string>>> structure, out List<Node<string>> flattened);
+            flattened = flattened.Where(n => pool.Contains(n.value)).ToList();
+            flattened.Randomize(n => n.value, (n, i) => n.value = i, distribution, pool);
+            for (int iIdx = 0; iIdx < structure.Count; iIdx++)
+                set(targets[iIdx], structure[iIdx].Select(n => n.value).ToArray());
+        }
+
+        private static void RandomizeArraySizes<T>(List<T> targets, Func<T, string[]> get, Action<T, string[]> set, IDistribution distribution,
+            List<string> pool)
+        {
+            List<Node<int>> newCounts = targets.Select(t => new Node<int>(get(t).Where(pool.Contains).Count())).ToList();
+            newCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, int.MaxValue);
+            for (int i = 0; i < targets.Count; i++)
+            {
+                T t = targets[i];
+                int newCount = newCounts[i].value;
+                while (get(t).Where(pool.Contains).Count() < newCount)
+                {
+                    IEnumerable<string> oldValues = get(t);
+                    IEnumerable<string> oldPoolValues = oldValues.Where(pool.Contains);
+                    if (oldPoolValues.Any())
+                        set(t, oldValues.Append(oldPoolValues.GetRandom()).ToArray());
+                    else
+                        set(t, oldValues.Append(pool.GetRandom()).ToArray());
+                }
+                while (get(t).Where(pool.Contains).Count() > newCount)
+                {
+                    List<string> oldValues = get(t).ToList();
+                    IEnumerable<string> oldPoolValues = oldValues.Where(pool.Contains);
+                    oldValues.Remove(oldPoolValues.GetRandom());
+                    set(t, oldValues.ToArray());
+                }
+            }
         }
 
         private void RandomizeEnemyClasses(RandomizerSettings.IndividualSettings settings, List<Individual> individuals,
@@ -1247,12 +1348,14 @@ namespace ALittleSecretIngredient
 
         private List<string> GetLegalWeapons(Individual i, List<TypeOfSoldier> toss)
         {
+            List<string> legalWeapons = new();
+            if (i.Jid == "")
+                return legalWeapons;
             string[] maxWeaponLevels = i.GetTOS(toss).GetMaxWeaponLevels();
             List<GameData.ProficiencyLevel> proficiencyLevels = maxWeaponLevels.Select(ToProficiencyLevel).ToList();
             foreach (int pIdx in i.GetAptitudes())
                 proficiencyLevels[pIdx] = proficiencyLevels[pIdx] == GameData.ProficiencyLevel.S ? GameData.ProficiencyLevel.S :
                     (GameData.ProficiencyLevel)(((int)proficiencyLevels[pIdx]) + 1);
-            List<string> legalWeapons = new();
             for (int pIdx = 0; pIdx < proficiencyLevels.Count; pIdx++)
                 legalWeapons.AddRange(GetLegalWeapons((GameData.Proficiency)pIdx, proficiencyLevels[pIdx]));
 
@@ -1666,65 +1769,63 @@ namespace ALittleSecretIngredient
                 set(individuals[iIdx], baseStats[iIdx]);
         }
 
-        private void HandleIndividualAptitude(RandomizerFieldSettings settings, RandomizerFieldSettings countSettings,
-            List<Individual> playableCharacters, List<int> proficiencyIDs, Dictionary<Individual, StringBuilder> entries,
-            Func<Individual, List<int>> getAptitudes, Action<Individual, List<int>> setAptitudes, string fieldName)
+        private void HandleFlagSet<T>(RandomizerFieldSettings settings, RandomizerFieldSettings countSettings,
+            List<T> targets, List<(int id, string name)> flags, Dictionary<T, StringBuilder> entries,
+            Func<T, List<int>> get, Action<T, List<int>> set, string fieldName, bool writeEmpty = true) where T : notnull 
         {
             if (settings.Enabled)
             {
-                // Randomize counts if toggled
+                List<int> flagIDs = flags.GetIDs();
                 if (countSettings.Enabled)
-                    RandomizeIndividualAptitudeCounts(countSettings.Distribution, playableCharacters, proficiencyIDs,
-                        getAptitudes, setAptitudes);
-                // Randomize proficiencies
-                RandomizeIndividualAptitude(settings.Distribution, playableCharacters, proficiencyIDs,
-                        getAptitudes, setAptitudes);
-                WriteIndividualAptitudeToChangelog(playableCharacters, entries, getAptitudes, fieldName);
+                    RandomizeFlagCounts(countSettings.Distribution, targets, flagIDs, get, set);
+                RandomizeFlags(settings.Distribution, targets, flagIDs, get, set);
+                WriteFlagsToChangelog(entries, targets, get, flags, fieldName, writeEmpty);
                 GD.SetDirty(DataSetEnum.Individual);
             }
         }
 
-        private void WriteIndividualAptitudeToChangelog(List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries,
-            Func<Individual, List<int>> getAptitudes, string fieldName)
+        private static void WriteFlagsToChangelog<T>(Dictionary<T, StringBuilder> entries, List<T> targets, Func<T, List<int>> get,
+            List<(int id, string name)> entities, string fieldName, bool writeEmpty) where T : notnull
         {
-            foreach (Individual i in playableCharacters)
+            foreach (T t in targets)
             {
                 StringBuilder entry = new($"{fieldName}:\t");
-                List<int> proficiencies = getAptitudes(i);
-                foreach (int proficiency in proficiencies)
-                    entry.Append(GD.Proficiencies.IDToName(proficiency) + ",\t");
-                if (proficiencies.Count > 0)
+                List<int> flags = get(t);
+                foreach (int proficiency in flags)
+                    entry.Append(entities.IDToName(proficiency) + ",\t");
+                if (flags.Count > 0)
                     entry = new(entry.ToString()[..^2]);
-                entries[i].AppendLine(entry.ToString());
+                if (writeEmpty && flags.Count == 0)
+                    entry.Append("None");
+                entries[t].AppendLine(entry.ToString());
             }
         }
 
-        private static void RandomizeIndividualAptitude(IDistribution distribution, List<Individual> playableCharacters,
-            List<int> proficiencyIDs, Func<Individual, List<int>> getAptitudes, Action<Individual, List<int>> setAptitudes)
+        private static void RandomizeFlags<T>(IDistribution distribution, List<T> targets, List<int> flagIDs, Func<T, List<int>> get,
+            Action<T, List<int>> set)
         {
-            AsNodeStructure(playableCharacters, i => getAptitudes(i),
-                                out List<List<Node<int>>> structure, out List<Node<int>> flattened);
-            flattened.Randomize(n => n.value, (n, i) => n.value = i, distribution, proficiencyIDs);
+            AsNodeStructure(targets, i => get(i), out List<List<Node<int>>> structure, out List<Node<int>> flattened);
+            flattened.Randomize(n => n.value, (n, i) => n.value = i, distribution, flagIDs);
             for (int iIdx = 0; iIdx < structure.Count; iIdx++)
-                setAptitudes(playableCharacters[iIdx], structure[iIdx].Select(n => n.value).ToList());
+                set(targets[iIdx], structure[iIdx].Select(n => n.value).ToList());
         }
 
-        private static void RandomizeIndividualAptitudeCounts(IDistribution distribution, List<Individual> playableCharacters,
-            List<int> proficiencyIDs, Func<Individual, List<int>> getAptitudes, Action<Individual, List<int>> setAptitudes)
+        private static void RandomizeFlagCounts<T>(IDistribution distribution, List<T> targets, List<int> flagIDs, Func<T, List<int>> get,
+            Action<T, List<int>> set)
         {
-            List<Node<int>> proficiencyCounts = playableCharacters.Select(i => new Node<int>(getAptitudes(i).Count)).ToList();
-            proficiencyCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, proficiencyIDs.Count);
-            AsNodeStructure(playableCharacters, i => getAptitudes(i).ToArray(),
+            List<Node<int>> flagCounts = targets.Select(i => new Node<int>(get(i).Count)).ToList();
+            flagCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, flagIDs.Count);
+            AsNodeStructure(targets, i => get(i).ToArray(),
                 out List<List<Node<int>>> structure, out List<Node<int>> flattened);
-            for (int iIdx = 0; iIdx < structure.Count; iIdx++)
+            for (int tIdx = 0; tIdx < structure.Count; tIdx++)
             {
-                List<Node<int>> iStructure = structure[iIdx];
-                int newCount = proficiencyCounts[iIdx].value;
-                while (iStructure.Count < newCount)
-                    iStructure.Add(flattened.GetRandom());
-                while (iStructure.Count > newCount)
-                    iStructure.Remove(iStructure.GetRandom());
-                setAptitudes(playableCharacters[iIdx], iStructure.Select(n => n.value).ToList());
+                List<Node<int>> tStructure = structure[tIdx];
+                int newCount = flagCounts[tIdx].value;
+                while (tStructure.Count < newCount)
+                    tStructure.Add(flattened.GetRandom());
+                while (tStructure.Count > newCount)
+                    tStructure.Remove(tStructure.GetRandom());
+                set(targets[tIdx], tStructure.Select(n => n.value).ToList());
             }
         }
 
@@ -2012,10 +2113,10 @@ namespace ALittleSecretIngredient
             flattened = structure.SelectMany(l => l).ToList();
         }
 
-        private static void AsNodeStructure<T>(List<Individual> individuals, Func<Individual, IEnumerable<T>> getIEnumerable, out List<List<Node<T>>> structure,
-            out List<Node<T>> flattened)
+        private static void AsNodeStructure<A, B>(List<A> individuals, Func<A, IEnumerable<B>> getIEnumerable,
+            out List<List<Node<B>>> structure, out List<Node<B>> flattened)
         {
-            structure = individuals.Select(i => getIEnumerable(i).Select(s => new Node<T>(s)).ToList()).ToList();
+            structure = individuals.Select(i => getIEnumerable(i).Select(s => new Node<B>(s)).ToList()).ToList();
             flattened = structure.SelectMany(l => l).ToList();
         }
 
@@ -2136,6 +2237,15 @@ namespace ALittleSecretIngredient
                         name = type.IDToName(property(o));
                     changelogEntries[o].AppendLine(propertyName + ":\t" + name);
                 });
+        private static void WriteToChangelog<T>(Dictionary<T, StringBuilder> changelogEntries, List<T> objects,
+            Func<T, IEnumerable<string>> property, string propertyName, List<(string id, string name)> type, bool writeEmpty = false) where T : notnull =>
+            objects.ForEach(o =>
+            {
+                if (property(o).Any())
+                    changelogEntries[o].AppendLine(propertyName + ":\t" + string.Join(",\t", property(o).Select(type.IDToName)));
+                if (!property(o).Any() && writeEmpty)
+                    changelogEntries[o].AppendLine(propertyName + ":\tNone");
+            });
         private static void WriteToChangelog<A, B>(Dictionary<A, StringBuilder> changelogEntries, List<A> objects,
             Func<A, B> property, string propertyName) where A : notnull =>
             objects.ForEach(o => changelogEntries[o].AppendLine(propertyName + ":\t" + property(o)));

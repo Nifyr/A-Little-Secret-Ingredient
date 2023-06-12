@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IndividualForm));
             flowLayoutPanel1 = new FlowLayoutPanel();
             groupBox14 = new GroupBox();
+            checkBox30 = new CheckBox();
             checkBox26 = new CheckBox();
             button71 = new Button();
             checkBox24 = new CheckBox();
@@ -158,8 +159,33 @@
             button82 = new Button();
             button83 = new Button();
             checkBox28 = new CheckBox();
+            groupBox16 = new GroupBox();
+            checkBox36 = new CheckBox();
+            button87 = new Button();
+            checkBox35 = new CheckBox();
+            button86 = new Button();
+            checkBox34 = new CheckBox();
+            checkBox33 = new CheckBox();
+            button85 = new Button();
+            checkBox32 = new CheckBox();
+            button84 = new Button();
+            checkBox31 = new CheckBox();
+            groupBox17 = new GroupBox();
+            button90 = new Button();
+            checkBox39 = new CheckBox();
+            button91 = new Button();
+            checkBox40 = new CheckBox();
+            button88 = new Button();
+            checkBox37 = new CheckBox();
+            button89 = new Button();
+            checkBox38 = new CheckBox();
             toolTip1 = new ToolTip(components);
-            checkBox30 = new CheckBox();
+            groupBox18 = new GroupBox();
+            button92 = new Button();
+            checkBox41 = new CheckBox();
+            button93 = new Button();
+            checkBox42 = new CheckBox();
+            checkBox43 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox14.SuspendLayout();
             groupBox7.SuspendLayout();
@@ -176,6 +202,9 @@
             groupBox12.SuspendLayout();
             groupBox13.SuspendLayout();
             groupBox15.SuspendLayout();
+            groupBox16.SuspendLayout();
+            groupBox17.SuspendLayout();
+            groupBox18.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -196,6 +225,9 @@
             flowLayoutPanel1.Controls.Add(groupBox12);
             flowLayoutPanel1.Controls.Add(groupBox13);
             flowLayoutPanel1.Controls.Add(groupBox15);
+            flowLayoutPanel1.Controls.Add(groupBox16);
+            flowLayoutPanel1.Controls.Add(groupBox17);
+            flowLayoutPanel1.Controls.Add(groupBox18);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -221,6 +253,16 @@
             groupBox14.TabIndex = 26;
             groupBox14.TabStop = false;
             groupBox14.Text = "Starting Class";
+            // 
+            // checkBox30
+            // 
+            checkBox30.AutoSize = true;
+            checkBox30.Location = new Point(6, 121);
+            checkBox30.Name = "checkBox30";
+            checkBox30.Size = new Size(171, 24);
+            checkBox30.TabIndex = 10;
+            checkBox30.Text = "Force usable weapon";
+            checkBox30.UseVisualStyleBackColor = true;
             // 
             // checkBox26
             // 
@@ -1616,21 +1658,300 @@
             checkBox28.Text = "Randomize allies";
             checkBox28.UseVisualStyleBackColor = true;
             // 
+            // groupBox16
+            // 
+            groupBox16.AutoSize = true;
+            groupBox16.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox16.Controls.Add(checkBox36);
+            groupBox16.Controls.Add(button87);
+            groupBox16.Controls.Add(checkBox35);
+            groupBox16.Controls.Add(button86);
+            groupBox16.Controls.Add(checkBox34);
+            groupBox16.Controls.Add(checkBox33);
+            groupBox16.Controls.Add(button85);
+            groupBox16.Controls.Add(checkBox32);
+            groupBox16.Controls.Add(button84);
+            groupBox16.Controls.Add(checkBox31);
+            groupBox16.Location = new Point(1857, 3);
+            groupBox16.MinimumSize = new Size(200, 0);
+            groupBox16.Name = "groupBox16";
+            groupBox16.Size = new Size(200, 366);
+            groupBox16.TabIndex = 28;
+            groupBox16.TabStop = false;
+            groupBox16.Text = "Static Starting Inventory";
+            // 
+            // checkBox36
+            // 
+            checkBox36.AutoSize = true;
+            checkBox36.Location = new Point(6, 316);
+            checkBox36.Name = "checkBox36";
+            checkBox36.Size = new Size(138, 24);
+            checkBox36.TabIndex = 16;
+            checkBox36.Text = "Include enemies";
+            checkBox36.UseVisualStyleBackColor = true;
+            // 
+            // button87
+            // 
+            button87.Location = new Point(6, 281);
+            button87.Name = "button87";
+            button87.Size = new Size(188, 29);
+            button87.TabIndex = 15;
+            button87.Text = "Item Count";
+            button87.UseVisualStyleBackColor = true;
+            button87.Click += Button87_Click;
+            // 
+            // checkBox35
+            // 
+            checkBox35.AutoSize = true;
+            checkBox35.Location = new Point(7, 251);
+            checkBox35.Name = "checkBox35";
+            checkBox35.Size = new Size(147, 24);
+            checkBox35.TabIndex = 14;
+            checkBox35.Text = "Randomize count";
+            checkBox35.UseVisualStyleBackColor = true;
+            // 
+            // button86
+            // 
+            button86.Location = new Point(6, 121);
+            button86.Name = "button86";
+            button86.Size = new Size(188, 29);
+            button86.TabIndex = 13;
+            button86.Text = "Weapon Count";
+            button86.UseVisualStyleBackColor = true;
+            button86.Click += Button86_Click;
+            // 
+            // checkBox34
+            // 
+            checkBox34.AutoSize = true;
+            checkBox34.Location = new Point(6, 91);
+            checkBox34.Name = "checkBox34";
+            checkBox34.Size = new Size(147, 24);
+            checkBox34.TabIndex = 12;
+            checkBox34.Text = "Randomize count";
+            checkBox34.UseVisualStyleBackColor = true;
+            // 
+            // checkBox33
+            // 
+            checkBox33.AutoSize = true;
+            checkBox33.Location = new Point(6, 156);
+            checkBox33.Name = "checkBox33";
+            checkBox33.Size = new Size(171, 24);
+            checkBox33.TabIndex = 11;
+            checkBox33.Text = "Only usable weapons";
+            checkBox33.UseVisualStyleBackColor = true;
+            // 
+            // button85
+            // 
+            button85.Location = new Point(6, 216);
+            button85.Name = "button85";
+            button85.Size = new Size(188, 29);
+            button85.TabIndex = 7;
+            button85.Text = "Items";
+            button85.UseVisualStyleBackColor = true;
+            button85.Click += Button85_Click;
+            // 
+            // checkBox32
+            // 
+            checkBox32.AutoSize = true;
+            checkBox32.Location = new Point(6, 186);
+            checkBox32.Name = "checkBox32";
+            checkBox32.Size = new Size(146, 24);
+            checkBox32.TabIndex = 6;
+            checkBox32.Text = "Randomize items";
+            checkBox32.UseVisualStyleBackColor = true;
+            // 
+            // button84
+            // 
+            button84.Location = new Point(6, 56);
+            button84.Name = "button84";
+            button84.Size = new Size(188, 29);
+            button84.TabIndex = 5;
+            button84.Text = "Weapons";
+            button84.UseVisualStyleBackColor = true;
+            button84.Click += Button84_Click;
+            // 
+            // checkBox31
+            // 
+            checkBox31.AutoSize = true;
+            checkBox31.Location = new Point(6, 26);
+            checkBox31.Name = "checkBox31";
+            checkBox31.Size = new Size(169, 24);
+            checkBox31.TabIndex = 0;
+            checkBox31.Text = "Randomize weapons";
+            checkBox31.UseVisualStyleBackColor = true;
+            // 
+            // groupBox17
+            // 
+            groupBox17.AutoSize = true;
+            groupBox17.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox17.Controls.Add(button90);
+            groupBox17.Controls.Add(checkBox39);
+            groupBox17.Controls.Add(button91);
+            groupBox17.Controls.Add(checkBox40);
+            groupBox17.Controls.Add(button88);
+            groupBox17.Controls.Add(checkBox37);
+            groupBox17.Controls.Add(button89);
+            groupBox17.Controls.Add(checkBox38);
+            groupBox17.Location = new Point(2063, 3);
+            groupBox17.MinimumSize = new Size(200, 0);
+            groupBox17.Name = "groupBox17";
+            groupBox17.Size = new Size(200, 306);
+            groupBox17.TabIndex = 29;
+            groupBox17.TabStop = false;
+            groupBox17.Text = "Attributes";
+            // 
+            // button90
+            // 
+            button90.Location = new Point(6, 251);
+            button90.Name = "button90";
+            button90.Size = new Size(188, 29);
+            button90.TabIndex = 11;
+            button90.Text = "Enemy Attribute Count";
+            button90.UseVisualStyleBackColor = true;
+            button90.Click += Button90_Click;
+            // 
+            // checkBox39
+            // 
+            checkBox39.AutoSize = true;
+            checkBox39.Location = new Point(6, 221);
+            checkBox39.Name = "checkBox39";
+            checkBox39.Size = new Size(147, 24);
+            checkBox39.TabIndex = 10;
+            checkBox39.Text = "Randomize count";
+            checkBox39.UseVisualStyleBackColor = true;
+            // 
+            // button91
+            // 
+            button91.Location = new Point(6, 186);
+            button91.Name = "button91";
+            button91.Size = new Size(188, 29);
+            button91.TabIndex = 9;
+            button91.Text = "Enemy Attributes";
+            button91.UseVisualStyleBackColor = true;
+            button91.Click += Button91_Click;
+            // 
+            // checkBox40
+            // 
+            checkBox40.AutoSize = true;
+            checkBox40.Location = new Point(6, 156);
+            checkBox40.Name = "checkBox40";
+            checkBox40.Size = new Size(165, 24);
+            checkBox40.TabIndex = 8;
+            checkBox40.Text = "Randomize enemies";
+            checkBox40.UseVisualStyleBackColor = true;
+            // 
+            // button88
+            // 
+            button88.Location = new Point(6, 121);
+            button88.Name = "button88";
+            button88.Size = new Size(188, 29);
+            button88.TabIndex = 7;
+            button88.Text = "Ally Attribute Count";
+            button88.UseVisualStyleBackColor = true;
+            button88.Click += Button88_Click;
+            // 
+            // checkBox37
+            // 
+            checkBox37.AutoSize = true;
+            checkBox37.Location = new Point(6, 91);
+            checkBox37.Name = "checkBox37";
+            checkBox37.Size = new Size(147, 24);
+            checkBox37.TabIndex = 6;
+            checkBox37.Text = "Randomize count";
+            checkBox37.UseVisualStyleBackColor = true;
+            // 
+            // button89
+            // 
+            button89.Location = new Point(6, 56);
+            button89.Name = "button89";
+            button89.Size = new Size(188, 29);
+            button89.TabIndex = 5;
+            button89.Text = "Ally Attributes";
+            button89.UseVisualStyleBackColor = true;
+            button89.Click += Button89_Click;
+            // 
+            // checkBox38
+            // 
+            checkBox38.AutoSize = true;
+            checkBox38.Location = new Point(6, 26);
+            checkBox38.Name = "checkBox38";
+            checkBox38.Size = new Size(144, 24);
+            checkBox38.TabIndex = 0;
+            checkBox38.Text = "Randomize allies";
+            checkBox38.UseVisualStyleBackColor = true;
+            // 
             // toolTip1
             // 
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
             // 
-            // checkBox30
+            // groupBox18
             // 
-            checkBox30.AutoSize = true;
-            checkBox30.Location = new Point(6, 121);
-            checkBox30.Name = "checkBox30";
-            checkBox30.Size = new Size(171, 24);
-            checkBox30.TabIndex = 10;
-            checkBox30.Text = "Force usable weapon";
-            checkBox30.UseVisualStyleBackColor = true;
+            groupBox18.AutoSize = true;
+            groupBox18.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox18.Controls.Add(checkBox43);
+            groupBox18.Controls.Add(button92);
+            groupBox18.Controls.Add(checkBox41);
+            groupBox18.Controls.Add(button93);
+            groupBox18.Controls.Add(checkBox42);
+            groupBox18.Location = new Point(2063, 315);
+            groupBox18.MinimumSize = new Size(200, 0);
+            groupBox18.Name = "groupBox18";
+            groupBox18.Size = new Size(200, 206);
+            groupBox18.TabIndex = 30;
+            groupBox18.TabStop = false;
+            groupBox18.Text = "Personal Skills";
+            // 
+            // button92
+            // 
+            button92.Location = new Point(6, 121);
+            button92.Name = "button92";
+            button92.Size = new Size(188, 29);
+            button92.TabIndex = 7;
+            button92.Text = "Skill Count";
+            button92.UseVisualStyleBackColor = true;
+            button92.Click += Button92_Click;
+            // 
+            // checkBox41
+            // 
+            checkBox41.AutoSize = true;
+            checkBox41.Location = new Point(6, 91);
+            checkBox41.Name = "checkBox41";
+            checkBox41.Size = new Size(147, 24);
+            checkBox41.TabIndex = 6;
+            checkBox41.Text = "Randomize count";
+            checkBox41.UseVisualStyleBackColor = true;
+            // 
+            // button93
+            // 
+            button93.Location = new Point(6, 56);
+            button93.Name = "button93";
+            button93.Size = new Size(188, 29);
+            button93.TabIndex = 5;
+            button93.Text = "Skills";
+            button93.UseVisualStyleBackColor = true;
+            button93.Click += Button93_Click;
+            // 
+            // checkBox42
+            // 
+            checkBox42.AutoSize = true;
+            checkBox42.Location = new Point(6, 26);
+            checkBox42.Name = "checkBox42";
+            checkBox42.Size = new Size(144, 24);
+            checkBox42.TabIndex = 0;
+            checkBox42.Text = "Randomize allies";
+            checkBox42.UseVisualStyleBackColor = true;
+            // 
+            // checkBox43
+            // 
+            checkBox43.AutoSize = true;
+            checkBox43.Location = new Point(6, 156);
+            checkBox43.Name = "checkBox43";
+            checkBox43.Size = new Size(138, 24);
+            checkBox43.TabIndex = 8;
+            checkBox43.Text = "Include enemies";
+            checkBox43.UseVisualStyleBackColor = true;
             // 
             // IndividualForm
             // 
@@ -1673,6 +1994,12 @@
             groupBox13.PerformLayout();
             groupBox15.ResumeLayout(false);
             groupBox15.PerformLayout();
+            groupBox16.ResumeLayout(false);
+            groupBox16.PerformLayout();
+            groupBox17.ResumeLayout(false);
+            groupBox17.PerformLayout();
+            groupBox18.ResumeLayout(false);
+            groupBox18.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1808,5 +2135,31 @@
         public CheckBox checkBox28;
         public CheckBox checkBox29;
         public CheckBox checkBox30;
+        private GroupBox groupBox16;
+        private Button button87;
+        public CheckBox checkBox35;
+        private Button button86;
+        public CheckBox checkBox34;
+        public CheckBox checkBox33;
+        private Button button85;
+        public CheckBox checkBox32;
+        private Button button84;
+        public CheckBox checkBox31;
+        public CheckBox checkBox36;
+        private GroupBox groupBox17;
+        private Button button88;
+        public CheckBox checkBox37;
+        private Button button89;
+        public CheckBox checkBox38;
+        private Button button90;
+        public CheckBox checkBox39;
+        private Button button91;
+        public CheckBox checkBox40;
+        private GroupBox groupBox18;
+        public CheckBox checkBox43;
+        private Button button92;
+        public CheckBox checkBox41;
+        private Button button93;
+        public CheckBox checkBox42;
     }
 }

@@ -154,7 +154,7 @@ namespace ALittleSecretIngredient
                 case DataSetEnum.GrowthTable:
                     List<ParamGroup> pgs = dataSet.Params.Cast<ParamGroup>().ToList();
                     List<string> syncStatSkillIDs = GD.SyncStatSkills.GetIDs();
-                    List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
+                    List<string> generalSkillIDs0 = GD.GeneralSkills.GetIDs();
                     switch (dfe)
                     {
                         case RandomizerDistribution.InheritanceSkills:
@@ -175,18 +175,18 @@ namespace ALittleSecretIngredient
                             return nds2;
                         case RandomizerDistribution.SynchroGeneralSkillsAlly:
                             NumericDistributionSetup nds3 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables), pg =>
-                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(generalSkillIDs.Contains)).Sum());
+                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(generalSkillIDs0.Contains)).Sum());
                             nds3.distributions[3] = new NormalConstant(100, 3, 1);
                             nds3.idx = 3;
                             return nds3;
                         case RandomizerDistribution.SynchroGeneralSkillsEnemy:
                             NumericDistributionSetup nds4 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables), pg =>
-                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(generalSkillIDs.Contains)).Sum());
+                                pg.Group.Cast<GrowthTable>().Select(gt => gt.SynchroSkills.Count(generalSkillIDs0.Contains)).Sum());
                             nds4.idx = 3;
                             return nds4;
                         case RandomizerDistribution.EngageSkills:
                             NumericDistributionSetup nds5 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.BondLevelTables), pg =>
-                                pg.Group.Cast<GrowthTable>().Select(gt => gt.EngageSkills.Count(generalSkillIDs.Contains)).Sum());
+                                pg.Group.Cast<GrowthTable>().Select(gt => gt.EngageSkills.Count(generalSkillIDs0.Contains)).Sum());
                             nds5.distributions[0] = new UniformConstant(10, 0, 2);
                             nds5.idx = 0;
                             return nds5;
@@ -325,6 +325,7 @@ namespace ALittleSecretIngredient
                     List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters).ToList();
                     List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters).ToList();
                     List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters).ToList();
+                    List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters).ToList();
                     List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
                     switch (dfe)
                     {
@@ -549,9 +550,34 @@ namespace ALittleSecretIngredient
                             nds23.idx = 0;
                             return nds23;
                         case RandomizerDistribution.GrowTotal:
-                            NumericDistributionSetup nds24 = GetNumericDistributionSetup(playableCharacters, i => i.GetBasicGrowths().Select(b => (int)b).Sum());
+                            NumericDistributionSetup nds24 = GetNumericDistributionSetup(playableCharacters, i =>
+                                i.GetBasicGrowths().Select(b => (int)b).Sum());
                             nds24.idx = 4;
                             return nds24;
+                        case RandomizerDistribution.ItemsWeapons:
+                            List<string> weaponIDs = GD.NormalWeapons.GetIDs();
+                            NumericDistributionSetup nds25 = GetNumericDistributionSetup(playableCharacters, i =>
+                                i.Items.Where(weaponIDs.Contains).Count());
+                            nds25.distributions[4] = new NormalRelative(100, 1);
+                            nds25.idx = 4;
+                            return nds25;
+                        case RandomizerDistribution.ItemsItems:
+                            List<string> itemIDs = GD.BattleItems.GetIDs();
+                            NumericDistributionSetup nds26 = GetNumericDistributionSetup(playableCharacters, i =>
+                                i.Items.Where(itemIDs.Contains).Count());
+                            nds26.distributions[4] = new NormalRelative(100, 1);
+                            nds26.idx = 4;
+                            return nds26;
+                        case RandomizerDistribution.AttrsAlly:
+                            return GetNumericDistributionSetup(playableCharacters, i => i.GetAttributes().Count);
+                        case RandomizerDistribution.AttrsEnemy:
+                            return GetNumericDistributionSetup(npcCharacters, i => i.GetAttributes().Count);
+                        case RandomizerDistribution.CommonSids:
+                            List<string> generalSkillIDs1 = GD.GeneralSkills.GetIDs();
+                            NumericDistributionSetup nds27 = GetNumericDistributionSetup(playableCharacters, i => i.CommonSids.Where(generalSkillIDs1.Contains).Count());
+                            nds27.distributions[1] = new UniformRelative(10, -1, 1);
+                            nds27.idx = 1;
+                            return nds27;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -601,7 +627,7 @@ namespace ALittleSecretIngredient
                 case DataSetEnum.GrowthTable:
                     List<ParamGroup> pgs = dataSet.Params.Cast<ParamGroup>().ToList();
                     List<string> syncStatSkillIDs = GD.SyncStatSkills.GetIDs();
-                    List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
+                    List<string> generalSkillIDs0 = GD.GeneralSkills.GetIDs();
                     switch (dfe)
                     {
                         case RandomizerDistribution.InheritanceSkills:
@@ -621,17 +647,17 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.SynchroGeneralSkillsAlly:
                             return GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => generalSkillIDs.Contains(s))).ToList(), s => s, GD.GeneralSkills);
+                                gt.SynchroSkills.Where(s => generalSkillIDs0.Contains(s))).ToList(), s => s, GD.GeneralSkills);
                         case RandomizerDistribution.SynchroGeneralSkillsEnemy:
                             SelectionDistributionSetup sds1 = GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => generalSkillIDs.Contains(s))).ToList(), s => s, GD.GeneralSkills);
+                                gt.SynchroSkills.Where(s => generalSkillIDs0.Contains(s))).ToList(), s => s, GD.GeneralSkills);
                             sds1.idx = 1;
                             return sds1;
                         case RandomizerDistribution.EngageSkills:
                             SelectionDistributionSetup sds2 = GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.BondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.EngageSkills.Where(s => generalSkillIDs.Contains(s))).ToList(), s => s, GD.GeneralSkills);
+                                gt.EngageSkills.Where(s => generalSkillIDs0.Contains(s))).ToList(), s => s, GD.GeneralSkills);
                             sds2.distributions[1] = new UniformSelection(100, ((Empirical)sds2.distributions[0]).weights.Select(i => i > 0).ToList());
                             sds2.idx = 1;
                             return sds2;
@@ -654,26 +680,52 @@ namespace ALittleSecretIngredient
                             return sds3;
                         case RandomizerDistribution.GrowthTableAptitude:
                             return GetSelectionDistributionSetup(pgs.FilterData(pg => pg.Name, GD.InheritableBondLevelTables).SelectMany(pg =>
-                            pg.Group.Cast<GrowthTable>()).SelectMany(gt => gt.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
+                                pg.Group.Cast<GrowthTable>()).SelectMany(gt => gt.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
+                    List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
+                    List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters);
+                    List<string> generalSkillIDs1 = GD.GeneralSkills.GetIDs();
                     switch (dfe)
                     {
                         case RandomizerDistribution.JidAlly:
-                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.Jid, GD.PlayableClasses);
+                            return GetSelectionDistributionSetup(playableCharacters, i => i.Jid, GD.PlayableClasses);
                         case RandomizerDistribution.JidEnemy:
                             List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
                             return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.NPCCharacters).Where(i =>
                                 generalClassIDs.Contains(i.Jid)).ToList(), i => i.Jid, GD.GeneralClasses);
                         case RandomizerDistribution.SupportCategory:
-                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters), i => i.SupportCategory, GD.SupportCategories);
+                            return GetSelectionDistributionSetup(playableCharacters, i => i.SupportCategory, GD.SupportCategories);
                         case RandomizerDistribution.IndividualAptitude:
-                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters).SelectMany(i => i.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
+                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetAptitudes()).ToList(), i => i,
+                                GD.Proficiencies);
                         case RandomizerDistribution.SubAptitude:
-                            return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.PlayableCharacters).SelectMany(i => i.GetSubAptitudes()).ToList(), i => i, GD.Proficiencies);
+                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetSubAptitudes()).ToList(), i => i,
+                                GD.Proficiencies);
+                        case RandomizerDistribution.ItemsWeapons:
+                            List<string> weaponIDs = GD.NormalWeapons.GetIDs();
+                            SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(playableCharacters.SelectMany(i =>
+                                i.Items.Where(weaponIDs.Contains)).ToList(), i => i, GD.NormalWeapons);
+                            sds0.idx = 1;
+                            return sds0;
+                        case RandomizerDistribution.ItemsItems:
+                            List<string> itemIDs = GD.BattleItems.GetIDs();
+                            SelectionDistributionSetup sds1 = GetSelectionDistributionSetup(playableCharacters.SelectMany(i =>
+                                i.Items.Where(itemIDs.Contains)).ToList(), i => i, GD.BattleItems);
+                            sds1.idx = 1;
+                            return sds1;
+                        case RandomizerDistribution.AttrsAlly:
+                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetAttributes()).ToList(), i => i,
+                                GD.Attributes);
+                        case RandomizerDistribution.AttrsEnemy:
+                            return GetSelectionDistributionSetup(npcCharacters.SelectMany(i => i.GetAttributes()).ToList(), i => i,
+                                GD.Attributes);
+                        case RandomizerDistribution.CommonSids:
+                            return GetSelectionDistributionSetup(npcCharacters.SelectMany(i =>
+                                i.CommonSids.Where(generalSkillIDs1.Contains)).ToList(), i => i, GD.GeneralSkills);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

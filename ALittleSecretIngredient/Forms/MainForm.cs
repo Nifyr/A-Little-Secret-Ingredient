@@ -59,14 +59,23 @@ namespace ALittleSecretIngredient.Forms
 
         private static void ExportSuccessMessage()
         {
-            MessageBox.Show("The Randomizer mod has been successfully exported and duly titled 'Output'. It has been placed *alongside* my executable.",
+            MessageBox.Show("The Randomizer mod has been successfully exported and deposited into the 'Output' folder, which " +
+                "is *positioned* alongside my executable.",
                 "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private static void NoChangesMessage()
         {
-            MessageBox.Show("It appears that there are no changes made. Could it be that you forgot to activate any of the *randomization* options?",
+            MessageBox.Show("It appears that there are no changes made. Could it be that you forgot to activate any of the " +
+                "*randomization* options?",
                 "No Options Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private static void NoExportTargetsMessage()
+        {
+            MessageBox.Show("The export of a mod cannot be executed if no format has been selected. Kindly ensure that you " +
+                "choose at *least* one option.",
+                "No Export Formats Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private RandomizerSettings RandomizerSettings
@@ -76,7 +85,9 @@ namespace ALittleSecretIngredient.Forms
                 RandomizerSettings rs = new()
                 {
                     Remember = rememberSettingsCheckBox.Checked,
-                    SaveChangelog = saveChangelogCheckBox.Checked
+                    SaveChangelog = saveChangelogCheckBox.Checked,
+                    ExportCobalt = exportCobaltCheckBox.Checked,
+                    ExportLayeredFS = exportLayeredFSCheckBox.Checked,
                 };
 
                 rs.AssetTable.ModelSwap = new(false, null!, new object[] { AssetTable.checkBox20.Checked, AssetTable.checkBox1.Checked,
@@ -345,6 +356,8 @@ namespace ALittleSecretIngredient.Forms
             {
                 rememberSettingsCheckBox.Checked = value.Remember;
                 saveChangelogCheckBox.Checked = value.SaveChangelog;
+                exportCobaltCheckBox.Checked = value.ExportCobalt;
+                exportLayeredFSCheckBox.Checked = value.ExportLayeredFS;
 
                 AssetTable.checkBox20.Checked = value.AssetTable.ModelSwap.GetArg<bool>(0);
                 AssetTable.checkBox1.Checked = value.AssetTable.ModelSwap.GetArg<bool>(1);
@@ -693,19 +706,33 @@ namespace ALittleSecretIngredient.Forms
 
         private void RandomizeAndExportButton_Click(object sender, EventArgs e)
         {
+            RandomizerSettings rs = RandomizerSettings;
             if (rememberSettingsCheckBox.Checked)
-                XmlParser.WriteRandomizerSettings(RandomizerSettings);
+                XmlParser.WriteRandomizerSettings(rs);
             else
                 FileManager.DeleteRandomizerSettings();
-            GlobalData.R.Randomize(RandomizerSettings);
-            bool success = GlobalData.Export();
-            if (success)
+            List<ExportFormat> targets = new();
+            if (rs.ExportCobalt) targets.Add(ExportFormat.Cobalt);
+            if (rs.ExportLayeredFS) targets.Add(ExportFormat.LayeredFS);
+            if (!targets.Any())
             {
-                ExportSuccessMessage();
-                Close();
+                NoExportTargetsMessage();
+                return;
             }
-            else
-                NoChangesMessage();
+            GlobalData.R.Randomize(rs);
+            switch (GlobalData.Export(targets))
+            {
+                case ExportResult.Success:
+                    ExportSuccessMessage();
+                    Close();
+                    break;
+                case ExportResult.NoChanges:
+                    NoChangesMessage();
+                    break;
+                case ExportResult.NoExportTargets:
+                    // This is handled before randomization, so this can't happen.
+                    throw new NotImplementedException();
+            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

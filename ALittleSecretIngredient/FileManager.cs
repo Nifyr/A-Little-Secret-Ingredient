@@ -15,8 +15,19 @@ namespace ALittleSecretIngredient
             (FileEnum.Person, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\person.xml.bundle"),
             (FileEnum.Skill, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\skill.xml.bundle")
         };
+        private Dictionary<FileEnum, string> CobaltPatches { get; } = new()
+        {
+            { FileEnum.AssetTable, "AssetTable.xml" },
+            { FileEnum.God, "God.xml" },
+            { FileEnum.Item, "Item.xml" },
+            { FileEnum.Job, "Job.xml" },
+            { FileEnum.Person, "Person.xml" },
+            { FileEnum.Skill, "Skill.xml" },
+        };
 
         private const string OutputFolderName = "Output";
+        private const string CobaltModName = "Cobalt Randomizer Mod";
+        private const string LayeredFSModName = "LayeredFS Randomizer Mod";
         private const string TempFolderName = "Temp";
         private const string RandomizerSettingsFileName = "RandomizerSettings.xml";
         private const string ChangelogFileName = "Changelog.txt";
@@ -61,7 +72,7 @@ namespace ALittleSecretIngredient
             foreach ((FileEnum fe, string localPath) in targetFiles)
                 Files.Add(fe, new()
                 {
-                    OutGamePath = @"romfs\Data\" + localPath,
+                    OutGamePath = @"Data\" + localPath,
                     SourcePath = dataDir + localPath
                 });
             return true;
@@ -95,11 +106,23 @@ namespace ALittleSecretIngredient
 
         private static string GetOutputPath() => $"{Directory.GetCurrentDirectory()}\\" +
             $"{OutputFolderName}";
-        private string GetOutputPath(FileEnum fe) => $"{GetOutputPath()}\\{Files[fe].OutGamePath}";
-        internal FileStream CreateOutputFile(FileEnum fe)
+        private static string GetOutputModPath(ExportFormat ef) => $"{GetOutputPath()}\\" +
+            $"{(ef == ExportFormat.Cobalt ? CobaltModName : LayeredFSModName)}";
+        private string GetPath(FileEnum fe, ExportFormat ef)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(GetOutputPath(fe))!);
-            return File.Create(GetOutputPath(fe));
+            string path = $"{GetOutputModPath(ef)}\\";
+            path += ef switch
+            {
+                ExportFormat.Cobalt => CobaltPatches.TryGetValue(fe, out string? fileName) ? $"patches\\{fileName}" : Files[fe].OutGamePath,
+                ExportFormat.LayeredFS => $"romfs\\{Files[fe].OutGamePath}",
+                _ => throw new NotImplementedException(),
+            };
+            return path;
+        }
+        internal FileStream CreateOutputFile(FileEnum fe, ExportFormat ef)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(GetPath(fe, ef))!);
+            return File.Create(GetPath(fe, ef));
         }
 
         internal static FileStream CreateRandomizerSettings() => File.Create(Directory.GetCurrentDirectory() + @"\" +

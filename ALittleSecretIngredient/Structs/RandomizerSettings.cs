@@ -6,7 +6,9 @@ namespace ALittleSecretIngredient.Structs
     public class RandomizerSettings
     {
         public bool Remember { get; set; } = new();
-        public bool SaveChangelog { get; set; } = new();
+        public bool SaveChangelog { get; set; } = true;
+        public bool ExportCobalt { get; set; } = true;
+        public bool ExportLayeredFS { get; set; } = true;
 
         public AssetTableSettings AssetTable { get; set; } = new();
         public GodGeneralSettings GodGeneral { get; set; } = new();

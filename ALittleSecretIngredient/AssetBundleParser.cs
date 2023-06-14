@@ -75,7 +75,7 @@ namespace ALittleSecretIngredient
             am = new();
             bfi = am.LoadBundleFile(fs0.Name, false);
             fs0.Dispose();
-            using FileStream fs1 = FM.CreateOutputFile(fe);
+            using FileStream fs1 = FM.CreateOutputFile(fe, ExportFormat.LayeredFS);
             afw = new(fs1);
             bfi.file.Pack(bfi.file.reader, afw, AssetBundleCompressionType.LZ4);
             afw.Dispose();

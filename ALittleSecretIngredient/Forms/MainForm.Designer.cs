@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tableLayoutPanel1 = new TableLayoutPanel();
             groupBox1 = new GroupBox();
+            exportLayeredFSCheckBox = new CheckBox();
+            exportCobaltCheckBox = new CheckBox();
             saveChangelogCheckBox = new CheckBox();
             rememberSettingsCheckBox = new CheckBox();
             randomizeAndExportButton = new Button();
@@ -41,8 +43,8 @@
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
-            toolTip1 = new ToolTip(components);
             button5 = new Button();
+            toolTip1 = new ToolTip(components);
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -67,6 +69,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(exportLayeredFSCheckBox);
+            groupBox1.Controls.Add(exportCobaltCheckBox);
             groupBox1.Controls.Add(saveChangelogCheckBox);
             groupBox1.Controls.Add(rememberSettingsCheckBox);
             groupBox1.Controls.Add(randomizeAndExportButton);
@@ -78,9 +82,37 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Main";
             // 
+            // exportLayeredFSCheckBox
+            // 
+            exportLayeredFSCheckBox.AutoSize = true;
+            exportLayeredFSCheckBox.Checked = true;
+            exportLayeredFSCheckBox.CheckState = CheckState.Checked;
+            exportLayeredFSCheckBox.Location = new Point(9, 151);
+            exportLayeredFSCheckBox.Name = "exportLayeredFSCheckBox";
+            exportLayeredFSCheckBox.Size = new Size(168, 24);
+            exportLayeredFSCheckBox.TabIndex = 4;
+            exportLayeredFSCheckBox.Text = "Export for LayeredFS";
+            toolTip1.SetToolTip(exportLayeredFSCheckBox, "This will result in the creation of a text document that *showcases* changes made in the exported mod.");
+            exportLayeredFSCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // exportCobaltCheckBox
+            // 
+            exportCobaltCheckBox.AutoSize = true;
+            exportCobaltCheckBox.Checked = true;
+            exportCobaltCheckBox.CheckState = CheckState.Checked;
+            exportCobaltCheckBox.Location = new Point(9, 121);
+            exportCobaltCheckBox.Name = "exportCobaltCheckBox";
+            exportCobaltCheckBox.Size = new Size(145, 24);
+            exportCobaltCheckBox.TabIndex = 3;
+            exportCobaltCheckBox.Text = "Export for Cobalt";
+            toolTip1.SetToolTip(exportCobaltCheckBox, "This will result in the creation of a text document that *showcases* changes made in the exported mod.");
+            exportCobaltCheckBox.UseVisualStyleBackColor = true;
+            // 
             // saveChangelogCheckBox
             // 
             saveChangelogCheckBox.AutoSize = true;
+            saveChangelogCheckBox.Checked = true;
+            saveChangelogCheckBox.CheckState = CheckState.Checked;
             saveChangelogCheckBox.Location = new Point(9, 91);
             saveChangelogCheckBox.Name = "saveChangelogCheckBox";
             saveChangelogCheckBox.Size = new Size(136, 24);
@@ -176,12 +208,6 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += Button3_Click;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // button5
             // 
             button5.Location = new Point(3, 143);
@@ -191,6 +217,12 @@
             button5.Text = "Character Data";
             button5.UseVisualStyleBackColor = true;
             button5.Click += Button5_Click;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
             // 
             // MainForm
             // 
@@ -226,5 +258,7 @@
         private ToolTip toolTip1;
         private Button button4;
         private Button button5;
+        private CheckBox exportLayeredFSCheckBox;
+        private CheckBox exportCobaltCheckBox;
     }
 }

@@ -14,9 +14,11 @@ namespace ALittleSecretIngredient
         private Dictionary<(FileEnum, string), Type> DataParamTypes { get; }
         internal Dictionary<DataSetEnum, (FileEnum fe, string name)> DataSetToSheetName { get; }
         private AssetBundleParser ABP { get; }
+        private FileManager FM { get; }
 
-        internal XmlParser(AssetBundleParser abp)
+        internal XmlParser(FileManager fm, AssetBundleParser abp)
         {
+            FM = fm;
             ABP = abp;
             Books = new();
             DataParamTypes = new();
@@ -66,12 +68,6 @@ namespace ALittleSecretIngredient
             return Books[fe];
         }
 
-        internal void Export(List<FileEnum> changedFiles)
-        {
-            foreach (FileEnum fe in changedFiles)
-                Export(fe);
-        }
-
         internal static void WriteRandomizerSettings(RandomizerSettings rs)
         {
             using FileStream fs = FileManager.CreateRandomizerSettings();
@@ -91,17 +87,36 @@ namespace ALittleSecretIngredient
             return rs;
         }
 
-        internal void Export(FileEnum fe)
+        internal void Export(IEnumerable<FileEnum> changedFiles, IEnumerable<ExportFormat> targets)
+        {
+            foreach (FileEnum fe in changedFiles)
+                Export(fe, targets);
+        }
+
+        internal void Export(FileEnum fe, IEnumerable<ExportFormat> targets)
         {
             XmlDocument xml = new();
             xml.Load(new StringReader(Encoding.UTF8.GetString(ABP.GetBytes(fe))[1..]));
             Books[fe].Write(xml.ChildNodes[1]!);
-            MemoryStream ms = new();
-            xml.Save(ms);
-            ms.Position = 0;
-            byte[] bytes = new byte[ms.Length];
-            ms.Read(bytes);
-            ABP.ExportBytes(fe, bytes);
+            foreach (ExportFormat ef in targets)
+                switch (ef)
+                {
+                    case ExportFormat.Cobalt:
+                        {
+                            using FileStream fs = FM.CreateOutputFile(fe, ef);
+                            xml.Save(fs);
+                            fs.Close();
+                            break;
+                        }
+                    case ExportFormat.LayeredFS:
+                        MemoryStream ms = new();
+                        xml.Save(ms);
+                        ms.Position = 0;
+                        byte[] bytes = new byte[ms.Length];
+                        ms.Read(bytes);
+                        ABP.ExportBytes(fe, bytes);
+                        break;
+                }
         }
 
         private class Book

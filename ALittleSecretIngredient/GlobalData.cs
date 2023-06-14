@@ -16,23 +16,24 @@ namespace ALittleSecretIngredient
         {
             FM = new();
             ABP = new(FM);
-            XP = new(ABP);
+            XP = new(FM, ABP);
             GD = new(XP, FM);
             R = new(GD);
             DDS = new(GD);
         }
 
-        internal bool Export()
+        internal ExportResult Export(IEnumerable<ExportFormat> targets)
         {
+            if (!targets.Any()) return ExportResult.NoExportTargets;
             FileManager.CleanOutputDir();
             List<FileEnum> changedFiles = FM.DirtyFiles();
-            if (changedFiles.Count == 0) return false;
-            XP.Export(changedFiles);
+            if (changedFiles.Count == 0) return ExportResult.NoChanges;
+            XP.Export(changedFiles, targets);
             FileManager.CleanTempDir();
             StringBuilder? changelog = R.PopChangelog();
             if (changelog != null)
                 FileManager.SaveChangelog(changelog);
-            return true;
+            return ExportResult.Success;
         }
     }
 }

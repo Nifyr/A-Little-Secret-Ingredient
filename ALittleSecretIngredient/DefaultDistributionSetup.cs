@@ -243,11 +243,11 @@ namespace ALittleSecretIngredient
                     {
                         case RandomizerDistribution.ScaleAll:
                             NumericDistributionSetup nds0 = GetNumericDistributionSetup(assets.Where(a => a.ScaleAll != 0).ToList(), a => a.ScaleAll);
-                            nds0.idx = 4;
+                            nds0.idx = 3;
                             return nds0;
                         case RandomizerDistribution.ScaleHead:
                             NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0).ToList(), a => a.ScaleHead);
-                            nds1.idx = 4;
+                            nds1.idx = 3;
                             return nds1;
                         case RandomizerDistribution.ScaleNeck:
                             NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0).ToList(), a => a.ScaleNeck);
@@ -558,14 +558,14 @@ namespace ALittleSecretIngredient
                             List<string> weaponIDs = GD.NormalWeapons.GetIDs();
                             NumericDistributionSetup nds25 = GetNumericDistributionSetup(playableCharacters, i =>
                                 i.Items.Where(weaponIDs.Contains).Count());
-                            nds25.distributions[4] = new NormalRelative(100, 1);
+                            nds25.distributions[4] = new NormalRelative(100, 0.4);
                             nds25.idx = 4;
                             return nds25;
                         case RandomizerDistribution.ItemsItems:
                             List<string> itemIDs = GD.BattleItems.GetIDs();
                             NumericDistributionSetup nds26 = GetNumericDistributionSetup(playableCharacters, i =>
                                 i.Items.Where(itemIDs.Contains).Count());
-                            nds26.distributions[4] = new NormalRelative(100, 1);
+                            nds26.distributions[4] = new NormalRelative(100, 0.4);
                             nds26.idx = 4;
                             return nds26;
                         case RandomizerDistribution.AttrsAlly:

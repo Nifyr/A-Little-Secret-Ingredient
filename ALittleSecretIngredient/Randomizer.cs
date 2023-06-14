@@ -1,5 +1,4 @@
 ﻿using ALittleSecretIngredient.Structs;
-using System.Linq;
 using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
@@ -63,8 +62,15 @@ namespace ALittleSecretIngredient
 
         private void DataPreAdjustment()
         {
-            // Unlock dragon stuff for fell child classes
+            // Set up comment modify events for Cobalt
             List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
+            for (int i = 0; i < assets.Count; i++)
+            {
+                int index = i;
+                assets[i].OnModified += a => a.Comment = "!Modify " + index;
+            }
+
+            // Unlock dragon stuff for fell child classes
             foreach (Asset a in assets)
                 switch(string.Join(';', a.Conditions))
                 {
@@ -1177,12 +1183,16 @@ namespace ALittleSecretIngredient
             HandleInventory(settings, playableCharacters, npcCharacters, toss, weaponIDs, itemIDs, entries);
 
             HandleFlagSet(settings.AttrsAlly, settings.AttrsAllyCount, playableCharacters, GD.Attributes, entries,
-                i => i.GetAttributes(), (i, l) => i.SetAttributes(l), "Attributes", false);
+                i => i.GetAttributes(), (i, l) => i.SetAttributes(l), "Attributes");
             HandleFlagSet(settings.AttrsEnemy, settings.AttrsEnemyCount, npcCharacters, GD.Attributes, entries,
-                i => i.GetAttributes(), (i, l) => i.SetAttributes(l), "Attributes", false);
+                i => i.GetAttributes(), (i, l) => i.SetAttributes(l), "Attributes");
 
             if (settings.CommonSids.Enabled)
-                RandomizePersonalSkills(settings, playableCharacters, npcCharacters, entries);
+            {
+                RandomizePersonalSkills(settings, playableCharacters, entries);
+                if (settings.CommonSids.GetArg<bool>(0))
+                    RandomizePersonalSkills(settings, npcCharacters, entries);
+            }
 
             StringBuilder innertable = new();
             List<(string id, string name)> mappedNames = MapNames(GD.Characters);
@@ -1196,16 +1206,20 @@ namespace ALittleSecretIngredient
             return ApplyTableTitle(innertable, "Characters");
         }
 
-        private void RandomizePersonalSkills(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters, List<Individual> npcCharacters, Dictionary<Individual, StringBuilder> entries)
+        private void RandomizePersonalSkills(RandomizerSettings.IndividualSettings settings, List<Individual> targets,
+            Dictionary<Individual, StringBuilder> entries)
         {
-            List<Individual> targets = playableCharacters;
+            List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
             if (settings.CommonSids.GetArg<bool>(0))
             {
-                targets = playableCharacters.Concat(npcCharacters).ToList();
-                targets.ForEach(i => i.CommonSids =
-                    i.CommonSids.Concat(i.NormalSids).Concat(i.HardSids).Concat(i.LunaticSids).Distinct().ToArray());
+                targets.ForEach(i => i.CommonSids = i.CommonSids.
+                    Concat(i.NormalSids.Where(generalSkillIDs.Contains)).
+                    Concat(i.HardSids.Where(generalSkillIDs.Contains)).
+                    Concat(i.LunaticSids.Where(generalSkillIDs.Contains)).Distinct().ToArray());
+                targets.ForEach(i => i.NormalSids = i.NormalSids.Where(s => !generalSkillIDs.Contains(s)).ToArray());
+                targets.ForEach(i => i.HardSids = i.HardSids.Where(s => !generalSkillIDs.Contains(s)).ToArray());
+                targets.ForEach(i => i.LunaticSids = i.LunaticSids.Where(s => !generalSkillIDs.Contains(s)).ToArray());
             }
-            List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
             if (settings.CommonSidsCount.Enabled)
                 RandomizeArraySizes(targets, i => i.CommonSids, (i, a) => i.CommonSids = a, settings.CommonSidsCount.Distribution,
                    generalSkillIDs);
@@ -1227,7 +1241,7 @@ namespace ALittleSecretIngredient
                 RandomizeArrayContents(inventoryTargets, i => i.Items, (i, a) => i.Items = a, settings.ItemsWeapons.Distribution, weaponIDs);
                 if (settings.ItemsWeapons.GetArg<bool>(0))
                     foreach (Individual i in inventoryTargets)
-                        EnsureUsableWeapons(toss, weaponIDs, i, false);
+                        EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon);
             }
             if (settings.ItemsItems.Enabled)
             {
@@ -1258,6 +1272,7 @@ namespace ALittleSecretIngredient
         {
             List<Node<int>> newCounts = targets.Select(t => new Node<int>(get(t).Where(pool.Contains).Count())).ToList();
             newCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, int.MaxValue);
+            IEnumerable<string> activePool = targets.SelectMany(t => get(t).Where(pool.Contains));
             for (int i = 0; i < targets.Count; i++)
             {
                 T t = targets[i];
@@ -1265,9 +1280,8 @@ namespace ALittleSecretIngredient
                 while (get(t).Where(pool.Contains).Count() < newCount)
                 {
                     IEnumerable<string> oldValues = get(t);
-                    IEnumerable<string> oldPoolValues = oldValues.Where(pool.Contains);
-                    if (oldPoolValues.Any())
-                        set(t, oldValues.Append(oldPoolValues.GetRandom()).ToArray());
+                    if (activePool.Any())
+                        set(t, oldValues.Append(activePool.GetRandom()).ToArray());
                     else
                         set(t, oldValues.Append(pool.GetRandom()).ToArray());
                 }

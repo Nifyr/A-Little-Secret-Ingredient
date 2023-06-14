@@ -187,4 +187,14 @@
         AttrsEnemy,
         CommonSids,
     }
+
+    internal enum ExportFormat
+    {
+        Cobalt, LayeredFS,
+    }
+
+    internal enum ExportResult
+    {
+        Success, NoChanges, NoExportTargets
+    }
 }

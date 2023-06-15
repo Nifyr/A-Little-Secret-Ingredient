@@ -337,7 +337,7 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.GrowTotal = new(Individual.checkBox27.Checked, Individual.GrowTotal.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeEnemyStatGrowths = Individual.checkBox29.Checked;
                 rs.Individual.ItemsWeapons = new(Individual.checkBox31.Checked, Individual.ItemsWeapons.Get(),
-                    new object[] { Individual.checkBox33.Checked });
+                    new object[] { Individual.checkBox33.Checked, Individual.checkBox44.Checked });
                 rs.Individual.ItemsWeaponCount = new(Individual.checkBox34.Checked, Individual.ItemsWeaponCount.Get(), Array.Empty<object>());
                 rs.Individual.ItemsItems = new(Individual.checkBox32.Checked, Individual.ItemsItems.Get(), Array.Empty<object>());
                 rs.Individual.ItemsItemCount = new(Individual.checkBox35.Checked, Individual.ItemsItemCount.Get(), Array.Empty<object>());
@@ -617,6 +617,7 @@ namespace ALittleSecretIngredient.Forms
                 Individual.checkBox34.Checked = value.Individual.ItemsWeaponCount.Enabled;
                 Individual.ItemsWeaponCount.Set(value.Individual.ItemsWeaponCount.Distribution);
                 Individual.checkBox33.Checked = value.Individual.ItemsWeapons.GetArg<bool>(0);
+                Individual.checkBox44.Checked = value.Individual.ItemsWeapons.GetArg<bool>(1);
                 Individual.checkBox32.Checked = value.Individual.ItemsItems.Enabled;
                 Individual.ItemsItems.Set(value.Individual.ItemsItems.Distribution);
                 Individual.checkBox35.Checked = value.Individual.ItemsItemCount.Enabled;

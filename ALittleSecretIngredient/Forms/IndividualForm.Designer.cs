@@ -179,13 +179,14 @@
             checkBox37 = new CheckBox();
             button89 = new Button();
             checkBox38 = new CheckBox();
-            toolTip1 = new ToolTip(components);
             groupBox18 = new GroupBox();
+            checkBox43 = new CheckBox();
             button92 = new Button();
             checkBox41 = new CheckBox();
             button93 = new Button();
             checkBox42 = new CheckBox();
-            checkBox43 = new CheckBox();
+            toolTip1 = new ToolTip(components);
+            checkBox44 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox14.SuspendLayout();
             groupBox7.SuspendLayout();
@@ -1662,6 +1663,7 @@
             // 
             groupBox16.AutoSize = true;
             groupBox16.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox16.Controls.Add(checkBox44);
             groupBox16.Controls.Add(checkBox36);
             groupBox16.Controls.Add(button87);
             groupBox16.Controls.Add(checkBox35);
@@ -1675,7 +1677,7 @@
             groupBox16.Location = new Point(1857, 3);
             groupBox16.MinimumSize = new Size(200, 0);
             groupBox16.Name = "groupBox16";
-            groupBox16.Size = new Size(200, 366);
+            groupBox16.Size = new Size(200, 396);
             groupBox16.TabIndex = 28;
             groupBox16.TabStop = false;
             groupBox16.Text = "Static Starting Inventory";
@@ -1683,7 +1685,7 @@
             // checkBox36
             // 
             checkBox36.AutoSize = true;
-            checkBox36.Location = new Point(6, 316);
+            checkBox36.Location = new Point(6, 346);
             checkBox36.Name = "checkBox36";
             checkBox36.Size = new Size(138, 24);
             checkBox36.TabIndex = 16;
@@ -1692,7 +1694,7 @@
             // 
             // button87
             // 
-            button87.Location = new Point(6, 281);
+            button87.Location = new Point(6, 311);
             button87.Name = "button87";
             button87.Size = new Size(188, 29);
             button87.TabIndex = 15;
@@ -1703,7 +1705,7 @@
             // checkBox35
             // 
             checkBox35.AutoSize = true;
-            checkBox35.Location = new Point(7, 251);
+            checkBox35.Location = new Point(7, 281);
             checkBox35.Name = "checkBox35";
             checkBox35.Size = new Size(147, 24);
             checkBox35.TabIndex = 14;
@@ -1742,7 +1744,7 @@
             // 
             // button85
             // 
-            button85.Location = new Point(6, 216);
+            button85.Location = new Point(6, 246);
             button85.Name = "button85";
             button85.Size = new Size(188, 29);
             button85.TabIndex = 7;
@@ -1753,7 +1755,7 @@
             // checkBox32
             // 
             checkBox32.AutoSize = true;
-            checkBox32.Location = new Point(6, 186);
+            checkBox32.Location = new Point(6, 216);
             checkBox32.Name = "checkBox32";
             checkBox32.Size = new Size(146, 24);
             checkBox32.TabIndex = 6;
@@ -1880,12 +1882,6 @@
             checkBox38.Text = "Randomize allies";
             checkBox38.UseVisualStyleBackColor = true;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // groupBox18
             // 
             groupBox18.AutoSize = true;
@@ -1902,6 +1898,16 @@
             groupBox18.TabIndex = 30;
             groupBox18.TabStop = false;
             groupBox18.Text = "Personal Skills";
+            // 
+            // checkBox43
+            // 
+            checkBox43.AutoSize = true;
+            checkBox43.Location = new Point(6, 156);
+            checkBox43.Name = "checkBox43";
+            checkBox43.Size = new Size(138, 24);
+            checkBox43.TabIndex = 8;
+            checkBox43.Text = "Include enemies";
+            checkBox43.UseVisualStyleBackColor = true;
             // 
             // button92
             // 
@@ -1943,15 +1949,22 @@
             checkBox42.Text = "Randomize allies";
             checkBox42.UseVisualStyleBackColor = true;
             // 
-            // checkBox43
+            // toolTip1
             // 
-            checkBox43.AutoSize = true;
-            checkBox43.Location = new Point(6, 156);
-            checkBox43.Name = "checkBox43";
-            checkBox43.Size = new Size(138, 24);
-            checkBox43.TabIndex = 8;
-            checkBox43.Text = "Include enemies";
-            checkBox43.UseVisualStyleBackColor = true;
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
+            // checkBox44
+            // 
+            checkBox44.AutoSize = true;
+            checkBox44.Location = new Point(21, 186);
+            checkBox44.Margin = new Padding(18, 3, 3, 3);
+            checkBox44.Name = "checkBox44";
+            checkBox44.Size = new Size(139, 24);
+            checkBox44.TabIndex = 17;
+            checkBox44.Text = "Lower rank early";
+            checkBox44.UseVisualStyleBackColor = true;
             // 
             // IndividualForm
             // 
@@ -2161,5 +2174,6 @@
         public CheckBox checkBox41;
         private Button button93;
         public CheckBox checkBox42;
+        public CheckBox checkBox44;
     }
 }

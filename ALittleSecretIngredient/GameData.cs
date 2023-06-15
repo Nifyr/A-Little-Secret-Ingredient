@@ -90,7 +90,7 @@ namespace ALittleSecretIngredient
             ("PID_マデリーン", "Madeline")
         };
 
-        internal List<(string id, string name)> AllyNPCCharacters { get; } = new()
+        internal List<(string id, string name)> FixedLevelAllyNPCCharacters { get; } = new()
         {
             ("PID_S001_ジャン_父親", "Sean"),
             ("PID_S001_村人_青年男", "Jean Paralogue Villager 1"), ("PID_S001_村人_青年女", "Jean Paralogue Villager 2"),
@@ -112,6 +112,10 @@ namespace ALittleSecretIngredient
             ("PID_E006_エル", "Xenologue 6 Nel"), ("PID_E006_エル_竜化", "Xenologue 6 Transformed Nel"),
             ("PID_E006_セレスティア", "Xenologue 6 Zelestia"), ("PID_E006_グレゴリー", "Xenologue 6 Gregory"),
             ("PID_E006_マデリーン", "Xenologue 6 Madeline"),
+        };
+
+        internal List<(string id, string name)> AllyNPCCharacters { get; } = new() // FixedLevelAllyNPCCharacters +
+        {
             ("PID_召喚_ソードファイター", "Sword Fighter Summon 1"), ("PID_召喚_ソードファイター_重装特効", "Sword Fighter Summon 2"),
             ("PID_召喚_ソードファイター_竜特効", "Sword Fighter Summon 3"), ("PID_召喚_ランスファイター", "Lance Fighter Summon 1"),
             ("PID_召喚_ランスファイター_大槍", "Lance Fighter Summon 2"), ("PID_召喚_ランスファイター_手槍", "Lance Fighter Summon 3"),
@@ -194,7 +198,7 @@ namespace ALittleSecretIngredient
 
         internal List<(string id, string name)> AllyCharacters { get; } = new(); // PlayableCharacters + AllyNPCCharacters
 
-        internal List<(string id, string name)> EnemyCharacters { get; } = new()
+        internal List<(string id, string name)> FixedLevelEnemyCharacters { get; } = new()
         {
             ("PID_M001_異形兵_蛮族_ボス", "Chapter 1 Boss"), ("PID_M001_異形兵_蛮族_雑魚A", "Chapter 1 Corrupted 1"),
             ("PID_M001_異形兵_蛮族_雑魚B", "Chapter 1 Corrupted 2"), ("PID_M001_異形兵_蛮族_雑魚C", "Chapter 1 Corrupted 3"),
@@ -534,56 +538,6 @@ namespace ALittleSecretIngredient
             ("PID_M026_異形兵_ウルフナイト", "Chapter 26 Corrupted 32"), ("PID_M026_異形兵_グリフォンナイト", "Chapter 26 Corrupted 33"),
             ("PID_M026_異形兵_ドラゴンナイト", "Chapter 26 Corrupted 34"), ("PID_M026_異形兵_ジェネラル", "Chapter 26 Corrupted 35"),
             ("PID_M026_異形兵_グレートナイト", "Chapter 26 Corrupted 36"), ("PID_M026_異形兵_シーフ", "Chapter 26 Corrupted 37"),
-            ("PID_闘技場_マルス", "Arena Marth"), ("PID_闘技場_シグルド", "Arena Sigurd"),
-            ("PID_闘技場_セリカ", "Arena Celica"), ("PID_闘技場_ミカヤ", "Arena Micaiah"),
-            ("PID_闘技場_ロイ", "Arena Roy"), ("PID_闘技場_リーフ", "Arena Leif"),
-            ("PID_闘技場_ルキナ", "Arena Lucina"), ("PID_闘技場_リン", "Arena Lyn"),
-            ("PID_闘技場_アイク", "Arena Ike"), ("PID_闘技場_ベレト", "Arena Byleth"),
-            ("PID_闘技場_カムイ", "Arena Corrin"), ("PID_闘技場_エイリーク", "Arena Eirika"),
-            ("PID_遭遇戦_異形兵_男", "Skirmish Corrupted Male"), ("PID_遭遇戦_異形兵_女", "Skirmish Corrupted Female"),
-            ("PID_遭遇戦_異形兵_男_上級", "Skirmish Strong Corrupted Male"), ("PID_遭遇戦_異形兵_女_上級", "Skirmish Strong Corrupted Female"),
-            ("PID_遭遇戦_ならずもの_男", "Skirmish Ruffian Male"), ("PID_遭遇戦_ならずもの_女", "Skirmish Ruffian Female"),
-            ("PID_遭遇戦_フィレネ兵_男", "Skirmish Firenese Male"), ("PID_遭遇戦_フィレネ兵_女", "Skirmish Firenese Female"),
-            ("PID_遭遇戦_ブロディア兵_男", "Skirmish Brodian Male"), ("PID_遭遇戦_ブロディア兵_女", "Skirmish Brodian Female"),
-            ("PID_遭遇戦_ソルム兵_男", "Skirmish Solmic Male"), ("PID_遭遇戦_ソルム兵_女", "Skirmish Solmic Female"),
-            ("PID_遭遇戦_イルシオン兵_男", "Skirmish Elusian Male"), ("PID_遭遇戦_イルシオン兵_女", "Skirmish Elusian Female"),
-            ("PID_遭遇戦_レア経験値_男", "Skirmish Silver Corrupted Male"), ("PID_遭遇戦_レア経験値_女", "Skirmish Silver Corrupted Female"),
-            ("PID_遭遇戦_レアお金_男", "Skirmish Gold Corrupted Male"), ("PID_遭遇戦_レアお金_女", "Skirmish Gold Corrupted Female"),
-            ("PID_やり込み_幻影兵_男", "Tempest Trial Fabrication Male"), ("PID_やり込み_幻影兵_女", "Tempest Trial Fabrication Female"),
-            ("PID_やり込み_幻影竜", "Tempest Trial Phantom Wyrm"), ("PID_G000_幻影兵_ソードファイター", "Divine Paralogue Fabrication 1"),
-            ("PID_G000_幻影兵_ランスファイター", "Divine Paralogue Fabrication 2"), ("PID_G000_幻影兵_アクスファイター", "Divine Paralogue Fabrication 3"),
-            ("PID_G000_幻影兵_アーチャー", "Divine Paralogue Fabrication 4"), ("PID_G000_幻影兵_ソードペガサス", "Divine Paralogue Fabrication 5"),
-            ("PID_G000_幻影兵_ランスペガサス", "Divine Paralogue Fabrication 6"), ("PID_G000_幻影兵_アクスペガサス", "Divine Paralogue Fabrication 7"),
-            ("PID_G000_幻影兵_ソードナイト", "Divine Paralogue Fabrication 8"), ("PID_G000_幻影兵_ランスナイト", "Divine Paralogue Fabrication 9"),
-            ("PID_G000_幻影兵_アクスナイト", "Divine Paralogue Fabrication 10"), ("PID_G000_幻影兵_ソードアーマー", "Divine Paralogue Fabrication 11"),
-            ("PID_G000_幻影兵_ランスアーマー", "Divine Paralogue Fabrication 12"), ("PID_G000_幻影兵_アクスアーマー", "Divine Paralogue Fabrication 13"),
-            ("PID_G000_幻影兵_マージ", "Divine Paralogue Fabrication 14"), ("PID_G000_幻影兵_モンク", "Divine Paralogue Fabrication 15"),
-            ("PID_G000_幻影兵_エンチャント", "Divine Paralogue Fabrication 16"), ("PID_G000_幻影兵_マージカノン", "Divine Paralogue Fabrication 17"),
-            ("PID_G000_幻影兵_シーフ", "Divine Paralogue Fabrication 18"), ("PID_G000_幻影竜", "Divine Paralogue Fabrication 19"),
-            ("PID_G000_幻影飛竜", "Divine Paralogue Fabrication 20"), ("PID_G000_幻影狼", "Divine Paralogue Fabrication 21"),
-            ("PID_G000_幻影兵_ソードペガサス_経験値なし", "Divine Paralogue Fabrication 22"), ("PID_G000_幻影兵_ランスペガサス_経験値なし", "Divine Paralogue Fabrication 23"),
-            ("PID_G000_幻影兵_アクスナイト_経験値なし", "Divine Paralogue Fabrication 24"), ("PID_G001_チキ", "Tiki Paralogue Tiki"),
-            ("PID_G001_チキ_特効無効", "Tiki Paralogue No Effectiveness Tiki"), ("PID_G001_チキ_竜化", "Tiki Paralogue Transformed Tiki"),
-            ("PID_G001_チキ_竜化_特効無効", "Tiki Paralogue Transformed No Effectiveness Tiki"), ("PID_G000_幻影飛竜_弱", "Divine Paralogue 0 Fabrication 25"),
-            ("PID_G002_ヘクトル", "Hector Paralogue Hector"), ("PID_G002_幻影兵_オズイン", "Hector Paralogue Oswin"),
-            ("PID_G002_幻影兵_マシュー", "Hector Paralogue Matthew"), ("PID_G002_幻影兵_ウルフナイト", "Hector Paralogue Fabrication 1"),
-            ("PID_G002_幻影兵_ソードペガサス_増援", "Hector Paralogue Fabrication 2"), ("PID_G002_幻影兵_ランスペガサス_増援", "Hector Paralogue Fabrication 3"),
-            ("PID_G002_幻影兵_ソードナイト_増援", "Hector Paralogue Fabrication 4"), ("PID_G002_幻影兵_ランスナイト_増援", "Hector Paralogue Fabrication 5"),
-            ("PID_G002_幻影兵_アクスペガサス_増援", "Hector Paralogue Fabrication 6"), ("PID_G002_幻影兵_アクスアーマー_増援", "Hector Paralogue Fabrication 7"),
-            ("PID_G002_幻影兵_ランスファイター_増援", "Hector Paralogue Fabrication 8"), ("PID_G003_ヴェロニカ_ノーマル", "Veronica Paralogue Veronica Normal"),
-            ("PID_G003_ヴェロニカ", "Veronica Paralogue Veronica"), ("PID_G004_セネリオ", "Soren Paralogue Soren"),
-            ("PID_G004_セネリオ_移動－１", "Soren Paralogue Mov -1 Soren"), ("PID_G004_セネリオ_ルナ", "Soren Paralogue Soren Maddening"),
-            ("PID_G004_セネリオ_ルナ_移動－１", "Soren Paralogue Mov -1 Soren Maddening"), ("PID_G004_幻影兵_シーフ_移動－１", "Soren Paralogue Fabrication 1"),
-            ("PID_G004_幻影兵_シーフ_移動－３", "Soren Paralogue Fabrication 2"), ("PID_G004_幻影兵_ソードペガサス_経験値なし", "Soren Paralogue Fabrication 3"),
-            ("PID_G004_幻影兵_ランスペガサス_経験値なし", "Soren Paralogue Fabrication 4"), ("PID_G004_幻影兵_ソードナイト_経験値なし", "Soren Paralogue Fabrication 5"),
-            ("PID_G004_幻影兵_アクスナイト_経験値なし", "Soren Paralogue Fabrication 6"), ("PID_G005_カミラ", "Camilla Paralogue Camilla"),
-            ("PID_G005_幻影兵_ベルカ", "Camilla Paralogue Beruka"), ("PID_G005_幻影兵_ベルカ_スキル持ち", "Camilla Paralogue Skilled Beruka"),
-            ("PID_G005_幻影兵_ルーナ", "Camilla Paralogue Severa"), ("PID_G005_幻影兵_ルーナ_スキル持ち", "Camilla Paralogue Skilled Severa"),
-            ("PID_G005_幻影兵_シーフ", "Camilla Paralogue Fabrication 1"), ("PID_G005_幻影兵_ドラゴンナイト", "Camilla Paralogue Fabrication 2"),
-            ("PID_G005_幻影兵_グリフォンナイト", "Camilla Paralogue Fabrication 3"), ("PID_G006_クロム", "Chrom Paralogue Chrom"),
-            ("PID_G006_クロム_移動－１", "Chrom Paralogue Mov -1 Chrom"), ("PID_G006_ルフレ", "Chrom Paralogue Robin"),
-            ("PID_G006_ルフレ_移動－１", "Chrom Paralogue Mov -1 Robin"), ("PID_G006_幻影兵_セイジ", "Chrom Paralogue Fabrication 1"),
-            ("PID_G006_幻影狼_移動－１", "Chrom Paralogue Fabrication 2"),
             ("PID_E001_Boss", "Xenologue 1 Fogado"), ("PID_E001_Boss_竜化", "Xenologue 1 Transformed Fogado"),
             ("PID_E001_異形兵_異形狼", "Xenologue 1 Corrupted Wolf 1"), ("PID_E001_異形兵強_異形狼", "Xenologue 1 Corrupted Wolf 2"),
             ("PID_E001_超強_異形狼", "Xenologue 1 Corrupted Wolf 3"), ("PID_E001_異形兵_アーチャー", "Xenologue 1 Corrupted 1"),
@@ -654,6 +608,60 @@ namespace ALittleSecretIngredient
             ("PID_E006_召喚異形兵_マージナイト", "Xenologue 6 Corrupted Summon 11"), ("PID_E006_召喚異形兵_ウルフナイト", "Xenologue 6 Corrupted Summon 12"),
             ("PID_E006_召喚異形兵_マージカノン", "Xenologue 6 Corrupted Summon 13"), ("PID_E006_召喚異形兵_セイジ", "Xenologue 6 Corrupted Summon 14"),
             ("PID_E006_召喚異形兵_異形狼", "Xenologue 6 Corrupted Wolf Summon 1"), ("PID_E006_召喚異形兵強_異形狼", "Xenologue 6 Corrupted Wolf Summon 2"),
+        };
+
+        internal List<(string id, string name)> EnemyCharacters { get; } = new() // FixedLevelEnemyCharacters +
+        {
+            ("PID_闘技場_マルス", "Arena Marth"), ("PID_闘技場_シグルド", "Arena Sigurd"),
+            ("PID_闘技場_セリカ", "Arena Celica"), ("PID_闘技場_ミカヤ", "Arena Micaiah"),
+            ("PID_闘技場_ロイ", "Arena Roy"), ("PID_闘技場_リーフ", "Arena Leif"),
+            ("PID_闘技場_ルキナ", "Arena Lucina"), ("PID_闘技場_リン", "Arena Lyn"),
+            ("PID_闘技場_アイク", "Arena Ike"), ("PID_闘技場_ベレト", "Arena Byleth"),
+            ("PID_闘技場_カムイ", "Arena Corrin"), ("PID_闘技場_エイリーク", "Arena Eirika"),
+            ("PID_遭遇戦_異形兵_男", "Skirmish Corrupted Male"), ("PID_遭遇戦_異形兵_女", "Skirmish Corrupted Female"),
+            ("PID_遭遇戦_異形兵_男_上級", "Skirmish Strong Corrupted Male"), ("PID_遭遇戦_異形兵_女_上級", "Skirmish Strong Corrupted Female"),
+            ("PID_遭遇戦_ならずもの_男", "Skirmish Ruffian Male"), ("PID_遭遇戦_ならずもの_女", "Skirmish Ruffian Female"),
+            ("PID_遭遇戦_フィレネ兵_男", "Skirmish Firenese Male"), ("PID_遭遇戦_フィレネ兵_女", "Skirmish Firenese Female"),
+            ("PID_遭遇戦_ブロディア兵_男", "Skirmish Brodian Male"), ("PID_遭遇戦_ブロディア兵_女", "Skirmish Brodian Female"),
+            ("PID_遭遇戦_ソルム兵_男", "Skirmish Solmic Male"), ("PID_遭遇戦_ソルム兵_女", "Skirmish Solmic Female"),
+            ("PID_遭遇戦_イルシオン兵_男", "Skirmish Elusian Male"), ("PID_遭遇戦_イルシオン兵_女", "Skirmish Elusian Female"),
+            ("PID_遭遇戦_レア経験値_男", "Skirmish Silver Corrupted Male"), ("PID_遭遇戦_レア経験値_女", "Skirmish Silver Corrupted Female"),
+            ("PID_遭遇戦_レアお金_男", "Skirmish Gold Corrupted Male"), ("PID_遭遇戦_レアお金_女", "Skirmish Gold Corrupted Female"),
+            ("PID_やり込み_幻影兵_男", "Tempest Trial Fabrication Male"), ("PID_やり込み_幻影兵_女", "Tempest Trial Fabrication Female"),
+            ("PID_やり込み_幻影竜", "Tempest Trial Phantom Wyrm"), ("PID_G000_幻影兵_ソードファイター", "Divine Paralogue Fabrication 1"),
+            ("PID_G000_幻影兵_ランスファイター", "Divine Paralogue Fabrication 2"), ("PID_G000_幻影兵_アクスファイター", "Divine Paralogue Fabrication 3"),
+            ("PID_G000_幻影兵_アーチャー", "Divine Paralogue Fabrication 4"), ("PID_G000_幻影兵_ソードペガサス", "Divine Paralogue Fabrication 5"),
+            ("PID_G000_幻影兵_ランスペガサス", "Divine Paralogue Fabrication 6"), ("PID_G000_幻影兵_アクスペガサス", "Divine Paralogue Fabrication 7"),
+            ("PID_G000_幻影兵_ソードナイト", "Divine Paralogue Fabrication 8"), ("PID_G000_幻影兵_ランスナイト", "Divine Paralogue Fabrication 9"),
+            ("PID_G000_幻影兵_アクスナイト", "Divine Paralogue Fabrication 10"), ("PID_G000_幻影兵_ソードアーマー", "Divine Paralogue Fabrication 11"),
+            ("PID_G000_幻影兵_ランスアーマー", "Divine Paralogue Fabrication 12"), ("PID_G000_幻影兵_アクスアーマー", "Divine Paralogue Fabrication 13"),
+            ("PID_G000_幻影兵_マージ", "Divine Paralogue Fabrication 14"), ("PID_G000_幻影兵_モンク", "Divine Paralogue Fabrication 15"),
+            ("PID_G000_幻影兵_エンチャント", "Divine Paralogue Fabrication 16"), ("PID_G000_幻影兵_マージカノン", "Divine Paralogue Fabrication 17"),
+            ("PID_G000_幻影兵_シーフ", "Divine Paralogue Fabrication 18"), ("PID_G000_幻影竜", "Divine Paralogue Fabrication 19"),
+            ("PID_G000_幻影飛竜", "Divine Paralogue Fabrication 20"), ("PID_G000_幻影狼", "Divine Paralogue Fabrication 21"),
+            ("PID_G000_幻影兵_ソードペガサス_経験値なし", "Divine Paralogue Fabrication 22"), ("PID_G000_幻影兵_ランスペガサス_経験値なし", "Divine Paralogue Fabrication 23"),
+            ("PID_G000_幻影兵_アクスナイト_経験値なし", "Divine Paralogue Fabrication 24"), ("PID_G001_チキ", "Tiki Paralogue Tiki"),
+            ("PID_G001_チキ_特効無効", "Tiki Paralogue No Effectiveness Tiki"), ("PID_G001_チキ_竜化", "Tiki Paralogue Transformed Tiki"),
+            ("PID_G001_チキ_竜化_特効無効", "Tiki Paralogue Transformed No Effectiveness Tiki"), ("PID_G000_幻影飛竜_弱", "Divine Paralogue 0 Fabrication 25"),
+            ("PID_G002_ヘクトル", "Hector Paralogue Hector"), ("PID_G002_幻影兵_オズイン", "Hector Paralogue Oswin"),
+            ("PID_G002_幻影兵_マシュー", "Hector Paralogue Matthew"), ("PID_G002_幻影兵_ウルフナイト", "Hector Paralogue Fabrication 1"),
+            ("PID_G002_幻影兵_ソードペガサス_増援", "Hector Paralogue Fabrication 2"), ("PID_G002_幻影兵_ランスペガサス_増援", "Hector Paralogue Fabrication 3"),
+            ("PID_G002_幻影兵_ソードナイト_増援", "Hector Paralogue Fabrication 4"), ("PID_G002_幻影兵_ランスナイト_増援", "Hector Paralogue Fabrication 5"),
+            ("PID_G002_幻影兵_アクスペガサス_増援", "Hector Paralogue Fabrication 6"), ("PID_G002_幻影兵_アクスアーマー_増援", "Hector Paralogue Fabrication 7"),
+            ("PID_G002_幻影兵_ランスファイター_増援", "Hector Paralogue Fabrication 8"), ("PID_G003_ヴェロニカ_ノーマル", "Veronica Paralogue Veronica Normal"),
+            ("PID_G003_ヴェロニカ", "Veronica Paralogue Veronica"), ("PID_G004_セネリオ", "Soren Paralogue Soren"),
+            ("PID_G004_セネリオ_移動－１", "Soren Paralogue Mov -1 Soren"), ("PID_G004_セネリオ_ルナ", "Soren Paralogue Soren Maddening"),
+            ("PID_G004_セネリオ_ルナ_移動－１", "Soren Paralogue Mov -1 Soren Maddening"), ("PID_G004_幻影兵_シーフ_移動－１", "Soren Paralogue Fabrication 1"),
+            ("PID_G004_幻影兵_シーフ_移動－３", "Soren Paralogue Fabrication 2"), ("PID_G004_幻影兵_ソードペガサス_経験値なし", "Soren Paralogue Fabrication 3"),
+            ("PID_G004_幻影兵_ランスペガサス_経験値なし", "Soren Paralogue Fabrication 4"), ("PID_G004_幻影兵_ソードナイト_経験値なし", "Soren Paralogue Fabrication 5"),
+            ("PID_G004_幻影兵_アクスナイト_経験値なし", "Soren Paralogue Fabrication 6"), ("PID_G005_カミラ", "Camilla Paralogue Camilla"),
+            ("PID_G005_幻影兵_ベルカ", "Camilla Paralogue Beruka"), ("PID_G005_幻影兵_ベルカ_スキル持ち", "Camilla Paralogue Skilled Beruka"),
+            ("PID_G005_幻影兵_ルーナ", "Camilla Paralogue Severa"), ("PID_G005_幻影兵_ルーナ_スキル持ち", "Camilla Paralogue Skilled Severa"),
+            ("PID_G005_幻影兵_シーフ", "Camilla Paralogue Fabrication 1"), ("PID_G005_幻影兵_ドラゴンナイト", "Camilla Paralogue Fabrication 2"),
+            ("PID_G005_幻影兵_グリフォンナイト", "Camilla Paralogue Fabrication 3"), ("PID_G006_クロム", "Chrom Paralogue Chrom"),
+            ("PID_G006_クロム_移動－１", "Chrom Paralogue Mov -1 Chrom"), ("PID_G006_ルフレ", "Chrom Paralogue Robin"),
+            ("PID_G006_ルフレ_移動－１", "Chrom Paralogue Mov -1 Robin"), ("PID_G006_幻影兵_セイジ", "Chrom Paralogue Fabrication 1"),
+            ("PID_G006_幻影狼_移動－１", "Chrom Paralogue Fabrication 2"),
             ("PID_闘技場_エーデルガルト", "Arena Edelgard"),
             ("PID_闘技場_ディミトリ", "Arena Dimitri"), ("PID_闘技場_クロード", "Arena Claude"),
             ("PID_闘技場_チキ", "Arena Tiki"), ("PID_闘技場_ヘクトル", "Arena Hector"),
@@ -775,6 +783,8 @@ namespace ALittleSecretIngredient
 
         internal List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
         internal List<(string id, string name)> NPCCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
+        internal List<(string id, string name)> FixedLevelCharacters { get; } = new(); // PlayableCharacters + FixedLevelAllyNPCCharacters +
+                                                                                       // FixedLevelEnemyCharacters
         #endregion
         #region Class IDs
         internal List<(string id, string name)> UniversalClasses { get; } = new()
@@ -2690,13 +2700,18 @@ namespace ALittleSecretIngredient
             BondLevelTables.AddRange(AllyBondLevelTables);
             BondLevelTables.AddRange(EnemyBondLevelTables);
             PlayableCharacters.AddRange(ProtagonistCharacters);
+            AllyNPCCharacters.AddRange(FixedLevelAllyNPCCharacters);
             AllyCharacters.AddRange(PlayableCharacters);
             AllyCharacters.AddRange(AllyNPCCharacters);
+            EnemyCharacters.AddRange(FixedLevelEnemyCharacters);
             Characters.AddRange(AllyCharacters);
             Characters.AddRange(EnemyCharacters);
             Characters.AddRange(OtherNPCCharacters);
             NPCCharacters.AddRange(AllyNPCCharacters);
             NPCCharacters.AddRange(EnemyCharacters);
+            FixedLevelCharacters.AddRange(PlayableCharacters);
+            FixedLevelCharacters.AddRange(FixedLevelAllyNPCCharacters);
+            FixedLevelCharacters.AddRange(FixedLevelEnemyCharacters);
             PlayableClasses.AddRange(UniversalClasses);
             PlayableClasses.AddRange(MaleExclusiveClasses);
             PlayableClasses.AddRange(FemaleExclusiveClasses);

@@ -1241,7 +1241,7 @@ namespace ALittleSecretIngredient
                 RandomizeArrayContents(inventoryTargets, i => i.Items, (i, a) => i.Items = a, settings.ItemsWeapons.Distribution, weaponIDs);
                 if (settings.ItemsWeapons.GetArg<bool>(0))
                     foreach (Individual i in inventoryTargets)
-                        EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon);
+                        EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon, settings.ItemsWeapons.GetArg<bool>(1));
             }
             if (settings.ItemsItems.Enabled)
             {
@@ -1341,37 +1341,41 @@ namespace ALittleSecretIngredient
                 legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
-                EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon);
+                EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon, false);
             }
             WriteToChangelog(entries, npcClassCharacters, i => i.Jid, "Class", GD.GeneralClasses);
             GD.SetDirty(DataSetEnum.Individual);
             GD.SetDirty(DataSetEnum.Asset);
         }
 
-        private void EnsureUsableWeapons(List<TypeOfSoldier> toss, List<string> weaponIDs, Individual i, bool force)
+        private void EnsureUsableWeapons(List<TypeOfSoldier> toss, List<string> weaponIDs, Individual i, bool forceMin1, bool useLevel)
         {
-            List<string> legalWeapons = GetLegalWeapons(i, toss);
+            List<string> legalWeapons = GetLegalWeapons(i, toss, useLevel);
             if (legalWeapons.Count == 0)
                 return;
-            if (force && i.Items.Length == 0)
+            if (forceMin1 && i.Items.Length == 0)
                 i.Items = new string[] { legalWeapons.GetRandom() };
             for (int itemIdx = 0; itemIdx < i.Items.Length; itemIdx++)
                 if (weaponIDs.Contains(i.Items[itemIdx]) && !legalWeapons.Contains(i.Items[itemIdx]))
                     i.Items[itemIdx] = legalWeapons.GetRandom();
         }
 
-        private List<string> GetLegalWeapons(Individual i, List<TypeOfSoldier> toss)
+        private List<string> GetLegalWeapons(Individual i, List<TypeOfSoldier> toss, bool useLevel)
         {
             List<string> legalWeapons = new();
             if (i.Jid == "")
                 return legalWeapons;
-            string[] maxWeaponLevels = i.GetTOS(toss).GetMaxWeaponLevels();
+            TypeOfSoldier tos = i.GetTOS(toss);
+            string[] maxWeaponLevels = tos.GetMaxWeaponLevels();
             List<GameData.ProficiencyLevel> proficiencyLevels = maxWeaponLevels.Select(ToProficiencyLevel).ToList();
             foreach (int pIdx in i.GetAptitudes())
                 proficiencyLevels[pIdx] = proficiencyLevels[pIdx] == GameData.ProficiencyLevel.S ? GameData.ProficiencyLevel.S :
                     (GameData.ProficiencyLevel)(((int)proficiencyLevels[pIdx]) + 1);
+            int weaponLevel = i.Level + (tos.Rank == 1 ? 20 : 0);
+            if (!useLevel || !GD.FixedLevelCharacters.Any(t => t.id == i.Pid))
+                weaponLevel = 40;
             for (int pIdx = 0; pIdx < proficiencyLevels.Count; pIdx++)
-                legalWeapons.AddRange(GetLegalWeapons((GameData.Proficiency)pIdx, proficiencyLevels[pIdx]));
+                legalWeapons.AddRange(GetLegalWeapons((GameData.Proficiency)pIdx, proficiencyLevels[pIdx], weaponLevel));
 
             if ((i.Pid == "PID_リュール" || i.Pid == "PID_M002_ルミエル") &&
                 (int)proficiencyLevels[(int)GameData.Proficiency.Sword] >= (int)GameData.ProficiencyLevel.D)
@@ -1416,21 +1420,21 @@ namespace ALittleSecretIngredient
             return legalWeapons;
         }
 
-        private List<string> GetLegalWeapons(GameData.Proficiency p, GameData.ProficiencyLevel pl)
+        private List<string> GetLegalWeapons(GameData.Proficiency p, GameData.ProficiencyLevel pl, int totalLevel)
         {
             List<string> legalWeapons = new();
             List<List<(string id, string name)>> weapons = GD.WeaponTypeLookup[p]; 
             if ((int)pl >= (int)GameData.ProficiencyLevel.D)
                 legalWeapons.AddRange(weapons[0].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.C)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.C && totalLevel >= 8)
                 legalWeapons.AddRange(weapons[1].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.B)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.B && totalLevel >= 16)
                 legalWeapons.AddRange(weapons[2].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.A)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.A && totalLevel >= 24)
                 legalWeapons.AddRange(weapons[3].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.S)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.S && totalLevel >= 32)
                 legalWeapons.AddRange(weapons[4].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.S)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.S && totalLevel >= 32)
                 legalWeapons.AddRange(weapons[5].GetIDs());
             return legalWeapons;
         }
@@ -1503,7 +1507,7 @@ namespace ALittleSecretIngredient
                     continue;
                 }
                 retryCounter = 0;
-                EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon);
+                EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon, false);
             }
             WriteToChangelog(entries, individuals, i => i.Jid, "Starting Class", GD.PlayableClasses);
             GD.SetDirty(DataSetEnum.Individual);

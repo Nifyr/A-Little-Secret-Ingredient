@@ -1127,7 +1127,8 @@ namespace ALittleSecretIngredient
             if (settings.RandomizeBirthday)
                 RandomizeBirthdays(playableCharacters, entries);
 
-            HandleLevel(settings.LevelAlly, allyCharacters, toss, entries);
+            //CHANGING THE PROTAGONIST'S LEVEL CRASHES THE GAME
+            HandleLevel(settings.LevelAlly, allyCharacters.Where(i => i.Pid != "PID_リュール").ToList(), toss, entries);
             HandleLevel(settings.LevelEnemy, enemyCharacters, toss, entries);
 
             if (settings.InternalLevel.Enabled)

@@ -113,7 +113,7 @@ namespace ALittleSecretIngredient
             string path = $"{GetOutputModPath(ef)}\\";
             path += ef switch
             {
-                ExportFormat.Cobalt => CobaltPatches.TryGetValue(fe, out string? fileName) ? $"patches\\{fileName}" : Files[fe].OutGamePath,
+                ExportFormat.Cobalt => CobaltPatches.TryGetValue(fe, out string? fileName) ? $"patches\\xml\\{fileName}" : Files[fe].OutGamePath,
                 ExportFormat.LayeredFS => $"romfs\\{Files[fe].OutGamePath}",
                 _ => throw new NotImplementedException(),
             };

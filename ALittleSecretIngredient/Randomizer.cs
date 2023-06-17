@@ -1,4 +1,5 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Collections.Generic;
 using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
@@ -620,6 +621,17 @@ namespace ALittleSecretIngredient
             // Pair bond links
             allyEngageableEmblems.ForEach(gg => { if (gg.LinkGid != "") ggs.First(gg0 => gg0.Gid == gg.LinkGid).LinkGid = gg.Gid; });
 
+            if (settings.Link.Enabled)
+            {
+                // Get Alear emblems
+                List<GodGeneral> alearEmblems = ggs.Where(gg => GD.AlearEmblems.Select(t => t.id).Contains(gg.Gid)).ToList();
+                // Randomize
+                alearEmblems.Randomize(gg => gg.Link, (gg, s) => gg.Link = s, settings.Link.Distribution, playableCharacterIDs);
+                // Remove duplicate characters
+                RemoveDuplicateLinks(alearEmblems);
+                WriteToChangelog(entries, alearEmblems, gg => gg.Link, "Engage+ Link", MapNames(GD.PlayableCharacters));
+                GD.SetDirty(DataSetEnum.GodGeneral);
+            }
             if (settings.Link.GetArg<bool>(0))
             {
                 // Filter down selection based on "Engage+ Link % per emblem" field.
@@ -632,18 +644,12 @@ namespace ALittleSecretIngredient
                 foreach (GodGeneral gg in linkableEmblems)
                     if (!randomizeSelection.Contains(gg))
                         gg.Link = "";
+                // Remove duplicate characters
+                RemoveDuplicateLinks(allyEngageableEmblems);
                 WriteToChangelog(entries, linkableEmblems, gg => gg.Link, "Engage+ Link", MapNames(GD.PlayableCharacters));
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
-            if (settings.Link.Enabled)
-            {
-                // Get Alear emblems
-                List<GodGeneral> alearEmblems = ggs.Where(gg => GD.AlearEmblems.Select(t => t.id).Contains(gg.Gid)).ToList();
-                // Randomize
-                alearEmblems.Randomize(gg => gg.Link, (gg, s) => gg.Link = s, settings.Link.Distribution, playableCharacterIDs);
-                WriteToChangelog(entries, alearEmblems, gg => gg.Link, "Engage+ Link", MapNames(GD.PlayableCharacters));
-                GD.SetDirty(DataSetEnum.GodGeneral);
-            }
+
 
             if (settings.EngageCount.Enabled)
             {
@@ -823,6 +829,19 @@ namespace ALittleSecretIngredient
                     innerTable.AppendLine(entries[gg].ToString());
                 }
             return ApplyTableTitle(innerTable, "Emblems");
+        }
+
+        private static void RemoveDuplicateLinks(List<GodGeneral> allyEngageableEmblems)
+        {
+            HashSet<string> linkedCharacters = new();
+            List<GodGeneral> shuffled = allyEngageableEmblems;
+            new Redistribution(100).Randomize(shuffled);
+            foreach (GodGeneral gg in shuffled)
+                if (gg.Link != "")
+                    if (linkedCharacters.Contains(gg.Link))
+                        gg.Link = "";
+                    else
+                        linkedCharacters.Add(gg.Link);
         }
 
         private List<(string id, string name)> MapNames(IEnumerable<(string id, string name)> characters) =>

@@ -151,7 +151,7 @@
             groupBox2.Location = new Point(3, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 254);
-            groupBox2.TabIndex = 2;
+            groupBox2.TabIndex = 0;
             groupBox2.TabStop = false;
             groupBox2.Text = "Engage+ Characters";
             // 
@@ -366,6 +366,7 @@
             groupBox6.Controls.Add(checkBox10);
             groupBox6.Controls.Add(checkBox8);
             groupBox6.Location = new Point(209, 150);
+            groupBox6.MinimumSize = new Size(200, 0);
             groupBox6.Name = "groupBox6";
             groupBox6.Size = new Size(200, 106);
             groupBox6.TabIndex = 5;
@@ -374,9 +375,10 @@
             // 
             // checkBox10
             // 
+            checkBox10.AutoSize = true;
             checkBox10.Location = new Point(6, 56);
             checkBox10.Name = "checkBox10";
-            checkBox10.Size = new Size(188, 24);
+            checkBox10.Size = new Size(136, 24);
             checkBox10.TabIndex = 1;
             checkBox10.Text = "Shuffle enemies";
             toolTip1.SetToolTip(checkBox10, "This will alter the set of bonuses that opponents receive from *bond levels*.");
@@ -384,9 +386,10 @@
             // 
             // checkBox8
             // 
+            checkBox8.AutoSize = true;
             checkBox8.Location = new Point(6, 26);
             checkBox8.Name = "checkBox8";
-            checkBox8.Size = new Size(188, 24);
+            checkBox8.Size = new Size(115, 24);
             checkBox8.TabIndex = 0;
             checkBox8.Text = "Shuffle allies";
             toolTip1.SetToolTip(checkBox8, "This alters the set of bonuses your characters receive from *bond levels*.");
@@ -746,7 +749,7 @@
             groupBox9.Location = new Point(621, 3);
             groupBox9.Name = "groupBox9";
             groupBox9.Size = new Size(200, 129);
-            groupBox9.TabIndex = 4;
+            groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
             groupBox9.Text = "Weapon Restriction";
             // 
@@ -808,6 +811,7 @@
             groupBox5.ResumeLayout(false);
             groupBox5.PerformLayout();
             groupBox6.ResumeLayout(false);
+            groupBox6.PerformLayout();
             groupBox7.ResumeLayout(false);
             groupBox7.PerformLayout();
             groupBox8.ResumeLayout(false);

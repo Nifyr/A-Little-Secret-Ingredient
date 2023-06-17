@@ -62,13 +62,14 @@ namespace ALittleSecretIngredient
 
         private void DataPreAdjustment()
         {
-            // Set up comment modify events for Cobalt
             List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
-            for (int i = 0; i < assets.Count; i++)
-            {
-                int index = i;
-                assets[i].OnModified += a => a.Comment = "!Modify " + index;
-            }
+
+            // Set up comment modify events for Cobalt - OBSOLETE AS OF COBALT 0.9.0
+            //for (int i = 0; i < assets.Count; i++)
+            //{
+            //    int index = i;
+            //    assets[i].OnModified += a => a.Comment = "!Modify " + index;
+            //}
 
             // Unlock dragon stuff for fell child classes
             foreach (Asset a in assets)

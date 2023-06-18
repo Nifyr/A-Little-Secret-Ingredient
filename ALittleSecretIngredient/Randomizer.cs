@@ -1511,7 +1511,7 @@ namespace ALittleSecretIngredient
             List<TypeOfSoldier> toss, List<string> weaponIDs, Dictionary<Individual, StringBuilder> entries)
         {
             List<int> totalLevels = individuals.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
-            individuals.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.JidEnemy.Distribution, GD.PlayableClasses.GetIDs());
+            individuals.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.JidAlly.Distribution, GD.PlayableClasses.GetIDs());
             if (settings.JidEnemy.GetArg<bool>(0))
                 foreach (Individual i in individuals)
                 {

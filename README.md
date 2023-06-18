@@ -15,12 +15,26 @@ Made with artistic passion!
 ## Available Randomizations
 - Bond Level Exp Requirements
 - Bond Level Bond Fragment Costs
+- Character Ages
 - Character Animation Swap
-- Character Body Shape/Size
+- Character Attributes
+- Character Base Stat Modifiers
+- Character Birthdays
+- Character Body Shapes/Sizes
+- Character Internal Levels
 - Character Model Swap
 - Character Mount Model Swap
-- Character Outfit Color Palette
+- Character Outfit Color Palettes
 - Character Outfit Swap
+- Character Personal Skills
+- Character Proficiencies
+- Character Starting Classes
+- Character Starting Levels
+- Character Starting SP
+- Character Stat Growths
+- Character Stat Limit Modifiers
+- Character Static Starting Inventories
+- Character Support Categories
 - Emblem Bond Level Table Assignment
 - Emblem Bond Link Pairings
 - Emblem Bond Link Skills
@@ -37,6 +51,12 @@ Made with artistic passion!
 - Emblem Sync Skills
 - Emblem Sync Stats
 - Emblem Weapon Restrictions
+- Enemy Attributes
+- Enemy Base Stat Modifiers
+- Enemy Classes
+- Enemy Levels
+- Enemy Personal Skills
+- Enemy Static Starting Inventories
 
 ## About
 You may have noticed that buttons are littered all over the settings windows, all of which open one of two types of windows: a numeric distribution control or a selection distribution control. These windows serve as ways for you to edit the probability distributions of each individual randomization option. If this sounds like a bother to learn and to deal with, know that it is entirely optional. All of them come pre-set with an acceptable - "mid-heat," so to speak - configuration.

@@ -263,6 +263,7 @@
             checkBox30.Size = new Size(171, 24);
             checkBox30.TabIndex = 10;
             checkBox30.Text = "Force usable weapon";
+            toolTip1.SetToolTip(checkBox30, "This compels every unit to begin with a weapon they can utilize if their class was randomized, *regardless* of the situation.");
             checkBox30.UseVisualStyleBackColor = true;
             // 
             // checkBox26
@@ -273,6 +274,7 @@
             checkBox26.Size = new Size(133, 24);
             checkBox26.TabIndex = 13;
             checkBox26.Text = "Grouped shuffe";
+            toolTip1.SetToolTip(checkBox26, "This causes enemy class randomization to select classes on a per-*class* basis rather than on a per-unit basis. Consequently, it disregards the probability distribution defined above.");
             checkBox26.UseVisualStyleBackColor = true;
             // 
             // button71
@@ -293,6 +295,7 @@
             checkBox24.Size = new Size(165, 24);
             checkBox24.TabIndex = 11;
             checkBox24.Text = "Randomize enemies";
+            toolTip1.SetToolTip(checkBox24, "This alters the *classes* of enemies.");
             checkBox24.UseVisualStyleBackColor = true;
             // 
             // checkBox23
@@ -303,6 +306,7 @@
             checkBox23.Size = new Size(160, 24);
             checkBox23.TabIndex = 6;
             checkBox23.Text = "Match proficiencies";
+            toolTip1.SetToolTip(checkBox23, "This results in *classes* being chosen based on the proficiencies of the units.");
             checkBox23.UseVisualStyleBackColor = true;
             // 
             // button59
@@ -323,6 +327,7 @@
             checkBox22.Size = new Size(144, 24);
             checkBox22.TabIndex = 0;
             checkBox22.Text = "Randomize allies";
+            toolTip1.SetToolTip(checkBox22, "This alters the *classes* in which playable units begin their journey.");
             checkBox22.UseVisualStyleBackColor = true;
             // 
             // groupBox7
@@ -357,6 +362,7 @@
             checkBox20.Size = new Size(106, 24);
             checkBox20.TabIndex = 0;
             checkBox20.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox20, "This alters the age of most *playable* characters.");
             checkBox20.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -380,6 +386,7 @@
             checkBox1.Size = new Size(106, 24);
             checkBox1.TabIndex = 0;
             checkBox1.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox1, "This adjusts the date of each playable character's *birthday.*");
             checkBox1.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -416,6 +423,7 @@
             checkBox4.Size = new Size(165, 24);
             checkBox4.TabIndex = 6;
             checkBox4.Text = "Randomize enemies";
+            toolTip1.SetToolTip(checkBox4, "This alters the *levels* of enemies.");
             checkBox4.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -436,6 +444,7 @@
             checkBox2.Size = new Size(144, 24);
             checkBox2.TabIndex = 0;
             checkBox2.Text = "Randomize allies";
+            toolTip1.SetToolTip(checkBox2, "This adjusts the starting level of *allied* characters.");
             checkBox2.UseVisualStyleBackColor = true;
             // 
             // groupBox3
@@ -470,6 +479,7 @@
             checkBox3.Size = new Size(106, 24);
             checkBox3.TabIndex = 0;
             checkBox3.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox3, "This modifies the rate at which playable characters *accumulate* experience.");
             checkBox3.UseVisualStyleBackColor = true;
             // 
             // groupBox4
@@ -504,6 +514,7 @@
             checkBox5.Size = new Size(106, 24);
             checkBox5.TabIndex = 0;
             checkBox5.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox5, "This adjusts the stat bonuses that characters provide through *support.*");
             checkBox5.UseVisualStyleBackColor = true;
             // 
             // groupBox5
@@ -538,6 +549,7 @@
             checkBox6.Size = new Size(106, 24);
             checkBox6.TabIndex = 0;
             checkBox6.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox6, "This modifies the *initial* amount of SP that each unit possesses.");
             checkBox6.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -574,6 +586,7 @@
             checkBox8.Size = new Size(147, 24);
             checkBox8.TabIndex = 6;
             checkBox8.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox8, "This modifies the *number* of proficiencies that are innate to each unit.");
             checkBox8.UseVisualStyleBackColor = true;
             // 
             // button7
@@ -594,6 +607,7 @@
             checkBox7.Size = new Size(106, 24);
             checkBox7.TabIndex = 0;
             checkBox7.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox7, "This alters the proficiencies that are innate to each *unit.*");
             checkBox7.UseVisualStyleBackColor = true;
             // 
             // groupBox8
@@ -630,6 +644,7 @@
             checkBox9.Size = new Size(147, 24);
             checkBox9.TabIndex = 6;
             checkBox9.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox9, "This modifies the number of extra proficiencies that each unit *starts* with.");
             checkBox9.UseVisualStyleBackColor = true;
             // 
             // button10
@@ -650,6 +665,7 @@
             checkBox10.Size = new Size(106, 24);
             checkBox10.TabIndex = 0;
             checkBox10.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox10, "This adjusts the extra *proficiencies* that each unit starts with.");
             checkBox10.UseVisualStyleBackColor = true;
             // 
             // groupBox9
@@ -688,6 +704,7 @@
             checkBox21.Size = new Size(169, 24);
             checkBox21.TabIndex = 20;
             checkBox21.Text = "Stronger protagonist";
+            toolTip1.SetToolTip(checkBox21, "To alleviate the potential burden, this grants the protagonist *additional* base stats.");
             checkBox21.UseVisualStyleBackColor = true;
             // 
             // checkBox12
@@ -698,6 +715,7 @@
             checkBox12.Size = new Size(153, 24);
             checkBox12.TabIndex = 21;
             checkBox12.Text = "Stronger ally NPCs";
+            toolTip1.SetToolTip(checkBox12, "To mitigate their potential burden, this provides green units with a *significant* boost in base stats.");
             checkBox12.UseVisualStyleBackColor = true;
             // 
             // button22
@@ -718,6 +736,7 @@
             checkBox13.Size = new Size(118, 24);
             checkBox13.TabIndex = 17;
             checkBox13.Text = "Use stat total";
+            toolTip1.SetToolTip(checkBox13, "This guarantees that randomly assigned base stats conform to a predefined *total.*");
             checkBox13.UseVisualStyleBackColor = true;
             // 
             // button21
@@ -838,6 +857,7 @@
             checkBox11.Size = new Size(106, 24);
             checkBox11.TabIndex = 0;
             checkBox11.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox11, "This alters the *base stats* that allied units have at level 1.");
             checkBox11.UseVisualStyleBackColor = true;
             // 
             // groupBox10
@@ -884,6 +904,7 @@
             checkBox15.Size = new Size(118, 24);
             checkBox15.TabIndex = 17;
             checkBox15.Text = "Use stat total";
+            toolTip1.SetToolTip(checkBox15, "This guarantees that randomly assigned base stats conform to a predefined *total.*");
             checkBox15.UseVisualStyleBackColor = true;
             // 
             // button24
@@ -1004,6 +1025,7 @@
             checkBox16.Size = new Size(106, 24);
             checkBox16.TabIndex = 0;
             checkBox16.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox16, "This modifies the base stats of enemies at level 1 on *normal* difficulty.");
             checkBox16.UseVisualStyleBackColor = true;
             // 
             // groupBox11
@@ -1050,6 +1072,7 @@
             checkBox14.Size = new Size(118, 24);
             checkBox14.TabIndex = 17;
             checkBox14.Text = "Use stat total";
+            toolTip1.SetToolTip(checkBox14, "This guarantees that randomly assigned base stats conform to a predefined *total.*");
             checkBox14.UseVisualStyleBackColor = true;
             // 
             // button36
@@ -1170,6 +1193,7 @@
             checkBox17.Size = new Size(106, 24);
             checkBox17.TabIndex = 0;
             checkBox17.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox17, "This modifies the base stats of enemies at level 1 on hard *difficulty.*");
             checkBox17.UseVisualStyleBackColor = true;
             // 
             // groupBox12
@@ -1216,6 +1240,7 @@
             checkBox18.Size = new Size(118, 24);
             checkBox18.TabIndex = 17;
             checkBox18.Text = "Use stat total";
+            toolTip1.SetToolTip(checkBox18, "This guarantees that randomly assigned base stats conform to a predefined *total.*");
             checkBox18.UseVisualStyleBackColor = true;
             // 
             // button48
@@ -1336,6 +1361,7 @@
             checkBox19.Size = new Size(106, 24);
             checkBox19.TabIndex = 0;
             checkBox19.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox19, "This adjusts the base stats of *enemies* at level 1 on maddening difficulty.");
             checkBox19.UseVisualStyleBackColor = true;
             // 
             // groupBox13
@@ -1480,6 +1506,7 @@
             checkBox25.Size = new Size(106, 24);
             checkBox25.TabIndex = 0;
             checkBox25.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox25, "This modifies the stat cap *modifiers* of playable units.");
             checkBox25.UseVisualStyleBackColor = true;
             // 
             // groupBox15
@@ -1517,6 +1544,7 @@
             checkBox29.Size = new Size(138, 24);
             checkBox29.TabIndex = 19;
             checkBox29.Text = "Include enemies";
+            toolTip1.SetToolTip(checkBox29, "This extends the randomization of *stat growths* to enemies with custom stat growths as well.");
             checkBox29.UseVisualStyleBackColor = true;
             // 
             // button72
@@ -1537,6 +1565,7 @@
             checkBox27.Size = new Size(141, 24);
             checkBox27.TabIndex = 17;
             checkBox27.Text = "Use total growth";
+            toolTip1.SetToolTip(checkBox27, "This ensures that randomly generated stat growths align with a predetermined *total.*");
             checkBox27.UseVisualStyleBackColor = true;
             // 
             // button73
@@ -1657,6 +1686,7 @@
             checkBox28.Size = new Size(144, 24);
             checkBox28.TabIndex = 0;
             checkBox28.Text = "Randomize allies";
+            toolTip1.SetToolTip(checkBox28, "This adjusts the rate at which playable *units* gain stats as they level up.");
             checkBox28.UseVisualStyleBackColor = true;
             // 
             // groupBox16
@@ -1691,6 +1721,7 @@
             checkBox44.Size = new Size(139, 24);
             checkBox44.TabIndex = 17;
             checkBox44.Text = "Lower rank early";
+            toolTip1.SetToolTip(checkBox44, "This restricts higher-ranking weapons to higher-level units, aiming to enhance game balance by aligning weapon strength with *game* progression.");
             checkBox44.UseVisualStyleBackColor = true;
             // 
             // checkBox36
@@ -1701,6 +1732,7 @@
             checkBox36.Size = new Size(138, 24);
             checkBox36.TabIndex = 22;
             checkBox36.Text = "Include enemies";
+            toolTip1.SetToolTip(checkBox36, "This extends the randomization to *include* the inventories of enemy units.");
             checkBox36.UseVisualStyleBackColor = true;
             // 
             // button87
@@ -1721,6 +1753,7 @@
             checkBox35.Size = new Size(147, 24);
             checkBox35.TabIndex = 20;
             checkBox35.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox35, "This determines the quantity of items that each *character* is equipped with at the beginning of the game.");
             checkBox35.UseVisualStyleBackColor = true;
             // 
             // button86
@@ -1741,6 +1774,7 @@
             checkBox34.Size = new Size(147, 24);
             checkBox34.TabIndex = 12;
             checkBox34.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox34, "This adjusts the quantity of weapons that each *character* is required to start with.");
             checkBox34.UseVisualStyleBackColor = true;
             // 
             // checkBox33
@@ -1751,6 +1785,7 @@
             checkBox33.Size = new Size(171, 24);
             checkBox33.TabIndex = 14;
             checkBox33.Text = "Only usable weapons";
+            toolTip1.SetToolTip(checkBox33, "This guarantees that the chosen weapons are suitable for each *character*, ensuring they can be effectively wielded.");
             checkBox33.UseVisualStyleBackColor = true;
             // 
             // button85
@@ -1771,6 +1806,7 @@
             checkBox32.Size = new Size(146, 24);
             checkBox32.TabIndex = 18;
             checkBox32.Text = "Randomize items";
+            toolTip1.SetToolTip(checkBox32, "This modifies the *items* that each character is initially equipped with.");
             checkBox32.UseVisualStyleBackColor = true;
             // 
             // button84
@@ -1791,6 +1827,7 @@
             checkBox31.Size = new Size(169, 24);
             checkBox31.TabIndex = 0;
             checkBox31.Text = "Randomize weapons";
+            toolTip1.SetToolTip(checkBox31, "This modifies the initial weapons that each *character* is equipped with.");
             checkBox31.UseVisualStyleBackColor = true;
             // 
             // groupBox17
@@ -1831,6 +1868,7 @@
             checkBox39.Size = new Size(147, 24);
             checkBox39.TabIndex = 10;
             checkBox39.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox39, "This modifies the quantity of additional *attributes* that enemies possess.");
             checkBox39.UseVisualStyleBackColor = true;
             // 
             // button91
@@ -1851,6 +1889,7 @@
             checkBox40.Size = new Size(165, 24);
             checkBox40.TabIndex = 8;
             checkBox40.Text = "Randomize enemies";
+            toolTip1.SetToolTip(checkBox40, "This alters the additional attributes *possessed* by enemies.");
             checkBox40.UseVisualStyleBackColor = true;
             // 
             // button88
@@ -1871,6 +1910,7 @@
             checkBox37.Size = new Size(147, 24);
             checkBox37.TabIndex = 6;
             checkBox37.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox37, "This modifies the quantity of attributes that are deemed permanent for each *playable* character.");
             checkBox37.UseVisualStyleBackColor = true;
             // 
             // button89
@@ -1891,6 +1931,7 @@
             checkBox38.Size = new Size(144, 24);
             checkBox38.TabIndex = 0;
             checkBox38.Text = "Randomize allies";
+            toolTip1.SetToolTip(checkBox38, "This alters the set of attributes that are considered *permanent* for each playable character.");
             checkBox38.UseVisualStyleBackColor = true;
             // 
             // groupBox18
@@ -1918,6 +1959,7 @@
             checkBox43.Size = new Size(138, 24);
             checkBox43.TabIndex = 8;
             checkBox43.Text = "Include enemies";
+            toolTip1.SetToolTip(checkBox43, "This extends the randomization to the skills *possessed* by enemies.");
             checkBox43.UseVisualStyleBackColor = true;
             // 
             // button92
@@ -1938,6 +1980,7 @@
             checkBox41.Size = new Size(147, 24);
             checkBox41.TabIndex = 6;
             checkBox41.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox41, "This determines the quantity of exclusive skills that are uniquely *tied* to each playable unit.");
             checkBox41.UseVisualStyleBackColor = true;
             // 
             // button93
@@ -1958,6 +2001,7 @@
             checkBox42.Size = new Size(144, 24);
             checkBox42.TabIndex = 0;
             checkBox42.Text = "Randomize allies";
+            toolTip1.SetToolTip(checkBox42, "This alters the repertoire of exclusive *skills* possessed by each playable unit.");
             checkBox42.UseVisualStyleBackColor = true;
             // 
             // toolTip1

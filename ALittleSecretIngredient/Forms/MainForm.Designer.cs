@@ -92,7 +92,7 @@
             exportLayeredFSCheckBox.Size = new Size(168, 24);
             exportLayeredFSCheckBox.TabIndex = 4;
             exportLayeredFSCheckBox.Text = "Export for LayeredFS";
-            toolTip1.SetToolTip(exportLayeredFSCheckBox, "This will result in the creation of a text document that *showcases* changes made in the exported mod.");
+            toolTip1.SetToolTip(exportLayeredFSCheckBox, "This ensures the generation of a *mod* formatted to be loaded with LayeredFS during the exporting process.");
             exportLayeredFSCheckBox.UseVisualStyleBackColor = true;
             // 
             // exportCobaltCheckBox
@@ -105,7 +105,7 @@
             exportCobaltCheckBox.Size = new Size(145, 24);
             exportCobaltCheckBox.TabIndex = 3;
             exportCobaltCheckBox.Text = "Export for Cobalt";
-            toolTip1.SetToolTip(exportCobaltCheckBox, "This will result in the creation of a text document that *showcases* changes made in the exported mod.");
+            toolTip1.SetToolTip(exportCobaltCheckBox, "This guarantees the creation of a mod formatted to be loaded by Cobalt during the *exporting* process.");
             exportCobaltCheckBox.UseVisualStyleBackColor = true;
             // 
             // saveChangelogCheckBox

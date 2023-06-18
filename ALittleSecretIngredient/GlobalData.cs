@@ -25,9 +25,9 @@ namespace ALittleSecretIngredient
         internal ExportResult Export(IEnumerable<ExportFormat> targets)
         {
             if (!targets.Any()) return ExportResult.NoExportTargets;
-            FileManager.CleanOutputDir();
             List<FileEnum> changedFiles = FM.DirtyFiles();
             if (changedFiles.Count == 0) return ExportResult.NoChanges;
+            FileManager.CleanOutputDir();
             XP.Export(changedFiles, targets);
             FileManager.CleanTempDir();
             StringBuilder? changelog = R.PopChangelog();

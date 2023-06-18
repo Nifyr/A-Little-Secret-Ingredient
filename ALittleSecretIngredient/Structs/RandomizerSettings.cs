@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Reflection;
+using System.Runtime.Serialization;
 using static ALittleSecretIngredient.Probability;
 
 namespace ALittleSecretIngredient.Structs
@@ -16,7 +17,28 @@ namespace ALittleSecretIngredient.Structs
         public BondLevelSettings BondLevel { get; set; } = new();
         public IndividualSettings Individual { get; set; } = new();
 
-        public class AssetTableSettings
+        public abstract class RandomizerTableSettings
+        {
+            internal bool Any()
+            {
+                foreach (FieldInfo fi in GetType().GetRuntimeFields())
+                    switch (fi.FieldType.Name)
+                    {
+                        case "RandomizerFieldSettings":
+                            RandomizerFieldSettings rfs = (RandomizerFieldSettings)fi.GetValue(this)!;
+                            if (rfs.Enabled || rfs.Args.Any(o => o.GetType().Name == "Boolean" && (bool)o))
+                                return true;
+                            break;
+                        case "Boolean":
+                            if ((bool)fi.GetValue(this)!)
+                                return true;
+                            break;
+                    }
+                return false;
+            } 
+        }
+
+        public class AssetTableSettings : RandomizerTableSettings
         {
             public RandomizerFieldSettings ModelSwap { get; set; } = new();
             public RandomizerFieldSettings OutfitSwap { get; set; } = new();
@@ -48,7 +70,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings MapScaleWing { get; set; } = new();
         }
 
-        public class GodGeneralSettings
+        public class GodGeneralSettings : RandomizerTableSettings
         {
             public RandomizerFieldSettings Link { get; set; } = new();
             public RandomizerFieldSettings EngageCount { get; set; } = new();
@@ -89,7 +111,7 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings SynchroEnhanceMoveEnemy { get; set; } = new();
             public RandomizerFieldSettings WeaponRestriction { get; set; } = new();
         }
-        public class GrowthTableSettings
+        public class GrowthTableSettings : RandomizerTableSettings
         {
             public RandomizerFieldSettings InheritanceSkills { get; set; } = new();
             public RandomizerFieldSettings InheritanceSkillsCount { get; set; } = new();
@@ -111,13 +133,13 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings StrongBondLevel { get; set; } = new();
             public RandomizerFieldSettings DeepSynergyLevel { get; set; } = new();
         }
-        public class BondLevelSettings
+        public class BondLevelSettings : RandomizerTableSettings
         {
             public RandomizerFieldSettings Exp { get; set; } = new();
             public RandomizerFieldSettings Cost { get; set; } = new();
         }
 
-        public class IndividualSettings
+        public class IndividualSettings : RandomizerTableSettings
         {
             public RandomizerFieldSettings JidAlly { get; set; } = new();
             public RandomizerFieldSettings JidEnemy { get; set; } = new();

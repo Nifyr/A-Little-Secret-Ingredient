@@ -42,15 +42,20 @@ namespace ALittleSecretIngredient
 
             StringBuilder innerChangelog = new();
 
-            DataPreAdjustment();
+            DataPreAdjustment(settings);
 
-            AddTable(innerChangelog, RandomizeAssetTable(settings.AssetTable));
-            AddTable(innerChangelog, RandomizeGodGeneral(settings.GodGeneral));
-            AddTable(innerChangelog, RandomizeGrowthTable(settings.GrowthTable));
-            AddTable(innerChangelog, RandomizeBondLevel(settings.BondLevel));
-            AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
+            if (settings.AssetTable.Any())
+                AddTable(innerChangelog, RandomizeAssetTable(settings.AssetTable));
+            if (settings.GodGeneral.Any())
+                AddTable(innerChangelog, RandomizeGodGeneral(settings.GodGeneral));
+            if (settings.GrowthTable.Any())
+                AddTable(innerChangelog, RandomizeGrowthTable(settings.GrowthTable));
+            if (settings.BondLevel.Any())
+                AddTable(innerChangelog, RandomizeBondLevel(settings.BondLevel));
+            if (settings.Individual.Any())
+                AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
 
-            DataPostAdjustment();
+            DataPostAdjustment(settings);
 
             if (settings.SaveChangelog && innerChangelog.Length > 0)
             {
@@ -61,9 +66,11 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private void DataPreAdjustment()
+        private void DataPreAdjustment(RandomizerSettings settings)
         {
-            List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
+            List<Asset>? assets = null;
+            if (settings.Individual.JidAlly.Enabled)
+                assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
 
             // Set up comment modify events for Cobalt - OBSOLETE AS OF COBALT 0.9.0
             //for (int i = 0; i < assets.Count; i++)
@@ -73,51 +80,58 @@ namespace ALittleSecretIngredient
             //}
 
             // Unlock dragon stuff for fell child classes
-            foreach (Asset a in assets)
-                switch(string.Join(';', a.Conditions))
-                {
-                    case "竜化;MPID_El":
-                        a.Conditions = new string[] { "竜化", "JID_裏邪竜ノ娘" };
-                        continue;
-                    case "エンゲージ中;MPID_El;JID_裏邪竜ノ娘;竜石":
-                        a.Conditions = new string[] { "エンゲージ中", "JID_裏邪竜ノ娘", "竜石" };
-                        continue; 
-                    case "竜化;MPID_Il|MPID_Rafale":
-                        a.Conditions = new string[] { "竜化", "JID_E006ラスボス|JID_裏邪竜ノ子" };
-                        continue;
-                    case "エンゲージ中;MPID_Rafale;JID_裏邪竜ノ子;竜石":
-                        a.Conditions = new string[] { "エンゲージ中", "JID_裏邪竜ノ子", "竜石" };
-                        continue;
-                }
-        }
-
-        private void DataPostAdjustment()
-        {
-            // Create dragon individuals
-            DataSet individualDataSet = GD.Get(DataSetEnum.Individual);
-            List<Individual> individuals = individualDataSet.Params.Cast<Individual>().ToList();
-            for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
-                if (!individuals[iIdx].Pid.EndsWith("_竜化") && !individuals.Any(i => i.Pid == individuals[iIdx].Pid + "_竜化"))
-                    switch (individuals[iIdx].Jid)
+            if (assets != null)
+                foreach (Asset a in assets)
+                    switch(string.Join(';', a.Conditions))
                     {
-                        case "JID_裏邪竜ノ娘":
-                            Individual newI0 = (Individual)individuals[iIdx].Clone();
-                            newI0.Pid = individuals[iIdx].Pid + "_竜化";
-                            newI0.Fid = individuals[iIdx].Pid + "_竜化";
-                            newI0.Aid = "AID_エル竜化";
-                            newI0.Items = Array.Empty<string>();
-                            individuals.Add(newI0);
+                        case "竜化;MPID_El":
+                            a.Conditions = new string[] { "竜化", "JID_裏邪竜ノ娘" };
                             continue;
-                        case "JID_裏邪竜ノ子":
-                            Individual newI1 = (Individual)individuals[iIdx].Clone();
-                            newI1.Pid = individuals[iIdx].Pid + "_竜化";
-                            newI1.Fid = individuals[iIdx].Pid + "_竜化";
-                            newI1.Aid = "AID_ラファール竜化";
-                            newI1.Items = Array.Empty<string>();
-                            individuals.Add(newI1);
+                        case "エンゲージ中;MPID_El;JID_裏邪竜ノ娘;竜石":
+                            a.Conditions = new string[] { "エンゲージ中", "JID_裏邪竜ノ娘", "竜石" };
+                            continue; 
+                        case "竜化;MPID_Il|MPID_Rafale":
+                            a.Conditions = new string[] { "竜化", "JID_E006ラスボス|JID_裏邪竜ノ子" };
+                            continue;
+                        case "エンゲージ中;MPID_Rafale;JID_裏邪竜ノ子;竜石":
+                            a.Conditions = new string[] { "エンゲージ中", "JID_裏邪竜ノ子", "竜石" };
                             continue;
                     }
-            individualDataSet.Params = individuals.Cast<DataParam>().ToList();
+        }
+
+        private void DataPostAdjustment(RandomizerSettings settings)
+        {
+            // Create dragon individuals
+            DataSet? individualDataSet = null; 
+            if (settings.Individual.JidAlly.Enabled)
+                individualDataSet = GD.Get(DataSetEnum.Individual);
+
+            if (individualDataSet != null)
+            {
+                List<Individual> individuals = individualDataSet.Params.Cast<Individual>().ToList();
+                for (int iIdx = 0; iIdx < individuals.Count; iIdx++)
+                    if (!individuals[iIdx].Pid.EndsWith("_竜化") && !individuals.Any(i => i.Pid == individuals[iIdx].Pid + "_竜化"))
+                        switch (individuals[iIdx].Jid)
+                        {
+                            case "JID_裏邪竜ノ娘":
+                                Individual newI0 = (Individual)individuals[iIdx].Clone();
+                                newI0.Pid = individuals[iIdx].Pid + "_竜化";
+                                newI0.Fid = individuals[iIdx].Pid + "_竜化";
+                                newI0.Aid = "AID_エル竜化";
+                                newI0.Items = Array.Empty<string>();
+                                individuals.Add(newI0);
+                                continue;
+                            case "JID_裏邪竜ノ子":
+                                Individual newI1 = (Individual)individuals[iIdx].Clone();
+                                newI1.Pid = individuals[iIdx].Pid + "_竜化";
+                                newI1.Fid = individuals[iIdx].Pid + "_竜化";
+                                newI1.Aid = "AID_ラファール竜化";
+                                newI1.Items = Array.Empty<string>();
+                                individuals.Add(newI1);
+                                continue;
+                        }
+                individualDataSet.Params = individuals.Cast<DataParam>().ToList();
+            }
         }
 
         private StringBuilder RandomizeAssetTable(RandomizerSettings.AssetTableSettings settings)

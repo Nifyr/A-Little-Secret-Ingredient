@@ -141,59 +141,59 @@ namespace ALittleSecretIngredient.Forms
                 rs.GodGeneral.ShuffleGrowTableAlly = GodGeneral.checkBox8.Checked;
                 rs.GodGeneral.ShuffleGrowTableEnemy = GodGeneral.checkBox10.Checked;
                 rs.GodGeneral.RandomizeEngravingStats = GodGeneral.checkBox11.Checked;
-                rs.GodGeneral.EngravePower = new(true,
+                rs.GodGeneral.EngravePower = new(false,
                     GodGeneral.EngravePower.Get(), Array.Empty<object>());
-                rs.GodGeneral.EngraveWeight = new(true,
+                rs.GodGeneral.EngraveWeight = new(false,
                     GodGeneral.EngraveWeight.Get(), Array.Empty<object>());
-                rs.GodGeneral.EngraveHit = new(true,
+                rs.GodGeneral.EngraveHit = new(false,
                     GodGeneral.EngraveHit.Get(), Array.Empty<object>());
-                rs.GodGeneral.EngraveCritical = new(true,
+                rs.GodGeneral.EngraveCritical = new(false,
                     GodGeneral.EngraveCritical.Get(), Array.Empty<object>());
-                rs.GodGeneral.EngraveAvoid = new(true,
+                rs.GodGeneral.EngraveAvoid = new(false,
                     GodGeneral.EngraveAvoid.Get(), Array.Empty<object>());
-                rs.GodGeneral.EngraveSecure = new(true,
+                rs.GodGeneral.EngraveSecure = new(false,
                     GodGeneral.EngraveSecure.Get(), Array.Empty<object>());
                 rs.GodGeneral.RandomizeAllyStaticSyncStats = GodGeneral.checkBox17.Checked;
-                rs.GodGeneral.SynchroEnhanceHpAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceHpAlly = new(false,
                     GodGeneral.SynchroEnhanceHpAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceStrAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceStrAlly = new(false,
                     GodGeneral.SynchroEnhanceStrAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceTechAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceTechAlly = new(false,
                     GodGeneral.SynchroEnhanceTechAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceQuickAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceQuickAlly = new(false,
                     GodGeneral.SynchroEnhanceQuickAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceLuckAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceLuckAlly = new(false,
                     GodGeneral.SynchroEnhanceLuckAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceDefAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceDefAlly = new(false,
                     GodGeneral.SynchroEnhanceDefAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceMagicAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceMagicAlly = new(false,
                     GodGeneral.SynchroEnhanceMagicAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceMdefAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceMdefAlly = new(false,
                     GodGeneral.SynchroEnhanceMdefAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhancePhysAlly = new(true,
+                rs.GodGeneral.SynchroEnhancePhysAlly = new(false,
                     GodGeneral.SynchroEnhancePhysAlly.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceMoveAlly = new(true,
+                rs.GodGeneral.SynchroEnhanceMoveAlly = new(false,
                     GodGeneral.SynchroEnhanceMoveAlly.Get(), Array.Empty<object>());
                 rs.GodGeneral.RandomizeEnemyStaticSyncStats = GodGeneral.checkBox12.Checked;
-                rs.GodGeneral.SynchroEnhanceHpEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceHpEnemy = new(false,
                     GodGeneral.SynchroEnhanceHpEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceStrEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceStrEnemy = new(false,
                     GodGeneral.SynchroEnhanceStrEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceTechEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceTechEnemy = new(false,
                     GodGeneral.SynchroEnhanceTechEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceQuickEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceQuickEnemy = new(false,
                     GodGeneral.SynchroEnhanceQuickEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceLuckEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceLuckEnemy = new(false,
                     GodGeneral.SynchroEnhanceLuckEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceDefEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceDefEnemy = new(false,
                     GodGeneral.SynchroEnhanceDefEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceMagicEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceMagicEnemy = new(false,
                     GodGeneral.SynchroEnhanceMagicEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceMdefEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceMdefEnemy = new(false,
                     GodGeneral.SynchroEnhanceMdefEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhancePhysEnemy = new(true,
+                rs.GodGeneral.SynchroEnhancePhysEnemy = new(false,
                     GodGeneral.SynchroEnhancePhysEnemy.Get(), Array.Empty<object>());
-                rs.GodGeneral.SynchroEnhanceMoveEnemy = new(true,
+                rs.GodGeneral.SynchroEnhanceMoveEnemy = new(false,
                     GodGeneral.SynchroEnhanceMoveEnemy.Get(), Array.Empty<object>());
                 rs.GodGeneral.WeaponRestriction = new(GodGeneral.checkBox13.Checked,
                     null!, new object[] { (double)GodGeneral.numericUpDown2.Value });

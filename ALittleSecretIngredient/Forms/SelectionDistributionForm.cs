@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Net;
 using static ALittleSecretIngredient.Probability;
 
 namespace ALittleSecretIngredient.Forms
@@ -164,9 +165,18 @@ namespace ALittleSecretIngredient.Forms
 
         internal void Initialize(SelectionDistributionSetup sds)
         {
-            distributions = sds.distributions;
+            if (HasValue)
+            {
+                for (int i = 0; i < distributions.Length; i++)
+                    if (i != idx)
+                        distributions[i] = sds.distributions[i];
+            }
+            else
+            {
+                distributions = sds.distributions;
+                idx = sds.idx;
+            }
             itemNames = sds.names;
-            idx = sds.idx;
             HasValue = true;
             Initialized = true;
         }

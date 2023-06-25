@@ -183,8 +183,9 @@ namespace ALittleSecretIngredient
                 ShuffleHubAnims(assets, hubAnimShuffleInnertable);
             StringBuilder hubAnimShuffleTable = ApplyTableTitle(hubAnimShuffleInnertable, "Hub Character Animation Swaps");
 
+            //Exclude the assets that adjusts sizes for engage outfits, randomizing them often results in stick-figures
             if (settings.RandomizeModelParameters)
-                RandomizeModelParameters(settings, assets);
+                RandomizeModelParameters(settings, assets.Where(a => a.Conditions.Length != 1 || a.Conditions.First() != "エンゲージ中"));
 
             StringBuilder tables = new();
             if (assetShuffleTable.Length > 0)
@@ -205,7 +206,7 @@ namespace ALittleSecretIngredient
             return tables;
         }
 
-        private void RandomizeModelParameters(RandomizerSettings.AssetTableSettings settings, List<Asset> assets)
+        private void RandomizeModelParameters(RandomizerSettings.AssetTableSettings settings, IEnumerable<Asset> assets)
         {
             assets.Where(a => a.ScaleAll != 0).ToList().Randomize(a => a.ScaleAll, (a, f) => a.ScaleAll = f,
                 settings.ScaleAll.Distribution, 0, float.MaxValue);

@@ -247,7 +247,7 @@ namespace ALittleSecretIngredient
                             return nds0;
                         case RandomizerDistribution.ScaleHead:
                             NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0).ToList(), a => a.ScaleHead);
-                            nds1.idx = 3;
+                            nds1.idx = 4;
                             return nds1;
                         case RandomizerDistribution.ScaleNeck:
                             NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0).ToList(), a => a.ScaleNeck);
@@ -287,6 +287,8 @@ namespace ALittleSecretIngredient
                             return nds10;
                         case RandomizerDistribution.VolumeBust:
                             NumericDistributionSetup nds11 = GetNumericDistributionSetup(assets.Where(a => a.VolumeBust != 0).ToList(), a => a.VolumeBust);
+                            // To counteract the large amount of npcs lowering the standard deviation. Why specifically this parameter? Who knows?
+                            ((NormalConstant)nds11.distributions[3]).standardDeviation *= 2;
                             nds11.idx = 3;
                             return nds11;
                         case RandomizerDistribution.VolumeAbdomen:

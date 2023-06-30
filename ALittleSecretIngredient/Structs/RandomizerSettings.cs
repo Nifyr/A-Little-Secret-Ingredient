@@ -15,6 +15,7 @@ namespace ALittleSecretIngredient.Structs
         public GodGeneralSettings GodGeneral { get; set; } = new();
         public GrowthTableSettings GrowthTable { get; set; } = new();
         public BondLevelSettings BondLevel { get; set; } = new();
+        public TypeOfSoldierSettings TypeOfSoldier { get; set; } = new();
         public IndividualSettings Individual { get; set; } = new();
 
         public abstract class RandomizerTableSettings
@@ -137,6 +138,12 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings Exp { get; set; } = new();
             public RandomizerFieldSettings Cost { get; set; } = new();
+        }
+
+        public class TypeOfSoldierSettings : RandomizerTableSettings
+        {
+            public RandomizerFieldSettings StyleName { get; set; } = new();
+            public RandomizerFieldSettings MoveType { get; set; } = new();
         }
 
         public class IndividualSettings : RandomizerTableSettings

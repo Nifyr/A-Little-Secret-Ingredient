@@ -686,6 +686,20 @@ namespace ALittleSecretIngredient
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
+                case DataSetEnum.TypeOfSoldier:
+                    List<TypeOfSoldier> toss = dataSet.Params.Cast<TypeOfSoldier>().ToList();
+                    List<TypeOfSoldier> allClasses = toss.FilterData(tos => tos.Jid, GD.AllClasses);
+                    List<TypeOfSoldier> generalClasses = toss.FilterData(tos => tos.Jid, GD.GeneralClasses);
+                    switch (dfe)
+                    {
+                        case RandomizerDistribution.StyleName:
+                            return GetSelectionDistributionSetup(allClasses, tos => tos.StyleName, GD.UnitTypes);
+                        case RandomizerDistribution.MoveType:
+                            return GetSelectionDistributionSetup(generalClasses, tos => tos.MoveType, GD.MovementTypes);
+                        default:
+                            ((Action)(() => { }))();
+                            throw new ArgumentException("Unsupported data field: " + dfe);
+                    }
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
                     List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);

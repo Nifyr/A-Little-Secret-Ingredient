@@ -9,6 +9,7 @@ namespace ALittleSecretIngredient.Forms
         private AssetTableForm AssetTable { get; set; }
         private GodGeneralForm GodGeneral { get; set; }
         private GrowthTableForm GrowthTable { get; set; }
+        private TypeOfSoldierForm TypeOfSoldier { get; set; }
         private BondLevelForm BondLevel { get; set; }
         private IndividualForm Individual { get; set; }
         public MainForm()
@@ -19,6 +20,7 @@ namespace ALittleSecretIngredient.Forms
             GodGeneral = new(GlobalData);
             GrowthTable = new(GlobalData);
             BondLevel = new(GlobalData);
+            TypeOfSoldier = new(GlobalData);
             Individual = new(GlobalData);
         }
         private static DialogResult LoadDumpDialog()
@@ -241,6 +243,9 @@ namespace ALittleSecretIngredient.Forms
                     BondLevel.Exp.Get(), Array.Empty<object>());
                 rs.BondLevel.Cost = new(BondLevel.checkBox1.Checked,
                     BondLevel.Cost.Get(), Array.Empty<object>());
+
+                rs.TypeOfSoldier.StyleName = new(TypeOfSoldier.checkBox20.Checked, TypeOfSoldier.StyleName.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.MoveType = new(TypeOfSoldier.checkBox1.Checked, TypeOfSoldier.MoveType.Get(), new object[] { TypeOfSoldier.checkBox2.Checked });
 
                 rs.Individual.JidAlly = new(Individual.checkBox22.Checked, Individual.JidAlly.Get(), new object[] { Individual.checkBox23.Checked });
                 rs.Individual.JidEnemy = new(Individual.checkBox24.Checked, Individual.JidEnemy.Get(), new object[] { Individual.checkBox26.Checked });
@@ -498,6 +503,12 @@ namespace ALittleSecretIngredient.Forms
                 BondLevel.Exp.Set(value.BondLevel.Exp.Distribution);
                 BondLevel.checkBox1.Checked = value.BondLevel.Cost.Enabled;
                 BondLevel.Cost.Set(value.BondLevel.Cost.Distribution);
+
+                TypeOfSoldier.checkBox20.Checked = value.TypeOfSoldier.StyleName.Enabled;
+                TypeOfSoldier.StyleName.Set(value.TypeOfSoldier.StyleName.Distribution);
+                TypeOfSoldier.checkBox1.Checked = value.TypeOfSoldier.MoveType.Enabled;
+                TypeOfSoldier.MoveType.Set(value.TypeOfSoldier.MoveType.Distribution);
+                TypeOfSoldier.checkBox2.Checked = value.TypeOfSoldier.MoveType.GetArg<bool>(0);
 
                 Individual.checkBox22.Checked = value.Individual.JidAlly.Enabled;
                 Individual.JidAlly.Set(value.Individual.JidAlly.Distribution);
@@ -772,6 +783,12 @@ namespace ALittleSecretIngredient.Forms
         {
             Individual.Show();
             Individual.Activate();
+        }
+
+        private void Button6_Click(object sender, EventArgs e)
+        {
+            TypeOfSoldier.Show();
+            TypeOfSoldier.Activate();
         }
     }
 }

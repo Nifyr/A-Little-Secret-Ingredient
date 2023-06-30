@@ -52,6 +52,8 @@ namespace ALittleSecretIngredient
                 AddTable(innerChangelog, RandomizeGrowthTable(settings.GrowthTable));
             if (settings.BondLevel.Any())
                 AddTable(innerChangelog, RandomizeBondLevel(settings.BondLevel));
+            if (settings.TypeOfSoldier.Any())
+                AddTable(innerChangelog, RandomizeTypeOfSoldier(settings.TypeOfSoldier));
             if (settings.Individual.Any())
                 AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
 
@@ -1123,6 +1125,48 @@ namespace ALittleSecretIngredient
             return ApplyTableTitle(innertable, "Bond Levels");
         }
 
+        private StringBuilder RandomizeTypeOfSoldier(RandomizerSettings.TypeOfSoldierSettings settings)
+        {
+            List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
+            List<TypeOfSoldier> allClasses = toss.FilterData(tos => tos.Jid, GD.AllClasses);
+            List<TypeOfSoldier> generalClasses = toss.FilterData(tos => tos.Jid, GD.GeneralClasses);
+            Dictionary<TypeOfSoldier, StringBuilder> entries = CreateStringBuilderDictionary(toss);
+
+            if (settings.StyleName.Enabled)
+            {
+                allClasses.Randomize(tos => tos.StyleName, (tos, s) => tos.StyleName = s, settings.StyleName.Distribution, GD.UnitTypes.GetIDs());
+                WriteToChangelog(entries, allClasses, tos => tos.StyleName, "Unit Type", GD.UnitTypes);
+                GD.SetDirty(DataSetEnum.TypeOfSoldier);
+            }
+
+            if (settings.MoveType.Enabled)
+            {
+                if (settings.MoveType.GetArg<bool>(0))
+                    foreach (TypeOfSoldier tos in generalClasses)
+                        tos.MoveType = tos.StyleName switch
+                        {
+                            "騎馬スタイル" => 2,
+                            "飛行スタイル" => 3,
+                            _ => 1
+                        };
+                else
+                    generalClasses.Randomize(tos => tos.MoveType, (tos, i) => tos.MoveType = (sbyte)i, settings.MoveType.Distribution,
+                        GD.MovementTypes.GetIDs());
+                WriteToChangelog(entries, generalClasses, tos => tos.MoveType, "Movement Type", GD.MovementTypes);
+                GD.SetDirty(DataSetEnum.TypeOfSoldier);
+            }
+
+            StringBuilder innerTable = new();
+            foreach (TypeOfSoldier tos in toss)
+                if (entries[tos].Length > 0)
+                {
+                    innerTable.AppendLine($"\t{GD.AllClasses.IDToName(tos.Jid)}:");
+                    innerTable.AppendLine(entries[tos].ToString());
+                }
+
+            return ApplyTableTitle(innerTable, "Classes");
+        }
+
         private StringBuilder RandomizeIndividual(RandomizerSettings.IndividualSettings settings)
         {
             List<Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList();
@@ -1595,6 +1639,9 @@ namespace ALittleSecretIngredient
         private static void EnsureLegalClass(List<TypeOfSoldier> toss, int totalLevel, Individual i, TypeOfSoldier tos,
             List<string> legalClassIDs)
         {
+            // This is specifically to avoid placing non-fliers on flier terrain in early rout maps.
+            if (i.Pid == "PID_M003_イルシオン兵_ランスペガサス" || i.Pid == "PID_M003_イルシオン兵_ランスペガサス_イベント")
+                legalClassIDs = legalClassIDs.Where(s => toss.First(tos => tos.Jid == s).MoveType == 3).ToList();
             if (!legalClassIDs.Contains(i.Jid))
             {
                 if (tos.MaxLevel == 20 && totalLevel > 20 && tos.Rank == 0)
@@ -1618,9 +1665,6 @@ namespace ALittleSecretIngredient
                 if (!legalClassIDs.Contains(i.Jid))
                     i.Jid = legalClassIDs.GetRandom();
             }
-            // This is specifically to avoid placing non-fliers on flier terrain in early rout maps.
-            if (i.Pid == "PID_M003_イルシオン兵_ランスペガサス" || i.Pid == "PID_M003_イルシオン兵_ランスペガサス_イベント")
-                i.Jid = "JID_ランスペガサス";
             i.Level = (byte)(totalLevel - (i.GetTOS(toss).Rank == 1 ? 20 : 0));
         }
 
@@ -2282,8 +2326,8 @@ namespace ALittleSecretIngredient
             internal Node(T t) => value = t;
         }
 
-        private static void WriteToChangelog<T>(Dictionary<T, StringBuilder> changelogEntries, List<T> objects,
-            Func<T, string> property, string propertyName, List<(string id, string name)> type) where T : notnull =>
+        private static void WriteToChangelog<A>(Dictionary<A, StringBuilder> changelogEntries, List<A> objects,
+            Func<A, string> property, string propertyName, List<(string id, string name)> type) where A : notnull =>
             objects.ForEach(o =>
                 {
                     string name = "None";
@@ -2291,6 +2335,9 @@ namespace ALittleSecretIngredient
                         name = type.IDToName(property(o));
                     changelogEntries[o].AppendLine(propertyName + ":\t" + name);
                 });
+        private static void WriteToChangelog<A, B>(Dictionary<A, StringBuilder> changelogEntries, List<A> objects,
+            Func<A, B> property, string propertyName, List<(B id, string name)> type) where A : notnull =>
+            objects.ForEach(o => changelogEntries[o].AppendLine(propertyName + ":\t" + type.IDToName(property(o))));
         private static void WriteToChangelog<T>(Dictionary<T, StringBuilder> changelogEntries, List<T> objects,
             Func<T, IEnumerable<string>> property, string propertyName, List<(string id, string name)> type, bool writeEmpty = false) where T : notnull =>
             objects.ForEach(o =>

@@ -100,6 +100,8 @@
         DeepSynergyLevel,
         Exp,
         Cost,
+        StyleName,
+        MoveType,
         JidAlly,
         JidEnemy,
         Age,

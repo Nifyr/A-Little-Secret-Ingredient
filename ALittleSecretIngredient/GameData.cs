@@ -847,6 +847,8 @@ namespace ALittleSecretIngredient
         internal List<(string id, string name)> PlayableClasses { get; } = new(); // UniversalClasses + MaleExclusiveClasses + FemaleExclusiveClasses
 
         internal List<(string id, string name)> GeneralClasses { get; } = new(); // PlayableClasses + NPCExclusiveClasses + MaleNPCExclusiveClasses + FemaleNPCExclusiveClasses
+
+        internal List<(string id, string name)> AllClasses { get; } = new(); // BeastClasses + GeneralClasses
         #endregion
         #region DemoAnim IDs
         internal List<(string id, string name)> UniqueMaleDemoAnims { get; } = new()
@@ -2362,6 +2364,14 @@ namespace ALittleSecretIngredient
             ("AOC_Talk_c562", "Veronica"),
         };
         #endregion
+        #region Unit Type IDs
+        internal List<(string id, string name)> UnitTypes { get; } = new()
+        {
+            ("スタイル無し", "None"), ("連携スタイル", "Backup"), ("騎馬スタイル", "Cavalry"), ("隠密スタイル", "Covert"),
+            ("重装スタイル", "Armor"), ("飛行スタイル", "Flier"), ("魔法スタイル", "Mystical"), ("気功スタイル", "Qi Adept"),
+            ("竜族スタイル", "Dragon"),
+        };
+        #endregion
         #region Other
         internal List<(int id, string name)> Proficiencies { get; } = new()
         {
@@ -2689,6 +2699,11 @@ namespace ALittleSecretIngredient
             (8, "Duma"), (9, "Loptous"), (10, "Veld"), (11, "Idunn"), (12, "Nergal"), (13, "Fomortiis"), (14, "Ashnard"), (15, "Ashera"),
             (16, "Grima"), (17, "Anankos"), (18, "Nemesis"),
         };
+
+        internal List<(int id, string name)> MovementTypes { get; } = new()
+        {
+            (1, "Infantry"), (2, "Cavalry"), (3, "Flier"),
+        };
         #endregion
 
         internal GameData(XmlParser xp, FileManager fm)
@@ -2719,6 +2734,8 @@ namespace ALittleSecretIngredient
             GeneralClasses.AddRange(MixedNPCExclusiveClasses);
             GeneralClasses.AddRange(MaleNPCExclusiveClasses);
             GeneralClasses.AddRange(FemaleNPCExclusiveClasses);
+            AllClasses.AddRange(BeastClasses);
+            AllClasses.AddRange(GeneralClasses);
             AllDressModels.AddRange(MaleClassDressModels);
             AllDressModels.AddRange(FemaleClassDressModels);
             AllDressModels.AddRange(MaleCorruptedClassDressModels);
@@ -2840,8 +2857,11 @@ namespace ALittleSecretIngredient
 
     internal static class GameDataLookup
     {
-        internal static List<T> FilterData<T>(this IEnumerable<T> data, Func<T, string> getID, List<(string id, string name)> entities) =>
-            data.Where(o => entities.Select(t => t.id).Contains(getID(o))).ToList();
+        internal static List<T> FilterData<T>(this IEnumerable<T> data, Func<T, string> getID, List<(string id, string name)> entities)
+        {
+            HashSet<string> entityIDs = entities.Select(t => t.id).ToHashSet();
+            return data.Where(o => entityIDs.Contains(getID(o))).ToList();
+        }
         internal static List<T> GetIDs<T>(this List<(T id, string name)> entities) => entities.Select(t => t.id).ToList();
         internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
         internal static sbyte GetInternalLevel(this Individual i, List<TypeOfSoldier> toss) =>
@@ -2924,6 +2944,8 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.DeepSynergyLevel, DataSetEnum.GrowthTable },
             { RandomizerDistribution.Exp, DataSetEnum.BondLevel },
             { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
+            { RandomizerDistribution.StyleName, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.MoveType, DataSetEnum.TypeOfSoldier },
             { RandomizerDistribution.JidAlly, DataSetEnum.Individual },
             { RandomizerDistribution.JidEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.Age, DataSetEnum.Individual },

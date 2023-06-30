@@ -43,6 +43,7 @@
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
+            button6 = new Button();
             button5 = new Button();
             toolTip1 = new ToolTip(components);
             tableLayoutPanel1.SuspendLayout();
@@ -64,7 +65,7 @@
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(418, 226);
+            tableLayoutPanel1.Size = new Size(439, 226);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox1
@@ -149,7 +150,7 @@
             groupBox2.Dock = DockStyle.Fill;
             groupBox2.Location = new Point(203, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(212, 220);
+            groupBox2.Size = new Size(233, 220);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "Options";
@@ -161,11 +162,12 @@
             flowLayoutPanel1.Controls.Add(button1);
             flowLayoutPanel1.Controls.Add(button2);
             flowLayoutPanel1.Controls.Add(button3);
+            flowLayoutPanel1.Controls.Add(button6);
             flowLayoutPanel1.Controls.Add(button5);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(3, 23);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(206, 194);
+            flowLayoutPanel1.Size = new Size(227, 194);
             flowLayoutPanel1.TabIndex = 0;
             // 
             // button4
@@ -208,9 +210,19 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += Button3_Click;
             // 
+            // button6
+            // 
+            button6.Location = new Point(3, 143);
+            button6.Name = "button6";
+            button6.Size = new Size(200, 29);
+            button6.TabIndex = 8;
+            button6.Text = "Class Data";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += Button6_Click;
+            // 
             // button5
             // 
-            button5.Location = new Point(3, 143);
+            button5.Location = new Point(3, 178);
             button5.Name = "button5";
             button5.Size = new Size(200, 29);
             button5.TabIndex = 7;
@@ -228,7 +240,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(418, 226);
+            ClientSize = new Size(439, 226);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
@@ -260,5 +272,6 @@
         private Button button5;
         private CheckBox exportLayeredFSCheckBox;
         private CheckBox exportCobaltCheckBox;
+        private Button button6;
     }
 }

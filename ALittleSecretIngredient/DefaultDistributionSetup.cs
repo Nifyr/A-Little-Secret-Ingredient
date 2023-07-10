@@ -322,13 +322,32 @@ namespace ALittleSecretIngredient
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
+                case DataSetEnum.TypeOfSoldier:
+                    List<TypeOfSoldier> toss0 = dataSet.Params.Cast<TypeOfSoldier>().ToList();
+                    List<TypeOfSoldier> generalClasses = toss0.FilterData(tos => tos.Jid, GD.GeneralClasses);
+                    switch (dfe)
+                    {
+                        case RandomizerDistribution.WeaponBaseCount:
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => !tos.IsAdvancedOrSpecial()).ToList(), tos => tos.GetBasicWeaponRequirementCount());
+                        case RandomizerDistribution.WeaponAdvancedCount:
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => tos.IsAdvancedOrSpecial()).ToList(), tos => tos.GetBasicWeaponRequirementCount());
+                        case RandomizerDistribution.MaxWeaponLevelBase:
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => !tos.IsAdvancedOrSpecial()).SelectMany(tos => tos.GetMaxWeaponLevels().Where(s => s != "N")).ToList(),
+                                s => (int)s.ToProficiencyLevel());
+                        case RandomizerDistribution.MaxWeaponLevelAdvanced:
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => tos.IsAdvancedOrSpecial()).SelectMany(tos => tos.GetMaxWeaponLevels().Where(s => s != "N")).ToList(),
+                                s => (int)s.ToProficiencyLevel());
+                        default:
+                            ((Action)(() => { }))();
+                            throw new ArgumentException("Unsupported data field: " + dfe);
+                    }
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
                     List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters).ToList();
                     List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters).ToList();
                     List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters).ToList();
                     List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters).ToList();
-                    List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
+                    List<TypeOfSoldier> toss1 = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
                     switch (dfe)
                     {
                         case RandomizerDistribution.Age:
@@ -344,7 +363,7 @@ namespace ALittleSecretIngredient
                             nds1.idx = 4;
                             return nds1;
                         case RandomizerDistribution.InternalLevel:
-                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(playableCharacters, i => i.GetInternalLevel(toss));
+                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(playableCharacters, i => i.GetInternalLevel(toss1));
                             nds2.distributions[4] = new NormalRelative(100, 1);
                             nds2.idx = 4;
                             return nds2;
@@ -696,8 +715,12 @@ namespace ALittleSecretIngredient
                             return GetSelectionDistributionSetup(allClasses, tos => tos.StyleName, GD.UnitTypes);
                         case RandomizerDistribution.MoveType:
                             return GetSelectionDistributionSetup(generalClasses, tos => tos.MoveType, GD.MovementTypes);
+                        case RandomizerDistribution.Weapon:
+                            SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(generalClasses.SelectMany(tos => tos.GetBasicWeaponRequirements()).ToList(),
+                                i => i, GD.BasicProficiencies);
+                            sds0.idx = 1;
+                            return sds0;
                         default:
-                            ((Action)(() => { }))();
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
                 case DataSetEnum.Individual:

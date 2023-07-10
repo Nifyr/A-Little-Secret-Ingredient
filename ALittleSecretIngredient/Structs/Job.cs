@@ -1,5 +1,7 @@
 ﻿#pragma warning disable CS8618
 
+using System.Linq;
+
 namespace ALittleSecretIngredient.Structs
 {
     internal class TypeOfSoldier : DataParam
@@ -130,12 +132,53 @@ namespace ALittleSecretIngredient.Structs
         internal string LunaticSkill { get; set; }
         internal uint Attrs { get; set; }
 
-        internal List<int> GetWeaponRequirements() => new()
+        internal sbyte[] GetWeaponRequirementValues() => new sbyte[]
         {
             WeaponNone, WeaponSword, WeaponLance, WeaponAxe,
             WeaponBow, WeaponDagger, WeaponMagic, WeaponRod,
             WeaponFist, WeaponSpecial,
         };
+
+        internal sbyte[] GetBasicWeaponRequirementValues() => new sbyte[]
+        {
+            WeaponSword, WeaponLance, WeaponAxe,
+            WeaponBow, WeaponDagger, WeaponMagic, WeaponRod,
+            WeaponFist,
+        };
+
+        internal void SetBasicWeaponRequirementValues(sbyte[] values)
+        {
+            WeaponSword = values[0];
+            WeaponLance = values[1];
+            WeaponAxe = values[2];
+            WeaponBow = values[3];
+            WeaponDagger = values[4];
+            WeaponMagic = values[5];
+            WeaponRod = values[6];
+            WeaponFist = values[7];
+        }
+
+        internal List<int> GetBasicWeaponRequirements()
+        {
+            List<int> output = new();
+            sbyte[] wrvs = GetWeaponRequirementValues();
+            for (int i = 1; i < 9; i++)
+                if (wrvs[i] > 0)
+                    output.Add(i);
+            return output;
+        }
+
+        internal int GetBasicWeaponRequirementCount()
+        {
+            int output = 0;
+            sbyte[] wrvs = GetWeaponRequirementValues();
+            for (int i = 1; i < 9; i++)
+                if (wrvs[i] == 1)
+                    output++;
+            if (wrvs.Any(i8 => i8 == 2 || i8 == 3))
+                output++;
+            return output;
+        }
 
         internal List<string> GetHighJobs()
         {
@@ -153,6 +196,22 @@ namespace ALittleSecretIngredient.Structs
             MaxWeaponLevelBow, MaxWeaponLevelDagger, MaxWeaponLevelMagic, MaxWeaponLevelRod,
             MaxWeaponLevelFist, MaxWeaponLevelSpecial,
         };
+
+        internal void SetMaxWeaponLevels(string[] values)
+        {
+            MaxWeaponLevelNone = values[0];
+            MaxWeaponLevelSword = values[1];
+            MaxWeaponLevelLance = values[2];
+            MaxWeaponLevelAxe = values[3];
+            MaxWeaponLevelBow = values[4];
+            MaxWeaponLevelDagger = values[5];
+            MaxWeaponLevelMagic = values[6];
+            MaxWeaponLevelRod = values[7];
+            MaxWeaponLevelFist = values[8];
+            MaxWeaponLevelSpecial = values[9];
+        }
+
+        internal bool IsAdvancedOrSpecial() => Rank > 0 || MaxLevel > 20;
     }
 
     internal class FightingStyle : DataParam

@@ -2378,6 +2378,10 @@ namespace ALittleSecretIngredient
             (0, "None"), (1, "Sword"), (2, "Lance"), (3, "Axe"), (4, "Bow"), (5, "Dagger"), (6, "Tome"), (7, "Staff"),
             (8, "Arts"), (9, "Special")
         };
+        internal List<(int id, string name)> BasicProficiencies { get; } = new()
+        {
+            (1, "Sword"), (2, "Lance"), (3, "Axe"), (4, "Bow"), (5, "Dagger"), (6, "Tome"), (7, "Staff"), (8, "Arts"),
+        };
 
         internal enum Gender // Ah yes, the four genders:
         {
@@ -2878,6 +2882,22 @@ namespace ALittleSecretIngredient
             return GameData.Gender.Male;
         }
 
+        internal static GameData.ProficiencyLevel ToProficiencyLevel(this string s) => s switch
+        {
+            "N" => GameData.ProficiencyLevel.N,
+            "N+" => GameData.ProficiencyLevel.Np,
+            "D" => GameData.ProficiencyLevel.D,
+            "D+" => GameData.ProficiencyLevel.Dp,
+            "C" => GameData.ProficiencyLevel.C,
+            "C+" => GameData.ProficiencyLevel.Cp,
+            "B" => GameData.ProficiencyLevel.B,
+            "B+" => GameData.ProficiencyLevel.Bp,
+            "A" => GameData.ProficiencyLevel.A,
+            "A+" => GameData.ProficiencyLevel.Ap,
+            "S" => GameData.ProficiencyLevel.S,
+            _ => throw new ArgumentException("Unsupported proficiency level: " + s)
+        };
+
         internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
         {
             { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },
@@ -2946,6 +2966,11 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
             { RandomizerDistribution.StyleName, DataSetEnum.TypeOfSoldier },
             { RandomizerDistribution.MoveType, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.Weapon, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.WeaponBaseCount, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.WeaponAdvancedCount, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.MaxWeaponLevelBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.MaxWeaponLevelAdvanced, DataSetEnum.TypeOfSoldier },
             { RandomizerDistribution.JidAlly, DataSetEnum.Individual },
             { RandomizerDistribution.JidEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.Age, DataSetEnum.Individual },

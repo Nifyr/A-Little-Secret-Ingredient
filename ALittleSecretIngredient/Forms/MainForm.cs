@@ -1,5 +1,6 @@
 using ALittleSecretIngredient.Structs;
 using System.Configuration;
+using System.Runtime.Serialization;
 
 namespace ALittleSecretIngredient.Forms
 {
@@ -246,6 +247,13 @@ namespace ALittleSecretIngredient.Forms
 
                 rs.TypeOfSoldier.StyleName = new(TypeOfSoldier.checkBox20.Checked, TypeOfSoldier.StyleName.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.MoveType = new(TypeOfSoldier.checkBox1.Checked, TypeOfSoldier.MoveType.Get(), new object[] { TypeOfSoldier.checkBox2.Checked });
+                rs.TypeOfSoldier.Weapon = new(TypeOfSoldier.checkBox3.Checked, TypeOfSoldier.Weapon.Get(), new object[] { TypeOfSoldier.checkBox5.Checked });
+                rs.TypeOfSoldier.RandomizeWeaponTypeCount = TypeOfSoldier.checkBox4.Checked;
+                rs.TypeOfSoldier.WeaponBaseCount = new(false, TypeOfSoldier.WeaponBaseCount.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.WeaponAdvancedCount = new(false, TypeOfSoldier.WeaponAdvancedCount.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.RandomizeWeaponRank = new(TypeOfSoldier.checkBox6.Checked, null!, new object[] { TypeOfSoldier.checkBox7.Checked });
+                rs.TypeOfSoldier.MaxWeaponLevelBase = new(false, TypeOfSoldier.MaxWeaponLevelBase.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.MaxWeaponLevelAdvanced = new(false, TypeOfSoldier.MaxWeaponLevelAdvanced.Get(), Array.Empty<object>());
 
                 rs.Individual.JidAlly = new(Individual.checkBox22.Checked, Individual.JidAlly.Get(), new object[] { Individual.checkBox23.Checked });
                 rs.Individual.JidEnemy = new(Individual.checkBox24.Checked, Individual.JidEnemy.Get(), new object[] { Individual.checkBox26.Checked });
@@ -509,6 +517,16 @@ namespace ALittleSecretIngredient.Forms
                 TypeOfSoldier.checkBox1.Checked = value.TypeOfSoldier.MoveType.Enabled;
                 TypeOfSoldier.MoveType.Set(value.TypeOfSoldier.MoveType.Distribution);
                 TypeOfSoldier.checkBox2.Checked = value.TypeOfSoldier.MoveType.GetArg<bool>(0);
+                TypeOfSoldier.checkBox3.Checked = value.TypeOfSoldier.Weapon.Enabled;
+                TypeOfSoldier.Weapon.Set(value.TypeOfSoldier.Weapon.Distribution);
+                TypeOfSoldier.checkBox5.Checked = value.TypeOfSoldier.Weapon.GetArg<bool>(0);
+                TypeOfSoldier.checkBox4.Checked = value.TypeOfSoldier.RandomizeWeaponTypeCount;
+                TypeOfSoldier.WeaponBaseCount.Set(value.TypeOfSoldier.WeaponBaseCount.Distribution);
+                TypeOfSoldier.WeaponAdvancedCount.Set(value.TypeOfSoldier.WeaponAdvancedCount.Distribution);
+                TypeOfSoldier.checkBox6.Checked = value.TypeOfSoldier.RandomizeWeaponRank.Enabled;
+                TypeOfSoldier.checkBox7.Checked = value.TypeOfSoldier.RandomizeWeaponRank.GetArg<bool>(0);
+                TypeOfSoldier.MaxWeaponLevelBase.Set(value.TypeOfSoldier.MaxWeaponLevelBase.Distribution);
+                TypeOfSoldier.MaxWeaponLevelAdvanced.Set(value.TypeOfSoldier.MaxWeaponLevelAdvanced.Distribution);
 
                 Individual.checkBox22.Checked = value.Individual.JidAlly.Enabled;
                 Individual.JidAlly.Set(value.Individual.JidAlly.Distribution);
@@ -658,13 +676,18 @@ namespace ALittleSecretIngredient.Forms
                     Close();
                     return;
                 }
-            RandomizerSettings? rs = XmlParser.ReadRandomizerSettings();
-            if (rs != null)
-                try { RandomizerSettings = rs; }
-                catch (NullReferenceException)
-                { ShowSettingsLoadError(); }
-                catch (ArgumentOutOfRangeException)
-                { ShowSettingsLoadError(); }
+            try
+            {
+                RandomizerSettings? rs = XmlParser.ReadRandomizerSettings();
+                if (rs != null)
+                    RandomizerSettings = rs;
+            }
+            catch (NullReferenceException)
+            { ShowSettingsLoadError(); }
+            catch (ArgumentOutOfRangeException)
+            { ShowSettingsLoadError(); }
+            catch (SerializationException)
+            { ShowSettingsLoadError(); }
             Activate();
         }
 

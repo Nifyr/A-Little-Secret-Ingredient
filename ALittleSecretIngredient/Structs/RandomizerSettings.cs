@@ -144,6 +144,13 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings StyleName { get; set; } = new();
             public RandomizerFieldSettings MoveType { get; set; } = new();
+            public RandomizerFieldSettings Weapon { get; set; } = new();
+            public bool RandomizeWeaponTypeCount { get; set; } = new();
+            public RandomizerFieldSettings WeaponBaseCount { get; set; } = new();
+            public RandomizerFieldSettings WeaponAdvancedCount { get; set; } = new();
+            public RandomizerFieldSettings RandomizeWeaponRank { get; set; } = new();
+            public RandomizerFieldSettings MaxWeaponLevelBase { get; set; } = new();
+            public RandomizerFieldSettings MaxWeaponLevelAdvanced { get; set; } = new();
         }
 
         public class IndividualSettings : RandomizerTableSettings

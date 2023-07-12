@@ -212,6 +212,160 @@ namespace ALittleSecretIngredient.Structs
         }
 
         internal bool IsAdvancedOrSpecial() => Rank > 0 || MaxLevel > 20;
+
+        internal byte[] GetBases() => new byte[]
+        {
+            BaseHp, BaseStr, BaseTech, BaseQuick, BaseLuck, BaseDef, BaseMagic, BaseMdef,
+            BasePhys, BaseSight, BaseMove,
+        };
+
+        internal byte[] GetBasicBases() => new byte[]
+        {
+            BaseHp, BaseStr, BaseTech, BaseQuick, BaseLuck, BaseDef, BaseMagic, BaseMdef,
+        };
+
+        internal void SetBases(byte[] values)
+        {
+            BaseHp = values[0];
+            BaseStr = values[1];
+            BaseTech = values[2];
+            BaseQuick = values[3];
+            BaseLuck = values[4];
+            BaseDef = values[5];
+            BaseMagic = values[6];
+            BaseMdef = values[7];
+            BasePhys = values[8];
+            BaseSight = values[9];
+            BaseMove = values[10];
+        }
+
+        internal void SetBasicBases(byte[] values)
+        {
+            BaseHp = values[0];
+            BaseStr = values[1];
+            BaseTech = values[2];
+            BaseQuick = values[3];
+            BaseLuck = values[4];
+            BaseDef = values[5];
+            BaseMagic = values[6];
+            BaseMdef = values[7];
+        }
+
+        internal byte[] GetLimits() => new byte[]
+        {
+            LimitHp, LimitStr, LimitTech, LimitQuick, LimitLuck, LimitDef, LimitMagic, LimitMdef,
+            LimitPhys, LimitSight, LimitMove,
+        };
+
+        internal byte[] GetBasicLimits() => new byte[]
+        {
+            LimitHp, LimitStr, LimitTech, LimitQuick, LimitLuck, LimitDef, LimitMagic, LimitMdef,
+        };
+
+        internal void SetLimits(byte[] values)
+        {
+            LimitHp = values[0];
+            LimitStr = values[1];
+            LimitTech = values[2];
+            LimitQuick = values[3];
+            LimitLuck = values[4];
+            LimitDef = values[5];
+            LimitMagic = values[6];
+            LimitMdef = values[7];
+            LimitPhys = values[8];
+            LimitSight = values[9];
+            LimitMove = values[10];
+        }
+
+        internal void SetBasicLimits(byte[] values)
+        {
+            LimitHp = values[0];
+            LimitStr = values[1];
+            LimitTech = values[2];
+            LimitQuick = values[3];
+            LimitLuck = values[4];
+            LimitDef = values[5];
+            LimitMagic = values[6];
+            LimitMdef = values[7];
+        }
+
+        internal byte[] GetEnemyGrowths() => new byte[]
+        {
+            BaseGrowHp, BaseGrowStr, BaseGrowTech, BaseGrowQuick, BaseGrowLuck, BaseGrowDef, BaseGrowMagic, BaseGrowMdef,
+            BaseGrowPhys, BaseGrowSight, BaseGrowMove,
+        };
+
+        internal byte[] GetBasicEnemyGrowths() => new byte[]
+        {
+            BaseGrowHp, BaseGrowStr, BaseGrowTech, BaseGrowQuick, BaseGrowLuck, BaseGrowDef, BaseGrowMagic, BaseGrowMdef,
+        };
+
+        internal void SetEnemyGrowths(byte[] values)
+        {
+            BaseGrowHp = values[0];
+            BaseGrowStr = values[1];
+            BaseGrowTech = values[2];
+            BaseGrowQuick = values[3];
+            BaseGrowLuck = values[4];
+            BaseGrowDef = values[5];
+            BaseGrowMagic = values[6];
+            BaseGrowMdef = values[7];
+            BaseGrowPhys = values[8];
+            BaseGrowSight = values[9];
+            BaseGrowMove = values[10];
+        }
+
+        internal void SetBasicEnemyGrowths(byte[] values)
+        {
+            BaseGrowHp = values[0];
+            BaseGrowStr = values[1];
+            BaseGrowTech = values[2];
+            BaseGrowQuick = values[3];
+            BaseGrowLuck = values[4];
+            BaseGrowDef = values[5];
+            BaseGrowMagic = values[6];
+            BaseGrowMdef = values[7];
+        }
+
+        internal sbyte[] GetGrowthModifiers() => new sbyte[]
+        {
+            DiffGrowHp, DiffGrowStr, DiffGrowTech, DiffGrowQuick, DiffGrowLuck, DiffGrowDef, DiffGrowMagic, DiffGrowMdef,
+            DiffGrowPhys, DiffGrowSight, DiffGrowMove,
+        };
+
+        internal sbyte[] GetBasicGrowthModifiers() => new sbyte[]
+        {
+            DiffGrowHp, DiffGrowStr, DiffGrowTech, DiffGrowQuick, DiffGrowLuck, DiffGrowDef, DiffGrowMagic, DiffGrowMdef,
+        };
+
+        internal void SetGrowthModifiers(sbyte[] values)
+        {
+            DiffGrowHp = values[0];
+            DiffGrowStr = values[1];
+            DiffGrowTech = values[2];
+            DiffGrowQuick = values[3];
+            DiffGrowLuck = values[4];
+            DiffGrowDef = values[5];
+            DiffGrowMagic = values[6];
+            DiffGrowMdef = values[7];
+            DiffGrowPhys = values[8];
+            DiffGrowSight = values[9];
+            DiffGrowMove = values[10];
+        }
+
+        internal void SetBasicGrowthModifiers(sbyte[] values)
+        {
+            DiffGrowHp = values[0];
+            DiffGrowStr = values[1];
+            DiffGrowTech = values[2];
+            DiffGrowQuick = values[3];
+            DiffGrowLuck = values[4];
+            DiffGrowDef = values[5];
+            DiffGrowMagic = values[6];
+            DiffGrowMdef = values[7];
+        }
+
+        internal bool HasGrowthModifiers() => GetGrowthModifiers().Any(i8 => i8 != 0);
     }
 
     internal class FightingStyle : DataParam

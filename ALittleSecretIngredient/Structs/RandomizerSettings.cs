@@ -151,6 +151,164 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings RandomizeWeaponRank { get; set; } = new();
             public RandomizerFieldSettings MaxWeaponLevelBase { get; set; } = new();
             public RandomizerFieldSettings MaxWeaponLevelAdvanced { get; set; } = new();
+            public RandomizerFieldSettings RandomizeBaseStats { get; set; } = new();
+            public RandomizerFieldSettings BaseHpBase { get; set; } = new();
+            public RandomizerFieldSettings BaseStrBase { get; set; } = new();
+            public RandomizerFieldSettings BaseTechBase { get; set; } = new();
+            public RandomizerFieldSettings BaseQuickBase { get; set; } = new();
+            public RandomizerFieldSettings BaseLuckBase { get; set; } = new();
+            public RandomizerFieldSettings BaseDefBase { get; set; } = new();
+            public RandomizerFieldSettings BaseMagicBase { get; set; } = new();
+            public RandomizerFieldSettings BaseMdefBase { get; set; } = new();
+            public RandomizerFieldSettings BasePhysBase { get; set; } = new();
+            public RandomizerFieldSettings BaseSightBase { get; set; } = new();
+            public RandomizerFieldSettings BaseMoveBase { get; set; } = new();
+            public RandomizerFieldSettings BaseHpAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseStrAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseTechAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseQuickAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseLuckAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseDefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseMagicAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseMdefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BasePhysAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseSightAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseMoveAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseTotalBase { get; set; } = new();
+            public RandomizerFieldSettings BaseTotalAdvanced { get; set; } = new();
+            public RandomizerFieldSettings RandomizeStatLimits { get; set; } = new();
+            public RandomizerFieldSettings LimitHpBase { get; set; } = new();
+            public RandomizerFieldSettings LimitStrBase { get; set; } = new();
+            public RandomizerFieldSettings LimitTechBase { get; set; } = new();
+            public RandomizerFieldSettings LimitQuickBase { get; set; } = new();
+            public RandomizerFieldSettings LimitLuckBase { get; set; } = new();
+            public RandomizerFieldSettings LimitDefBase { get; set; } = new();
+            public RandomizerFieldSettings LimitMagicBase { get; set; } = new();
+            public RandomizerFieldSettings LimitMdefBase { get; set; } = new();
+            public RandomizerFieldSettings LimitPhysBase { get; set; } = new();
+            public RandomizerFieldSettings LimitSightBase { get; set; } = new();
+            public RandomizerFieldSettings LimitMoveBase { get; set; } = new();
+            public RandomizerFieldSettings LimitHpAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitStrAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitTechAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitQuickAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitLuckAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitDefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitMagicAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitMdefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitPhysAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitSightAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitMoveAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LimitTotalBase { get; set; } = new();
+            public RandomizerFieldSettings LimitTotalAdvanced { get; set; } = new();
+            public RandomizerFieldSettings RandomizeEnemyStatGrows { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowHpBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowStrBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowTechBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowQuickBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowLuckBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowDefBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowMagicBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowMdefBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowPhysBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowSightBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowMoveBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowHpAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowStrAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowTechAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowQuickAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowLuckAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowDefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowMagicAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowMdefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowPhysAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowSightAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowMoveAdvanced { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowTotalBase { get; set; } = new();
+            public RandomizerFieldSettings BaseGrowTotalAdvanced { get; set; } = new();
+            public RandomizerFieldSettings RandomizeStatGrowthModifiers { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowHpBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowStrBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowTechBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowQuickBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowLuckBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowDefBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowMagicBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowMdefBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowPhysBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowSightBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowMoveBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowHpAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowStrAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowTechAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowQuickAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowLuckAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowDefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowMagicAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowMdefAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowPhysAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowSightAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowMoveAdvanced { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowTotalBase { get; set; } = new();
+            public RandomizerFieldSettings DiffGrowTotalAdvanced { get; set; } = new();
+            public RandomizerFieldSettings LearningSkill { get; set; } = new();
+            public RandomizerFieldSettings LunaticSkill { get; set; } = new();
+
+            internal RandomizerFieldSettings[] GetBaseBaseStatSettings() => new RandomizerFieldSettings[]
+            {
+                BaseHpBase, BaseStrBase, BaseTechBase, BaseQuickBase,
+                BaseLuckBase, BaseDefBase, BaseMagicBase, BaseMdefBase,
+                BasePhysBase, BaseSightBase, BaseMoveBase, BaseTotalBase,
+            };
+
+            internal RandomizerFieldSettings[] GetAdvancedBaseStatSettings() => new RandomizerFieldSettings[]
+            {
+                BaseHpAdvanced, BaseStrAdvanced, BaseTechAdvanced, BaseQuickAdvanced,
+                BaseLuckAdvanced, BaseDefAdvanced, BaseMagicAdvanced, BaseMdefAdvanced,
+                BasePhysAdvanced, BaseSightAdvanced, BaseMoveAdvanced, BaseTotalAdvanced,
+            };
+
+            internal RandomizerFieldSettings[] GetBaseStatLimitSettings() => new RandomizerFieldSettings[]
+            {
+                LimitHpBase, LimitStrBase, LimitTechBase, LimitQuickBase,
+                LimitLuckBase, LimitDefBase, LimitMagicBase, LimitMdefBase,
+                LimitPhysBase, LimitSightBase, LimitMoveBase, LimitTotalBase,
+            };
+
+            internal RandomizerFieldSettings[] GetAdvancedStatLimitSettings() => new RandomizerFieldSettings[]
+            {
+                LimitHpAdvanced, LimitStrAdvanced, LimitTechAdvanced, LimitQuickAdvanced,
+                LimitLuckAdvanced, LimitDefAdvanced, LimitMagicAdvanced, LimitMdefAdvanced,
+                LimitPhysAdvanced, LimitSightAdvanced, LimitMoveAdvanced, LimitTotalAdvanced,
+            };
+
+            internal RandomizerFieldSettings[] GetBaseEnemyGrowthSettings() => new RandomizerFieldSettings[]
+            {
+                BaseGrowHpBase, BaseGrowStrBase, BaseGrowTechBase, BaseGrowQuickBase,
+                BaseGrowLuckBase, BaseGrowDefBase, BaseGrowMagicBase, BaseGrowMdefBase,
+                BaseGrowPhysBase, BaseGrowSightBase, BaseGrowMoveBase, BaseGrowTotalBase,
+            };
+
+            internal RandomizerFieldSettings[] GetAdvancedEnemyGrowthSettings() => new RandomizerFieldSettings[]
+            {
+                BaseGrowHpAdvanced, BaseGrowStrAdvanced, BaseGrowTechAdvanced, BaseGrowQuickAdvanced,
+                BaseGrowLuckAdvanced, BaseGrowDefAdvanced, BaseGrowMagicAdvanced, BaseGrowMdefAdvanced,
+                BaseGrowPhysAdvanced, BaseGrowSightAdvanced, BaseGrowMoveAdvanced, BaseGrowTotalAdvanced,
+            };
+
+            internal RandomizerFieldSettings[] GetBaseGrowthModifierSettings() => new RandomizerFieldSettings[]
+            {
+                DiffGrowHpBase, DiffGrowStrBase, DiffGrowTechBase, DiffGrowQuickBase,
+                DiffGrowLuckBase, DiffGrowDefBase, DiffGrowMagicBase, DiffGrowMdefBase,
+                DiffGrowPhysBase, DiffGrowSightBase, DiffGrowMoveBase, DiffGrowTotalBase,
+            };
+
+            internal RandomizerFieldSettings[] GetAdvancedGrowthModifierSettings() => new RandomizerFieldSettings[]
+            {
+                DiffGrowHpAdvanced, DiffGrowStrAdvanced, DiffGrowTechAdvanced, DiffGrowQuickAdvanced,
+                DiffGrowLuckAdvanced, DiffGrowDefAdvanced, DiffGrowMagicAdvanced, DiffGrowMdefAdvanced,
+                DiffGrowPhysAdvanced, DiffGrowSightAdvanced, DiffGrowMoveAdvanced, DiffGrowTotalAdvanced,
+            };
         }
 
         public class IndividualSettings : RandomizerTableSettings
@@ -261,55 +419,40 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings CommonSids { get; set; } = new();
             public RandomizerFieldSettings CommonSidsCount { get; set; } = new();
 
-            internal RandomizerFieldSettings[] GetOffsetNAllySettings()
+            internal RandomizerFieldSettings[] GetOffsetNAllySettings() => new RandomizerFieldSettings[]
             {
-                return new RandomizerFieldSettings[]
-                {
-                    OffsetNHpAlly, OffsetNStrAlly, OffsetNTechAlly, OffsetNQuickAlly,
-                    OffsetNLuckAlly, OffsetNDefAlly, OffsetNMagicAlly, OffsetNMdefAlly,
-                    OffsetNPhysAlly, OffsetNSightAlly, OffsetNMoveAlly, OffsetNTotalAlly,
-                };
-            }
+                OffsetNHpAlly, OffsetNStrAlly, OffsetNTechAlly, OffsetNQuickAlly,
+                OffsetNLuckAlly, OffsetNDefAlly, OffsetNMagicAlly, OffsetNMdefAlly,
+                OffsetNPhysAlly, OffsetNSightAlly, OffsetNMoveAlly, OffsetNTotalAlly,
+            };
 
-            internal RandomizerFieldSettings[] GetOffsetNEnemySettings()
+            internal RandomizerFieldSettings[] GetOffsetNEnemySettings() => new RandomizerFieldSettings[]
             {
-                return new RandomizerFieldSettings[]
-                {
-                    OffsetNHpEnemy, OffsetNStrEnemy, OffsetNTechEnemy, OffsetNQuickEnemy,
-                    OffsetNLuckEnemy, OffsetNDefEnemy, OffsetNMagicEnemy, OffsetNMdefEnemy,
-                    OffsetNPhysEnemy, OffsetNSightEnemy, OffsetNMoveEnemy, OffsetNTotalEnemy,
-                };
-            }
+                OffsetNHpEnemy, OffsetNStrEnemy, OffsetNTechEnemy, OffsetNQuickEnemy,
+                OffsetNLuckEnemy, OffsetNDefEnemy, OffsetNMagicEnemy, OffsetNMdefEnemy,
+                OffsetNPhysEnemy, OffsetNSightEnemy, OffsetNMoveEnemy, OffsetNTotalEnemy,
+            };
 
-            internal RandomizerFieldSettings[] GetOffsetHEnemySettings()
+            internal RandomizerFieldSettings[] GetOffsetHEnemySettings() => new RandomizerFieldSettings[]
             {
-                return new RandomizerFieldSettings[]
-                {
-                    OffsetHHpEnemy, OffsetHStrEnemy, OffsetHTechEnemy, OffsetHQuickEnemy,
-                    OffsetHLuckEnemy, OffsetHDefEnemy, OffsetHMagicEnemy, OffsetHMdefEnemy,
-                    OffsetHPhysEnemy, OffsetHSightEnemy, OffsetHMoveEnemy, OffsetHTotalEnemy,
-                };
-            }
+                OffsetHHpEnemy, OffsetHStrEnemy, OffsetHTechEnemy, OffsetHQuickEnemy,
+                OffsetHLuckEnemy, OffsetHDefEnemy, OffsetHMagicEnemy, OffsetHMdefEnemy,
+                OffsetHPhysEnemy, OffsetHSightEnemy, OffsetHMoveEnemy, OffsetHTotalEnemy,
+            };
 
-            internal RandomizerFieldSettings[] GetOffsetLEnemySettings()
+            internal RandomizerFieldSettings[] GetOffsetLEnemySettings() => new RandomizerFieldSettings[]
             {
-                return new RandomizerFieldSettings[]
-                {
-                    OffsetLHpEnemy, OffsetLStrEnemy, OffsetLTechEnemy, OffsetLQuickEnemy,
-                    OffsetLLuckEnemy, OffsetLDefEnemy, OffsetLMagicEnemy, OffsetLMdefEnemy,
-                    OffsetLPhysEnemy, OffsetLSightEnemy, OffsetLMoveEnemy, OffsetLTotalEnemy,
-                };
-            }
+                OffsetLHpEnemy, OffsetLStrEnemy, OffsetLTechEnemy, OffsetLQuickEnemy,
+                OffsetLLuckEnemy, OffsetLDefEnemy, OffsetLMagicEnemy, OffsetLMdefEnemy,
+                OffsetLPhysEnemy, OffsetLSightEnemy, OffsetLMoveEnemy, OffsetLTotalEnemy,
+            };
 
-            internal RandomizerFieldSettings[] GetGrowthSettings()
+            internal RandomizerFieldSettings[] GetGrowthSettings() => new RandomizerFieldSettings[]
             {
-                return new RandomizerFieldSettings[]
-                {
-                    GrowHp, GrowStr, GrowTech, GrowQuick,
-                    GrowLuck, GrowDef, GrowMagic, GrowMdef,
-                    GrowPhys, GrowSight, GrowMove, GrowTotal,
-                };
-            }
+                GrowHp, GrowStr, GrowTech, GrowQuick,
+                GrowLuck, GrowDef, GrowMagic, GrowMdef,
+                GrowPhys, GrowSight, GrowMove, GrowTotal,
+            };
         }
     }
 

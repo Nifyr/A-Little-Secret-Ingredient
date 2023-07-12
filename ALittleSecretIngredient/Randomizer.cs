@@ -1159,141 +1159,73 @@ namespace ALittleSecretIngredient
             if (settings.Weapon.Enabled)
             {
                 if (settings.RandomizeWeaponTypeCount)
-                {
-                    List<Node<TypeOfSoldier, int>> weaponTypeCounts = generalClasses.Select(tos =>
-                        new Node<TypeOfSoldier, int>(tos, tos.GetBasicWeaponRequirementCount())).ToList();
-                    weaponTypeCounts.Where(n => !n.a.IsAdvancedOrSpecial()).ToList().Randomize(n => n.b, (n, i) => n.b = i,
-                        settings.WeaponBaseCount.Distribution, 0, 8);
-                    weaponTypeCounts.Where(n => n.a.IsAdvancedOrSpecial()).ToList().Randomize(n => n.b, (n, i) => n.b = i,
-                        settings.WeaponAdvancedCount.Distribution, 0, 8);
-                    foreach (Node<TypeOfSoldier, int> n in weaponTypeCounts)
-                        if (n.b == 0 && n.a.WeaponNone == 0 && n.a.WeaponSpecial == 0)
-                            n.b = 1;
-                    if (settings.Weapon.GetArg<bool>(0))
-                        foreach (Node<TypeOfSoldier, int> n in weaponTypeCounts)
-                        {
-                            Node<TypeOfSoldier, int>? lowNode = weaponTypeCounts.FirstOrDefault(n0 => n0.a.Name == n.a.LowJob);
-                            if (lowNode == null) continue;
-                            if (n.b < lowNode.b)
-                                n.b = lowNode.b;
-                        }
-                    foreach (Node<TypeOfSoldier, int> n in weaponTypeCounts)
-                    {
-                        sbyte[] reqValues = n.a.GetBasicWeaponRequirementValues();
-                        if (reqValues.Any(i8 => i8 == 2))
-                        {
-                            List<int> indices = reqValues.Select((i8, i32) => (i8, i32)).Where(t => t.i8 == 2).Select(t => t.i32).ToList();
-                            for (int i = 0; i < reqValues.Length; i++)
-                                if (reqValues[i] == 2)
-                                    reqValues[i] = 0;
-                            reqValues[indices.GetRandom()] = 1;
-                        }
-                        if (reqValues.Any(i8 => i8 == 3))
-                        {
-                            List<int> indices = reqValues.Select((i8, i32) => (i8, i32)).Where(t => t.i8 == 3).Select(t => t.i32).ToList();
-                            new Redistribution(100).Randomize(indices);
-                            for (int i = 0; i < reqValues.Length; i++)
-                                if (reqValues[i] == 3)
-                                    reqValues[i] = 0;
-                            reqValues[indices[0]] = 1;
-                            reqValues[indices[1]] = 1;
-                        }
-                        List<int> reqs = n.a.GetBasicWeaponRequirementValues().Select((i8, i32) => (i8, i32)).Where(t => t.i8 == 1).Select(t => t.i32).ToList();
-                        while (reqs.Count < n.b)
-                            reqs.Add(Enumerable.Range(0, reqValues.Length).Except(reqs).GetRandom());
-                        while (reqs.Count > n.b)
-                            reqs.Remove(reqs.GetRandom());
-                        reqValues = new sbyte[reqValues.Length];
-                        foreach (int req in reqs)
-                            reqValues[req] = 1;
-                        n.a.SetBasicWeaponRequirementValues(reqValues);
-                    }
-                }
-                AsNodeStructure(generalClasses, tos => tos.GetBasicWeaponRequirements(), out List<List<Node<int>>> structure, out List<Node<int>> flattened);
-                flattened.Randomize(n => n.value, (n, i) => n.value = i, settings.Weapon.Distribution, GD.BasicProficiencies.GetIDs());
-                for (int tosIdx = 0; tosIdx < generalClasses.Count; tosIdx++)
-                {
-                    TypeOfSoldier tos = generalClasses[tosIdx];
-                    List<Node<int>> list = structure[tosIdx];
-                    List<int> reqs = list.Select(n => n.value).Distinct().ToList();
-                    sbyte[] reqValues = tos.GetBasicWeaponRequirementValues();
-                    while (reqs.Count < list.Count)
-                        reqs.Add(GD.BasicProficiencies.GetIDs().Except(reqs).GetRandom());
-                    IEnumerable<sbyte> valuePool = reqValues.Distinct().Where(i => i != 0);
-                    if (!valuePool.Any())
-                        valuePool = new sbyte[] { 1 };
-                    reqValues = new sbyte[reqValues.Length];
-                    foreach (int i in reqs)
-                        reqValues[i - 1] = valuePool.GetRandom();
-                    tos.SetBasicWeaponRequirementValues(reqValues);
-                }
-                if (settings.Weapon.GetArg<bool>(0))
-                    foreach (TypeOfSoldier tos in generalClasses)
-                    {
-                        TypeOfSoldier? lowTOS = generalClasses.FirstOrDefault(tos0 => tos0.Name == tos.LowJob);
-                        if (lowTOS == null) continue;
-
-                        IEnumerable<sbyte> valuePool = tos.GetBasicWeaponRequirementValues().Distinct().Where(i => i != 0);
-                        if (!valuePool.Any())
-                            valuePool = new sbyte[] { 1 };
-                        while (GetWeaponRequirements(lowTOS).Except(GetWeaponRequirements(tos)).Any())
-                        {
-                            sbyte[] reqValues = tos.GetBasicWeaponRequirementValues();
-                            List<int> reqs = GetWeaponRequirements(tos);
-                            int index = GetWeaponRequirements(lowTOS).Except(reqs).GetRandom();
-                            reqValues[reqs.GetRandom()] = 0;
-                            reqValues[index] = valuePool.GetRandom();
-                            tos.SetBasicWeaponRequirementValues(reqValues);
-                        }
-                    }
+                    RandomizeWeaponTypeCounts(settings, generalClasses);
+                RandomizeWeaponTypes(settings, generalClasses);
                 foreach (TypeOfSoldier tos in generalClasses)
                     AdjustRanksToWeaponTypes(tos);
             }
             if (settings.RandomizeWeaponRank.Enabled)
-            {
-                AsNodeStructure(generalClasses, tos => GetRankPool(tos).Select(s => (int)s.ToProficiencyLevel()), out List<List<Node<int>>> rankStructure, out _);
-                IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> tosRankStructure = rankStructure.Zip(generalClasses);
-                IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> baseStructure = tosRankStructure.Where(t => !t.tos.IsAdvancedOrSpecial());
-                IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> advancedStructure = tosRankStructure.Where(t => t.tos.IsAdvancedOrSpecial());
-                baseStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i, settings.MaxWeaponLevelBase.Distribution, 1, 10);
-                advancedStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i, settings.MaxWeaponLevelAdvanced.Distribution, 1, 10);
-                IEnumerable<string> proficiencyLevels = Enum.GetNames(typeof(GameData.ProficiencyLevel)).Select(s => s.Replace('p', '+'));
-                foreach ((List<Node<int>> newRanks, TypeOfSoldier tos) in tosRankStructure)
-                {
-                    if (settings.RandomizeWeaponRank.GetArg<bool>(0) && tos.IsAdvancedOrSpecial())
-                        if (newRanks.Count == 1)
-                            newRanks[0].value = Math.Min(newRanks[0].value + 1, 10);
-                        else
-                            for (int i = 0; i < newRanks.Count * 2; i++)
-                            {
-                                Node<int> n = newRanks.GetRandom();
-                                n.value = Math.Max(n.value - 1, 1);
-                            }
-                    int index = 0;
-                    string[] ranks = tos.GetMaxWeaponLevels();
-                    while (newRanks.Any())
-                    {
-                        if (ranks[index] != "N")
-                        {
-                            ranks[index] = proficiencyLevels.ElementAt(newRanks.First().value);
-                            newRanks.RemoveAt(0);
-                        }
-                        index++;
-                    }
-                    tos.SetMaxWeaponLevels(ranks);
-                }
-            }
+                RandomizeWeaponRanks(settings, generalClasses);
             if (settings.Weapon.Enabled || settings.RandomizeWeaponRank.Enabled)
             {
-                foreach (TypeOfSoldier tos in generalClasses)
-                {
-                    IEnumerable<(string, int)> ranks = tos.GetMaxWeaponLevels().Select((s, i) => (s, i)).Where(t => t.s != "N");
-                    if (ranks.Any())
-                        entries[tos].AppendLine("Weapons:\t" + string.Join(",\t", ranks.Select(t =>
-                            $"{t.Item1} {GD.Proficiencies.IDToName(t.Item2)}")));
-                    if (!ranks.Any())
-                        entries[tos].AppendLine("Weapons:\tNone");
-                }
+                WriteWeaponRanksToChangelog(generalClasses, entries);
+                GD.SetDirty(DataSetEnum.TypeOfSoldier);
+            }
+
+            if (settings.RandomizeBaseStats.Enabled)
+            {
+                RandomizeStatSpread(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()).ToList(), entries, settings.GetBaseBaseStatSettings(),
+                    tos => tos.GetBases(), (tos, a) => tos.SetBases(a), tos => tos.GetBasicBases(), (tos, a) => tos.SetBasicBases(a),
+                    "Base Stats", DataSetEnum.TypeOfSoldier);
+                RandomizeStatSpread(allClasses.Where(tos => tos.IsAdvancedOrSpecial()).ToList(), entries, settings.GetAdvancedBaseStatSettings(),
+                    tos => tos.GetBases(), (tos, a) => tos.SetBases(a), tos => tos.GetBasicBases(), (tos, a) => tos.SetBasicBases(a),
+                    "Base Stats", DataSetEnum.TypeOfSoldier);
+            }
+            if (settings.RandomizeStatLimits.Enabled)
+            {
+                RandomizeStatSpread(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()).ToList(), entries, settings.GetBaseStatLimitSettings(),
+                    tos => tos.GetLimits(), (tos, a) => tos.SetLimits(a), tos => tos.GetBasicLimits(), (tos, a) => tos.SetBasicLimits(a),
+                    "Stat Limits", DataSetEnum.TypeOfSoldier);
+                RandomizeStatSpread(allClasses.Where(tos => tos.IsAdvancedOrSpecial()).ToList(), entries, settings.GetAdvancedStatLimitSettings(),
+                    tos => tos.GetLimits(), (tos, a) => tos.SetLimits(a), tos => tos.GetBasicLimits(), (tos, a) => tos.SetBasicLimits(a),
+                    "Stat Limits", DataSetEnum.TypeOfSoldier);
+            }
+            if (settings.RandomizeEnemyStatGrows.Enabled)
+            {
+                RandomizeStatSpread(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()).ToList(), entries, settings.GetBaseEnemyGrowthSettings(),
+                    tos => tos.GetEnemyGrowths(), (tos, a) => tos.SetEnemyGrowths(a), tos => tos.GetBasicEnemyGrowths(),
+                    (tos, a) => tos.SetBasicEnemyGrowths(a), "Enemy Growths", DataSetEnum.TypeOfSoldier);
+                RandomizeStatSpread(allClasses.Where(tos => tos.IsAdvancedOrSpecial()).ToList(), entries, settings.GetBaseEnemyGrowthSettings(),
+                    tos => tos.GetEnemyGrowths(), (tos, a) => tos.SetEnemyGrowths(a), tos => tos.GetBasicEnemyGrowths(),
+                    (tos, a) => tos.SetBasicEnemyGrowths(a), "Enemy Growths", DataSetEnum.TypeOfSoldier);
+            }
+            if (settings.RandomizeStatGrowthModifiers.Enabled)
+            {
+                RandomizeStatSpread(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()).ToList(), entries,
+                    settings.GetBaseGrowthModifierSettings(), tos => tos.GetGrowthModifiers(), (tos, a) => tos.SetGrowthModifiers(a),
+                    tos => tos.GetBasicGrowthModifiers(), (tos, a) => tos.SetBasicGrowthModifiers(a), "Growth Modifiers",
+                    DataSetEnum.TypeOfSoldier);
+                RandomizeStatSpread(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()).ToList(), entries,
+                    settings.GetAdvancedGrowthModifierSettings(), tos => tos.GetGrowthModifiers(), (tos, a) => tos.SetGrowthModifiers(a),
+                    tos => tos.GetBasicGrowthModifiers(), (tos, a) => tos.SetBasicGrowthModifiers(a), "Growth Modifiers",
+                    DataSetEnum.TypeOfSoldier);
+            }
+
+            if (settings.LearningSkill.Enabled)
+            {
+                List<TypeOfSoldier> learningSkillTOSs = allClasses.Where(tos => tos.LearningSkill != "").ToList();
+                learningSkillTOSs.Randomize(tos => tos.LearningSkill, (tos, s) => tos.LearningSkill = s,
+                    settings.LearningSkill.Distribution, GD.GeneralSkills.GetIDs());
+                WriteToChangelog(entries, learningSkillTOSs, tos => tos.LearningSkill, "Class Skill", GD.GeneralSkills);
+                GD.SetDirty(DataSetEnum.TypeOfSoldier);
+            }
+
+            if (settings.LunaticSkill.Enabled)
+            {
+                List<TypeOfSoldier> lunaticSkillTOSs = allClasses.Where(tos => tos.LunaticSkill != "").ToList();
+                lunaticSkillTOSs.Randomize(tos => tos.LunaticSkill, (tos, s) => tos.LunaticSkill = s,
+                    settings.LunaticSkill.Distribution, GD.GeneralSkills.GetIDs());
+                WriteToChangelog(entries, lunaticSkillTOSs, tos => tos.LunaticSkill, "Maddening Skill", GD.GeneralSkills);
                 GD.SetDirty(DataSetEnum.TypeOfSoldier);
             }
 
@@ -1306,6 +1238,147 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innerTable, "Classes");
+        }
+
+        private void WriteWeaponRanksToChangelog(List<TypeOfSoldier> generalClasses, Dictionary<TypeOfSoldier, StringBuilder> entries)
+        {
+            foreach (TypeOfSoldier tos in generalClasses)
+            {
+                IEnumerable<(string, int)> ranks = tos.GetMaxWeaponLevels().Select((s, i) => (s, i)).Where(t => t.s != "N");
+                if (ranks.Any())
+                    entries[tos].AppendLine("Weapons:\t" + string.Join(",\t", ranks.Select(t =>
+                        $"{t.Item1} {GD.Proficiencies.IDToName(t.Item2)}")));
+                if (!ranks.Any())
+                    entries[tos].AppendLine("Weapons:\tNone");
+            }
+        }
+
+        private static void RandomizeWeaponRanks(RandomizerSettings.TypeOfSoldierSettings settings, List<TypeOfSoldier> generalClasses)
+        {
+            AsNodeStructure(generalClasses, tos => GetRankPool(tos).Select(s => (int)s.ToProficiencyLevel()), out List<List<Node<int>>> rankStructure, out _);
+            IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> tosRankStructure = rankStructure.Zip(generalClasses);
+            IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> baseStructure = tosRankStructure.Where(t => !t.tos.IsAdvancedOrSpecial());
+            IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> advancedStructure = tosRankStructure.Where(t => t.tos.IsAdvancedOrSpecial());
+            baseStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i, settings.MaxWeaponLevelBase.Distribution, 1, 10);
+            advancedStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i, settings.MaxWeaponLevelAdvanced.Distribution, 1, 10);
+            IEnumerable<string> proficiencyLevels = Enum.GetNames(typeof(GameData.ProficiencyLevel)).Select(s => s.Replace('p', '+'));
+            foreach ((List<Node<int>> newRanks, TypeOfSoldier tos) in tosRankStructure)
+            {
+                if (settings.RandomizeWeaponRank.GetArg<bool>(0) && tos.IsAdvancedOrSpecial())
+                    if (newRanks.Count == 1)
+                        newRanks[0].value = Math.Min(newRanks[0].value + 1, 10);
+                    else
+                        for (int i = 0; i < newRanks.Count * 2; i++)
+                        {
+                            Node<int> n = newRanks.GetRandom();
+                            n.value = Math.Max(n.value - 1, 1);
+                        }
+                int index = 0;
+                string[] ranks = tos.GetMaxWeaponLevels();
+                while (newRanks.Any())
+                {
+                    if (ranks[index] != "N")
+                    {
+                        ranks[index] = proficiencyLevels.ElementAt(newRanks.First().value);
+                        newRanks.RemoveAt(0);
+                    }
+                    index++;
+                }
+                tos.SetMaxWeaponLevels(ranks);
+            }
+        }
+
+        private void RandomizeWeaponTypes(RandomizerSettings.TypeOfSoldierSettings settings, List<TypeOfSoldier> generalClasses)
+        {
+            AsNodeStructure(generalClasses, tos => tos.GetBasicWeaponRequirements(), out List<List<Node<int>>> structure, out List<Node<int>> flattened);
+            flattened.Randomize(n => n.value, (n, i) => n.value = i, settings.Weapon.Distribution, GD.BasicProficiencies.GetIDs());
+            for (int tosIdx = 0; tosIdx < generalClasses.Count; tosIdx++)
+            {
+                TypeOfSoldier tos = generalClasses[tosIdx];
+                List<Node<int>> list = structure[tosIdx];
+                List<int> reqs = list.Select(n => n.value).Distinct().ToList();
+                sbyte[] reqValues = tos.GetBasicWeaponRequirementValues();
+                while (reqs.Count < list.Count)
+                    reqs.Add(GD.BasicProficiencies.GetIDs().Except(reqs).GetRandom());
+                IEnumerable<sbyte> valuePool = reqValues.Distinct().Where(i => i != 0);
+                if (!valuePool.Any())
+                    valuePool = new sbyte[] { 1 };
+                reqValues = new sbyte[reqValues.Length];
+                foreach (int i in reqs)
+                    reqValues[i - 1] = valuePool.GetRandom();
+                tos.SetBasicWeaponRequirementValues(reqValues);
+            }
+            if (settings.Weapon.GetArg<bool>(0))
+                foreach (TypeOfSoldier tos in generalClasses)
+                {
+                    TypeOfSoldier? lowTOS = generalClasses.FirstOrDefault(tos0 => tos0.Name == tos.LowJob);
+                    if (lowTOS == null) continue;
+
+                    IEnumerable<sbyte> valuePool = tos.GetBasicWeaponRequirementValues().Distinct().Where(i => i != 0);
+                    if (!valuePool.Any())
+                        valuePool = new sbyte[] { 1 };
+                    while (GetWeaponRequirements(lowTOS).Except(GetWeaponRequirements(tos)).Any())
+                    {
+                        sbyte[] reqValues = tos.GetBasicWeaponRequirementValues();
+                        List<int> reqs = GetWeaponRequirements(tos);
+                        int index = GetWeaponRequirements(lowTOS).Except(reqs).GetRandom();
+                        reqValues[reqs.GetRandom()] = 0;
+                        reqValues[index] = valuePool.GetRandom();
+                        tos.SetBasicWeaponRequirementValues(reqValues);
+                    }
+                }
+        }
+
+        private static void RandomizeWeaponTypeCounts(RandomizerSettings.TypeOfSoldierSettings settings, List<TypeOfSoldier> generalClasses)
+        {
+            List<Node<TypeOfSoldier, int>> weaponTypeCounts = generalClasses.Select(tos =>
+                                    new Node<TypeOfSoldier, int>(tos, tos.GetBasicWeaponRequirementCount())).ToList();
+            weaponTypeCounts.Where(n => !n.a.IsAdvancedOrSpecial()).ToList().Randomize(n => n.b, (n, i) => n.b = i,
+                settings.WeaponBaseCount.Distribution, 0, 8);
+            weaponTypeCounts.Where(n => n.a.IsAdvancedOrSpecial()).ToList().Randomize(n => n.b, (n, i) => n.b = i,
+                settings.WeaponAdvancedCount.Distribution, 0, 8);
+            foreach (Node<TypeOfSoldier, int> n in weaponTypeCounts)
+                if (n.b == 0 && n.a.WeaponNone == 0 && n.a.WeaponSpecial == 0)
+                    n.b = 1;
+            if (settings.Weapon.GetArg<bool>(0))
+                foreach (Node<TypeOfSoldier, int> n in weaponTypeCounts)
+                {
+                    Node<TypeOfSoldier, int>? lowNode = weaponTypeCounts.FirstOrDefault(n0 => n0.a.Name == n.a.LowJob);
+                    if (lowNode == null) continue;
+                    if (n.b < lowNode.b)
+                        n.b = lowNode.b;
+                }
+            foreach (Node<TypeOfSoldier, int> n in weaponTypeCounts)
+            {
+                sbyte[] reqValues = n.a.GetBasicWeaponRequirementValues();
+                if (reqValues.Any(i8 => i8 == 2))
+                {
+                    List<int> indices = reqValues.Select((i8, i32) => (i8, i32)).Where(t => t.i8 == 2).Select(t => t.i32).ToList();
+                    for (int i = 0; i < reqValues.Length; i++)
+                        if (reqValues[i] == 2)
+                            reqValues[i] = 0;
+                    reqValues[indices.GetRandom()] = 1;
+                }
+                if (reqValues.Any(i8 => i8 == 3))
+                {
+                    List<int> indices = reqValues.Select((i8, i32) => (i8, i32)).Where(t => t.i8 == 3).Select(t => t.i32).ToList();
+                    new Redistribution(100).Randomize(indices);
+                    for (int i = 0; i < reqValues.Length; i++)
+                        if (reqValues[i] == 3)
+                            reqValues[i] = 0;
+                    reqValues[indices[0]] = 1;
+                    reqValues[indices[1]] = 1;
+                }
+                List<int> reqs = n.a.GetBasicWeaponRequirementValues().Select((i8, i32) => (i8, i32)).Where(t => t.i8 == 1).Select(t => t.i32).ToList();
+                while (reqs.Count < n.b)
+                    reqs.Add(Enumerable.Range(0, reqValues.Length).Except(reqs).GetRandom());
+                while (reqs.Count > n.b)
+                    reqs.Remove(reqs.GetRandom());
+                reqValues = new sbyte[reqValues.Length];
+                foreach (int req in reqs)
+                    reqValues[req] = 1;
+                n.a.SetBasicWeaponRequirementValues(reqValues);
+            }
         }
 
         private static List<int> GetWeaponRequirements(TypeOfSoldier tos) =>
@@ -1399,27 +1472,30 @@ namespace ALittleSecretIngredient
                 RandomizeAllyBaseStats(allyCharacters, entries, settings.GetOffsetNAllySettings(), "Base Stat Modifiers",
                     settings.StrongerProtagonist, settings.StrongerAllyNPCs);
             if (settings.RandomizeEnemyBasesNormal)
-                RandomizeBaseStats(enemyCharacters, entries, settings.GetOffsetNEnemySettings(), i => i.GetOffsetN(),
-                    (i, a) => i.SetOffsetN(a), i => i.GetBasicOffsetN(), (i, a) => i.SetBasicOffsetN(a), "Base Stats Normal");
+                RandomizeStatSpread(enemyCharacters, entries, settings.GetOffsetNEnemySettings(), i => i.GetOffsetN(),
+                    (i, a) => i.SetOffsetN(a), i => i.GetBasicOffsetN(), (i, a) => i.SetBasicOffsetN(a), "Base Stats Normal",
+                    DataSetEnum.Individual);
             if (settings.RandomizeEnemyBasesHard)
-                RandomizeBaseStats(enemyCharacters, entries, settings.GetOffsetHEnemySettings(), i => i.GetOffsetH(),
-                    (i, a) => i.SetOffsetH(a), i => i.GetBasicOffsetH(), (i, a) => i.SetBasicOffsetH(a), "Base Stats Hard");
+                RandomizeStatSpread(enemyCharacters, entries, settings.GetOffsetHEnemySettings(), i => i.GetOffsetH(),
+                    (i, a) => i.SetOffsetH(a), i => i.GetBasicOffsetH(), (i, a) => i.SetBasicOffsetH(a), "Base Stats Hard",
+                    DataSetEnum.Individual);
             if (settings.RandomizeEnemyBasesMaddening)
-                RandomizeBaseStats(enemyCharacters, entries, settings.GetOffsetLEnemySettings(), i => i.GetOffsetL(),
-                    (i, a) => i.SetOffsetL(a), i => i.GetBasicOffsetL(), (i, a) => i.SetBasicOffsetL(a), "Base Stats Maddening");
+                RandomizeStatSpread(enemyCharacters, entries, settings.GetOffsetLEnemySettings(), i => i.GetOffsetL(),
+                    (i, a) => i.SetOffsetL(a), i => i.GetBasicOffsetL(), (i, a) => i.SetBasicOffsetL(a), "Base Stats Maddening",
+                    DataSetEnum.Individual);
 
             if (settings.RandomizeStatLimits)
                 RandomizeStatLimits(settings, playableCharacters, entries);
 
             if (settings.RandomizeAllyStatGrowths)
-                RandomizeBaseStats(playableCharacters.Where(i => i.HasGrowths()).ToList(), entries, settings.GetGrowthSettings(),
+                RandomizeStatSpread(playableCharacters.Where(i => i.HasGrowths()).ToList(), entries, settings.GetGrowthSettings(),
                     i => i.GetGrowths(), (i, a) => i.SetGrowths(a), i => i.GetBasicGrowths(), (i, a) => i.SetBasicGrowths(a),
-                    "Stat Growths");
+                    "Stat Growths", DataSetEnum.Individual);
 
             if (settings.RandomizeEnemyStatGrowths)
-                RandomizeBaseStats(npcCharacters.Where(i => i.HasGrowths()).ToList(), entries, settings.GetGrowthSettings(),
+                RandomizeStatSpread(npcCharacters.Where(i => i.HasGrowths()).ToList(), entries, settings.GetGrowthSettings(),
                     i => i.GetGrowths(), (i, a) => i.SetGrowths(a), i => i.GetBasicGrowths(), (i, a) => i.SetBasicGrowths(a),
-                    "Stat Growths");
+                    "Stat Growths", DataSetEnum.Individual);
 
             HandleInventory(settings, playableCharacters, npcCharacters, toss, weaponIDs, itemIDs, entries);
 
@@ -1896,28 +1972,28 @@ namespace ALittleSecretIngredient
             GD.SetDirty(DataSetEnum.Individual);
         }
 
-        private void RandomizeBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
-            RandomizerFieldSettings[] settingsFields, Func<Individual, sbyte[]> get, Action<Individual, sbyte[]> set,
-            Func<Individual, sbyte[]> getBasic, Action<Individual, sbyte[]> setBasic, string fieldName)
+        private void RandomizeStatSpread<T>(List<T> individuals, Dictionary<T, StringBuilder> entries,
+            RandomizerFieldSettings[] settingsFields, Func<T, sbyte[]> get, Action<T, sbyte[]> set,
+            Func<T, sbyte[]> getBasic, Action<T, sbyte[]> setBasic, string fieldName, DataSetEnum dse) where T : notnull
         {
             List<Node<double>> oldStatTotals = individuals.Select(i => new Node<double>(getBasic(i).Select(s =>
                                 (double)s).Sum())).ToList();
             RandomizeBaseStats(individuals, settingsFields, get, set);
             HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldStatTotals);
             WriteStatsToChangelog(individuals, entries, get, fieldName);
-            GD.SetDirty(DataSetEnum.Individual);
+            GD.SetDirty(dse);
         }
 
-        private void RandomizeBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
-            RandomizerFieldSettings[] settingsFields, Func<Individual, byte[]> get, Action<Individual, byte[]> set,
-            Func<Individual, byte[]> getBasic, Action<Individual, byte[]> setBasic, string fieldName)
+        private void RandomizeStatSpread<T>(List<T> individuals, Dictionary<T, StringBuilder> entries,
+            RandomizerFieldSettings[] settingsFields, Func<T, byte[]> get, Action<T, byte[]> set,
+            Func<T, byte[]> getBasic, Action<T, byte[]> setBasic, string fieldName, DataSetEnum dse) where T : notnull
         {
             List<Node<double>> oldStatTotals = individuals.Select(i => new Node<double>(getBasic(i).Select(s =>
                                 (double)s).Sum())).ToList();
             RandomizeBaseStats(individuals, settingsFields, get, set);
             HandleStatTotal(individuals, settingsFields, getBasic, setBasic, oldStatTotals);
             WriteStatsToChangelog(individuals, entries, get, fieldName);
-            GD.SetDirty(DataSetEnum.Individual);
+            GD.SetDirty(dse);
         }
 
         private void RandomizeAllyBaseStats(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
@@ -1942,20 +2018,20 @@ namespace ALittleSecretIngredient
             GD.SetDirty(DataSetEnum.Individual);
         }
 
-        private static void WriteStatsToChangelog<T>(List<Individual> individuals, Dictionary<Individual, StringBuilder> entries,
-            Func<Individual, T[]> get, string fieldName)
+        private static void WriteStatsToChangelog<A, B>(List<B> individuals, Dictionary<B, StringBuilder> entries,
+            Func<B, A[]> get, string fieldName) where B : notnull
         {
-            foreach (Individual i in individuals)
+            foreach (B i in individuals)
             {
-                T[] stats = get(i);
+                A[] stats = get(i);
                 entries[i].AppendLine($"{fieldName}:\t{stats[0]} HP,\t{stats[1]} Str,\t{stats[2]} Dex,\t{stats[3]} Spd,\t" +
                     $"{stats[4]} Lck,\t{stats[5]} Def,\t{stats[6]} Mag,\t{stats[7]} Res,\t" +
                     $"{stats[8]} Bld,\t{stats[9]} Sig,\t{stats[10]} Mov");
             }
         }
 
-        private static void HandleStatTotal(List<Individual> individuals, RandomizerFieldSettings[] settingsFields,
-            Func<Individual, sbyte[]> getBasic, Action<Individual, sbyte[]> setBasic, List<Node<double>> baseStatTotals)
+        private static void HandleStatTotal<T>(List<T> individuals, RandomizerFieldSettings[] settingsFields,
+            Func<T, sbyte[]> getBasic, Action<T, sbyte[]> setBasic, List<Node<double>> baseStatTotals)
         {
             RandomizerFieldSettings totalSettings = settingsFields[11];
             if (totalSettings.Enabled)
@@ -1973,8 +2049,8 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private static void HandleStatTotal(List<Individual> individuals, RandomizerFieldSettings[] settingsFields,
-            Func<Individual, byte[]> getBasic, Action<Individual, byte[]> setBasic, List<Node<double>> baseStatTotals)
+        private static void HandleStatTotal<T>(List<T> individuals, RandomizerFieldSettings[] settingsFields,
+            Func<T, byte[]> getBasic, Action<T, byte[]> setBasic, List<Node<double>> baseStatTotals)
         {
             RandomizerFieldSettings totalSettings = settingsFields[11];
             if (totalSettings.Enabled)
@@ -1992,7 +2068,7 @@ namespace ALittleSecretIngredient
             }
         }
 
-        private static void RandomizeBaseStats(List<Individual> individuals, RandomizerFieldSettings[] settingsFields, Func<Individual, sbyte[]> get, Action<Individual, sbyte[]> set)
+        private static void RandomizeBaseStats<T>(List<T> individuals, RandomizerFieldSettings[] settingsFields, Func<T, sbyte[]> get, Action<T, sbyte[]> set)
         {
             List<sbyte[]> baseStats = individuals.Select(get).ToList();
             for (int sIdx = 0; sIdx < baseStats[0].Length; sIdx++)
@@ -2002,7 +2078,7 @@ namespace ALittleSecretIngredient
                 set(individuals[iIdx], baseStats[iIdx]);
         }
 
-        private static void RandomizeBaseStats(List<Individual> individuals, RandomizerFieldSettings[] settingsFields, Func<Individual, byte[]> get, Action<Individual, byte[]> set)
+        private static void RandomizeBaseStats<T>(List<T> individuals, RandomizerFieldSettings[] settingsFields, Func<T, byte[]> get, Action<T, byte[]> set)
         {
             List<byte[]> baseStats = individuals.Select(get).ToList();
             for (int sIdx = 0; sIdx < baseStats[0].Length; sIdx++)

@@ -242,81 +242,81 @@ namespace ALittleSecretIngredient
                     switch (dfe)
                     {
                         case RandomizerDistribution.ScaleAll:
-                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(assets.Where(a => a.ScaleAll != 0).ToList(), a => a.ScaleAll);
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(assets.Where(a => a.ScaleAll != 0), a => a.ScaleAll);
                             nds0.idx = 3;
                             return nds0;
                         case RandomizerDistribution.ScaleHead:
-                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0).ToList(), a => a.ScaleHead);
+                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0), a => a.ScaleHead);
                             nds1.idx = 4;
                             return nds1;
                         case RandomizerDistribution.ScaleNeck:
-                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0).ToList(), a => a.ScaleNeck);
+                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0), a => a.ScaleNeck);
                             nds2.idx = 3;
                             return nds2;
                         case RandomizerDistribution.ScaleTorso:
-                            NumericDistributionSetup nds3 = GetNumericDistributionSetup(assets.Where(a => a.ScaleTorso != 0).ToList(), a => a.ScaleTorso);
+                            NumericDistributionSetup nds3 = GetNumericDistributionSetup(assets.Where(a => a.ScaleTorso != 0), a => a.ScaleTorso);
                             nds3.idx = 3;
                             return nds3;
                         case RandomizerDistribution.ScaleShoulders:
-                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(assets.Where(a => a.ScaleShoulders != 0).ToList(), a => a.ScaleShoulders);
+                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(assets.Where(a => a.ScaleShoulders != 0), a => a.ScaleShoulders);
                             nds4.idx = 3;
                             return nds4;
                         case RandomizerDistribution.ScaleArms:
-                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(assets.Where(a => a.ScaleArms != 0).ToList(), a => a.ScaleArms);
+                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(assets.Where(a => a.ScaleArms != 0), a => a.ScaleArms);
                             nds5.idx = 3;
                             return nds5;
                         case RandomizerDistribution.ScaleHands:
-                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHands != 0).ToList(), a => a.ScaleHands);
+                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHands != 0), a => a.ScaleHands);
                             nds6.idx = 3;
                             return nds6;
                         case RandomizerDistribution.ScaleLegs:
-                            NumericDistributionSetup nds7 = GetNumericDistributionSetup(assets.Where(a => a.ScaleLegs != 0).ToList(), a => a.ScaleLegs);
+                            NumericDistributionSetup nds7 = GetNumericDistributionSetup(assets.Where(a => a.ScaleLegs != 0), a => a.ScaleLegs);
                             nds7.idx = 3;
                             return nds7;
                         case RandomizerDistribution.ScaleFeet:
-                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(assets.Where(a => a.ScaleFeet != 0).ToList(), a => a.ScaleFeet);
+                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(assets.Where(a => a.ScaleFeet != 0), a => a.ScaleFeet);
                             nds8.idx = 3;
                             return nds8;
                         case RandomizerDistribution.VolumeArms:
-                            NumericDistributionSetup nds9 = GetNumericDistributionSetup(assets.Where(a => a.VolumeArms != 0).ToList(), a => a.VolumeArms);
+                            NumericDistributionSetup nds9 = GetNumericDistributionSetup(assets.Where(a => a.VolumeArms != 0), a => a.VolumeArms);
                             nds9.idx = 3;
                             return nds9;
                         case RandomizerDistribution.VolumeLegs:
-                            NumericDistributionSetup nds10 = GetNumericDistributionSetup(assets.Where(a => a.VolumeLegs != 0).ToList(), a => a.VolumeLegs);
+                            NumericDistributionSetup nds10 = GetNumericDistributionSetup(assets.Where(a => a.VolumeLegs != 0), a => a.VolumeLegs);
                             nds10.idx = 3;
                             return nds10;
                         case RandomizerDistribution.VolumeBust:
-                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(assets.Where(a => a.VolumeBust != 0).ToList(), a => a.VolumeBust);
+                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(assets.Where(a => a.VolumeBust != 0), a => a.VolumeBust);
                             // To counteract the large amount of npcs lowering the standard deviation. Why specifically this parameter? Who knows?
                             ((NormalConstant)nds11.distributions[3]).standardDeviation *= 2;
                             nds11.idx = 3;
                             return nds11;
                         case RandomizerDistribution.VolumeAbdomen:
-                            NumericDistributionSetup nds12 = GetNumericDistributionSetup(assets.Where(a => a.VolumeAbdomen != 0).ToList(), a => a.VolumeAbdomen);
+                            NumericDistributionSetup nds12 = GetNumericDistributionSetup(assets.Where(a => a.VolumeAbdomen != 0), a => a.VolumeAbdomen);
                             nds12.idx = 3;
                             return nds12;
                         case RandomizerDistribution.VolumeTorso:
-                            NumericDistributionSetup nds13 = GetNumericDistributionSetup(assets.Where(a => a.VolumeTorso != 0).ToList(), a => a.VolumeTorso);
+                            NumericDistributionSetup nds13 = GetNumericDistributionSetup(assets.Where(a => a.VolumeTorso != 0), a => a.VolumeTorso);
                             nds13.idx = 3;
                             return nds13;
                         case RandomizerDistribution.VolumeScaleArms:
-                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(assets.Where(a => a.VolumeScaleArms != 0).ToList(), a => a.VolumeScaleArms);
+                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(assets.Where(a => a.VolumeScaleArms != 0), a => a.VolumeScaleArms);
                             nds14.idx = 3;
                             return nds14;
                         case RandomizerDistribution.VolumeScaleLegs:
-                            NumericDistributionSetup nds15 = GetNumericDistributionSetup(assets.Where(a => a.VolumeScaleLegs != 0).ToList(), a => a.VolumeScaleLegs);
+                            NumericDistributionSetup nds15 = GetNumericDistributionSetup(assets.Where(a => a.VolumeScaleLegs != 0), a => a.VolumeScaleLegs);
                             nds15.idx = 3;
                             return nds15;
                         case RandomizerDistribution.MapScaleAll:
-                            NumericDistributionSetup nds16 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleAll != 0).ToList(), a => a.MapScaleAll);
+                            NumericDistributionSetup nds16 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleAll != 0), a => a.MapScaleAll);
                             nds16.idx = 4;
                             return nds16;
                         case RandomizerDistribution.MapScaleHead:
-                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleHead != 0).ToList(), a => a.MapScaleHead);
+                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleHead != 0), a => a.MapScaleHead);
                             nds17.idx = 4;
                             return nds17;
                         case RandomizerDistribution.MapScaleWing:
-                            NumericDistributionSetup nds18 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleWing != 0).ToList(), a => a.MapScaleWing);
+                            NumericDistributionSetup nds18 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleWing != 0), a => a.MapScaleWing);
                             nds18.idx = 3;
                             return nds18;
                         default:
@@ -325,28 +325,275 @@ namespace ALittleSecretIngredient
                 case DataSetEnum.TypeOfSoldier:
                     List<TypeOfSoldier> toss0 = dataSet.Params.Cast<TypeOfSoldier>().ToList();
                     List<TypeOfSoldier> generalClasses = toss0.FilterData(tos => tos.Jid, GD.GeneralClasses);
+                    List<TypeOfSoldier> allClasses = toss0.FilterData(tos => tos.Jid, GD.AllClasses);
                     switch (dfe)
                     {
                         case RandomizerDistribution.WeaponBaseCount:
-                            return GetNumericDistributionSetup(generalClasses.Where(tos => !tos.IsAdvancedOrSpecial()).ToList(), tos => tos.GetBasicWeaponRequirementCount());
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.GetBasicWeaponRequirementCount());
                         case RandomizerDistribution.WeaponAdvancedCount:
-                            return GetNumericDistributionSetup(generalClasses.Where(tos => tos.IsAdvancedOrSpecial()).ToList(), tos => tos.GetBasicWeaponRequirementCount());
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.GetBasicWeaponRequirementCount());
                         case RandomizerDistribution.MaxWeaponLevelBase:
-                            return GetNumericDistributionSetup(generalClasses.Where(tos => !tos.IsAdvancedOrSpecial()).SelectMany(tos => tos.GetMaxWeaponLevels().Where(s => s != "N")).ToList(),
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => !tos.IsAdvancedOrSpecial()).SelectMany(tos => tos.GetMaxWeaponLevels().Where(s => s != "N")),
                                 s => (int)s.ToProficiencyLevel());
                         case RandomizerDistribution.MaxWeaponLevelAdvanced:
-                            return GetNumericDistributionSetup(generalClasses.Where(tos => tos.IsAdvancedOrSpecial()).SelectMany(tos => tos.GetMaxWeaponLevels().Where(s => s != "N")).ToList(),
+                            return GetNumericDistributionSetup(generalClasses.Where(tos => tos.IsAdvancedOrSpecial()).SelectMany(tos => tos.GetMaxWeaponLevels().Where(s => s != "N")),
                                 s => (int)s.ToProficiencyLevel());
+                        case RandomizerDistribution.BaseHpBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseHp);
+                        case RandomizerDistribution.BaseStrBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseStr);
+                        case RandomizerDistribution.BaseTechBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseTech);
+                        case RandomizerDistribution.BaseQuickBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseQuick);
+                        case RandomizerDistribution.BaseLuckBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseLuck);
+                        case RandomizerDistribution.BaseDefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseDef);
+                        case RandomizerDistribution.BaseMagicBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseMagic);
+                        case RandomizerDistribution.BaseMdefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseMdef);
+                        case RandomizerDistribution.BasePhysBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BasePhys);
+                        case RandomizerDistribution.BaseSightBase:
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseSight);
+                            nds0.distributions[0] = new UniformConstant(10, 2, 4);
+                            nds0.idx = 0;
+                            return nds0;
+                        case RandomizerDistribution.BaseMoveBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseMove);
+                        case RandomizerDistribution.BaseHpAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseHp);
+                        case RandomizerDistribution.BaseStrAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseStr);
+                        case RandomizerDistribution.BaseTechAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseTech);
+                        case RandomizerDistribution.BaseQuickAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseQuick);
+                        case RandomizerDistribution.BaseLuckAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseLuck);
+                        case RandomizerDistribution.BaseDefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseDef);
+                        case RandomizerDistribution.BaseMagicAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseMagic);
+                        case RandomizerDistribution.BaseMdefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseMdef);
+                        case RandomizerDistribution.BasePhysAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BasePhys);
+                        case RandomizerDistribution.BaseSightAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseSight);
+                        case RandomizerDistribution.BaseMoveAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseMove);
+                        case RandomizerDistribution.BaseTotalBase:
+                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.GetBasicBases().Select(b => (int)b).Sum());
+                            nds1.idx = 4;
+                            return nds1;
+                        case RandomizerDistribution.BaseTotalAdvanced:
+                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.GetBasicBases().Select(b => (int)b).Sum());
+                            nds2.idx = 4;
+                            return nds2;
+                        case RandomizerDistribution.LimitHpBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitHp);
+                        case RandomizerDistribution.LimitStrBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitStr);
+                        case RandomizerDistribution.LimitTechBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitTech);
+                        case RandomizerDistribution.LimitQuickBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitQuick);
+                        case RandomizerDistribution.LimitLuckBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitLuck);
+                        case RandomizerDistribution.LimitDefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitDef);
+                        case RandomizerDistribution.LimitMagicBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitMagic);
+                        case RandomizerDistribution.LimitMdefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitMdef);
+                        case RandomizerDistribution.LimitPhysBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitPhys);
+                        case RandomizerDistribution.LimitSightBase:
+                            NumericDistributionSetup nds3 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitSight);
+                            nds3.distributions[3] = new NormalConstant(10, 20, 5);
+                            nds3.idx = 3;
+                            return nds3;
+                        case RandomizerDistribution.LimitMoveBase:
+                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitMove);
+                            nds4.distributions[3] = new NormalConstant(10, 20, 5);
+                            nds4.idx = 3;
+                            return nds4;
+                        case RandomizerDistribution.LimitHpAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitHp);
+                        case RandomizerDistribution.LimitStrAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitStr);
+                        case RandomizerDistribution.LimitTechAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitTech);
+                        case RandomizerDistribution.LimitQuickAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitQuick);
+                        case RandomizerDistribution.LimitLuckAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitLuck);
+                        case RandomizerDistribution.LimitDefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitDef);
+                        case RandomizerDistribution.LimitMagicAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitMagic);
+                        case RandomizerDistribution.LimitMdefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitMdef);
+                        case RandomizerDistribution.LimitPhysAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitPhys);
+                        case RandomizerDistribution.LimitSightAdvanced:
+                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitSight);
+                            nds5.distributions[3] = new NormalConstant(10, 20, 5);
+                            nds5.idx = 3;
+                            return nds5;
+                        case RandomizerDistribution.LimitMoveAdvanced:
+                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitMove);
+                            nds6.distributions[3] = new NormalConstant(10, 20, 5);
+                            nds6.idx = 3;
+                            return nds6;
+                        case RandomizerDistribution.LimitTotalBase:
+                            NumericDistributionSetup nds7 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.GetBasicLimits().Select(b => (int)b).Sum());
+                            nds7.idx = 4;
+                            return nds7;
+                        case RandomizerDistribution.LimitTotalAdvanced:
+                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.GetBasicLimits().Select(b => (int)b).Sum());
+                            nds8.idx = 4;
+                            return nds8;
+                        case RandomizerDistribution.BaseGrowHpBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowHp);
+                        case RandomizerDistribution.BaseGrowStrBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowStr);
+                        case RandomizerDistribution.BaseGrowTechBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowTech);
+                        case RandomizerDistribution.BaseGrowQuickBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowQuick);
+                        case RandomizerDistribution.BaseGrowLuckBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowLuck);
+                        case RandomizerDistribution.BaseGrowDefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowDef);
+                        case RandomizerDistribution.BaseGrowMagicBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowMagic);
+                        case RandomizerDistribution.BaseGrowMdefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowMdef);
+                        case RandomizerDistribution.BaseGrowPhysBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowPhys);
+                        case RandomizerDistribution.BaseGrowSightBase:
+                            NumericDistributionSetup nds9 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowSight);
+                            nds9.distributions[0] = new UniformConstant(10, 0, 10);
+                            nds9.idx = 0;
+                            return nds9;
+                        case RandomizerDistribution.BaseGrowMoveBase:
+                            NumericDistributionSetup nds10 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowMove);
+                            nds10.distributions[0] = new UniformConstant(10, 0, 10);
+                            nds10.idx = 0;
+                            return nds10;
+                        case RandomizerDistribution.BaseGrowHpAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowHp);
+                        case RandomizerDistribution.BaseGrowStrAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowStr);
+                        case RandomizerDistribution.BaseGrowTechAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowTech);
+                        case RandomizerDistribution.BaseGrowQuickAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowQuick);
+                        case RandomizerDistribution.BaseGrowLuckAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowLuck);
+                        case RandomizerDistribution.BaseGrowDefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowDef);
+                        case RandomizerDistribution.BaseGrowMagicAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowMagic);
+                        case RandomizerDistribution.BaseGrowMdefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowMdef);
+                        case RandomizerDistribution.BaseGrowPhysAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowPhys);
+                        case RandomizerDistribution.BaseGrowSightAdvanced:
+                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowSight);
+                            nds11.distributions[0] = new UniformConstant(10, 0, 10);
+                            nds11.idx = 0;
+                            return nds11;
+                        case RandomizerDistribution.BaseGrowMoveAdvanced:
+                            NumericDistributionSetup nds12 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.BaseGrowMove);
+                            nds12.distributions[0] = new UniformConstant(10, 0, 10);
+                            nds12.idx = 0;
+                            return nds12;
+                        case RandomizerDistribution.BaseGrowTotalBase:
+                            NumericDistributionSetup nds13 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.GetBasicEnemyGrowths().Select(b => (int)b).Sum());
+                            nds13.idx = 4;
+                            return nds13;
+                        case RandomizerDistribution.BaseGrowTotalAdvanced:
+                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.GetBasicEnemyGrowths().Select(b => (int)b).Sum());
+                            nds14.idx = 4;
+                            return nds14;
+                        case RandomizerDistribution.DiffGrowHpBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowHp);
+                        case RandomizerDistribution.DiffGrowStrBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowStr);
+                        case RandomizerDistribution.DiffGrowTechBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowTech);
+                        case RandomizerDistribution.DiffGrowQuickBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowQuick);
+                        case RandomizerDistribution.DiffGrowLuckBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowLuck);
+                        case RandomizerDistribution.DiffGrowDefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowDef);
+                        case RandomizerDistribution.DiffGrowMagicBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowMagic);
+                        case RandomizerDistribution.DiffGrowMdefBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowMdef);
+                        case RandomizerDistribution.DiffGrowPhysBase:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowPhys);
+                        case RandomizerDistribution.DiffGrowSightBase:
+                            NumericDistributionSetup nds15 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowSight);
+                            nds15.distributions[3] = new NormalConstant(10, 0, 5);
+                            nds15.idx = 3;
+                            return nds15;
+                        case RandomizerDistribution.DiffGrowMoveBase:
+                            NumericDistributionSetup nds16 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowMove);
+                            nds16.distributions[3] = new NormalConstant(10, 0, 5);
+                            nds16.idx = 3;
+                            return nds16;
+                        case RandomizerDistribution.DiffGrowHpAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowHp);
+                        case RandomizerDistribution.DiffGrowStrAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowStr);
+                        case RandomizerDistribution.DiffGrowTechAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowTech);
+                        case RandomizerDistribution.DiffGrowQuickAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowQuick);
+                        case RandomizerDistribution.DiffGrowLuckAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowLuck);
+                        case RandomizerDistribution.DiffGrowDefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowDef);
+                        case RandomizerDistribution.DiffGrowMagicAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowMagic);
+                        case RandomizerDistribution.DiffGrowMdefAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowMdef);
+                        case RandomizerDistribution.DiffGrowPhysAdvanced:
+                            return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowPhys);
+                        case RandomizerDistribution.DiffGrowSightAdvanced:
+                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowSight);
+                            nds17.distributions[3] = new NormalConstant(10, 0, 5);
+                            nds17.idx = 3;
+                            return nds17;
+                        case RandomizerDistribution.DiffGrowMoveAdvanced:
+                            NumericDistributionSetup nds18 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.DiffGrowMove);
+                            nds18.distributions[3] = new NormalConstant(10, 0, 5);
+                            nds18.idx = 3;
+                            return nds18;
+                        case RandomizerDistribution.DiffGrowTotalBase:
+                            NumericDistributionSetup nds19 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.GetBasicGrowthModifiers().Select(b => (int)b).Sum());
+                            nds19.idx = 4;
+                            return nds19;
+                        case RandomizerDistribution.DiffGrowTotalAdvanced:
+                            NumericDistributionSetup nds20 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.GetBasicGrowthModifiers().Select(b => (int)b).Sum());
+                            nds20.idx = 4;
+                            return nds20;
                         default:
-                            ((Action)(() => { }))();
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
                 case DataSetEnum.Individual:
                     List<Individual> individuals = dataSet.Params.Cast<Individual>().ToList();
-                    List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters).ToList();
-                    List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters).ToList();
-                    List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters).ToList();
-                    List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters).ToList();
+                    List<Individual> playableCharacters = individuals.FilterData(i => i.Pid, GD.PlayableCharacters);
+                    List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters);
+                    List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters);
+                    List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters);
                     List<TypeOfSoldier> toss1 = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
                     switch (dfe)
                     {
@@ -654,31 +901,31 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.InheritanceSkills:
                             return GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.InheritanceSkills).ToList(), s => s, GD.GeneralSkills);
+                                gt.InheritanceSkills), s => s, GD.GeneralSkills);
                         case RandomizerDistribution.SynchroStatSkillsAlly:
                             return GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => syncStatSkillIDs.Contains(s))).ToList(), s => s, GD.SyncStatSkills);
+                                gt.SynchroSkills.Where(s => syncStatSkillIDs.Contains(s))), s => s, GD.SyncStatSkills);
                         case RandomizerDistribution.SynchroStatSkillsEnemy:
                             SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => syncStatSkillIDs.Contains(s))).ToList(), s => s, GD.SyncStatSkills);
+                                gt.SynchroSkills.Where(s => syncStatSkillIDs.Contains(s))), s => s, GD.SyncStatSkills);
                             sds0.idx = 1;
                             return sds0;
                         case RandomizerDistribution.SynchroGeneralSkillsAlly:
                             return GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.AllyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => generalSkillIDs0.Contains(s))).ToList(), s => s, GD.GeneralSkills);
+                                gt.SynchroSkills.Where(s => generalSkillIDs0.Contains(s))), s => s, GD.GeneralSkills);
                         case RandomizerDistribution.SynchroGeneralSkillsEnemy:
                             SelectionDistributionSetup sds1 = GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.EnemyBondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.SynchroSkills.Where(s => generalSkillIDs0.Contains(s))).ToList(), s => s, GD.GeneralSkills);
+                                gt.SynchroSkills.Where(s => generalSkillIDs0.Contains(s))), s => s, GD.GeneralSkills);
                             sds1.idx = 1;
                             return sds1;
                         case RandomizerDistribution.EngageSkills:
                             SelectionDistributionSetup sds2 = GetSelectionDistributionSetup(
                                 pgs.FilterData(pg => pg.Name, GD.BondLevelTables).SelectMany(pg => pg.Group.Cast<GrowthTable>()).SelectMany(gt =>
-                                gt.EngageSkills.Where(s => generalSkillIDs0.Contains(s))).ToList(), s => s, GD.GeneralSkills);
+                                gt.EngageSkills.Where(s => generalSkillIDs0.Contains(s))), s => s, GD.GeneralSkills);
                             sds2.distributions[1] = new UniformSelection(100, ((Empirical)sds2.distributions[0]).weights.Select(i => i > 0).ToList());
                             sds2.idx = 1;
                             return sds2;
@@ -696,12 +943,12 @@ namespace ALittleSecretIngredient
                                     itemIDs.AddRange(gt.EngagePranas);
                                     itemIDs.AddRange(gt.EngageDragons);
                                     return itemIDs;
-                                }).ToList(), s => s, GD.EngageWeapons);
+                                }), s => s, GD.EngageWeapons);
                             sds3.idx = 1;
                             return sds3;
                         case RandomizerDistribution.GrowthTableAptitude:
                             return GetSelectionDistributionSetup(pgs.FilterData(pg => pg.Name, GD.InheritableBondLevelTables).SelectMany(pg =>
-                                pg.Group.Cast<GrowthTable>()).SelectMany(gt => gt.GetAptitudes()).ToList(), i => i, GD.Proficiencies);
+                                pg.Group.Cast<GrowthTable>()).SelectMany(gt => gt.GetAptitudes()), i => i, GD.Proficiencies);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -716,10 +963,14 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.MoveType:
                             return GetSelectionDistributionSetup(generalClasses, tos => tos.MoveType, GD.MovementTypes);
                         case RandomizerDistribution.Weapon:
-                            SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(generalClasses.SelectMany(tos => tos.GetBasicWeaponRequirements()).ToList(),
+                            SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(generalClasses.SelectMany(tos => tos.GetBasicWeaponRequirements()),
                                 i => i, GD.BasicProficiencies);
                             sds0.idx = 1;
                             return sds0;
+                        case RandomizerDistribution.LearningSkill:
+                            return GetSelectionDistributionSetup(allClasses.Where(tos => tos.LearningSkill != ""), tos => tos.LearningSkill, GD.GeneralSkills);
+                        case RandomizerDistribution.LunaticSkill:
+                            return GetSelectionDistributionSetup(allClasses.Where(tos => tos.LunaticSkill != ""), tos => tos.LunaticSkill, GD.GeneralSkills);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -735,36 +986,36 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.JidEnemy:
                             List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
                             return GetSelectionDistributionSetup(individuals.FilterData(i => i.Pid, GD.NPCCharacters).Where(i =>
-                                generalClassIDs.Contains(i.Jid)).ToList(), i => i.Jid, GD.GeneralClasses);
+                                generalClassIDs.Contains(i.Jid)), i => i.Jid, GD.GeneralClasses);
                         case RandomizerDistribution.SupportCategory:
                             return GetSelectionDistributionSetup(playableCharacters, i => i.SupportCategory, GD.SupportCategories);
                         case RandomizerDistribution.IndividualAptitude:
-                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetAptitudes()).ToList(), i => i,
+                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetAptitudes()), i => i,
                                 GD.Proficiencies);
                         case RandomizerDistribution.SubAptitude:
-                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetSubAptitudes()).ToList(), i => i,
+                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetSubAptitudes()), i => i,
                                 GD.Proficiencies);
                         case RandomizerDistribution.ItemsWeapons:
                             List<string> weaponIDs = GD.NormalWeapons.GetIDs();
                             SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(playableCharacters.SelectMany(i =>
-                                i.Items.Where(weaponIDs.Contains)).ToList(), i => i, GD.NormalWeapons);
+                                i.Items.Where(weaponIDs.Contains)), i => i, GD.NormalWeapons);
                             sds0.idx = 1;
                             return sds0;
                         case RandomizerDistribution.ItemsItems:
                             List<string> itemIDs = GD.BattleItems.GetIDs();
                             SelectionDistributionSetup sds1 = GetSelectionDistributionSetup(playableCharacters.SelectMany(i =>
-                                i.Items.Where(itemIDs.Contains)).ToList(), i => i, GD.BattleItems);
+                                i.Items.Where(itemIDs.Contains)), i => i, GD.BattleItems);
                             sds1.idx = 1;
                             return sds1;
                         case RandomizerDistribution.AttrsAlly:
-                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetAttributes()).ToList(), i => i,
+                            return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetAttributes()), i => i,
                                 GD.Attributes);
                         case RandomizerDistribution.AttrsEnemy:
-                            return GetSelectionDistributionSetup(npcCharacters.SelectMany(i => i.GetAttributes()).ToList(), i => i,
+                            return GetSelectionDistributionSetup(npcCharacters.SelectMany(i => i.GetAttributes()), i => i,
                                 GD.Attributes);
                         case RandomizerDistribution.CommonSids:
                             return GetSelectionDistributionSetup(npcCharacters.SelectMany(i =>
-                                i.CommonSids.Where(generalSkillIDs1.Contains)).ToList(), i => i, GD.GeneralSkills);
+                                i.CommonSids.Where(generalSkillIDs1.Contains)), i => i, GD.GeneralSkills);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -776,11 +1027,11 @@ namespace ALittleSecretIngredient
         /// <summary>
         ///  Generates numeric distribution objects.
         /// </summary>
-        private static NumericDistributionSetup GetNumericDistributionSetup<T>(IList<T> objects, Func<T, double> f)
+        private static NumericDistributionSetup GetNumericDistributionSetup<T>(IEnumerable<T> objects, Func<T, double> f)
         {
             List<double> observations = new();
-            for (int item = 0; item < objects.Count; item++)
-                observations.Add(f(objects[item]));
+            for (int item = 0; item < objects.Count(); item++)
+                observations.Add(f(objects.ElementAt(item)));
             return GetNumericDistributionSetup(observations);
         }
 
@@ -815,14 +1066,14 @@ namespace ALittleSecretIngredient
         /// <summary>
         ///  Generates selection distribution objects.
         /// </summary>
-        private static SelectionDistributionSetup GetSelectionDistributionSetup<T>(IList<T> objects,
+        private static SelectionDistributionSetup GetSelectionDistributionSetup<T>(IEnumerable<T> objects,
             Func<T, string> getID, IEnumerable<(string id, string name)> entities)
         {
             int[] instances = new int[entities.Count()];
             List<string> ids = entities.Select(t => t.id).ToList();
-            for (int i = 0; i < objects.Count; i++)
+            for (int i = 0; i < objects.Count(); i++)
             {
-                string id = getID(objects[i]);
+                string id = getID(objects.ElementAt(i));
                 if (id != "")
                     instances[ids.IndexOf(id)]++;
             }
@@ -832,14 +1083,14 @@ namespace ALittleSecretIngredient
         /// <summary>
         ///  Generates selection distribution objects.
         /// </summary>
-        private static SelectionDistributionSetup GetSelectionDistributionSetup<T>(IList<T> objects,
+        private static SelectionDistributionSetup GetSelectionDistributionSetup<T>(IEnumerable<T> objects,
             Func<T, int> getID, IEnumerable<(int id, string name)> entities)
         {
             int[] instances = new int[entities.Count()];
             List<int> ids = entities.Select(t => t.id).ToList();
-            for (int i = 0; i < objects.Count; i++)
+            for (int i = 0; i < objects.Count(); i++)
             {
-                int id = getID(objects[i]);
+                int id = getID(objects.ElementAt(i));
                 instances[ids.IndexOf(id)]++;
             }
             return GetSelectionDistributionSetup(instances, entities.Select(t => t.name));

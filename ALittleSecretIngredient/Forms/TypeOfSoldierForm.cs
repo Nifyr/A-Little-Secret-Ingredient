@@ -108,6 +108,8 @@
         internal NumericDistributionForm DiffGrowTotalAdvanced { get; }
         internal SelectionDistributionForm LearningSkill { get; }
         internal SelectionDistributionForm LunaticSkill { get; }
+        internal SelectionDistributionForm Attrs { get; }
+        internal NumericDistributionForm AttrsCount { get; }
         internal TypeOfSoldierForm(GlobalData globalData)
         {
             GlobalData = globalData;
@@ -217,6 +219,8 @@
             DiffGrowTotalAdvanced = new(GlobalData, RandomizerDistribution.DiffGrowTotalAdvanced, "Advanced Class Stat Growth Modifier Total");
             LearningSkill = new(GlobalData, RandomizerDistribution.LearningSkill, "Class Skills");
             LunaticSkill = new(GlobalData, RandomizerDistribution.LunaticSkill, "Maddening Enemy Skills");
+            Attrs = new(GlobalData, RandomizerDistribution.Attrs, "Attributes");
+            AttrsCount = new(GlobalData, RandomizerDistribution.Attrs, "Attributes");
             FormClosing += MainForm.CancelFormClosing;
         }
 
@@ -848,6 +852,18 @@
         {
             LunaticSkill.Show();
             LunaticSkill.Activate();
+        }
+
+        private void Button106_Click(object sender, EventArgs e)
+        {
+            Attrs.Show();
+            Attrs.Activate();
+        }
+
+        private void Button107_Click(object sender, EventArgs e)
+        {
+            AttrsCount.Show();
+            AttrsCount.Activate();
         }
     }
 }

@@ -205,6 +205,7 @@
         DiffGrowTotalAdvanced,
         LearningSkill,
         LunaticSkill,
+        Attrs,
         JidAlly,
         JidEnemy,
         Age,

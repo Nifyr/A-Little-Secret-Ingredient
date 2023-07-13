@@ -366,6 +366,30 @@ namespace ALittleSecretIngredient.Structs
         }
 
         internal bool HasGrowthModifiers() => GetGrowthModifiers().Any(i8 => i8 != 0);
+
+        internal List<int> GetAttributes()
+        {
+            List<int> l = new();
+            for (int i = 0; i < 32; i++)
+                if ((Attrs & (1 << i)) > 0)
+                    l.Add(i);
+            return l;
+        }
+
+        internal void SetAttributes(List<int> l)
+        {
+            Attrs = 0;
+            for (int i = 0; i < l.Count; i++)
+                Attrs |= (uint)(1 << l[i]);
+        }
+
+        internal bool GetAttribute(int index) => (Attrs & (1 << index)) > 0;
+
+        internal void SetAttribute(int index, bool value)
+        {
+            if (value ^ GetAttribute(index))
+                Attrs ^= (byte)(1 << index);
+        }
     }
 
     internal class FightingStyle : DataParam

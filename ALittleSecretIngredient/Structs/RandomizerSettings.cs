@@ -253,6 +253,8 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings DiffGrowTotalAdvanced { get; set; } = new();
             public RandomizerFieldSettings LearningSkill { get; set; } = new();
             public RandomizerFieldSettings LunaticSkill { get; set; } = new();
+            public RandomizerFieldSettings Attrs { get; set; } = new();
+            public RandomizerFieldSettings AttrsCount { get; set; } = new();
 
             internal RandomizerFieldSettings[] GetBaseBaseStatSettings() => new RandomizerFieldSettings[]
             {

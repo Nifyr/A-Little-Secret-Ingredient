@@ -3069,6 +3069,7 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.DiffGrowTotalAdvanced, DataSetEnum.TypeOfSoldier },
             { RandomizerDistribution.LearningSkill, DataSetEnum.TypeOfSoldier },
             { RandomizerDistribution.LunaticSkill, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.Attrs, DataSetEnum.TypeOfSoldier },
             { RandomizerDistribution.JidAlly, DataSetEnum.Individual },
             { RandomizerDistribution.JidEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.Age, DataSetEnum.Individual },

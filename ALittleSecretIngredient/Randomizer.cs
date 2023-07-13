@@ -532,10 +532,10 @@ namespace ALittleSecretIngredient
                     switch (source.gender)
                     {
                         case GameData.Gender.Male:
-                        case GameData.Gender.Rosado:
                             remove = assets.First(a => a.Conditions[0] == "PID_タイトル用_リュール女");
                             break;
                         case GameData.Gender.Female:
+                        case GameData.Gender.Rosado:
                             remove = assets.First(a => a.Conditions[0] == "PID_タイトル用_リュール男");
                             break;
                     }
@@ -1229,6 +1229,18 @@ namespace ALittleSecretIngredient
                 GD.SetDirty(DataSetEnum.TypeOfSoldier);
             }
 
+            if (settings.Attrs.Enabled)
+            {
+                List<int> flagIDs = GD.Attributes.GetIDs();
+                if (settings.AttrsCount.Enabled)
+                    RandomizeFlagCounts(settings.AttrsCount.Distribution, allClasses, flagIDs, tos => tos.GetAttributes(), (tos, l) => tos.SetAttributes(l));
+                RandomizeFlags(settings.Attrs.Distribution, allClasses, flagIDs, tos => tos.GetAttributes(), (tos, l) => tos.SetAttributes(l));
+                if (settings.Attrs.GetArg<bool>(0))
+                    MatchAttributesToUnitType(allClasses);
+                WriteFlagsToChangelog(entries, allClasses, tos => tos.GetAttributes(), GD.Attributes, "Attributes", true);
+                GD.SetDirty(DataSetEnum.TypeOfSoldier);
+            }
+
             StringBuilder innerTable = new();
             foreach (TypeOfSoldier tos in toss)
                 if (entries[tos].Length > 0)
@@ -1238,6 +1250,47 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innerTable, "Classes");
+        }
+
+        private static void MatchAttributesToUnitType(List<TypeOfSoldier> allClasses)
+        {
+            foreach (TypeOfSoldier tos in allClasses)
+                switch (tos.StyleName)
+                {
+                    case "スタイル無し":
+                    case "連携スタイル":
+                    case "隠密スタイル":
+                    case "魔法スタイル":
+                    case "気功スタイル":
+                        tos.SetAttribute(0, true);
+                        tos.SetAttribute(1, false);
+                        tos.SetAttribute(2, false);
+                        tos.SetAttribute(3, false);
+                        tos.SetAttribute(4, false);
+                        tos.SetAttribute(5, false);
+                        break;
+                    case "騎馬スタイル":
+                        tos.SetAttribute(0, false);
+                        tos.SetAttribute(1, true);
+                        tos.SetAttribute(3, false);
+                        break;
+                    case "重装スタイル":
+                        tos.SetAttribute(0, false);
+                        tos.SetAttribute(2, true);
+                        break;
+                    case "飛行スタイル":
+                        tos.SetAttribute(0, false);
+                        tos.SetAttribute(1, false);
+                        tos.SetAttribute(3, true);
+                        break;
+                    case "竜族スタイル":
+                        if (!tos.GetAttribute(4) && !tos.GetAttribute(4))
+                            if (0.5.Occur())
+                                tos.SetAttribute(4, true);
+                            else
+                                tos.SetAttribute(5, true);
+                        break;
+                }
         }
 
         private void WriteWeaponRanksToChangelog(List<TypeOfSoldier> generalClasses, Dictionary<TypeOfSoldier, StringBuilder> entries)

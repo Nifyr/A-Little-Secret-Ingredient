@@ -585,6 +585,8 @@ namespace ALittleSecretIngredient
                             NumericDistributionSetup nds20 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial() && tos.HasGrowthModifiers()), tos => tos.GetBasicGrowthModifiers().Select(b => (int)b).Sum());
                             nds20.idx = 4;
                             return nds20;
+                        case RandomizerDistribution.Attrs:
+                            return GetNumericDistributionSetup(allClasses, i => i.GetAttributes().Count);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -971,6 +973,8 @@ namespace ALittleSecretIngredient
                             return GetSelectionDistributionSetup(allClasses.Where(tos => tos.LearningSkill != ""), tos => tos.LearningSkill, GD.GeneralSkills);
                         case RandomizerDistribution.LunaticSkill:
                             return GetSelectionDistributionSetup(allClasses.Where(tos => tos.LunaticSkill != ""), tos => tos.LunaticSkill, GD.GeneralSkills);
+                        case RandomizerDistribution.Attrs:
+                            return GetSelectionDistributionSetup(allClasses.SelectMany(tos => tos.GetAttributes()), i => i, GD.Attributes);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

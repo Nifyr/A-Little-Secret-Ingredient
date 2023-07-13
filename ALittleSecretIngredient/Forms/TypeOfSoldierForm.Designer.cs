@@ -157,13 +157,19 @@
             button102 = new Button();
             button103 = new Button();
             checkBox15 = new CheckBox();
-            toolTip1 = new ToolTip(components);
             groupBox8 = new GroupBox();
             button104 = new Button();
             checkBox17 = new CheckBox();
             groupBox9 = new GroupBox();
             button105 = new Button();
             checkBox16 = new CheckBox();
+            groupBox10 = new GroupBox();
+            checkBox21 = new CheckBox();
+            button107 = new Button();
+            checkBox19 = new CheckBox();
+            button106 = new Button();
+            checkBox18 = new CheckBox();
+            toolTip1 = new ToolTip(components);
             flowLayoutPanel1.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -174,6 +180,7 @@
             groupBox6.SuspendLayout();
             groupBox8.SuspendLayout();
             groupBox9.SuspendLayout();
+            groupBox10.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -188,6 +195,7 @@
             flowLayoutPanel1.Controls.Add(groupBox6);
             flowLayoutPanel1.Controls.Add(groupBox8);
             flowLayoutPanel1.Controls.Add(groupBox9);
+            flowLayoutPanel1.Controls.Add(groupBox10);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -1589,12 +1597,6 @@
             checkBox15.Text = "Randomize";
             checkBox15.UseVisualStyleBackColor = true;
             // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
-            // 
             // groupBox8
             // 
             groupBox8.AutoSize = true;
@@ -1663,6 +1665,79 @@
             checkBox16.Text = "Randomize";
             checkBox16.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            groupBox10.AutoSize = true;
+            groupBox10.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox10.Controls.Add(checkBox21);
+            groupBox10.Controls.Add(button107);
+            groupBox10.Controls.Add(checkBox19);
+            groupBox10.Controls.Add(button106);
+            groupBox10.Controls.Add(checkBox18);
+            groupBox10.Location = new Point(1033, 237);
+            groupBox10.MinimumSize = new Size(200, 0);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new Size(200, 206);
+            groupBox10.TabIndex = 29;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "Attributes";
+            // 
+            // checkBox21
+            // 
+            checkBox21.AutoSize = true;
+            checkBox21.Location = new Point(6, 156);
+            checkBox21.Name = "checkBox21";
+            checkBox21.Size = new Size(134, 24);
+            checkBox21.TabIndex = 4;
+            checkBox21.Text = "Match unit type";
+            checkBox21.UseVisualStyleBackColor = true;
+            // 
+            // button107
+            // 
+            button107.Location = new Point(6, 121);
+            button107.Name = "button107";
+            button107.Size = new Size(188, 29);
+            button107.TabIndex = 3;
+            button107.Text = "Attribute Count";
+            button107.UseVisualStyleBackColor = true;
+            button107.Click += Button107_Click;
+            // 
+            // checkBox19
+            // 
+            checkBox19.AutoSize = true;
+            checkBox19.Location = new Point(6, 91);
+            checkBox19.Name = "checkBox19";
+            checkBox19.Size = new Size(147, 24);
+            checkBox19.TabIndex = 2;
+            checkBox19.Text = "Randomize count";
+            checkBox19.UseVisualStyleBackColor = true;
+            // 
+            // button106
+            // 
+            button106.Location = new Point(6, 56);
+            button106.Name = "button106";
+            button106.Size = new Size(188, 29);
+            button106.TabIndex = 1;
+            button106.Text = "Attributes";
+            button106.UseVisualStyleBackColor = true;
+            button106.Click += Button106_Click;
+            // 
+            // checkBox18
+            // 
+            checkBox18.AutoSize = true;
+            checkBox18.Location = new Point(6, 26);
+            checkBox18.Name = "checkBox18";
+            checkBox18.Size = new Size(106, 24);
+            checkBox18.TabIndex = 0;
+            checkBox18.Text = "Randomize";
+            checkBox18.UseVisualStyleBackColor = true;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
+            // 
             // TypeOfSoldierForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -1692,6 +1767,8 @@
             groupBox8.PerformLayout();
             groupBox9.ResumeLayout(false);
             groupBox9.PerformLayout();
+            groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1831,5 +1908,11 @@
         private GroupBox groupBox9;
         public Button button105;
         public CheckBox checkBox16;
+        private GroupBox groupBox10;
+        public CheckBox checkBox21;
+        public Button button107;
+        public CheckBox checkBox19;
+        public Button button106;
+        public CheckBox checkBox18;
     }
 }

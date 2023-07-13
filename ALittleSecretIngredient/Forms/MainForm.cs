@@ -356,6 +356,8 @@ namespace ALittleSecretIngredient.Forms
                 rs.TypeOfSoldier.DiffGrowTotalAdvanced = new(TypeOfSoldier.checkBox14.Checked, TypeOfSoldier.DiffGrowTotalAdvanced.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.LearningSkill = new(TypeOfSoldier.checkBox17.Checked, TypeOfSoldier.LearningSkill.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.LunaticSkill = new(TypeOfSoldier.checkBox16.Checked, TypeOfSoldier.LunaticSkill.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.Attrs = new(TypeOfSoldier.checkBox18.Checked, TypeOfSoldier.Attrs.Get(), new object[] { TypeOfSoldier.checkBox21.Checked });
+                rs.TypeOfSoldier.AttrsCount = new(TypeOfSoldier.checkBox19.Checked, TypeOfSoldier.AttrsCount.Get(), Array.Empty<object>());
 
                 rs.Individual.JidAlly = new(Individual.checkBox22.Checked, Individual.JidAlly.Get(), new object[] { Individual.checkBox23.Checked });
                 rs.Individual.JidEnemy = new(Individual.checkBox24.Checked, Individual.JidEnemy.Get(), new object[] { Individual.checkBox26.Checked });
@@ -737,6 +739,11 @@ namespace ALittleSecretIngredient.Forms
                 TypeOfSoldier.LearningSkill.Set(value.TypeOfSoldier.LearningSkill.Distribution);
                 TypeOfSoldier.checkBox16.Checked = value.TypeOfSoldier.LunaticSkill.Enabled;
                 TypeOfSoldier.LunaticSkill.Set(value.TypeOfSoldier.LunaticSkill.Distribution);
+                TypeOfSoldier.checkBox18.Checked = value.TypeOfSoldier.Attrs.Enabled;
+                TypeOfSoldier.checkBox21.Checked = value.TypeOfSoldier.Attrs.GetArg<bool>(0);
+                TypeOfSoldier.Attrs.Set(value.TypeOfSoldier.Attrs.Distribution);
+                TypeOfSoldier.checkBox19.Checked = value.TypeOfSoldier.AttrsCount.Enabled;
+                TypeOfSoldier.AttrsCount.Set(value.TypeOfSoldier.AttrsCount.Distribution);
 
                 Individual.checkBox22.Checked = value.Individual.JidAlly.Enabled;
                 Individual.JidAlly.Set(value.Individual.JidAlly.Distribution);

@@ -141,8 +141,10 @@ namespace ALittleSecretIngredient.Forms
                     GodGeneral.EngageAttackLink.Get(), Array.Empty<object>());
                 rs.GodGeneral.LinkGid = new(GodGeneral.checkBox6.Checked,
                     GodGeneral.LinkGid.Get(), new object[] { GodGeneral.checkBox7.Checked });
+                /* Removed
                 rs.GodGeneral.ShuffleGrowTableAlly = GodGeneral.checkBox8.Checked;
                 rs.GodGeneral.ShuffleGrowTableEnemy = GodGeneral.checkBox10.Checked;
+                */
                 rs.GodGeneral.RandomizeEngravingStats = GodGeneral.checkBox11.Checked;
                 rs.GodGeneral.EngravePower = new(false,
                     GodGeneral.EngravePower.Get(), Array.Empty<object>());
@@ -233,8 +235,10 @@ namespace ALittleSecretIngredient.Forms
                     GrowthTable.Aptitude.Get(), Array.Empty<object>());
                 rs.GrowthTable.AptitudeCount = new(GrowthTable.checkBox17.Checked,
                     GrowthTable.AptitudeCount.Get(), Array.Empty<object>());
+                /* Removed
                 rs.GrowthTable.SkillInheritanceLevel = new(GrowthTable.checkBox20.Checked,
                     GrowthTable.SkillInheritanceLevel.Get(), Array.Empty<object>());
+                */
                 rs.GrowthTable.StrongBondLevel = new(GrowthTable.checkBox19.Checked,
                     GrowthTable.StrongBondLevel.Get(), Array.Empty<object>());
                 rs.GrowthTable.DeepSynergyLevel = new(GrowthTable.checkBox21.Checked,
@@ -535,8 +539,10 @@ namespace ALittleSecretIngredient.Forms
                 GodGeneral.checkBox6.Checked = value.GodGeneral.LinkGid.Enabled;
                 GodGeneral.LinkGid.Set(value.GodGeneral.LinkGid.Distribution);
                 GodGeneral.checkBox7.Checked = (bool)value.GodGeneral.LinkGid.Args[0];
+                /* Removed
                 GodGeneral.checkBox8.Checked = value.GodGeneral.ShuffleGrowTableAlly;
                 GodGeneral.checkBox10.Checked = value.GodGeneral.ShuffleGrowTableEnemy;
+                */
                 GodGeneral.checkBox11.Checked = value.GodGeneral.RandomizeEngravingStats;
                 GodGeneral.EngravePower.Set(value.GodGeneral.EngravePower.Distribution);
                 GodGeneral.EngraveWeight.Set(value.GodGeneral.EngraveWeight.Distribution);
@@ -604,8 +610,10 @@ namespace ALittleSecretIngredient.Forms
                 GrowthTable.Aptitude.Set(value.GrowthTable.Aptitude.Distribution);
                 GrowthTable.checkBox17.Checked = value.GrowthTable.AptitudeCount.Enabled;
                 GrowthTable.AptitudeCount.Set(value.GrowthTable.AptitudeCount.Distribution);
+                /* Removed
                 GrowthTable.checkBox20.Checked = value.GrowthTable.SkillInheritanceLevel.Enabled;
                 GrowthTable.SkillInheritanceLevel.Set(value.GrowthTable.SkillInheritanceLevel.Distribution);
+                */
                 GrowthTable.checkBox19.Checked = value.GrowthTable.StrongBondLevel.Enabled;
                 GrowthTable.StrongBondLevel.Set(value.GrowthTable.StrongBondLevel.Distribution);
                 GrowthTable.checkBox21.Checked = value.GrowthTable.DeepSynergyLevel.Enabled;

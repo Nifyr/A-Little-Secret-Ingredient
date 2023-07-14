@@ -73,9 +73,6 @@
             checkBox17 = new CheckBox();
             button16 = new Button();
             checkBox18 = new CheckBox();
-            groupBox7 = new GroupBox();
-            button18 = new Button();
-            checkBox20 = new CheckBox();
             groupBox8 = new GroupBox();
             button17 = new Button();
             checkBox19 = new CheckBox();
@@ -91,7 +88,6 @@
             groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             groupBox6.SuspendLayout();
-            groupBox7.SuspendLayout();
             groupBox8.SuspendLayout();
             groupBox9.SuspendLayout();
             SuspendLayout();
@@ -105,7 +101,6 @@
             flowLayoutPanel1.Controls.Add(groupBox4);
             flowLayoutPanel1.Controls.Add(groupBox5);
             flowLayoutPanel1.Controls.Add(groupBox6);
-            flowLayoutPanel1.Controls.Add(groupBox7);
             flowLayoutPanel1.Controls.Add(groupBox8);
             flowLayoutPanel1.Controls.Add(groupBox9);
             flowLayoutPanel1.Dock = DockStyle.Fill;
@@ -592,47 +587,13 @@
             toolTip1.SetToolTip(checkBox18, "This will modify which proficiencies each *emblem* unlocks.");
             checkBox18.UseVisualStyleBackColor = true;
             // 
-            // groupBox7
-            // 
-            groupBox7.AutoSize = true;
-            groupBox7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            groupBox7.Controls.Add(button18);
-            groupBox7.Controls.Add(checkBox20);
-            groupBox7.Location = new Point(1033, 185);
-            groupBox7.Name = "groupBox7";
-            groupBox7.Size = new Size(200, 111);
-            groupBox7.TabIndex = 13;
-            groupBox7.TabStop = false;
-            groupBox7.Text = "Skill Inheritance";
-            // 
-            // button18
-            // 
-            button18.Location = new Point(6, 56);
-            button18.Name = "button18";
-            button18.Size = new Size(188, 29);
-            button18.TabIndex = 1;
-            button18.Text = "Skill Inheritance Level";
-            button18.UseVisualStyleBackColor = true;
-            button18.Click += Button18_Click;
-            // 
-            // checkBox20
-            // 
-            checkBox20.AutoSize = true;
-            checkBox20.Location = new Point(6, 26);
-            checkBox20.Name = "checkBox20";
-            checkBox20.Size = new Size(188, 24);
-            checkBox20.TabIndex = 0;
-            checkBox20.Text = "Randomize unlock level";
-            toolTip1.SetToolTip(checkBox20, "This changes the level at which *Skill Inheritance* is unlocked for each emblem.");
-            checkBox20.UseVisualStyleBackColor = true;
-            // 
             // groupBox8
             // 
             groupBox8.AutoSize = true;
             groupBox8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox8.Controls.Add(button17);
             groupBox8.Controls.Add(checkBox19);
-            groupBox8.Location = new Point(1033, 302);
+            groupBox8.Location = new Point(1033, 185);
             groupBox8.Name = "groupBox8";
             groupBox8.Size = new Size(200, 111);
             groupBox8.TabIndex = 14;
@@ -666,7 +627,7 @@
             groupBox9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox9.Controls.Add(button19);
             groupBox9.Controls.Add(checkBox21);
-            groupBox9.Location = new Point(1239, 3);
+            groupBox9.Location = new Point(1033, 302);
             groupBox9.Name = "groupBox9";
             groupBox9.Size = new Size(200, 111);
             groupBox9.TabIndex = 15;
@@ -724,8 +685,6 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
-            groupBox7.ResumeLayout(false);
-            groupBox7.PerformLayout();
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
             groupBox9.ResumeLayout(false);
@@ -778,9 +737,6 @@
         public CheckBox checkBox17;
         public Button button16;
         public CheckBox checkBox18;
-        private GroupBox groupBox7;
-        public Button button18;
-        public CheckBox checkBox20;
         private GroupBox groupBox8;
         public Button button17;
         public CheckBox checkBox19;

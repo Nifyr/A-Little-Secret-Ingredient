@@ -1796,15 +1796,15 @@ namespace ALittleSecretIngredient
             List<List<(string id, string name)>> weapons = GD.WeaponTypeLookup[p]; 
             if ((int)pl >= (int)GameData.ProficiencyLevel.D)
                 legalWeapons.AddRange(weapons[0].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.C && totalLevel >= 8)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.C && totalLevel > 8)
                 legalWeapons.AddRange(weapons[1].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.B && totalLevel >= 16)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.B && totalLevel > 16)
                 legalWeapons.AddRange(weapons[2].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.A && totalLevel >= 24)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.A && totalLevel > 24)
                 legalWeapons.AddRange(weapons[3].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.S && totalLevel >= 32)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.S && totalLevel > 32)
                 legalWeapons.AddRange(weapons[4].GetIDs());
-            if ((int)pl >= (int)GameData.ProficiencyLevel.S && totalLevel >= 32)
+            if ((int)pl >= (int)GameData.ProficiencyLevel.S && totalLevel > 32)
                 legalWeapons.AddRange(weapons[5].GetIDs());
             return legalWeapons;
         }

@@ -52,9 +52,6 @@
             checkBox7 = new CheckBox();
             button5 = new Button();
             checkBox6 = new CheckBox();
-            groupBox6 = new GroupBox();
-            checkBox10 = new CheckBox();
-            checkBox8 = new CheckBox();
             groupBox7 = new GroupBox();
             button12 = new Button();
             button11 = new Button();
@@ -98,7 +95,6 @@
             groupBox4.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             groupBox5.SuspendLayout();
-            groupBox6.SuspendLayout();
             groupBox7.SuspendLayout();
             groupBox8.SuspendLayout();
             groupBox9.SuspendLayout();
@@ -302,7 +298,6 @@
             flowLayoutPanel1.Controls.Add(groupBox3);
             flowLayoutPanel1.Controls.Add(groupBox4);
             flowLayoutPanel1.Controls.Add(groupBox5);
-            flowLayoutPanel1.Controls.Add(groupBox6);
             flowLayoutPanel1.Controls.Add(groupBox7);
             flowLayoutPanel1.Controls.Add(groupBox8);
             flowLayoutPanel1.Controls.Add(groupBox9);
@@ -359,42 +354,6 @@
             toolTip1.SetToolTip(checkBox6, "This will alter the emblem that *triggers* a bond link for each individual emblem.");
             checkBox6.UseVisualStyleBackColor = true;
             // 
-            // groupBox6
-            // 
-            groupBox6.AutoSize = true;
-            groupBox6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            groupBox6.Controls.Add(checkBox10);
-            groupBox6.Controls.Add(checkBox8);
-            groupBox6.Location = new Point(209, 150);
-            groupBox6.MinimumSize = new Size(200, 0);
-            groupBox6.Name = "groupBox6";
-            groupBox6.Size = new Size(200, 106);
-            groupBox6.TabIndex = 5;
-            groupBox6.TabStop = false;
-            groupBox6.Text = "Bond Level Tables";
-            // 
-            // checkBox10
-            // 
-            checkBox10.AutoSize = true;
-            checkBox10.Location = new Point(6, 56);
-            checkBox10.Name = "checkBox10";
-            checkBox10.Size = new Size(136, 24);
-            checkBox10.TabIndex = 1;
-            checkBox10.Text = "Shuffle enemies";
-            toolTip1.SetToolTip(checkBox10, "This will alter the set of bonuses that opponents receive from *bond levels*.");
-            checkBox10.UseVisualStyleBackColor = true;
-            // 
-            // checkBox8
-            // 
-            checkBox8.AutoSize = true;
-            checkBox8.Location = new Point(6, 26);
-            checkBox8.Name = "checkBox8";
-            checkBox8.Size = new Size(115, 24);
-            checkBox8.TabIndex = 0;
-            checkBox8.Text = "Shuffle allies";
-            toolTip1.SetToolTip(checkBox8, "This alters the set of bonuses your characters receive from *bond levels*.");
-            checkBox8.UseVisualStyleBackColor = true;
-            // 
             // groupBox7
             // 
             groupBox7.AutoSize = true;
@@ -406,7 +365,7 @@
             groupBox7.Controls.Add(button8);
             groupBox7.Controls.Add(button7);
             groupBox7.Controls.Add(checkBox11);
-            groupBox7.Location = new Point(209, 262);
+            groupBox7.Location = new Point(209, 150);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new Size(200, 286);
             groupBox7.TabIndex = 6;
@@ -810,8 +769,6 @@
             flowLayoutPanel1.PerformLayout();
             groupBox5.ResumeLayout(false);
             groupBox5.PerformLayout();
-            groupBox6.ResumeLayout(false);
-            groupBox6.PerformLayout();
             groupBox7.ResumeLayout(false);
             groupBox7.PerformLayout();
             groupBox8.ResumeLayout(false);
@@ -844,11 +801,8 @@
         public Button button5;
         public CheckBox checkBox6;
         public CheckBox checkBox7;
-        private GroupBox groupBox6;
-        public CheckBox checkBox8;
         public CheckBox checkBox9;
         public Button button6;
-        public CheckBox checkBox10;
         private GroupBox groupBox7;
         public Button button12;
         public Button button11;

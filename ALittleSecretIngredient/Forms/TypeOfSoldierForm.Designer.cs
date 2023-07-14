@@ -235,6 +235,7 @@
             checkBox20.Size = new Size(106, 24);
             checkBox20.TabIndex = 0;
             checkBox20.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox20, "This alters the *unit type* associated with each class.");
             checkBox20.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -260,6 +261,7 @@
             checkBox2.Size = new Size(134, 24);
             checkBox2.TabIndex = 2;
             checkBox2.Text = "Match unit type";
+            toolTip1.SetToolTip(checkBox2, "This ensures that fliers and cavalry units are *assigned* their respective movement types.");
             checkBox2.UseVisualStyleBackColor = true;
             // 
             // button1
@@ -280,6 +282,7 @@
             checkBox1.Size = new Size(106, 24);
             checkBox1.TabIndex = 0;
             checkBox1.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox1, "This modifies the movement behavior of each *class.*");
             checkBox1.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -312,6 +315,7 @@
             checkBox7.Size = new Size(184, 24);
             checkBox7.TabIndex = 9;
             checkBox7.Text = "Correlate to type count";
+            toolTip1.SetToolTip(checkBox7, "This adjustment favors high *weapon* ranks for classes that have a lower number of weapon types.");
             checkBox7.UseVisualStyleBackColor = true;
             // 
             // button6
@@ -342,6 +346,7 @@
             checkBox6.Size = new Size(144, 24);
             checkBox6.TabIndex = 6;
             checkBox6.Text = "Randomize ranks";
+            toolTip1.SetToolTip(checkBox6, "This alters which classes have the *capability* to wield high-ranking weapons.");
             checkBox6.UseVisualStyleBackColor = true;
             // 
             // button4
@@ -349,7 +354,7 @@
             button4.Location = new Point(6, 156);
             button4.Name = "button4";
             button4.Size = new Size(188, 29);
-            button4.TabIndex = 5;
+            button4.TabIndex = 4;
             button4.Text = "Advanced Weapon Count";
             button4.UseVisualStyleBackColor = true;
             button4.Click += Button4_Click;
@@ -361,8 +366,9 @@
             checkBox5.MaximumSize = new Size(200, 0);
             checkBox5.Name = "checkBox5";
             checkBox5.Size = new Size(187, 24);
-            checkBox5.TabIndex = 4;
+            checkBox5.TabIndex = 5;
             checkBox5.Text = "Propagate base classes'";
+            toolTip1.SetToolTip(checkBox5, "This ensures that each advanced class is capable of using the *same* weapons as its corresponding base class.");
             checkBox5.UseVisualStyleBackColor = true;
             // 
             // button3
@@ -383,6 +389,7 @@
             checkBox4.Size = new Size(180, 24);
             checkBox4.TabIndex = 2;
             checkBox4.Text = "Randomize type count";
+            toolTip1.SetToolTip(checkBox4, "This modifies the *number* of weapon types that each class is capable of using.");
             checkBox4.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -403,6 +410,7 @@
             checkBox3.Size = new Size(139, 24);
             checkBox3.TabIndex = 0;
             checkBox3.Text = "Randomize type";
+            toolTip1.SetToolTip(checkBox3, "This alters the types of weapons that each *class* can utilize.");
             checkBox3.UseVisualStyleBackColor = true;
             // 
             // groupBox3
@@ -471,6 +479,7 @@
             checkBox8.Size = new Size(118, 24);
             checkBox8.TabIndex = 23;
             checkBox8.Text = "Use stat total";
+            toolTip1.SetToolTip(checkBox8, "This guarantees that randomly assigned base stats conform to a predefined *total.*");
             checkBox8.UseVisualStyleBackColor = true;
             // 
             // button19
@@ -701,6 +710,7 @@
             checkBox9.Size = new Size(106, 24);
             checkBox9.TabIndex = 0;
             checkBox9.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox9, "This adjusts the stats of each *class* at level 1.");
             checkBox9.UseVisualStyleBackColor = true;
             // 
             // groupBox4
@@ -769,6 +779,7 @@
             checkBox10.Size = new Size(118, 24);
             checkBox10.TabIndex = 23;
             checkBox10.Text = "Use stat total";
+            toolTip1.SetToolTip(checkBox10, "This guarantees that randomly assigned stat limits conform to a predefined *total.*");
             checkBox10.UseVisualStyleBackColor = true;
             // 
             // button34
@@ -999,6 +1010,7 @@
             checkBox11.Size = new Size(106, 24);
             checkBox11.TabIndex = 0;
             checkBox11.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox11, "This alters the *maximum* amount of stats that each class can accumulate.");
             checkBox11.UseVisualStyleBackColor = true;
             // 
             // groupBox5
@@ -1067,6 +1079,7 @@
             checkBox12.Size = new Size(141, 24);
             checkBox12.TabIndex = 23;
             checkBox12.Text = "Use total growth";
+            toolTip1.SetToolTip(checkBox12, "This guarantees that randomly assigned stat growths conform to a predefined *total.*");
             checkBox12.UseVisualStyleBackColor = true;
             // 
             // button58
@@ -1297,6 +1310,7 @@
             checkBox13.Size = new Size(106, 24);
             checkBox13.TabIndex = 0;
             checkBox13.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox13, "This adjusts the rate at which enemies of each *class* gain stats as they level up.");
             checkBox13.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -1365,6 +1379,7 @@
             checkBox14.Size = new Size(141, 24);
             checkBox14.TabIndex = 23;
             checkBox14.Text = "Use total growth";
+            toolTip1.SetToolTip(checkBox14, "This guarantees that randomly assigned stat growths conform to a predefined *total.*");
             checkBox14.UseVisualStyleBackColor = true;
             // 
             // button82
@@ -1595,6 +1610,7 @@
             checkBox15.Size = new Size(106, 24);
             checkBox15.TabIndex = 0;
             checkBox15.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox15, "This alters how each class influences the stat growths of *allied* units.");
             checkBox15.UseVisualStyleBackColor = true;
             // 
             // groupBox8
@@ -1629,6 +1645,7 @@
             checkBox17.Size = new Size(106, 24);
             checkBox17.TabIndex = 0;
             checkBox17.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox17, "This adjusts the skills that each *class* can acquire at either level 5 or level 25.");
             checkBox17.UseVisualStyleBackColor = true;
             // 
             // groupBox9
@@ -1663,6 +1680,7 @@
             checkBox16.Size = new Size(106, 24);
             checkBox16.TabIndex = 0;
             checkBox16.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox16, "This alters the additional skills that enemies *possess* on maddening difficulty.");
             checkBox16.UseVisualStyleBackColor = true;
             // 
             // groupBox10
@@ -1690,6 +1708,7 @@
             checkBox21.Size = new Size(134, 24);
             checkBox21.TabIndex = 4;
             checkBox21.Text = "Match unit type";
+            toolTip1.SetToolTip(checkBox21, "This ensures that attributes such as Flier and Dragon are appropriately associated with classes of the corresponding *unit type.*");
             checkBox21.UseVisualStyleBackColor = true;
             // 
             // button107
@@ -1710,6 +1729,7 @@
             checkBox19.Size = new Size(147, 24);
             checkBox19.TabIndex = 2;
             checkBox19.Text = "Randomize count";
+            toolTip1.SetToolTip(checkBox19, "This modifies the quantity of attributes that each *class* applies to units.");
             checkBox19.UseVisualStyleBackColor = true;
             // 
             // button106
@@ -1730,6 +1750,7 @@
             checkBox18.Size = new Size(106, 24);
             checkBox18.TabIndex = 0;
             checkBox18.Text = "Randomize";
+            toolTip1.SetToolTip(checkBox18, "This adjusts the set of attributes that each *class* applies to units.");
             checkBox18.UseVisualStyleBackColor = true;
             // 
             // toolTip1

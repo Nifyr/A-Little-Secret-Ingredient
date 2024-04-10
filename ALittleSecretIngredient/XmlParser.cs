@@ -59,13 +59,14 @@ namespace ALittleSecretIngredient
 
         private Book GetBook(FileEnum fe)
         {
-            if (!Books.ContainsKey(fe))
+            if (!Books.TryGetValue(fe, out Book? value))
             {
                 XmlDocument xml = new();
                 xml.Load(new StringReader(Encoding.UTF8.GetString(ABP.GetBytes(fe))[1..]));
-                Books[fe] = new Book(this, xml.ChildNodes[1]!, fe);
+                value = new Book(this, xml.ChildNodes[1]!, fe);
+                Books[fe] = value;
             }
-            return Books[fe];
+            return value;
         }
 
         internal static void WriteRandomizerSettings(RandomizerSettings rs)

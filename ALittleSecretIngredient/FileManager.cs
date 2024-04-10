@@ -38,7 +38,7 @@ namespace ALittleSecretIngredient
             internal string SourcePath { get; set; }
             internal bool Dirty { get; set; }
 
-            public FileStream FileStream
+            public readonly FileStream FileStream
             {
                 get => File.Open(SourcePath, FileMode.Open, FileAccess.Read);
             }

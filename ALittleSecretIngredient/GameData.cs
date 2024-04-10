@@ -2075,7 +2075,9 @@ namespace ALittleSecretIngredient
             ("SID_幻影狼連携", "Pack Hunter (Phantom)"),
         };
 
-        internal List<(string id, string name)> VisibleSkills { get; } = new() // GeneralSkills + 
+        internal List<(string id, string name)> VisibleSkills { get; } = new(); // GeneralSkills + RestrictedSkills
+
+        internal List<(string id, string name)> RestrictedSkills { get; } = new()
         {
             ("SID_バリア１", "Fell Barrier"), ("SID_バリア２", "Fell Barrier+"), ("SID_バリア３", "Fell Barrier++"), ("SID_バリア４", "Fell Barrier+++"), ("SID_バリア１_ノーマル用", "Dark Barrier"),
             ("SID_バリア２_ノーマル用", "Dark Barrier+"), ("SID_バリア３_ノーマル用", "Dark Barrier++"), ("SID_バリア４_ノーマル用", "Dark Barrier+++"),
@@ -2825,6 +2827,7 @@ namespace ALittleSecretIngredient
             CompatibleAsEngageAttacks.AddRange(TriggerAttackSkills);
             GeneralSkills.AddRange(TriggerAttackSkills);
             VisibleSkills.AddRange(GeneralSkills);
+            VisibleSkills.AddRange(RestrictedSkills);
             SyncStatSkills.AddRange(SyncHPSkills);
             SyncStatSkills.AddRange(SyncStrSkills);
             SyncStatSkills.AddRange(SyncDexSkills);

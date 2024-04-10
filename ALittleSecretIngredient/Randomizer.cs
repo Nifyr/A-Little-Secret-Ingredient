@@ -1,5 +1,4 @@
 ﻿using ALittleSecretIngredient.Structs;
-using System.Collections.Generic;
 using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
@@ -61,8 +60,10 @@ namespace ALittleSecretIngredient
 
             if (settings.SaveChangelog && innerChangelog.Length > 0)
             {
-                StringBuilder changelog = new($"\t---- A Little *Secret* Ingredient Changelog ----\nMade with artistic passion!\n\n" +
-                    $"By Nifyr.\nGenerated {DateTime.Now}\n\n\n");
+                StringBuilder changelog = new($"\t---- A Little *Secret* Ingredient Changelog ----\n" +
+                    $"Made with artistic passion!\n\n" +
+                    $"By Nifyr.\n" +
+                    $"Generated {DateTime.Now}\n\n\n");
                 changelog.AppendLine(innerChangelog.ToString());
                 Changelog = changelog;
             }
@@ -882,6 +883,7 @@ namespace ALittleSecretIngredient
             List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
             List<string> syncStatSkillIDs = GD.SyncStatSkills.GetIDs();
             List<string> syncMovSkillIDs = GD.SyncMovSkills.GetIDs();
+            List<string> visibleSkillIDs = GD.VisibleSkills.GetIDs();
             List<string> engageWeaponIDs = GD.EngageWeapons.GetIDs();
             List<int> proficiencyIDs = GD.Proficiencies.GetIDs();
 
@@ -973,9 +975,6 @@ namespace ALittleSecretIngredient
                 // Randomize skills
                 RandomizeGrowthTableArrays(settings.SynchroGeneralSkillsAlly.Distribution, allyBondLevelTables, generalSkillIDs,
                     gt => gt.SynchroSkills, generalSkillIDs.Contains);
-                WriteGrowthTableArraysToChangelog(allyBondLevelTables, gt => gt.SynchroSkills.Where(generalSkillIDs.Contains),
-                    levelEntries, GD.GeneralSkills, "While Synced");
-                GD.SetDirty(DataSetEnum.GrowthTable);
             }
             if (settings.SynchroGeneralSkillsEnemy.Enabled)
             {
@@ -991,9 +990,6 @@ namespace ALittleSecretIngredient
                 // Randomize skills
                 RandomizeGrowthTableArrays(settings.SynchroGeneralSkillsEnemy.Distribution, enemyBondLevelTables, generalSkillIDs,
                     gt => gt.SynchroSkills, generalSkillIDs.Contains);
-                WriteGrowthTableArraysToChangelog(enemyBondLevelTables, gt => gt.SynchroSkills.Where(generalSkillIDs.Contains),
-                    levelEntries, GD.GeneralSkills, "While Synced");
-                GD.SetDirty(DataSetEnum.GrowthTable);
             }
 
             if (settings.EngageSkills.Enabled)
@@ -1010,8 +1006,24 @@ namespace ALittleSecretIngredient
                 // Randomize skills
                 RandomizeGrowthTableArrays(settings.EngageSkills.Distribution, bondLevelTables, generalSkillIDs, gt => gt.EngageSkills,
                     generalSkillIDs.Contains);
-                WriteGrowthTableArraysToChangelog(bondLevelTables, gt => gt.EngageSkills.Where(generalSkillIDs.Contains), levelEntries,
-                    GD.GeneralSkills, "While Engaged");
+            }
+
+            if (settings.SynchroGeneralSkillsAlly.Enabled || settings.SynchroGeneralSkillsEnemy.Enabled || settings.EngageSkills.Enabled)
+            {
+                // Having more than 5 visible sync + engage skills leads to issues
+                CapEmblemSkillCount(bondLevelTables, generalSkillIDs, visibleSkillIDs);
+                // Having an invisible skill as the first engage skill leads to - you guessed it - a crash
+                EnsureVisibleFirstEngageSkill(bondLevelTables, visibleSkillIDs);
+
+                if (settings.SynchroGeneralSkillsAlly.Enabled)
+                    WriteGrowthTableArraysToChangelog(allyBondLevelTables, gt => gt.SynchroSkills.Where(visibleSkillIDs.Contains),
+                        levelEntries, GD.VisibleSkills, "While Synced");
+                if (settings.SynchroGeneralSkillsEnemy.Enabled)
+                    WriteGrowthTableArraysToChangelog(enemyBondLevelTables, gt => gt.SynchroSkills.Where(visibleSkillIDs.Contains),
+                        levelEntries, GD.VisibleSkills, "While Synced");
+                if (settings.EngageSkills.Enabled)
+                    WriteGrowthTableArraysToChangelog(bondLevelTables, gt => gt.EngageSkills.Where(visibleSkillIDs.Contains), levelEntries,
+                        GD.VisibleSkills, "While Engaged");
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
 
@@ -1088,6 +1100,82 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Bond Level Tables");
+        }
+
+        private static void EnsureVisibleFirstEngageSkill(List<ParamGroup> bondLevelTables, List<string> visibleSkillIDs)
+        {
+            foreach (ParamGroup pg in bondLevelTables)
+            {
+                bool stop = false;
+                foreach (GrowthTable gt in pg.Group.Cast<GrowthTable>())
+                {
+                    while (gt.EngageSkills.Length > 0)
+                    {
+                        string skillID = gt.EngageSkills[0];
+                        if (visibleSkillIDs.Contains(skillID))
+                        {
+                            stop = true;
+                            break;
+                        }
+                        else
+                            gt.EngageSkills = gt.EngageSkills.Where(s => s != skillID).ToArray();
+                    }
+                    if (stop)
+                        break;
+                }
+            }
+        }
+
+        private void CapEmblemSkillCount(List<ParamGroup> bondLevelTables, List<string> generalSkillIDs, List<string> visibleSkillIDs)
+        {
+            List<HashSet<string>> skillIDGroups = new();
+            List<Skill> visibleSkills = GD.Get(DataSetEnum.Skill).Params.Cast<Skill>().ToList().FilterData(s => s.Sid, GD.VisibleSkills);
+
+            // Figure out which skills replace each other
+            byte lastPriority = 0;
+            foreach (Skill s in visibleSkills)
+            {
+                byte priority = s.Priority;
+                if (priority != 0)
+                    if (lastPriority == 0 || lastPriority >= priority)
+                        skillIDGroups.Add(new() { s.Sid });
+                    else
+                        skillIDGroups[^1].Add(s.Sid);
+                lastPriority = priority;
+            }
+
+            // Count the amount of skills that can be visible at once
+            int GetVisibleSkillCount(ParamGroup pg)
+            {
+                List<string> skills = pg.Group.Cast<GrowthTable>().SelectMany(gt => gt.SynchroSkills.Concat(gt.EngageSkills)
+                    .Where(visibleSkillIDs.Contains)).Distinct().ToList();
+                int count = 0;
+                foreach (HashSet<string> skillIDGroup in skillIDGroups)
+                    if (skills.Any(skillIDGroup.Contains))
+                    {
+                        foreach (string s in skillIDGroup)
+                            skills.Remove(s);
+                        count++;
+                    }
+                count += skills.Count;
+                return count;
+            }
+
+            // Remove skills until there's not too many
+            foreach (ParamGroup pg in bondLevelTables)
+            {
+                while (GetVisibleSkillCount(pg) > 5)
+                {
+                    List<string> emblemSkills = pg.Group.Cast<GrowthTable>().SelectMany(gt => gt.SynchroSkills.Concat(gt.EngageSkills)
+                        .Where(generalSkillIDs.Contains)).ToList();
+                    string selection = emblemSkills.GetRandom();
+                    foreach (GrowthTable gt in pg.Group.Cast<GrowthTable>())
+                    {
+                        gt.SynchroSkills = gt.SynchroSkills.Where(s => s != selection).ToArray();
+                        gt.EngageSkills = gt.EngageSkills.Where(s => s != selection).ToArray();
+                    }
+                }
+            }
         }
 
         private StringBuilder RandomizeBondLevel(RandomizerSettings.BondLevelSettings settings)
@@ -2457,8 +2545,7 @@ namespace ALittleSecretIngredient
             foreach (ParamGroup pg in pgs)
                 for (int gtIdx = 0; gtIdx < pg.Group.Count; gtIdx++)
                     foreach (string skillID in getArray((GrowthTable)pg.Group[gtIdx]))
-                        levelEntries[(pg, gtIdx)].Append(
-                            $"{names.IDToName(skillID)} {fieldName},\t");
+                        levelEntries[(pg, gtIdx)].Append($"{names.IDToName(skillID)} {fieldName},\t");
         }
 
         private static void RandomizeGrowthTableArrays(IDistribution distribution, List<ParamGroup> pgs, List<string> pool,
@@ -2511,11 +2598,15 @@ namespace ALittleSecretIngredient
         }
 
         private static void RandomizeGrowthTableArraySizes(IDistribution distribution, List<ParamGroup> pgs,
-            Func<GrowthTable, string[]> getArray, Action<GrowthTable, string[]> setArray, List<string> emergencyPool)
+            Func<GrowthTable, string[]> getArray, Action<GrowthTable, string[]> setArray, List<string> emergencyPool) =>
+            RandomizeGrowthTableArraySizes(distribution, pgs, getArray, setArray, emergencyPool, 0, 255);
+
+        private static void RandomizeGrowthTableArraySizes(IDistribution distribution, List<ParamGroup> pgs,
+            Func<GrowthTable, string[]> getArray, Action<GrowthTable, string[]> setArray, List<string> emergencyPool, int min, int max)
         {
             List<Node<int>> skillCounts = pgs.Select(pg => new Node<int>(
                                     pg.Group.Cast<GrowthTable>().Select(gt => getArray(gt).Length).Sum())).ToList();
-            skillCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, 255);
+            skillCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, min, max);
             for (int i = 0; i < pgs.Count; i++)
             {
                 ParamGroup pg = pgs[i];

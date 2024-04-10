@@ -35,7 +35,15 @@ Made with artistic passion!
 - Character Stat Limit Modifiers
 - Character Static Starting Inventories
 - Character Support Categories
-- Emblem Bond Level Table Assignment
+- Class Attributes
+- Class Base Stats
+- Class Movement Types
+- Class Skills
+- Class Stat Growth Modifiers
+- Class Stat Limits
+- Class Unit Types
+- Class Weapon Ranks
+- Class Weapon Types
 - Emblem Bond Link Pairings
 - Emblem Bond Link Skills
 - Emblem Engage Attack Skills
@@ -47,14 +55,16 @@ Made with artistic passion!
 - Emblem Inheritable Skills
 - Emblem Proficiency Unlocks
 - Emblem Static Sync Stats
-- Emblem Skill Inheritance, Strong Bond and Deep Synergy Unlock Levels
+- Emblem Strong Bond and Deep Synergy Unlock Levels
 - Emblem Sync Skills
 - Emblem Sync Stats
 - Emblem Weapon Restrictions
 - Enemy Attributes
 - Enemy Base Stat Modifiers
+- Enemy Class Stat Growths
 - Enemy Classes
 - Enemy Levels
+- Enemy Maddening Skills
 - Enemy Personal Skills
 - Enemy Static Starting Inventories
 

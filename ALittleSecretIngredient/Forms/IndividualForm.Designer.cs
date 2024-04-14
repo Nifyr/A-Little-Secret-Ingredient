@@ -187,6 +187,7 @@
             button93 = new Button();
             checkBox42 = new CheckBox();
             toolTip1 = new ToolTip(components);
+            checkBox45 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox14.SuspendLayout();
             groupBox7.SuspendLayout();
@@ -1938,6 +1939,7 @@
             // 
             groupBox18.AutoSize = true;
             groupBox18.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox18.Controls.Add(checkBox45);
             groupBox18.Controls.Add(checkBox43);
             groupBox18.Controls.Add(button92);
             groupBox18.Controls.Add(checkBox41);
@@ -1946,7 +1948,7 @@
             groupBox18.Location = new Point(2063, 315);
             groupBox18.MinimumSize = new Size(200, 0);
             groupBox18.Name = "groupBox18";
-            groupBox18.Size = new Size(200, 206);
+            groupBox18.Size = new Size(200, 236);
             groupBox18.TabIndex = 30;
             groupBox18.TabStop = false;
             groupBox18.Text = "Personal Skills";
@@ -2009,6 +2011,18 @@
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
+            // 
+            // checkBox45
+            // 
+            checkBox45.AutoSize = true;
+            checkBox45.Location = new Point(21, 186);
+            checkBox45.Margin = new Padding(18, 3, 3, 3);
+            checkBox45.Name = "checkBox45";
+            checkBox45.Size = new Size(155, 24);
+            checkBox45.TabIndex = 9;
+            checkBox45.Text = "Preserve boss skills";
+            toolTip1.SetToolTip(checkBox45, "This ensures that boss skills like Anchor and Bond Breaker remain *unchanged.*");
+            checkBox45.UseVisualStyleBackColor = true;
             // 
             // IndividualForm
             // 
@@ -2219,5 +2233,6 @@
         private Button button93;
         public CheckBox checkBox42;
         public CheckBox checkBox44;
+        public CheckBox checkBox45;
     }
 }

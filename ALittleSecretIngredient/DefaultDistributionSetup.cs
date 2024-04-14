@@ -1019,7 +1019,7 @@ namespace ALittleSecretIngredient
                                 GD.Attributes);
                         case RandomizerDistribution.CommonSids:
                             return GetSelectionDistributionSetup(npcCharacters.SelectMany(i =>
-                                i.CommonSids.Where(generalSkillIDs1.Contains)), i => i, GD.GeneralSkills);
+                                i.CommonSids.Concat(i.NormalSids).Concat(i.HardSids).Concat(i.LunaticSids).Distinct().Where(generalSkillIDs1.Contains)), i => i, GD.GeneralSkills);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

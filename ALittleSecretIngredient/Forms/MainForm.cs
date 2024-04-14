@@ -470,7 +470,7 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.AttrsEnemy = new(Individual.checkBox40.Checked, Individual.AttrsEnemy.Get(), Array.Empty<object>());
                 rs.Individual.AttrsEnemyCount = new(Individual.checkBox39.Checked, Individual.AttrsEnemyCount.Get(), Array.Empty<object>());
                 rs.Individual.CommonSids = new(Individual.checkBox42.Checked, Individual.CommonSids.Get(),
-                    new object[] { Individual.checkBox43.Checked });
+                    new object[] { Individual.checkBox43.Checked, Individual.checkBox45.Checked });
                 rs.Individual.CommonSidsCount = new(Individual.checkBox41.Checked, Individual.CommonSidsCount.Get(), Array.Empty<object>());
 
                 return rs;
@@ -894,6 +894,7 @@ namespace ALittleSecretIngredient.Forms
                 Individual.checkBox41.Checked = value.Individual.CommonSidsCount.Enabled;
                 Individual.CommonSidsCount.Set(value.Individual.CommonSidsCount.Distribution);
                 Individual.checkBox43.Checked = value.Individual.CommonSids.GetArg<bool>(0);
+                Individual.checkBox45.Checked = value.Individual.CommonSids.GetArg<bool>(1);
             }
         }
 

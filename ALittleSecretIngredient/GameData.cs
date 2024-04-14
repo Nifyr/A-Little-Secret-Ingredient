@@ -1971,7 +1971,15 @@ namespace ALittleSecretIngredient
             ("SID_クロムエンゲージ技＋_飛行", "Giga Levin Sword+ [Flying]"), ("SID_クロムエンゲージ技＋_魔法", "Giga Levin Sword+ [Mystical]")
         };
 
-        internal List<(string id, string name)> GeneralSkills { get; } = new() // TriggerAttackSkills +
+        internal List<(string id, string name)> BossSkills { get; } = new()
+        {
+            ("SID_ブレイク無効", "Unbreakable"), ("SID_特効耐性", "Stalwart"), ("SID_特効無効", "Unwavering"),
+            ("SID_不動", "Anchor"), ("SID_熟練者", "Veteran"), ("SID_熟練者＋", "Veteran+"),
+            ("SID_チェインアタック威力軽減", "Bond Breaker"),
+            ("SID_チェインアタック威力軽減＋", "Bond Breaker+"),
+        };
+
+        internal List<(string id, string name)> GeneralSkills { get; } = new() // TriggerAttackSkills + BossSkills +
         {
             ("SID_ＨＰ＋５_継承用", "HP +5"), ("SID_ＨＰ＋７_継承用", "HP +7"), ("SID_ＨＰ＋１０_継承用", "HP +10"), ("SID_ＨＰ＋１２_継承用", "HP +12"),
             ("SID_ＨＰ＋１５_継承用", "HP +15"), ("SID_力＋１_継承用", "Strength +1"), ("SID_力＋２_継承用", "Strength +2"), ("SID_力＋３_継承用", "Strength +3"),
@@ -1991,9 +1999,8 @@ namespace ALittleSecretIngredient
             ("SID_飛燕の構え", "Darting Stance"), ("SID_明鏡の構え", "Warding Stance"), ("SID_死線", "Life and Death"), ("SID_相性激化", "Triangle Adept"),
             ("SID_噛描", "Cornered Beast"), ("SID_自壊", "Self-Destruct"), ("SID_清流の一撃", "Duelist's Blow"), ("SID_飛燕の一撃", "Darting Blow"),
             ("SID_鬼神の一撃", "Death Blow"), ("SID_凶鳥の一撃", "Certain Blow"), ("SID_金剛の一撃", "Armored Blow"), ("SID_明鏡の一撃", "Warding Blow"),
-            ("SID_狂乱の一撃", "Spirit Strike"), ("SID_ブレイク無効", "Unbreakable"), ("SID_特効耐性", "Stalwart"), ("SID_特効無効", "Unwavering"),
-            ("SID_不動", "Anchor"), ("SID_熟練者", "Veteran"), ("SID_熟練者＋", "Veteran+"), ("SID_虚無の呪い", "Void Curse"),
-            ("SID_チェインアタック威力軽減", "Bond Breaker"),
+            ("SID_狂乱の一撃", "Spirit Strike"),
+            ("SID_虚無の呪い", "Void Curse"),
             ("SID_回避＋１０", "Avoid +10"), ("SID_回避＋１５", "Avoid +15"), ("SID_回避＋２０", "Avoid +20"), ("SID_回避＋２５", "Avoid +25"),
             ("SID_回避＋３０", "Avoid +30"), ("SID_命中＋１０", "Hit +10"), ("SID_命中＋１５", "Hit +15"), ("SID_命中＋２０", "Hit +20"),
             ("SID_命中＋２５", "Hit +25"), ("SID_命中＋３０", "Hit +30"), ("SID_必殺回避＋１０", "Dodge +10"), ("SID_必殺回避＋１５", "Dodge +15"),
@@ -2109,7 +2116,7 @@ namespace ALittleSecretIngredient
             ("SID_保身", "Self-Defense"), ("SID_戦場の花", "Fierce Bloom"), ("SID_促す決着", "This Ends Here"), ("SID_能力誇示", "Show-Off"),
             ("SID_傷をつけたわね", "Final Say"), ("SID_密かな支援", "Stealth Assist"), ("SID_王の尊厳", "Dignity of Solm"), ("SID_殺戮者", "Wear Down"),
             ("SID_輸送隊", "Convoy"), ("SID_瘴気の領域", "Miasma Domain "), ("SID_氷の領域", "Frost Domain"), ("SID_裏邪竜ノ娘_兵種スキル", "Resist Emblems"), ("SID_裏邪竜ノ子_兵種スキル", "Spur Emblems"), ("SID_受けるダメージ-50", "Sigil Protection"),
-            ("SID_チェインアタック威力軽減＋", "Bond Breaker+"), ("SID_異形狼連携", "Pack Hunter (Corrupted)"),
+            ("SID_異形狼連携", "Pack Hunter (Corrupted)"),
             ("SID_幻影狼連携", "Pack Hunter (Phantom)"),
         };
 
@@ -2876,6 +2883,7 @@ namespace ALittleSecretIngredient
             AllItems.AddRange(EngageWeapons);
             CompatibleAsEngageAttacks.AddRange(TriggerAttackSkills);
             GeneralSkills.AddRange(TriggerAttackSkills);
+            GeneralSkills.AddRange(BossSkills);
             VisibleSkills.AddRange(GeneralSkills);
             VisibleSkills.AddRange(RestrictedSkills);
             SyncStatSkills.AddRange(SyncHPSkills);

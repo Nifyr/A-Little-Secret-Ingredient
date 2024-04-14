@@ -1730,19 +1730,29 @@ namespace ALittleSecretIngredient
             List<string> generalSkillIDs = GD.GeneralSkills.GetIDs();
             if (settings.CommonSids.GetArg<bool>(0))
             {
-                targets.ForEach(i => i.CommonSids = i.CommonSids.
-                    Concat(i.NormalSids.Where(generalSkillIDs.Contains)).
-                    Concat(i.HardSids.Where(generalSkillIDs.Contains)).
-                    Concat(i.LunaticSids.Where(generalSkillIDs.Contains)).Distinct().ToArray());
-                targets.ForEach(i => i.NormalSids = i.NormalSids.Where(s => !generalSkillIDs.Contains(s)).ToArray());
-                targets.ForEach(i => i.HardSids = i.HardSids.Where(s => !generalSkillIDs.Contains(s)).ToArray());
-                targets.ForEach(i => i.LunaticSids = i.LunaticSids.Where(s => !generalSkillIDs.Contains(s)).ToArray());
+                List<string> selectedSkillIDs = new();
+                selectedSkillIDs.AddRange(generalSkillIDs);
+                if (settings.CommonSids.GetArg<bool>(1))
+                {
+                    List<string> bossSkillIDs = GD.BossSkills.GetIDs();
+                    selectedSkillIDs = selectedSkillIDs.Where(s => !bossSkillIDs.Contains(s)).ToList();
+                }
+                targets.ForEach(i => i.CommonSids = i.CommonSids.Concat(i.NormalSids).Concat(i.HardSids).Concat(i.LunaticSids).Distinct()
+                    .Where(selectedSkillIDs.Contains).ToArray());
+                targets.ForEach(i => i.NormalSids = i.NormalSids.Where(s => !selectedSkillIDs.Contains(s)).ToArray());
+                targets.ForEach(i => i.HardSids = i.HardSids.Where(s => !selectedSkillIDs.Contains(s)).ToArray());
+                targets.ForEach(i => i.LunaticSids = i.LunaticSids.Where(s => !selectedSkillIDs.Contains(s)).ToArray());
             }
             if (settings.CommonSidsCount.Enabled)
-                RandomizeArraySizes(targets, i => i.CommonSids, (i, a) => i.CommonSids = a, settings.CommonSidsCount.Distribution,
-                   generalSkillIDs);
+                RandomizeArraySizes(targets, i => i.CommonSids, (i, a) => i.CommonSids = a, settings.CommonSidsCount.Distribution, generalSkillIDs);
             RandomizeArrayContents(targets, i => i.CommonSids, (i, a) => i.CommonSids = a, settings.CommonSids.Distribution, generalSkillIDs);
             WriteToChangelog(entries, targets, i => i.CommonSids.Where(generalSkillIDs.Contains), "Personal Skills", GD.GeneralSkills, true);
+            if (settings.CommonSids.GetArg<bool>(0))
+            {
+                WriteToChangelog(entries, targets, i => i.NormalSids.Where(generalSkillIDs.Contains), "Normal Skills", GD.GeneralSkills, false);
+                WriteToChangelog(entries, targets, i => i.HardSids.Where(generalSkillIDs.Contains), "Hard Skills", GD.GeneralSkills, false);
+                WriteToChangelog(entries, targets, i => i.LunaticSids.Where(generalSkillIDs.Contains), "Maddening Skills", GD.GeneralSkills, false);
+            }
             GD.SetDirty(DataSetEnum.Individual);
         }
 

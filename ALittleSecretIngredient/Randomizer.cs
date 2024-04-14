@@ -633,8 +633,10 @@ namespace ALittleSecretIngredient
             gg.UnitIconID = source.iconID;
             gg.SetCorrupted(source.enemyEmblem);
             gg.Mid = source.nameID;
+            /* Removed due to messing with ring models and engraving icons
             if (source.thumbnail != null)
                 gg.AsciiName = source.thumbnail;
+            */
             gg.FaceIconName = source.faceIconID;
             gg.FaceIconNameDarkness = source.faceIconID;
         }

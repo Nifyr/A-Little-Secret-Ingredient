@@ -193,7 +193,7 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.EngageItems:
                             NumericDistributionSetup nds6 = GetNumericDistributionSetup(pgs.FilterData(pg => pg.Name, GD.BondLevelTables), pg =>
                             pg.Group.Cast<GrowthTable>().Select(gt => gt.EngageSkills.Length + gt.EngageDragons.Length).Sum());
-                            nds6.distributions[0] = new UniformConstant(10, 2, 4);
+                            nds6.distributions[0] = new UniformConstant(10, 2, 3);
                             nds6.idx = 0;
                             return nds6;
                         case RandomizerDistribution.GrowthTableAptitude:

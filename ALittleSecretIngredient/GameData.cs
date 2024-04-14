@@ -1,9 +1,4 @@
 ﻿using ALittleSecretIngredient.Structs;
-using System.Diagnostics;
-using System.Runtime.InteropServices.JavaScript;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace ALittleSecretIngredient
 {
@@ -610,14 +605,8 @@ namespace ALittleSecretIngredient
             ("PID_E006_召喚異形兵_異形狼", "Xenologue 6 Corrupted Wolf Summon 1"), ("PID_E006_召喚異形兵強_異形狼", "Xenologue 6 Corrupted Wolf Summon 2"),
         };
 
-        internal List<(string id, string name)> EnemyCharacters { get; } = new() // FixedLevelEnemyCharacters +
+        internal List<(string id, string name)> NonArenaEnemyCharacters { get; } = new()
         {
-            ("PID_闘技場_マルス", "Arena Marth"), ("PID_闘技場_シグルド", "Arena Sigurd"),
-            ("PID_闘技場_セリカ", "Arena Celica"), ("PID_闘技場_ミカヤ", "Arena Micaiah"),
-            ("PID_闘技場_ロイ", "Arena Roy"), ("PID_闘技場_リーフ", "Arena Leif"),
-            ("PID_闘技場_ルキナ", "Arena Lucina"), ("PID_闘技場_リン", "Arena Lyn"),
-            ("PID_闘技場_アイク", "Arena Ike"), ("PID_闘技場_ベレト", "Arena Byleth"),
-            ("PID_闘技場_カムイ", "Arena Corrin"), ("PID_闘技場_エイリーク", "Arena Eirika"),
             ("PID_遭遇戦_異形兵_男", "Skirmish Corrupted Male"), ("PID_遭遇戦_異形兵_女", "Skirmish Corrupted Female"),
             ("PID_遭遇戦_異形兵_男_上級", "Skirmish Strong Corrupted Male"), ("PID_遭遇戦_異形兵_女_上級", "Skirmish Strong Corrupted Female"),
             ("PID_遭遇戦_ならずもの_男", "Skirmish Ruffian Male"), ("PID_遭遇戦_ならずもの_女", "Skirmish Ruffian Female"),
@@ -661,15 +650,42 @@ namespace ALittleSecretIngredient
             ("PID_G005_幻影兵_グリフォンナイト", "Camilla Paralogue Fabrication 3"), ("PID_G006_クロム", "Chrom Paralogue Chrom"),
             ("PID_G006_クロム_移動－１", "Chrom Paralogue Mov -1 Chrom"), ("PID_G006_ルフレ", "Chrom Paralogue Robin"),
             ("PID_G006_ルフレ_移動－１", "Chrom Paralogue Mov -1 Robin"), ("PID_G006_幻影兵_セイジ", "Chrom Paralogue Fabrication 1"),
-            ("PID_G006_幻影狼_移動－１", "Chrom Paralogue Fabrication 2"),
+            ("PID_G006_幻影狼_移動－１", "Chrom Paralogue Fabrication 2"), ("PID_遭遇戦_異形狼", "Skirmish Corrupted Wolf"),
+            ("PID_遭遇戦_異形飛竜", "Skirmish Corrupted Wyvern"), ("PID_遭遇戦_レア経験値_異形狼", "Skirmish Silver Corrupted Wolf"),
+            ("PID_遭遇戦_レアお金_異形飛竜", "Skirmish Gold Corrupted Wyvern"),
+        };
+
+        internal List<(string id, string name)> EnemyCharacters { get; } = new(); // FixedLevelEnemyCharacters + NonArenaEnemyCharacters + ArenaCharacters
+
+        internal List<(string id, string name)> ArenaCharacters { get; } = new()
+        {
+            ("PID_闘技場_マルス", "Arena Marth"), ("PID_闘技場_シグルド", "Arena Sigurd"),
+            ("PID_闘技場_セリカ", "Arena Celica"), ("PID_闘技場_ミカヤ", "Arena Micaiah"),
+            ("PID_闘技場_ロイ", "Arena Roy"), ("PID_闘技場_リーフ", "Arena Leif"),
+            ("PID_闘技場_ルキナ", "Arena Lucina"), ("PID_闘技場_リン", "Arena Lyn"),
+            ("PID_闘技場_アイク", "Arena Ike"), ("PID_闘技場_ベレト", "Arena Byleth"),
+            ("PID_闘技場_カムイ", "Arena Corrin"), ("PID_闘技場_エイリーク", "Arena Eirika"),
             ("PID_闘技場_エーデルガルト", "Arena Edelgard"),
             ("PID_闘技場_ディミトリ", "Arena Dimitri"), ("PID_闘技場_クロード", "Arena Claude"),
             ("PID_闘技場_チキ", "Arena Tiki"), ("PID_闘技場_ヘクトル", "Arena Hector"),
             ("PID_闘技場_ヴェロニカ", "Arena Veronica"), ("PID_闘技場_セネリオ", "Arena Soren"),
             ("PID_闘技場_カミラ", "Arena Camilla"), ("PID_闘技場_クロム", "Arena Chrom"),
-            ("PID_闘技場_ルフレ", "Arena Robin"), ("PID_遭遇戦_異形狼", "Skirmish Corrupted Wolf"),
-            ("PID_遭遇戦_異形飛竜", "Skirmish Corrupted Wyvern"), ("PID_遭遇戦_レア経験値_異形狼", "Skirmish Silver Corrupted Wolf"),
-            ("PID_遭遇戦_レアお金_異形飛竜", "Skirmish Gold Corrupted Wyvern"),
+            ("PID_闘技場_ルフレ", "Arena Robin"),
+        };
+
+        internal Dictionary<string, string> ArenaCharacterToGrowthTables { get; } = new()
+        {
+            { "PID_闘技場_マルス", "GGID_マルス" }, { "PID_闘技場_シグルド", "GGID_シグルド" },
+            { "PID_闘技場_セリカ", "GGID_セリカ" }, { "PID_闘技場_ミカヤ", "GGID_ミカヤ" },
+            { "PID_闘技場_ロイ", "GGID_ロイ" }, { "PID_闘技場_リーフ", "GGID_リーフ" },
+            { "PID_闘技場_ルキナ", "GGID_ルキナ" }, { "PID_闘技場_リン", "GGID_リン" },
+            { "PID_闘技場_アイク", "GGID_アイク" }, { "PID_闘技場_ベレト", "GGID_ベレト" },
+            { "PID_闘技場_カムイ", "GGID_カムイ" }, { "PID_闘技場_エイリーク", "GGID_エイリーク" },
+            { "PID_闘技場_エーデルガルト", "GGID_エーデルガルト" }, { "PID_闘技場_ディミトリ", "GGID_エーデルガルト" },
+            { "PID_闘技場_クロード", "GGID_エーデルガルト" }, { "PID_闘技場_チキ", "GGID_チキ" },
+            { "PID_闘技場_ヘクトル", "GGID_ヘクトル" }, { "PID_闘技場_ヴェロニカ", "GGID_ヴェロニカ" },
+            { "PID_闘技場_セネリオ", "GGID_セネリオ" }, { "PID_闘技場_カミラ", "GGID_カミラ" },
+            { "PID_闘技場_クロム", "GGID_クロム" }, { "PID_闘技場_ルフレ", "GGID_クロム" },
         };
 
         internal List<(string id, string name)> OtherNPCCharacters { get; } = new()
@@ -783,6 +799,7 @@ namespace ALittleSecretIngredient
 
         internal List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
         internal List<(string id, string name)> NPCCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
+        internal List<(string id, string name)> NonArenaNPCCharacters { get; } = new(); // AllyNPCCharacters + NonArenaEnemyCharacters
         internal List<(string id, string name)> FixedLevelCharacters { get; } = new(); // PlayableCharacters + FixedLevelAllyNPCCharacters +
                                                                                        // FixedLevelEnemyCharacters
         #endregion
@@ -820,23 +837,44 @@ namespace ALittleSecretIngredient
             ("JID_邪竜ノ子", "Fell Child (Past Alear)"), ("JID_蛮族", "Barbarian"), ("JID_村人", "Villager"),
         };
 
-        internal List<(string id, string name)> MaleNPCExclusiveClasses { get; } = new()
+        internal List<(string id, string name)> MaleEmblemClasses { get; } = new()
         {
-            ("JID_邪竜ノ王", "Fell Monarch"), ("JID_紋章士_マルス", "Emblem (Marth)"), ("JID_紋章士_シグルド", "Emblem (Sigurd)"), ("JID_紋章士_ロイ", "Emblem (Roy)"),
-            ("JID_紋章士_リーフ", "Emblem (Leif)"), ("JID_紋章士_アイク", "Emblem (Ike)"), ("JID_紋章士_ベレト", "Emblem (Byleth)"), ("JID_裏邪竜ノ子_E1-4", "Fell Child (Xenologue 1-4 Nil)"),
-            ("JID_裏邪竜ノ子_E5", "Fell Child (Xenologue 5 Nil)"), ("JID_アヴニール_E", "Royal (Alfred)"), ("JID_スュクセサール_E", "Warden (Diamant)"), ("JID_ティラユール_E", "Warden (Alcryst)"),
-            ("JID_クピードー_E", "Watcher (Fogado)"), ("JID_紋章士_ディミトリ", "Emblem (Dimitri)"), ("JID_紋章士_クロード", "Emblem (Claude)"), ("JID_紋章士_ヘクトル", "Emblem (Hector)"),
-            ("JID_紋章士_セネリオ", "Emblem (Soren)"), ("JID_紋章士_クロム", "Emblem (Chrom)"), ("JID_紋章士_ルフレ", "Emblem (Robin)"), ("JID_紋章士_ヘクトル_召喚", "Emblem (Hector Summon)"),
+            ("JID_紋章士_マルス", "Emblem (Marth)"), ("JID_紋章士_シグルド", "Emblem (Sigurd)"), ("JID_紋章士_ロイ", "Emblem (Roy)"),
+            ("JID_紋章士_リーフ", "Emblem (Leif)"), ("JID_紋章士_アイク", "Emblem (Ike)"), ("JID_紋章士_ベレト", "Emblem (Byleth)"), ("JID_紋章士_ディミトリ", "Emblem (Dimitri)"),
+            ("JID_紋章士_クロード", "Emblem (Claude)"), ("JID_紋章士_ヘクトル", "Emblem (Hector)"),
+            ("JID_紋章士_セネリオ", "Emblem (Soren)"), ("JID_紋章士_クロム", "Emblem (Chrom)"), ("JID_紋章士_ルフレ", "Emblem (Robin)"),
         };
 
-        internal List<(string id, string name)> FemaleNPCExclusiveClasses { get; } = new()
+        internal List<(string id, string name)> MaleNPCExclusiveClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + MaleEmblemClasses
+
+        internal List<(string id, string name)> MaleNonEmblemNPCExclusiveClasses { get; } = new()
         {
-            ("JID_M002_神竜ノ王", "Divine Dragon (Lumera)"), ("JID_邪竜ノ娘_敵", "Fell Child (Evil Veyle)"), ("JID_メリュジーヌ", "Melusine (Zephia)"), ("JID_紋章士_セリカ", "Emblem (Celica)"),
-            ("JID_紋章士_ミカヤ", "Emblem (Micaiah)"), ("JID_紋章士_ルキナ", "Emblem (Lucina)"), ("JID_紋章士_リン", "Emblem (Lyn)"), ("JID_紋章士_カムイ", "Emblem (Corrin)"),
-            ("JID_紋章士_エイリーク", "Emblem (Eirika)"), ("JID_フロラージュ_E", "Royal (Céline)"), ("JID_リンドブルム_E", "Trainer (Ivy)"), ("JID_スレイプニル_E", "Trainer (Hortensia)"),
-            ("JID_ピッチフォーク_E", "Watcher (Timerra)"), ("JID_紋章士_エーデルガルト", "Emblem (Edelgard)"), ("JID_紋章士_チキ", "Emblem (Tiki)"), ("JID_紋章士_ヴェロニカ", "Emblem (Veronica)"),
-            ("JID_紋章士_カミラ", "Emblem (Camilla)"), ("JID_紋章士_ルキナ_召喚", "Emblem (Lucina Summon)"),
+            ("JID_邪竜ノ王", "Fell Monarch"),  ("JID_裏邪竜ノ子_E1-4", "Fell Child (Xenologue 1-4 Nil)"),
+            ("JID_裏邪竜ノ子_E5", "Fell Child (Xenologue 5 Nil)"), ("JID_アヴニール_E", "Royal (Alfred)"), ("JID_スュクセサール_E", "Warden (Diamant)"), ("JID_ティラユール_E", "Warden (Alcryst)"),
+            ("JID_クピードー_E", "Watcher (Fogado)"), ("JID_紋章士_ヘクトル_召喚", "Emblem (Hector Summon)"),
         };
+
+        internal List<(string id, string name)> FemaleEmblemClasses { get; } = new()
+        {
+            ("JID_紋章士_セリカ", "Emblem (Celica)"),
+            ("JID_紋章士_ミカヤ", "Emblem (Micaiah)"), ("JID_紋章士_ルキナ", "Emblem (Lucina)"), ("JID_紋章士_リン", "Emblem (Lyn)"), ("JID_紋章士_カムイ", "Emblem (Corrin)"),
+            ("JID_紋章士_エイリーク", "Emblem (Eirika)"),
+            ("JID_紋章士_エーデルガルト", "Emblem (Edelgard)"), ("JID_紋章士_チキ", "Emblem (Tiki)"), ("JID_紋章士_ヴェロニカ", "Emblem (Veronica)"),
+            ("JID_紋章士_カミラ", "Emblem (Camilla)"),
+        };
+
+        internal List<(string id, string name)> EmblemClasses { get; } = new(); // MaleEmblemClasses + FemaleEmblemClasses
+
+        internal List<(string id, string name)> FemaleNPCExclusiveClasses { get; } = new(); // FemaleNonEmblemNPCExclusiveClasses + FemaleEmblemClasses
+
+        internal List<(string id, string name)> FemaleNonEmblemNPCExclusiveClasses { get; } = new()
+        {
+            ("JID_M002_神竜ノ王", "Divine Dragon (Lumera)"), ("JID_邪竜ノ娘_敵", "Fell Child (Evil Veyle)"), ("JID_メリュジーヌ", "Melusine (Zephia)"),
+            ("JID_フロラージュ_E", "Royal (Céline)"), ("JID_リンドブルム_E", "Trainer (Ivy)"), ("JID_スレイプニル_E", "Trainer (Hortensia)"),
+            ("JID_ピッチフォーク_E", "Watcher (Timerra)"), ("JID_紋章士_ルキナ_召喚", "Emblem (Lucina Summon)"),
+        };
+
+        internal List<(string id, string name)> NonEmblemGeneralClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + FemaleNonEmblemNPCExclusiveClasses
 
         internal List<(string id, string name)> BeastClasses { get; } = new()
         {
@@ -846,7 +884,7 @@ namespace ALittleSecretIngredient
 
         internal List<(string id, string name)> PlayableClasses { get; } = new(); // UniversalClasses + MaleExclusiveClasses + FemaleExclusiveClasses
 
-        internal List<(string id, string name)> GeneralClasses { get; } = new(); // PlayableClasses + NPCExclusiveClasses + MaleNPCExclusiveClasses + FemaleNPCExclusiveClasses
+        internal List<(string id, string name)> GeneralClasses { get; } = new(); // PlayableClasses + MaleNPCExclusiveClasses + FemaleNPCExclusiveClasses
 
         internal List<(string id, string name)> AllClasses { get; } = new(); // BeastClasses + GeneralClasses
         #endregion
@@ -1276,7 +1314,7 @@ namespace ALittleSecretIngredient
             ("GID_相手エーデルガルト", "Edelgard (Arena)"), ("GID_相手チキ", "Tiki (Arena)"),
             ("GID_相手ヘクトル", "Hector (Arena)"), ("GID_相手ヴェロニカ", "Veronica (Arena)"),
             ("GID_相手セネリオ", "Soren (Arena)"), ("GID_相手カミラ", "Camilla (Arena)"),
-            ("GID_相手クロム", "Chrom (Arena)")
+            ("GID_相手クロム", "Chrom (Arena)"),
         };
 
         internal List<(string id, string name)> ArenaEmblems { get; } = new() // BaseArenaEmblems +
@@ -2725,14 +2763,26 @@ namespace ALittleSecretIngredient
             AllyCharacters.AddRange(PlayableCharacters);
             AllyCharacters.AddRange(AllyNPCCharacters);
             EnemyCharacters.AddRange(FixedLevelEnemyCharacters);
+            EnemyCharacters.AddRange(NonArenaEnemyCharacters);
+            EnemyCharacters.AddRange(ArenaCharacters);
             Characters.AddRange(AllyCharacters);
             Characters.AddRange(EnemyCharacters);
             Characters.AddRange(OtherNPCCharacters);
             NPCCharacters.AddRange(AllyNPCCharacters);
             NPCCharacters.AddRange(EnemyCharacters);
+            NonArenaNPCCharacters.AddRange(AllyNPCCharacters);
+            NonArenaNPCCharacters.AddRange(NonArenaEnemyCharacters);
             FixedLevelCharacters.AddRange(PlayableCharacters);
             FixedLevelCharacters.AddRange(FixedLevelAllyNPCCharacters);
             FixedLevelCharacters.AddRange(FixedLevelEnemyCharacters);
+            MaleNPCExclusiveClasses.AddRange(MaleNonEmblemNPCExclusiveClasses);
+            MaleNPCExclusiveClasses.AddRange(MaleEmblemClasses);
+            FemaleNPCExclusiveClasses.AddRange(FemaleNonEmblemNPCExclusiveClasses);
+            FemaleNPCExclusiveClasses.AddRange(FemaleEmblemClasses);
+            EmblemClasses.AddRange(MaleEmblemClasses);
+            EmblemClasses.AddRange(FemaleEmblemClasses);
+            NonEmblemGeneralClasses.AddRange(MaleNonEmblemNPCExclusiveClasses);
+            NonEmblemGeneralClasses.AddRange(FemaleNonEmblemNPCExclusiveClasses);
             PlayableClasses.AddRange(UniversalClasses);
             PlayableClasses.AddRange(MaleExclusiveClasses);
             PlayableClasses.AddRange(FemaleExclusiveClasses);

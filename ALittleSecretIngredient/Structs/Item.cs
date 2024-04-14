@@ -2,7 +2,7 @@
 
 namespace ALittleSecretIngredient.Structs
 {
-    internal class Item : DataParam
+    internal class Item : DataParam, ICloneable
     {
         internal string Out { get; set; }
         internal string Iid { get; set; }
@@ -67,6 +67,24 @@ namespace ALittleSecretIngredient.Structs
         internal string AddEffect { get; set; }
         internal string AddHelp { get; set; }
         internal string HighRankItem { get; set; }
+
+        public object Clone()
+        {
+            Item i = (Item)MemberwiseClone();
+            i.EquipSids = (string[])EquipSids.Clone();
+            i.PassiveSids = (string[])PassiveSids.Clone();
+            i.GiveSids = (string[])GiveSids.Clone();
+            i.AddSids = (string[])AddSids.Clone();
+            return i;
+        }
+
+        internal bool GetFlag(int index) => (Flag & (1 << index)) > 0;
+
+        internal void SetFlag(int index, bool value)
+        {
+            if (value ^ GetFlag(index))
+                Flag ^= (byte)(1 << index);
+        }
     }
 
     internal class ItemCategory : DataParam

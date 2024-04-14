@@ -108,7 +108,6 @@ namespace ALittleSecretIngredient
             DataSet? individualDataSet = null; 
             if (settings.Individual.JidAlly.Enabled)
                 individualDataSet = GD.Get(DataSetEnum.Individual);
-
             if (individualDataSet != null)
             {
                 List<Individual> individuals = individualDataSet.Params.Cast<Individual>().ToList();
@@ -134,6 +133,27 @@ namespace ALittleSecretIngredient
                                 continue;
                         }
                 individualDataSet.Params = individuals.Cast<DataParam>().ToList();
+                GD.SetDirty(DataSetEnum.Individual);
+            }
+
+            // Create the missing normal versions of engage weapons for the arena
+            DataSet? itemDataSet = null;
+            if (settings.GrowthTable.EngageItems.Enabled)
+                itemDataSet = GD.Get(DataSetEnum.Item);
+            if (itemDataSet != null)
+            {
+                List<Item> engageWeapons = itemDataSet.Params.Cast<Item>().FilterData(i => i.Iid, GD.EngageWeapons).ToList();
+                foreach (Item i in engageWeapons)
+                {
+                    string newIid = i.Iid + "_通常";
+                    if (itemDataSet.Params.Cast<Item>().Any(i => i.Iid == newIid))
+                        continue;
+                    Item newItem = (Item)i.Clone();
+                    newItem.Iid = newIid;
+                    newItem.SetFlag(7, false);
+                    itemDataSet.Params.Add(newItem);
+                }
+                GD.SetDirty(DataSetEnum.Item);
             }
         }
 
@@ -1044,7 +1064,10 @@ namespace ALittleSecretIngredient
                     SetUnitTypeSpecificItems(settings.EngageItems.GetArg<double>(1), bondLevelTables);
                 // Randomize engage weapons
                 RandomizeEngageItems(settings.EngageItems.Distribution, bondLevelTables, engageWeaponIDs);
+                // Setting emblem classes' weapon types to match their engage weapons. Mostly to fix the arena
+                AdjustEmblemClasses(inheritableBondLevelTables);
                 WriteEngageItemsToChangelog(bondLevelTables, levelEntries);
+                GD.SetDirty(DataSetEnum.TypeOfSoldier);
                 GD.SetDirty(DataSetEnum.GrowthTable);
             }
 
@@ -1100,6 +1123,39 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Bond Level Tables");
+        }
+
+        private void AdjustEmblemClasses(List<ParamGroup> inheritableBondLevelTables)
+        {
+            List<TypeOfSoldier> emblemClasses = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList()
+                                .FilterData(tos => tos.Jid, GD.EmblemClasses);
+            List<Individual> arenaCharacters = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToList()
+                .FilterData(i => i.Pid, GD.ArenaCharacters);
+            List<Item> engageWeapons = GD.Get(DataSetEnum.Item).Params.Cast<Item>().ToList()
+                .FilterData(i => i.Iid, GD.EngageWeapons);
+            List<(TypeOfSoldier, ParamGroup)> tosPGPairs = arenaCharacters.Where(i => emblemClasses.Any(tos =>
+                tos.Jid == i.Jid)).Select(i => (emblemClasses.First(tos => tos.Jid == i.Jid), inheritableBondLevelTables.First(pg =>
+                    ((GrowthTable)pg.GroupMarker).Ggid == GD.ArenaCharacterToGrowthTables[i.Pid]))).ToList();
+            foreach ((TypeOfSoldier tos, ParamGroup pg) in tosPGPairs)
+            {
+                IEnumerable<string> weaponIDs = pg.Group.Cast<GrowthTable>().SelectMany(gt => gt.EngageItems);
+                IEnumerable<Item> weapons = engageWeapons.Where(i => weaponIDs.Contains(i.Iid));
+                sbyte[] requirements = tos.GetWeaponRequirementValues().Select(_ => (sbyte)0).ToArray();
+                string[] maxLevels = tos.GetMaxWeaponLevels().Select(_ => "N").ToArray();
+                foreach (Item i in weapons)
+                {
+                    if (i.Kind == 10) // Non-weapon items have kind 10
+                        continue;
+                    requirements[i.Kind] = 1;
+                    maxLevels[i.Kind] = "S";
+                    /* If only this didn't crash the arena...
+                    if (i.Kind == 9) // Special items are all dragon stones, and *some* of them require this skill
+                        tos.Skills = tos.Skills.Append("SID_竜石装備").Distinct().ToArray();
+                    */
+                }
+                tos.SetWeaponRequirementValues(requirements);
+                tos.SetMaxWeaponLevels(maxLevels);
+            }
         }
 
         private static void EnsureVisibleFirstEngageSkill(List<ParamGroup> bondLevelTables, List<string> visibleSkillIDs)
@@ -1218,6 +1274,7 @@ namespace ALittleSecretIngredient
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
             List<TypeOfSoldier> allClasses = toss.FilterData(tos => tos.Jid, GD.AllClasses);
             List<TypeOfSoldier> generalClasses = toss.FilterData(tos => tos.Jid, GD.GeneralClasses);
+            List<TypeOfSoldier> nonEmblemGeneralClasses = toss.FilterData(tos => tos.Jid, GD.NonEmblemGeneralClasses);
             Dictionary<TypeOfSoldier, StringBuilder> entries = CreateStringBuilderDictionary(toss);
 
             if (settings.StyleName.Enabled)
@@ -1247,16 +1304,16 @@ namespace ALittleSecretIngredient
             if (settings.Weapon.Enabled)
             {
                 if (settings.RandomizeWeaponTypeCount)
-                    RandomizeWeaponTypeCounts(settings, generalClasses);
-                RandomizeWeaponTypes(settings, generalClasses);
-                foreach (TypeOfSoldier tos in generalClasses)
+                    RandomizeWeaponTypeCounts(settings, nonEmblemGeneralClasses);
+                RandomizeWeaponTypes(settings, nonEmblemGeneralClasses);
+                foreach (TypeOfSoldier tos in nonEmblemGeneralClasses)
                     AdjustRanksToWeaponTypes(tos);
             }
             if (settings.RandomizeWeaponRank.Enabled)
-                RandomizeWeaponRanks(settings, generalClasses);
+                RandomizeWeaponRanks(settings, nonEmblemGeneralClasses);
             if (settings.Weapon.Enabled || settings.RandomizeWeaponRank.Enabled)
             {
-                WriteWeaponRanksToChangelog(generalClasses, entries);
+                WriteWeaponRanksToChangelog(nonEmblemGeneralClasses, entries);
                 GD.SetDirty(DataSetEnum.TypeOfSoldier);
             }
 
@@ -1549,6 +1606,7 @@ namespace ALittleSecretIngredient
             List<Individual> allyCharacters = individuals.FilterData(i => i.Pid, GD.AllyCharacters);
             List<Individual> enemyCharacters = individuals.FilterData(i => i.Pid, GD.EnemyCharacters);
             List<Individual> npcCharacters = individuals.FilterData(i => i.Pid, GD.NPCCharacters);
+            List<Individual> nonArenaNPCCharacters = individuals.FilterData(i => i.Pid, GD.NonArenaNPCCharacters);
             List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
             List<Asset> assets = GD.Get(DataSetEnum.Asset).Params.Cast<Asset>().ToList();
             List<string> generalClassIDs = GD.GeneralClasses.GetIDs();
@@ -1567,7 +1625,7 @@ namespace ALittleSecretIngredient
                 RandomizeStartingClasses(settings, playableCharacters, toss, weaponIDs, entries);
 
             if (settings.JidEnemy.Enabled)
-                RandomizeEnemyClasses(settings, npcCharacters, toss, generalClassIDs, weaponIDs, entries);
+                RandomizeEnemyClasses(settings, nonArenaNPCCharacters, toss, generalClassIDs, weaponIDs, entries);
 
             if (settings.Age.Enabled)
             {
@@ -1581,7 +1639,7 @@ namespace ALittleSecretIngredient
             if (settings.RandomizeBirthday)
                 RandomizeBirthdays(playableCharacters, entries);
 
-            //CHANGING THE PROTAGONIST'S LEVEL CRASHES THE GAME
+            // CHANGING THE PROTAGONIST'S LEVEL CRASHES THE GAME
             HandleLevel(settings.LevelAlly, allyCharacters.Where(i => i.Pid != "PID_リュール").ToList(), toss, entries);
             HandleLevel(settings.LevelEnemy, enemyCharacters, toss, entries);
 
@@ -2467,7 +2525,10 @@ namespace ALittleSecretIngredient
             foreach (ParamGroup pg in bondLevelTables)
                 foreach (GrowthTable gt in pg.Group.Cast<GrowthTable>())
                 {
-                    gt.EngageItems = gt.EngageItems.Concat(gt.EngageDragons).ToArray();
+                    if (gt.EngageItems.Length == 2 && gt.EngageCooperations.Length == 1)
+                        continue;
+
+                    gt.EngageItems = gt.EngageItems.Concat(gt.EngageCooperations).ToArray();
                     gt.EngageCooperations = Array.Empty<string>();
                     gt.EngageHorses = Array.Empty<string>();
                     gt.EngageCoverts = Array.Empty<string>();
@@ -2489,7 +2550,7 @@ namespace ALittleSecretIngredient
                             gt.EngagePranas = gt.EngagePranas.Append(gt.EngageItems[i]).ToArray();
                             gt.EngageDragons = gt.EngageDragons.Append(gt.EngageItems[i]).ToArray();
                         }
-                    gt.EngageItems = gt.EngageItems.Where(s => !gt.EngageDragons.Contains(s)).ToArray();
+                    gt.EngageItems = gt.EngageItems.Where(s => !gt.EngageCooperations.Contains(s)).ToArray();
                 }
         }
 

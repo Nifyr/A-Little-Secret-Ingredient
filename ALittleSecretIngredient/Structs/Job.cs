@@ -139,6 +139,20 @@ namespace ALittleSecretIngredient.Structs
             WeaponFist, WeaponSpecial,
         };
 
+        internal void SetWeaponRequirementValues(sbyte[] values)
+        {
+            WeaponNone = values[0];
+            WeaponSword = values[1];
+            WeaponLance = values[2];
+            WeaponAxe = values[3];
+            WeaponBow = values[4];
+            WeaponDagger = values[5];
+            WeaponMagic = values[6];
+            WeaponRod = values[7];
+            WeaponFist = values[8];
+            WeaponSpecial = values[9];
+        }
+
         internal sbyte[] GetBasicWeaponRequirementValues() => new sbyte[]
         {
             WeaponSword, WeaponLance, WeaponAxe,

@@ -64,8 +64,6 @@
             numericUpDown1 = new NumericUpDown();
             label1 = new Label();
             checkBox16 = new CheckBox();
-            button11 = new Button();
-            checkBox10 = new CheckBox();
             button12 = new Button();
             checkBox13 = new CheckBox();
             groupBox6 = new GroupBox();
@@ -449,13 +447,11 @@
             groupBox5.Controls.Add(numericUpDown1);
             groupBox5.Controls.Add(label1);
             groupBox5.Controls.Add(checkBox16);
-            groupBox5.Controls.Add(button11);
-            groupBox5.Controls.Add(checkBox10);
             groupBox5.Controls.Add(button12);
             groupBox5.Controls.Add(checkBox13);
             groupBox5.Location = new Point(827, 3);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(200, 299);
+            groupBox5.Size = new Size(200, 234);
             groupBox5.TabIndex = 11;
             groupBox5.TabStop = false;
             groupBox5.Text = "Engage Weapons";
@@ -463,7 +459,7 @@
             // numericUpDown1
             // 
             numericUpDown1.DecimalPlaces = 3;
-            numericUpDown1.Location = new Point(6, 246);
+            numericUpDown1.Location = new Point(6, 181);
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(188, 27);
             numericUpDown1.TabIndex = 6;
@@ -472,7 +468,7 @@
             // 
             // label1
             // 
-            label1.Location = new Point(6, 203);
+            label1.Location = new Point(6, 138);
             label1.Name = "label1";
             label1.Size = new Size(188, 40);
             label1.TabIndex = 5;
@@ -480,34 +476,13 @@
             // 
             // checkBox16
             // 
-            checkBox16.Location = new Point(6, 156);
+            checkBox16.Location = new Point(6, 91);
             checkBox16.Name = "checkBox16";
             checkBox16.Size = new Size(188, 44);
             checkBox16.TabIndex = 4;
             checkBox16.Text = "Randomize unit type specific weapons";
             toolTip1.SetToolTip(checkBox16, "Certain engage weapons are exclusive to particular unit types. This option modifies *which* engage weapons have this property.");
             checkBox16.UseVisualStyleBackColor = true;
-            // 
-            // button11
-            // 
-            button11.Location = new Point(6, 121);
-            button11.Name = "button11";
-            button11.Size = new Size(188, 29);
-            button11.TabIndex = 3;
-            button11.Text = "Weapon Count";
-            button11.UseVisualStyleBackColor = true;
-            button11.Click += Button11_Click;
-            // 
-            // checkBox10
-            // 
-            checkBox10.AutoSize = true;
-            checkBox10.Location = new Point(6, 91);
-            checkBox10.Name = "checkBox10";
-            checkBox10.Size = new Size(147, 24);
-            checkBox10.TabIndex = 2;
-            checkBox10.Text = "Randomize count";
-            toolTip1.SetToolTip(checkBox10, "This alters the quantity of engage weapons that can be *utilized* while engaged.");
-            checkBox10.UseVisualStyleBackColor = true;
             // 
             // button12
             // 
@@ -725,8 +700,6 @@
         public Button button14;
         public CheckBox checkBox15;
         private GroupBox groupBox5;
-        public Button button11;
-        public CheckBox checkBox10;
         public Button button12;
         public CheckBox checkBox13;
         public CheckBox checkBox16;

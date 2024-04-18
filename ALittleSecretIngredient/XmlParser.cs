@@ -7,66 +7,75 @@ using System.Xml;
 
 namespace ALittleSecretIngredient
 {
-
     internal class XmlParser
     {
         private Dictionary<FileEnum, Book> Books { get; }
-        private Dictionary<(FileEnum, string), Type> DataParamTypes { get; }
-        internal Dictionary<DataSetEnum, (FileEnum fe, string name)> DataSetToSheetName { get; }
-        private AssetBundleParser ABP { get; }
-        private FileManager FM { get; }
+        private Dictionary<(FileGroupEnum fge, string fileName), Book> GroupBooks { get; }
 
-        internal XmlParser(FileManager fm, AssetBundleParser abp)
+        internal XmlParser()
         {
-            FM = fm;
-            ABP = abp;
             Books = new();
-            DataParamTypes = new();
-            DataSetToSheetName = new();
-            Bind(FileEnum.AssetTable, DataSetEnum.Asset, typeof(Asset), "アセット");
-            Bind(FileEnum.God, DataSetEnum.GodGeneral, typeof(GodGeneral), "神将");
-            Bind(FileEnum.God, DataSetEnum.GrowthTable, typeof(GrowthTable), "成長表");
-            Bind(FileEnum.God, DataSetEnum.BondLevel, typeof(BondLevel), "絆レベル");
-            Bind(FileEnum.Item, DataSetEnum.Item, typeof(Item), "アイテム");
-            Bind(FileEnum.Item, DataSetEnum.ItemCategory, typeof(ItemCategory), "カテゴリ");
-            Bind(FileEnum.Item, DataSetEnum.Alchemy, typeof(Alchemy), "錬成");
-            Bind(FileEnum.Item, DataSetEnum.Evolution, typeof(Evolution), "進化");
-            Bind(FileEnum.Item, DataSetEnum.RefiningMaterialExchange, typeof(RefiningMaterialExchange), "錬成素材交換");
-            Bind(FileEnum.Item, DataSetEnum.WeaponLevel, typeof(WeaponLevel), "武器レベル");
-            Bind(FileEnum.Item, DataSetEnum.Compatibility, typeof(Compatibility), "相性");
-            Bind(FileEnum.Item, DataSetEnum.Accessory, typeof(Accessory), "アクセサリ");
-            Bind(FileEnum.Item, DataSetEnum.Gift, typeof(Gift), "贈り物");
-            Bind(FileEnum.Item, DataSetEnum.Reward, typeof(Reward), "報酬");
-            Bind(FileEnum.Item, DataSetEnum.EngageWeaponEnhancement, typeof(EngageWeaponEnhancement), "エンゲージ武器強化");
-            Bind(FileEnum.Item, DataSetEnum.BattleReward, typeof(BattleReward), "対戦報酬");
-            Bind(FileEnum.Job, DataSetEnum.TypeOfSoldier, typeof(TypeOfSoldier), "兵種");
-            Bind(FileEnum.Job, DataSetEnum.FightingStyle, typeof(FightingStyle), "戦闘スタイル");
-            Bind(FileEnum.Person, DataSetEnum.Individual, typeof(Individual), "個人");
-            Bind(FileEnum.Skill, DataSetEnum.Skill, typeof(Skill), "スキル");
+            GroupBooks = new();
         }
 
-        private void Bind(FileEnum fe, DataSetEnum dse, Type dataParam, string sheetName)
+        internal DataSet? GetDataSet(DataSetEnum dse)
         {
-            DataParamTypes.Add((fe, sheetName), dataParam);
-            DataSetToSheetName.Add(dse, (fe, sheetName));
+            (FileEnum fe, string sheetName) = GameDataLookup.DataSetToSheetName[dse];
+            Books.TryGetValue(fe, out Book? b);
+            return b?.Sheets.First(s => s.Name == sheetName).Data;
         }
 
-        internal DataSet GetData(DataSetEnum dse)
+        internal DataSet Parse(DataSetEnum dse, string xmlString)
         {
-            (FileEnum fe, string sheetName) = DataSetToSheetName[dse];
-            return GetBook(fe).Sheets.First(s => s.Name == sheetName).Data;
+            (FileEnum fe, string sheetName) = GameDataLookup.DataSetToSheetName[dse];
+            XmlDocument xml = new();
+            xml.Load(new StringReader(xmlString));
+            Book b = new(xml.ChildNodes[1]!, fe);
+            Books[fe] = b;
+            return b.Sheets.First(s => s.Name == sheetName).Data;
         }
 
-        private Book GetBook(FileEnum fe)
+        internal DataSet? GetDataSet(DataSetEnum dse, string fileName)
         {
-            if (!Books.TryGetValue(fe, out Book? value))
-            {
-                XmlDocument xml = new();
-                xml.Load(new StringReader(Encoding.UTF8.GetString(ABP.GetBytes(fe))[1..]));
-                value = new Book(this, xml.ChildNodes[1]!, fe);
-                Books[fe] = value;
-            }
-            return value;
+            (FileGroupEnum fge, string sheetName) = GameDataLookup.GroupDataSetToSheetName[dse];
+            GroupBooks.TryGetValue((fge, fileName), out Book? b);
+            return b?.Sheets.First(s => s.Name == sheetName).Data;
+        }
+
+        internal DataSet Parse(DataSetEnum dse, string fileName, string xmlString)
+        {
+            (FileGroupEnum fge, string sheetName) = GameDataLookup.GroupDataSetToSheetName[dse];
+            XmlDocument xml = new();
+            xml.Load(new StringReader(xmlString));
+            Book b = new(this, xml.ChildNodes[1]!, fge);
+            GroupBooks[(fge, fileName)] = b;
+            return b.Sheets.First(s => s.Name == sheetName).Data;
+        }
+
+        internal byte[] ExportXml(FileEnum fe, string oldXmlString)
+        {
+            XmlDocument xml = new();
+            xml.Load(new StringReader(oldXmlString));
+            Books[fe].Write(xml.ChildNodes[1]!);
+            MemoryStream ms = new();
+            xml.Save(ms);
+            ms.Position = 0;
+            byte[] bytes = new byte[ms.Length];
+            ms.Read(bytes);
+            return bytes;
+        }
+
+        internal byte[] GetNewXml(FileGroupEnum fge, string fileName, string oldXmlString)
+        {
+            XmlDocument xml = new();
+            xml.Load(new StringReader(oldXmlString));
+            GroupBooks[(fge, fileName)].Write(xml.ChildNodes[1]!);
+            MemoryStream ms = new();
+            xml.Save(ms);
+            ms.Position = 0;
+            byte[] bytes = new byte[ms.Length];
+            ms.Read(bytes);
+            return bytes;
         }
 
         internal static void WriteRandomizerSettings(RandomizerSettings rs)
@@ -88,44 +97,17 @@ namespace ALittleSecretIngredient
             return rs;
         }
 
-        internal void Export(IEnumerable<FileEnum> changedFiles, IEnumerable<ExportFormat> targets)
-        {
-            foreach (FileEnum fe in changedFiles)
-                Export(fe, targets);
-        }
-
-        internal void Export(FileEnum fe, IEnumerable<ExportFormat> targets)
-        {
-            XmlDocument xml = new();
-            xml.Load(new StringReader(Encoding.UTF8.GetString(ABP.GetBytes(fe))[1..]));
-            Books[fe].Write(xml.ChildNodes[1]!);
-            foreach (ExportFormat ef in targets)
-                switch (ef)
-                {
-                    case ExportFormat.Cobalt:
-                        {
-                            using FileStream fs = FM.CreateOutputFile(fe, ef);
-                            xml.Save(fs);
-                            fs.Close();
-                            break;
-                        }
-                    case ExportFormat.LayeredFS:
-                        MemoryStream ms = new();
-                        xml.Save(ms);
-                        ms.Position = 0;
-                        byte[] bytes = new byte[ms.Length];
-                        ms.Read(bytes);
-                        ABP.ExportBytes(fe, bytes);
-                        break;
-                }
-        }
-
         private class Book
         {
-            internal Book(XmlParser xp, XmlNode n, FileEnum fe)
+            internal Book(XmlNode n, FileEnum fe)
             {
                 Count = n.Attributes!["Count"]!.Value;
-                Sheets = n.SelectChildren().Select(c => new Sheet(xp, c, fe)).ToArray();
+                Sheets = n.SelectChildren().Select(c => new Sheet(c, fe)).ToArray();
+            }
+            internal Book(XmlParser xp, XmlNode n, FileGroupEnum fge)
+            {
+                Count = n.Attributes!["Count"]!.Value;
+                Sheets = n.SelectChildren().Select(c => new Sheet(c, fge)).ToArray();
             }
             internal string Count { get; set; }
             internal Sheet[] Sheets { get; set; }
@@ -140,12 +122,19 @@ namespace ALittleSecretIngredient
 
         private class Sheet
         {
-            internal Sheet(XmlParser xp, XmlNode n, FileEnum fe)
+            internal Sheet(XmlNode n, FileEnum fe)
             {
                 Name = n.Attributes!["Name"]!.Value;
                 Count = n.Attributes["Count"]!.Value;
                 Header = new Header(n["Header"]!);
-                Data = new DataSet(n["Data"]!, xp.DataParamTypes[(fe, Name)]);
+                Data = new DataSet(n["Data"]!, GameDataLookup.DataParamTypes[(fe, Name)]);
+            }
+            internal Sheet(XmlNode n, FileGroupEnum fge)
+            {
+                Name = n.Attributes!["Name"]!.Value;
+                Count = n.Attributes["Count"]!.Value;
+                Header = new Header(n["Header"]!);
+                Data = new DataSet(n["Data"]!, GameDataLookup.GroupDataParamTypes[(fge, Name)]);
             }
 
             internal string Name { get; set; }
@@ -206,98 +195,6 @@ namespace ALittleSecretIngredient
                 n.Attributes["Chg"]!.Value = Chg;
             }
         }
-    }
-
-    internal class DataSet
-    {
-        internal DataSet(XmlNode n, Type paramType)
-        {
-            Params = n.SelectChildren().Select(c => DataParam.Create(c, paramType)).ToList();
-            if (GroupedParams())
-                Group();
-        }
-        internal List<DataParam> Params { get; set; }
-
-        private bool GroupedParams() => Params.Count > 0 && (Params[0] is GroupedParam || Params[0] is ParamGroup);
-
-        internal int ParamCount() => GroupedParams() ? Params.Select(dp => ((ParamGroup)dp).Group.Count + 1).Sum() : Params.Count;
-
-        private void Group()
-        {
-            List<ParamGroup> groups = new();
-            foreach (DataParam dp in Params)
-            {
-                GroupedParam gp = (GroupedParam)dp;
-                string? name = gp.GetGroupName();
-                if (name != null)
-                    groups.Add(new(gp));
-                else
-                    groups.Last().Group.Add(gp);
-            }
-            Params = groups.Cast<DataParam>().ToList();
-        }
-
-        private void UnGroup()
-        {
-            List<DataParam> unGrouped = new();
-            foreach (DataParam dp in Params)
-            {
-                ParamGroup pg = (ParamGroup)dp;
-                unGrouped.Add(pg.GroupMarker);
-                unGrouped.AddRange(pg.Group);
-            }
-            Params = unGrouped;
-        }
-
-        internal void Write(XmlNode n)
-        {
-            if (GroupedParams())
-                UnGroup();
-            for (int i = 0; i < Params.Count; i++)
-            {
-                if (i >= n.ChildNodes.Count)
-                    n.AppendChild(n.FirstChild!.Clone());
-                Params[i].Write(n.ChildNodes[i]!);
-            }
-            if (GroupedParams())
-                Group();
-        }
-    }
-
-    internal class ParamGroup : DataParam
-    {
-        internal string Name { get; set; }
-        internal List<GroupedParam> Group { get; set; }
-        internal GroupedParam GroupMarker { get; set; }
-
-        internal ParamGroup(GroupedParam gp)
-        {
-            GroupMarker = gp;
-            Name = GroupMarker.GetGroupName()!;
-            Group = new();
-        }
-    }
-
-    internal abstract class DataParam
-    {
-        internal static DataParam Create(XmlNode n, Type paramType)
-        {
-            DataParam dp = (DataParam)paramType.GetConstructor(Array.Empty<Type>())!.Invoke(Array.Empty<object>());
-            foreach (PropertyInfo p in paramType.GetRuntimeProperties())
-                p.SetValue(dp, n.ParseTo(p));
-            return dp;
-        }
-
-        internal void Write(XmlNode n)
-        {
-            foreach (PropertyInfo p in GetType().GetRuntimeProperties())
-                n.SelectAttributes().First(a => a.Name.Replace(".", "") == p.Name).ParseFrom(p.GetValue(this)!);
-        }
-    }
-
-    internal abstract class GroupedParam : DataParam
-    {
-        internal abstract string? GetGroupName();
     }
 
     internal static class XmlStructUtils

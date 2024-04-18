@@ -7,7 +7,13 @@
         Item,
         Job,
         Person,
-        Skill
+        Skill,
+    }
+
+    internal enum FileGroupEnum
+    {
+        Dispos,
+        Terrains,
     }
 
     internal enum DataSetEnum
@@ -31,7 +37,9 @@
         TypeOfSoldier,
         FightingStyle,
         Individual,
-        Skill
+        Skill,
+        Arrangement,
+        MapTerrain
     }
 
     internal enum RandomizerDistribution

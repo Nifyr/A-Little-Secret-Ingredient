@@ -1,16 +1,528 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Data.SqlTypes;
+using System.Text;
+using System.Xml;
 
 namespace ALittleSecretIngredient
 {
     internal class GameData
     {
         private XmlParser XP { get; }
+        private AssetBundleParser ABP { get; }
         private FileManager FM { get; }
-        internal DataSet Get(DataSetEnum dse) => XP.GetData(dse);
-        internal void SetDirty(DataSetEnum dse) => FM.SetDirty(XP.DataSetToSheetName[dse].fe);
+
+        private Dictionary<DataSetEnum, DataSet> DataSets { get; } = new();
+        internal DataSet Get(DataSetEnum dse)
+        {
+            if (!DataSets.TryGetValue(dse, out DataSet? ds))
+            {
+                ds = XP.GetDataSet(dse);
+                if (ds is null)
+                {
+                    FileEnum fe = GameDataLookup.DataSetToSheetName[dse].fe;
+                    string? xmlString = ABP.GetXmlString(fe);
+                    if (xmlString is null)
+                    {
+                        using FileStream fs = FM.ReadFile(fe);
+                        xmlString = ABP.ParseToXmlString(fe, fs);
+                    }
+                    ds = XP.Parse(dse, xmlString);
+                }
+                DataSets.Add(dse, ds);
+            }
+            return ds;
+        }
+
+        internal void Export(IEnumerable<FileEnum> changedFiles, IEnumerable<ExportFormat> targets)
+        {
+            foreach (FileEnum fe in changedFiles)
+                Export(fe, targets);
+        }
+
+        private void Export(FileEnum fe, IEnumerable<ExportFormat> targets)
+        {
+            string xmlString = ABP.GetXmlString(fe)!;
+            byte[] xmlBytes = XP.ExportXml(fe, xmlString);
+            foreach (ExportFormat ef in targets)
+            {
+                using FileStream outputFile = FM.CreateOutputFile(fe, ef);
+                switch (ef)
+                {
+                    case ExportFormat.Cobalt:
+                        {
+                            outputFile.Write(xmlBytes);
+                            break;
+                        }
+                    case ExportFormat.LayeredFS:
+                        {
+                            using FileStream tempFile = FM.CreateTempFile(fe);
+                            ABP.ExportXmlBytes(fe, xmlBytes, tempFile, outputFile);
+                            break;
+                        }
+                }
+            }
+        }
+
+        private Dictionary<DataSetEnum, DataSetGroup> DataSetGroups { get; } = new();
+        internal List<(string id, DataSet)> GetGroup(DataSetEnum dse, List<(string id, string name)> entities)
+        {
+            if (!DataSetGroups.ContainsKey(dse))
+                DataSetGroups.Add(dse, new(this, dse));
+            return DataSetGroups[dse].Get(entities);
+        }
+
+        private class DataSetGroup
+        {
+            private GameData GD { get; }
+            internal Dictionary<string, DataSet> DataSets { get; }
+            private DataSetEnum DSE { get; }
+            private FileGroupEnum FGE { get; }
+
+            internal DataSetGroup(GameData gd, DataSetEnum dse)
+            {
+                GD = gd;
+                DSE = dse;
+                FGE = GameDataLookup.GroupDataSetToSheetName[dse].fge;
+                DataSets = new();
+            }
+
+            internal List<(string fileName, DataSet ds)> Get(List<(string id, string name)> entities)
+            {
+                List<(string id, DataSet)> dataSets = new();
+                foreach ((string id, string _) in entities)
+                {
+                    if (!DataSets.TryGetValue(id, out DataSet? ds))
+                    {
+                        ds = Parse(id);
+                        DataSets.Add(id, ds);
+                    }
+                    dataSets.Add((id, ds));
+                }
+                return dataSets;
+            }
+
+            private DataSet Parse(string id)
+            {
+                string fileName = id.IdToFileName(FGE);
+                switch (FGE)
+                {
+                    case FileGroupEnum.Dispos:
+                        {
+                            DataSet? ds = GD.XP.GetDataSet(DSE, fileName);
+                            if (ds is null)
+                            {
+                                string? xmlString = GD.ABP.GetXmlString(FGE, fileName);
+                                if (xmlString is null)
+                                {
+                                    using FileStream fs = GD.FM.ReadFile(FGE, fileName);
+                                    xmlString = GD.ABP.ParseToXmlString(FGE, fileName, fs);
+                                }
+                                ds = GD.XP.Parse(DSE, fileName, xmlString);
+                            }
+                            return ds;
+                        }
+                    case FileGroupEnum.Terrains:
+                        {
+                            DataSet? ds = GD.ABP.GetDataSet(FGE, fileName);
+                            if (ds is null)
+                            {
+                                using FileStream fs = GD.FM.ReadFile(FGE, fileName);
+                                ds = GD.ABP.ParseToDataSet(FGE, fileName, fs);
+                            }
+                            return ds;
+                        }
+                    default: throw new NotImplementedException();
+                }
+            }
+        }
+
+        internal void Export(IEnumerable<(FileGroupEnum fge, string fileName)> changedFiles, IEnumerable<ExportFormat> targets)
+        {
+            foreach ((FileGroupEnum fge, string fileName) in changedFiles)
+                Export(fge, fileName, targets);
+        }
+
+        private void Export(FileGroupEnum fge, string fileName, IEnumerable<ExportFormat> targets)
+        {
+            switch (fge)
+            {
+                case FileGroupEnum.Dispos:
+                    string xmlString = ABP.GetXmlString(fge, fileName)!;
+                    byte[] xmlBytes = XP.GetNewXml(fge, fileName, xmlString);
+                    foreach (ExportFormat ef in targets)
+                    {
+                        using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
+                        switch (ef)
+                        {
+                            case ExportFormat.Cobalt:
+                                {
+                                    outputFile.Write(xmlBytes);
+                                    break;
+                                }
+                            case ExportFormat.LayeredFS:
+                                {
+                                    ABP.ExportXmlBytes(fge, fileName, xmlBytes, outputFile);
+                                    break;
+                                }
+                        }
+                    }
+                    break;
+                case FileGroupEnum.Terrains:
+                    foreach (ExportFormat ef in targets)
+                    {
+                        using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
+                        ABP.ExportDataSet(fge, fileName, DataSetGroups[DataSetEnum.MapTerrain].DataSets[fileName.FileNameToId(fge)], outputFile);
+                    }
+                    break;
+            }
+        }
+
+        internal void SetDirty(DataSetEnum dse) => FM.SetDirty(GameDataLookup.DataSetToSheetName[dse].fe);
+        internal void SetDirty(DataSetEnum dse, List<(string id, DataSet)> group)
+        {
+            FileGroupEnum fge = GameDataLookup.GroupDataSetToSheetName[dse].fge;
+            group.ForEach(t => FM.SetDirty(fge, t.id.IdToFileName(fge)));
+        }
+
+        internal GameData(XmlParser xp, AssetBundleParser abp, FileManager fm)
+        {
+            XP = xp;
+            ABP = abp;
+            FM = fm;
+        }
+    }
+
+    internal static class GameDataLookup
+    {
+        internal static List<T> FilterData<T>(this IEnumerable<T> data, Func<T, string> getID, List<(string id, string name)> entities)
+        {
+            HashSet<string> entityIDs = entities.Select(t => t.id).ToHashSet();
+            return data.Where(o => entityIDs.Contains(getID(o))).ToList();
+        }
+        internal static List<T> GetIDs<T>(this List<(T id, string name)> entities) => entities.Select(t => t.id).ToList();
+        internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
+        internal static sbyte GetInternalLevel(this Individual i, List<TypeOfSoldier> toss) =>
+            i.InternalLevel != 0 ? i.InternalLevel : i.GetTOS(toss).InternalLevel;
+        internal static TypeOfSoldier GetTOS(this Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
+        internal static Gender GetGender(this Individual i)
+        {
+            if (i.Name == "MPID_Lueur" || i.Name == "MPID_PastLueur")
+                return Gender.Both;
+            if (i.GetFlag(5))
+                return Gender.Rosado;
+            if (i.Gender == 2)
+                return Gender.Female;
+            return Gender.Male;
+        }
+
+        internal static string IdToFileName(this string id, FileGroupEnum fge) => fge switch
+        {
+            FileGroupEnum.Dispos => id.ToLower() + ".xml.bundle",
+            FileGroupEnum.Terrains => "mapterrain_" + id.ToLower() + ".bundle",
+            _ => throw new NotImplementedException()
+        };
+
+        internal static string FileNameToId(this string fileName, FileGroupEnum fge) => fge switch
+        {
+            FileGroupEnum.Dispos => fileName.Replace(".xml.bundle", "").ToUpper(),
+            FileGroupEnum.Terrains => fileName.Replace("mapterrain_", "").Replace(".bundle", "").ToUpper(),
+            _ => throw new NotImplementedException()
+        };
+
+        internal static ProficiencyLevel ToProficiencyLevel(this string s) => s switch
+        {
+            "N" => ProficiencyLevel.N,
+            "N+" => ProficiencyLevel.Np,
+            "D" => ProficiencyLevel.D,
+            "D+" => ProficiencyLevel.Dp,
+            "C" => ProficiencyLevel.C,
+            "C+" => ProficiencyLevel.Cp,
+            "B" => ProficiencyLevel.B,
+            "B+" => ProficiencyLevel.Bp,
+            "A" => ProficiencyLevel.A,
+            "A+" => ProficiencyLevel.Ap,
+            "S" => ProficiencyLevel.S,
+            _ => throw new ArgumentException("Unsupported proficiency level: " + s)
+        };
+
+        internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
+        {
+            { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleHead, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleNeck, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleTorso, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleShoulders, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleArms, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleHands, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleLegs, DataSetEnum.Asset },
+            { RandomizerDistribution.ScaleFeet, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeArms, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeLegs, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeBust, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeAbdomen, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeTorso, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeScaleArms, DataSetEnum.Asset },
+            { RandomizerDistribution.VolumeScaleLegs, DataSetEnum.Asset },
+            { RandomizerDistribution.MapScaleAll, DataSetEnum.Asset },
+            { RandomizerDistribution.MapScaleHead, DataSetEnum.Asset },
+            { RandomizerDistribution.MapScaleWing, DataSetEnum.Asset },
+            { RandomizerDistribution.Link, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngageCount, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngageAttackAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngageAttackEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngageAttackLink, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.LinkGid, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngravePower, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngraveWeight, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngraveHit, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngraveCritical, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngraveAvoid, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.EngraveSecure, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceHpAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceStrAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceTechAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceQuickAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceLuckAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceDefAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceMagicAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceMdefAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhancePhysAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceMoveAlly, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceHpEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceStrEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceTechEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceQuickEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceLuckEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceDefEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceMagicEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceMdefEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhancePhysEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.SynchroEnhanceMoveEnemy, DataSetEnum.GodGeneral },
+            { RandomizerDistribution.InheritanceSkills, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.SynchroStatSkillsAlly, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.SynchroStatSkillsEnemy, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.SynchroGeneralSkillsAlly, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.SynchroGeneralSkillsEnemy, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.EngageSkills, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.EngageItems, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.GrowthTableAptitude, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.SkillInheritanceLevel, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.StrongBondLevel, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.DeepSynergyLevel, DataSetEnum.GrowthTable },
+            { RandomizerDistribution.Exp, DataSetEnum.BondLevel },
+            { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
+            { RandomizerDistribution.StyleName, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.MoveType, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.Weapon, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.WeaponBaseCount, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.WeaponAdvancedCount, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.MaxWeaponLevelBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.MaxWeaponLevelAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseHpBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseStrBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseTechBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseQuickBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseLuckBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseDefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseMagicBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseMdefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BasePhysBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseSightBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseMoveBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseHpAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseStrAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseTechAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseQuickAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseLuckAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseDefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseMagicAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseMdefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BasePhysAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseSightAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseMoveAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseTotalBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseTotalAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitHpBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitStrBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitTechBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitQuickBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitLuckBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitDefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitMagicBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitMdefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitPhysBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitSightBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitMoveBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitHpAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitStrAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitTechAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitQuickAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitLuckAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitDefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitMagicAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitMdefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitPhysAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitSightAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitMoveAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitTotalBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LimitTotalAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowHpBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowStrBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowTechBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowQuickBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowLuckBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowDefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowMagicBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowMdefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowPhysBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowSightBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowMoveBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowHpAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowStrAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowTechAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowQuickAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowLuckAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowDefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowMagicAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowMdefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowPhysAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowSightAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowMoveAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowTotalBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.BaseGrowTotalAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowHpBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowStrBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowTechBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowQuickBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowLuckBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowDefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowMagicBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowMdefBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowPhysBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowSightBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowMoveBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowHpAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowStrAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowTechAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowQuickAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowLuckAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowDefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowMagicAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowMdefAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowPhysAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowSightAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowMoveAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowTotalBase, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.DiffGrowTotalAdvanced, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LearningSkill, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.LunaticSkill, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.Attrs, DataSetEnum.TypeOfSoldier },
+            { RandomizerDistribution.JidAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.JidEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.Age, DataSetEnum.Individual },
+            { RandomizerDistribution.LevelAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.LevelEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.InternalLevel, DataSetEnum.Individual },
+            { RandomizerDistribution.SupportCategory, DataSetEnum.Individual },
+            { RandomizerDistribution.SkillPoint, DataSetEnum.Individual },
+            { RandomizerDistribution.IndividualAptitude, DataSetEnum.Individual },
+            { RandomizerDistribution.SubAptitude, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNHpAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNStrAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTechAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNQuickAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNLuckAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNDefAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMagicAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMdefAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNPhysAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNSightAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMoveAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTotalAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNHpEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNStrEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTechEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNQuickEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNLuckEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNDefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMagicEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMdefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNPhysEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNSightEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNMoveEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetNTotalEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHHpEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHStrEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHTechEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHQuickEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHLuckEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHDefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHMagicEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHMdefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHPhysEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHSightEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHMoveEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetHTotalEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLHpEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLStrEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLTechEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLQuickEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLLuckEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLDefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLMagicEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLMdefEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLPhysEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLSightEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLMoveEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.OffsetLTotalEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitHp, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitStr, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitTech, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitQuick, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitLuck, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitDef, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitMagic, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitMdef, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitPhys, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitSight, DataSetEnum.Individual },
+            { RandomizerDistribution.LimitMove, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowHp, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowStr, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowTech, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowQuick, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowLuck, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowDef, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowMagic, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowMdef, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowPhys, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowSight, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowMove, DataSetEnum.Individual },
+            { RandomizerDistribution.GrowTotal, DataSetEnum.Individual },
+            { RandomizerDistribution.ItemsWeapons, DataSetEnum.Individual },
+            { RandomizerDistribution.ItemsItems, DataSetEnum.Individual },
+            { RandomizerDistribution.AttrsAlly, DataSetEnum.Individual },
+            { RandomizerDistribution.AttrsEnemy, DataSetEnum.Individual },
+            { RandomizerDistribution.CommonSids, DataSetEnum.Individual },
+        };
+
+        internal static Dictionary<(FileEnum fe, string sheetName), Type> DataParamTypes { get; } = new();
+        internal static Dictionary<(FileGroupEnum fge, string sheetName), Type> GroupDataParamTypes { get; } = new();
+        internal static Dictionary<DataSetEnum, (FileEnum fe, string sheetName)> DataSetToSheetName { get; } = new();
+        internal static Dictionary<DataSetEnum, (FileGroupEnum fge, string sheetName)> GroupDataSetToSheetName { get; } = new();
+
+        private static void Bind(FileEnum fe, DataSetEnum dse, Type dataParam, string sheetName)
+        {
+            DataParamTypes.Add((fe, sheetName), dataParam);
+            DataSetToSheetName.Add(dse, (fe, sheetName));
+        }
+        private static void Bind(FileGroupEnum fge, DataSetEnum dse, Type dataParam, string sheetName)
+        {
+            GroupDataParamTypes.Add((fge, sheetName), dataParam);
+            GroupDataSetToSheetName.Add(dse, (fge, sheetName));
+        }
 
         #region Bond Level IDs
-        internal List<(string id, string name)> BondLevelsFromExp { get; } = new()
+        internal static List<(string id, string name)> BondLevelsFromExp { get; } = new()
         {
             ("2", "Level 2"), ("3", "Level 3"), ("4", "Level 4"), ("5", "Level 5"),
             ("6", "Level 6"), ("7", "Level 7"), ("8", "Level 8"), ("9", "Level 9"),
@@ -18,13 +530,13 @@ namespace ALittleSecretIngredient
             ("14", "Level 14"), ("15", "Level 15"), ("16", "Level 16"), ("17", "Level 17"),
             ("18", "Level 18"), ("19", "Level 19"), ("20", "Level 20")
         };
-        internal List<(string id, string name)> BondLevels { get; } = new() // BondLevelsFromExp +
+        internal static List<(string id, string name)> BondLevels { get; } = new() // BondLevelsFromExp +
         {
             ("0", "Level 0"), ("1", "Level 1")
         }; // For consistency's sake, but that doesn't stop me from feeling like a dumbass for doing it this way.
         #endregion
         #region Bond Level Table IDs
-        internal List<(string id, string name)> InheritableBondLevelTables { get; } = new()
+        internal static List<(string id, string name)> InheritableBondLevelTables { get; } = new()
         {
             ("GGID_マルス", "Marth"), ("GGID_シグルド", "Sigurd"), ("GGID_セリカ", "Celica"), ("GGID_ミカヤ", "Micaiah"),
             ("GGID_ロイ", "Roy"), ("GGID_リーフ", "Leif"), ("GGID_ルキナ", "Lucina"), ("GGID_リン", "Lyn"),
@@ -33,12 +545,12 @@ namespace ALittleSecretIngredient
             ("GGID_セネリオ", "Soren"), ("GGID_カミラ", "Camilla"), ("GGID_クロム", "Chrom")
         };
 
-        internal List<(string id, string name)> AllyBondLevelTables { get; } = new() // InheritableBondLevelTables +
+        internal static List<(string id, string name)> AllyBondLevelTables { get; } = new() // InheritableBondLevelTables +
         {
             ("GGID_リュール", "Emblem Alear")
         };
 
-        internal List<(string id, string name)> EnemyBondLevelTables { get; } = new()
+        internal static List<(string id, string name)> EnemyBondLevelTables { get; } = new()
         {
             ("GGID_M002_シグルド", "Sigurd (Chapter 2)"), ("GGID_M007_敵ルキナ", "Corrupted Lucina"),
             ("GGID_M008_敵リーフ", "Corrupted Leif (Chapter 8)"),
@@ -62,15 +574,15 @@ namespace ALittleSecretIngredient
             ("GGID_E006_敵エーデルガルト", "Corrupted Edelgard")
         };
 
-        internal List<(string id, string name)> BondLevelTables { get; } = new(); // AllyBondLevelTables + EnemyBondLevelTables
+        internal static List<(string id, string name)> BondLevelTables { get; } = new(); // AllyBondLevelTables + EnemyBondLevelTables
         #endregion
         #region Character IDs
-        internal List<(string id, string name)> ProtagonistCharacters { get; } = new()
+        internal static List<(string id, string name)> ProtagonistCharacters { get; } = new()
         {
             ("PID_リュール", "Alear")
         };
 
-        internal List<(string id, string name)> PlayableCharacters { get; } = new() // ProtagonistCharacters +
+        internal static List<(string id, string name)> PlayableCharacters { get; } = new() // ProtagonistCharacters +
         {
             ("PID_ヴァンドレ", "Vander"), ("PID_クラン", "Clanne"), ("PID_フラン", "Framme"),
             ("PID_アルフレッド", "Alfred"), ("PID_エーティエ", "Etie"), ("PID_ブシュロン", "Boucheron"), ("PID_セリーヌ", "Céline"),
@@ -85,7 +597,7 @@ namespace ALittleSecretIngredient
             ("PID_マデリーン", "Madeline")
         };
 
-        internal List<(string id, string name)> FixedLevelAllyNPCCharacters { get; } = new()
+        internal static List<(string id, string name)> FixedLevelAllyNPCCharacters { get; } = new()
         {
             ("PID_S001_ジャン_父親", "Sean"),
             ("PID_S001_村人_青年男", "Jean Paralogue Villager 1"), ("PID_S001_村人_青年女", "Jean Paralogue Villager 2"),
@@ -109,7 +621,7 @@ namespace ALittleSecretIngredient
             ("PID_E006_マデリーン", "Xenologue 6 Madeline"),
         };
 
-        internal List<(string id, string name)> AllyNPCCharacters { get; } = new() // FixedLevelAllyNPCCharacters +
+        internal static List<(string id, string name)> AllyNPCCharacters { get; } = new() // FixedLevelAllyNPCCharacters +
         {
             ("PID_召喚_ソードファイター", "Sword Fighter Summon 1"), ("PID_召喚_ソードファイター_重装特効", "Sword Fighter Summon 2"),
             ("PID_召喚_ソードファイター_竜特効", "Sword Fighter Summon 3"), ("PID_召喚_ランスファイター", "Lance Fighter Summon 1"),
@@ -191,9 +703,9 @@ namespace ALittleSecretIngredient
             ("PID_召喚_ルフレ", "Robin Summon"),
         };
 
-        internal List<(string id, string name)> AllyCharacters { get; } = new(); // PlayableCharacters + AllyNPCCharacters
+        internal static List<(string id, string name)> AllyCharacters { get; } = new(); // PlayableCharacters + AllyNPCCharacters
 
-        internal List<(string id, string name)> FixedLevelEnemyCharacters { get; } = new()
+        internal static List<(string id, string name)> FixedLevelEnemyCharacters { get; } = new()
         {
             ("PID_M001_異形兵_蛮族_ボス", "Chapter 1 Boss"), ("PID_M001_異形兵_蛮族_雑魚A", "Chapter 1 Corrupted 1"),
             ("PID_M001_異形兵_蛮族_雑魚B", "Chapter 1 Corrupted 2"), ("PID_M001_異形兵_蛮族_雑魚C", "Chapter 1 Corrupted 3"),
@@ -605,7 +1117,7 @@ namespace ALittleSecretIngredient
             ("PID_E006_召喚異形兵_異形狼", "Xenologue 6 Corrupted Wolf Summon 1"), ("PID_E006_召喚異形兵強_異形狼", "Xenologue 6 Corrupted Wolf Summon 2"),
         };
 
-        internal List<(string id, string name)> NonArenaEnemyCharacters { get; } = new()
+        internal static List<(string id, string name)> NonArenaEnemyCharacters { get; } = new() // FixedLevelEnemyCharacters +
         {
             ("PID_遭遇戦_異形兵_男", "Skirmish Corrupted Male"), ("PID_遭遇戦_異形兵_女", "Skirmish Corrupted Female"),
             ("PID_遭遇戦_異形兵_男_上級", "Skirmish Strong Corrupted Male"), ("PID_遭遇戦_異形兵_女_上級", "Skirmish Strong Corrupted Female"),
@@ -655,9 +1167,9 @@ namespace ALittleSecretIngredient
             ("PID_遭遇戦_レアお金_異形飛竜", "Skirmish Gold Corrupted Wyvern"),
         };
 
-        internal List<(string id, string name)> EnemyCharacters { get; } = new(); // FixedLevelEnemyCharacters + NonArenaEnemyCharacters + ArenaCharacters
+        internal static List<(string id, string name)> EnemyCharacters { get; } = new(); // FixedLevelEnemyCharacters + NonArenaEnemyCharacters + ArenaCharacters
 
-        internal List<(string id, string name)> ArenaCharacters { get; } = new()
+        internal static List<(string id, string name)> ArenaCharacters { get; } = new()
         {
             ("PID_闘技場_マルス", "Arena Marth"), ("PID_闘技場_シグルド", "Arena Sigurd"),
             ("PID_闘技場_セリカ", "Arena Celica"), ("PID_闘技場_ミカヤ", "Arena Micaiah"),
@@ -673,7 +1185,7 @@ namespace ALittleSecretIngredient
             ("PID_闘技場_ルフレ", "Arena Robin"),
         };
 
-        internal Dictionary<string, string> ArenaCharacterToGrowthTables { get; } = new()
+        internal static Dictionary<string, string> ArenaCharacterToGrowthTables { get; } = new()
         {
             { "PID_闘技場_マルス", "GGID_マルス" }, { "PID_闘技場_シグルド", "GGID_シグルド" },
             { "PID_闘技場_セリカ", "GGID_セリカ" }, { "PID_闘技場_ミカヤ", "GGID_ミカヤ" },
@@ -688,7 +1200,7 @@ namespace ALittleSecretIngredient
             { "PID_闘技場_クロム", "GGID_クロム" }, { "PID_闘技場_ルフレ", "GGID_クロム" },
         };
 
-        internal List<(string id, string name)> OtherNPCCharacters { get; } = new()
+        internal static List<(string id, string name)> OtherNPCCharacters { get; } = new()
         {
             ("PID_不明", "Null"), ("PID_ルミエル", "Lumera"),
             ("PID_ソンブル", "Sombron"), ("PID_イヴ", "Éve"),
@@ -794,17 +1306,17 @@ namespace ALittleSecretIngredient
             ("PID_ソルム兵士_アーチャー2", "Solmic Archer 2"), ("PID_ソルム兵士_アーチャー3", "Solmic Archer 3"),
             ("PID_ソルム兵士_アーチャー4", "Solmic Archer 4"), ("PID_エル_竜化", "Transformed Nel"),
             ("PID_ラファール_竜化", "Transformed Rafal"), ("PID_ルフレ", "Robin (Character)"),
-            ("PID_闇ルフレ", "Corrupted Robin"), 
+            ("PID_闇ルフレ", "Corrupted Robin"),
         };
 
-        internal List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
-        internal List<(string id, string name)> NPCCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
-        internal List<(string id, string name)> NonArenaNPCCharacters { get; } = new(); // AllyNPCCharacters + NonArenaEnemyCharacters
-        internal List<(string id, string name)> FixedLevelCharacters { get; } = new(); // PlayableCharacters + FixedLevelAllyNPCCharacters +
+        internal static List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
+        internal static List<(string id, string name)> NPCCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
+        internal static List<(string id, string name)> NonArenaNPCCharacters { get; } = new(); // AllyNPCCharacters + NonArenaEnemyCharacters
+        internal static List<(string id, string name)> FixedLevelCharacters { get; } = new(); // PlayableCharacters + FixedLevelAllyNPCCharacters +
                                                                                        // FixedLevelEnemyCharacters
         #endregion
         #region Class IDs
-        internal List<(string id, string name)> UniversalClasses { get; } = new()
+        internal static List<(string id, string name)> UniversalClasses { get; } = new()
         {
             ("JID_神竜ノ子", "Dragon Child"), ("JID_神竜ノ王", "Divine Dragon (Alear)"), ("JID_ソードファイター", "Sword Fighter"), ("JID_ソードマスター", "Swordmaster"),
             ("JID_ブレイブヒーロー", "Hero"), ("JID_ランスファイター", "Lance Fighter"), ("JID_ハルバーディア", "Halberdier"), ("JID_ロイヤルナイト", "Royal Knight"),
@@ -817,14 +1329,14 @@ namespace ALittleSecretIngredient
             ("JID_シーフ", "Thief"), ("JID_エンチャント", "Enchanter"), ("JID_マージカノン", "Mage Cannoneer"),
         };
 
-        internal List<(string id, string name)> MaleExclusiveClasses { get; } = new()
+        internal static List<(string id, string name)> MaleExclusiveClasses { get; } = new()
         {
             ("JID_アヴニール下級", "Noble (Alfred)"), ("JID_アヴニール", "Avenir"), ("JID_スュクセサール下級", "Lord (Diamant)"), ("JID_スュクセサール", "Successeur"),
             ("JID_ティラユール下級", "Lord (Alcryst)"), ("JID_ティラユール", "Tireur d'élite"), ("JID_クピードー下級", "Sentinel (Fogado)"), ("JID_クピードー", "Cupido"),
             ("JID_ダンサー", "Dancer"), ("JID_裏邪竜ノ子", "Fell Child (Rafal)"),
         };
 
-        internal List<(string id, string name)> FemaleExclusiveClasses { get; } = new()
+        internal static List<(string id, string name)> FemaleExclusiveClasses { get; } = new()
         {
             ("JID_邪竜ノ娘", "Fell Child (Veyle)"), ("JID_フロラージュ下級", "Noble (Céline)"), ("JID_フロラージュ", "Vidame"),
             ("JID_リンドブルム下級", "Wing Tamer (Ivy)"), ("JID_リンドブルム", "Lindwurm"), ("JID_スレイプニル下級", "Wing Tamer (Hortensia)"), ("JID_スレイプニル", "Sleipnir Rider"),
@@ -832,12 +1344,12 @@ namespace ALittleSecretIngredient
             ("JID_アクスペガサス", "Axe Flier"), ("JID_裏邪竜ノ娘", "Fell Child (Nel)"), ("JID_メリュジーヌ_味方", "Melusine (Zelestia)"),
         };
 
-        internal List<(string id, string name)> MixedNPCExclusiveClasses { get; } = new()
+        internal static List<(string id, string name)> MixedNPCExclusiveClasses { get; } = new()
         {
             ("JID_邪竜ノ子", "Fell Child (Past Alear)"), ("JID_蛮族", "Barbarian"), ("JID_村人", "Villager"),
         };
 
-        internal List<(string id, string name)> MaleEmblemClasses { get; } = new()
+        internal static List<(string id, string name)> MaleEmblemClasses { get; } = new()
         {
             ("JID_紋章士_マルス", "Emblem (Marth)"), ("JID_紋章士_シグルド", "Emblem (Sigurd)"), ("JID_紋章士_ロイ", "Emblem (Roy)"),
             ("JID_紋章士_リーフ", "Emblem (Leif)"), ("JID_紋章士_アイク", "Emblem (Ike)"), ("JID_紋章士_ベレト", "Emblem (Byleth)"), ("JID_紋章士_ディミトリ", "Emblem (Dimitri)"),
@@ -845,16 +1357,16 @@ namespace ALittleSecretIngredient
             ("JID_紋章士_セネリオ", "Emblem (Soren)"), ("JID_紋章士_クロム", "Emblem (Chrom)"), ("JID_紋章士_ルフレ", "Emblem (Robin)"),
         };
 
-        internal List<(string id, string name)> MaleNPCExclusiveClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + MaleEmblemClasses
+        internal static List<(string id, string name)> MaleNPCExclusiveClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + MaleEmblemClasses
 
-        internal List<(string id, string name)> MaleNonEmblemNPCExclusiveClasses { get; } = new()
+        internal static List<(string id, string name)> MaleNonEmblemNPCExclusiveClasses { get; } = new()
         {
             ("JID_邪竜ノ王", "Fell Monarch"),  ("JID_裏邪竜ノ子_E1-4", "Fell Child (Xenologue 1-4 Nil)"),
             ("JID_裏邪竜ノ子_E5", "Fell Child (Xenologue 5 Nil)"), ("JID_アヴニール_E", "Royal (Alfred)"), ("JID_スュクセサール_E", "Warden (Diamant)"), ("JID_ティラユール_E", "Warden (Alcryst)"),
             ("JID_クピードー_E", "Watcher (Fogado)"), ("JID_紋章士_ヘクトル_召喚", "Emblem (Hector Summon)"),
         };
 
-        internal List<(string id, string name)> FemaleEmblemClasses { get; } = new()
+        internal static List<(string id, string name)> FemaleEmblemClasses { get; } = new()
         {
             ("JID_紋章士_セリカ", "Emblem (Celica)"),
             ("JID_紋章士_ミカヤ", "Emblem (Micaiah)"), ("JID_紋章士_ルキナ", "Emblem (Lucina)"), ("JID_紋章士_リン", "Emblem (Lyn)"), ("JID_紋章士_カムイ", "Emblem (Corrin)"),
@@ -863,33 +1375,33 @@ namespace ALittleSecretIngredient
             ("JID_紋章士_カミラ", "Emblem (Camilla)"),
         };
 
-        internal List<(string id, string name)> EmblemClasses { get; } = new(); // MaleEmblemClasses + FemaleEmblemClasses
+        internal static List<(string id, string name)> EmblemClasses { get; } = new(); // MaleEmblemClasses + FemaleEmblemClasses
 
-        internal List<(string id, string name)> FemaleNPCExclusiveClasses { get; } = new(); // FemaleNonEmblemNPCExclusiveClasses + FemaleEmblemClasses
+        internal static List<(string id, string name)> FemaleNPCExclusiveClasses { get; } = new(); // FemaleNonEmblemNPCExclusiveClasses + FemaleEmblemClasses
 
-        internal List<(string id, string name)> FemaleNonEmblemNPCExclusiveClasses { get; } = new()
+        internal static List<(string id, string name)> FemaleNonEmblemNPCExclusiveClasses { get; } = new()
         {
             ("JID_M002_神竜ノ王", "Divine Dragon (Lumera)"), ("JID_邪竜ノ娘_敵", "Fell Child (Evil Veyle)"), ("JID_メリュジーヌ", "Melusine (Zephia)"),
             ("JID_フロラージュ_E", "Royal (Céline)"), ("JID_リンドブルム_E", "Trainer (Ivy)"), ("JID_スレイプニル_E", "Trainer (Hortensia)"),
             ("JID_ピッチフォーク_E", "Watcher (Timerra)"), ("JID_紋章士_ルキナ_召喚", "Emblem (Lucina Summon)"),
         };
 
-        internal List<(string id, string name)> NonEmblemGeneralClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + FemaleNonEmblemNPCExclusiveClasses
+        internal static List<(string id, string name)> NonEmblemGeneralClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + FemaleNonEmblemNPCExclusiveClasses
 
-        internal List<(string id, string name)> BeastClasses { get; } = new()
+        internal static List<(string id, string name)> BeastClasses { get; } = new()
         {
             ("JID_邪竜", "Great Fell Dragon (Sombron)"), ("JID_異形竜", "Corrupted Wyrm"), ("JID_幻影竜", "Phantom Wyrm"), ("JID_E006ラスボス", "Great Fell Dragon (Nil)"),
             ("JID_異形狼", "Corrupted Wolf"), ("JID_幻影狼", "Phantom Wolf"), ("JID_異形飛竜", "Corrupted Wyvern"), ("JID_幻影飛竜", "Phantom Wyvern"),
         };
 
-        internal List<(string id, string name)> PlayableClasses { get; } = new(); // UniversalClasses + MaleExclusiveClasses + FemaleExclusiveClasses
+        internal static List<(string id, string name)> PlayableClasses { get; } = new(); // UniversalClasses + MaleExclusiveClasses + FemaleExclusiveClasses
 
-        internal List<(string id, string name)> GeneralClasses { get; } = new(); // PlayableClasses + MaleNPCExclusiveClasses + FemaleNPCExclusiveClasses
+        internal static List<(string id, string name)> GeneralClasses { get; } = new(); // PlayableClasses + MaleNPCExclusiveClasses + FemaleNPCExclusiveClasses
 
-        internal List<(string id, string name)> AllClasses { get; } = new(); // BeastClasses + GeneralClasses
+        internal static List<(string id, string name)> AllClasses { get; } = new(); // BeastClasses + GeneralClasses
         #endregion
         #region DemoAnim IDs
-        internal List<(string id, string name)> UniqueMaleDemoAnims { get; } = new()
+        internal static List<(string id, string name)> UniqueMaleDemoAnims { get; } = new()
         {
             ("AOC_Demo_c001", "Male Alear"), ("AOC_Demo_c049", "Rafal A"),
             ("AOC_Demo_c049b", "Rafal B"), ("AOC_Demo_c100", "Alfred"),
@@ -909,14 +1421,14 @@ namespace ALittleSecretIngredient
             ("AOC_Demo_c513", "Robin"),
         };
 
-        internal List<(string id, string name)> GenericMaleDemoAnims { get; } = new()
+        internal static List<(string id, string name)> GenericMaleDemoAnims { get; } = new()
         {
             ("AOC_Demo_Hum0M", "Male A"), ("AOC_Demo_Hum1M", "Male B"),
             ("AOC_Demo_Hum2M", "Male C"), ("AOC_Demo_c702", "Corrupted Male"),
             ("AOC_Demo_c809", "Old Man"),
         };
 
-        internal List<(string id, string name)> UniqueFemaleDemoAnims { get; } = new()
+        internal static List<(string id, string name)> UniqueFemaleDemoAnims { get; } = new()
         {
             ("AOC_Demo_c051", "Female Alear"), ("AOC_Demo_c099", "Nel"),
             ("AOC_Demo_c150", "Céline"), ("AOC_Demo_c151", "Éve"),
@@ -937,7 +1449,7 @@ namespace ALittleSecretIngredient
             ("AOC_Demo_c562", "Veronica"),
         };
 
-        internal List<(string id, string name)> GenericFemaleDemoAnims { get; } = new()
+        internal static List<(string id, string name)> GenericFemaleDemoAnims { get; } = new()
         {
             ("AOC_Demo_Hum0F", "Female A"), ("AOC_Demo_Hum1F", "Female B"),
             ("AOC_Demo_Hum2F", "Female C"), ("AOC_Demo_Hum3F", "Female D"),
@@ -947,7 +1459,7 @@ namespace ALittleSecretIngredient
         };
         #endregion
         #region Dress Model IDs
-        internal List<(string id, string name)> MaleClassDressModels { get; } = new()
+        internal static List<(string id, string name)> MaleClassDressModels { get; } = new()
         {
             ("uBody_Swd0AM_c000", "Male Sword Fighter"), ("uBody_Swd1AM_c699", "Male Swordmaster"),
             ("uBody_Swd1AM_c000", "Male Enemy Swordmaster"), ("uBody_Swd2AM_c000", "Male Hero"),
@@ -979,7 +1491,7 @@ namespace ALittleSecretIngredient
             ("uBody_File4M_c809", "Male Firenese Villager"),
         };
 
-        internal List<(string id, string name)> MaleCorruptedClassDressModels { get; } = new()
+        internal static List<(string id, string name)> MaleCorruptedClassDressModels { get; } = new()
         {
             ("uBody_Swd0AM_c702", "Male Corrupted Sword Fighter"), ("uBody_Swd1AM_c704", "Male Corrupted Swordmaster"),
             ("uBody_Swd2AM_c704", "Male Corrupted Hero"), ("uBody_Lnc0AM_c702", "Male Corrupted Lance Fighter"),
@@ -998,11 +1510,11 @@ namespace ALittleSecretIngredient
             ("uBody_Ect3AM_c704", "Male Corrupted Enchanter"), ("uBody_Mcn3AM_c704", "Male Corrupted Mage Cannoneer"),
         };
 
-        internal List<(string id, string name)> FemaleClassDressModels { get; } = new()
+        internal static List<(string id, string name)> FemaleClassDressModels { get; } = new()
         {
             ("uBody_Swd0AF_c699", "Female Sword Fighter"), ("uBody_Swd0AF_c000", "Female Enemy Sword Fighter"),
-            ("uBody_Swd1AF_c699", "Female Swordmaster"), ("uBody_Swd1AF_c000", "Female Enemy Swordmaster"), 
-            ("uBody_Swd2AF_c000", "Female Hero"), ("uBody_Lnc0AF_c000", "Female Lance Fighter"), 
+            ("uBody_Swd1AF_c699", "Female Swordmaster"), ("uBody_Swd1AF_c000", "Female Enemy Swordmaster"),
+            ("uBody_Swd2AF_c000", "Female Hero"), ("uBody_Lnc0AF_c000", "Female Lance Fighter"),
             ("uBody_Lnc1AF_c000", "Female Halberdier"), ("uBody_Lnc2BF_c000", "Female Royal Knight"),
             ("uBody_Axe0AF_c699", "Female Axe Fighter"), ("uBody_Axe0AF_c000", "Female Enemy Axe Fighter"),
             ("uBody_Axe1AF_c699", "Female Berserker A"), ("uBody_Axe1AF_c699b", "Female Berserker B"),
@@ -1030,7 +1542,7 @@ namespace ALittleSecretIngredient
             ("uBody_Mcn3AF_c000", "Female Mage Cannoneer"),
         };
 
-        internal List<(string id, string name)> FemaleCorruptedClassDressModels { get; } = new()
+        internal static List<(string id, string name)> FemaleCorruptedClassDressModels { get; } = new()
         {
             ("uBody_Swd0AF_c703", "Female Corrupted Sword Fighter"), ("uBody_Swd1AF_c705", "Female Corrupted Swordmaster"),
             ("uBody_Swd2AF_c705", "Female Corrupted Hero"), ("uBody_Lnc0AF_c703", "Female Corrupted Lance Fighter"),
@@ -1050,7 +1562,7 @@ namespace ALittleSecretIngredient
             ("uBody_Mcn3AF_c705", "Female Corrupted Mage Cannoneer"),
         };
 
-        internal List<(string id, string name)> MalePersonalDressModels { get; } = new()
+        internal static List<(string id, string name)> MalePersonalDressModels { get; } = new()
         {
             ("uBody_Drg0AM_c001", "Male Dragon Child"), ("uBody_Drg1AM_c001", "Male Divine Dragon (Alear)"),
             ("uBody_Drg0AM_c002", "Male Fell Child (Past Alear)"), ("uBody_Sds0AM_c049", "Fell Child (Rafal)"),
@@ -1084,7 +1596,7 @@ namespace ALittleSecretIngredient
             ("uBody_WearM_c503", "Gregory Casual"),
         };
 
-        internal List<(string id, string name)> FemalePersonalDressModels { get; } = new()
+        internal static List<(string id, string name)> FemalePersonalDressModels { get; } = new()
         {
             ("uBody_Drg0AF_c051", "Female Dragon Child"),
             ("uBody_Drg1AF_c051", "Female Divine Dragon (Alear)"), ("uBody_Drg0AF_c052", "Female Fell Child (Past Alear)"),
@@ -1121,7 +1633,7 @@ namespace ALittleSecretIngredient
             ("uBody_WearF_c554", "Madeline Casual"),
         };
 
-        internal List<(string id, string name)> MaleEmblemDressModels { get; } = new()
+        internal static List<(string id, string name)> MaleEmblemDressModels { get; } = new()
         {
             ("uBody_Mar0AM_c530", "Marth"), ("uBody_Mar0AM_c537", "Corrupted Marth"),
             ("uBody_Sig0BM_c531", "Sigurd"), ("uBody_Sig0BM_c538", "Corrupted Sigurd"),
@@ -1139,7 +1651,7 @@ namespace ALittleSecretIngredient
             ("uBody_Rbi0AM_c520", "Corrupted Robin"),
         };
 
-        internal List<(string id, string name)> FemaleEmblemDressModels { get; } = new()
+        internal static List<(string id, string name)> FemaleEmblemDressModels { get; } = new()
         {
             ("uBody_Cel0AF_c580", "Celica"), ("uBody_Cel0AF_c587", "Corrupted Celica"),
             ("uBody_Lyn0AF_c581", "Lyn"), ("uBody_Lyn0AF_c588", "Corrupted Lyn"),
@@ -1154,7 +1666,7 @@ namespace ALittleSecretIngredient
             ("uBody_Ver0AF_c569", "Corrupted Veronica"),
         };
 
-        internal List<(string id, string name)> MaleEngageDressModels { get; } = new()
+        internal static List<(string id, string name)> MaleEngageDressModels { get; } = new()
         {
             ("uBody_Mar1AM_c000", "Male Engaged (Marth)"), ("uBody_Sig1AM_c000", "Male Engaged (Sigurd)"),
             ("uBody_Lei1AM_c000", "Male Engaged (Leif)"), ("uBody_Roy1AM_c000", "Male Engaged (Roy)"),
@@ -1168,7 +1680,7 @@ namespace ALittleSecretIngredient
             ("uBody_Ver1AM_c000", "Male Engaged (Veronica)"), ("uBody_Chr1AM_c000", "Male Engaged (Chrom)"),
         };
 
-        internal List<(string id, string name)> FemaleEngageDressModels { get; } = new()
+        internal static List<(string id, string name)> FemaleEngageDressModels { get; } = new()
         {
             ("uBody_Mar1AF_c000", "Female Engaged (Marth)"), ("uBody_Sig1AF_c000", "Female Engaged (Sigurd)"),
             ("uBody_Lei1AF_c000", "Female Engaged (Leif)"), ("uBody_Roy1AF_c000", "Female Engaged (Roy)"),
@@ -1182,7 +1694,7 @@ namespace ALittleSecretIngredient
             ("uBody_Ver1AF_c000", "Female Engaged (Veronica)"), ("uBody_Chr1AF_c000", "Female Engaged (Chrom)"),
         };
 
-        internal List<(string id, string name)> MaleCommonDressModels { get; } = new()
+        internal static List<(string id, string name)> MaleCommonDressModels { get; } = new()
         {
             ("uBody_File1M_c000", "Male Firene Formal 1"), ("uBody_File2M_c000", "Male Firene Formal 2"),
             ("uBody_File3M_c000", "Male Firene Formal 3"), ("uBody_File4M_c000", "Male Firene Casual 1"),
@@ -1212,7 +1724,7 @@ namespace ALittleSecretIngredient
             ("uBody_Lei0AM_c000", "Leif Costume"), ("uBody_Byl0AM_c000", "Byleth Costume"),
         };
 
-        internal List<(string id, string name)> FemaleCommonDressModels { get; } = new()
+        internal static List<(string id, string name)> FemaleCommonDressModels { get; } = new()
         {
             ("uBody_File1F_c000", "Female Firene Formal 1"), ("uBody_File2F_c000", "Female Firene Formal 2"),
             ("uBody_File3F_c000", "Female Firene Formal 3"), ("uBody_File4F_c000", "Female Firene Casual 1"),
@@ -1241,15 +1753,15 @@ namespace ALittleSecretIngredient
             ("uBody_Cor0AF_c000", "Corrin Costume"), ("uBody_Eir0AF_c000", "Eirika Costume"),
         };
 
-        internal List<(string id, string name)> AllDressModels { get; } = new();
+        internal static List<(string id, string name)> AllDressModels { get; } = new();
         #endregion
         #region Emblem IDs
-        internal List<(string id, string name)> AlearEmblems { get; } = new()
+        internal static List<(string id, string name)> AlearEmblems { get; } = new()
         {
             ("GID_リュール", "Emblem Alear")
         };
 
-        internal List<(string id, string name)> LinkableEmblems { get; } = new()
+        internal static List<(string id, string name)> LinkableEmblems { get; } = new()
         {
             ("GID_マルス", "Marth"), ("GID_シグルド", "Sigurd"), ("GID_セリカ", "Celica"), ("GID_ミカヤ", "Micaiah"),
             ("GID_ロイ", "Roy"), ("GID_リーフ", "Leif"), ("GID_ルキナ", "Lucina"), ("GID_リン", "Lyn"),
@@ -1258,14 +1770,14 @@ namespace ALittleSecretIngredient
             ("GID_セネリオ", "Soren"), ("GID_カミラ", "Camilla"), ("GID_クロム", "Chrom")
         };
 
-        internal List<(string id, string name)> AllyEngageableEmblems { get; } = new(); // AlearEmblem + LinkableEmblems
+        internal static List<(string id, string name)> AllyEngageableEmblems { get; } = new(); // AlearEmblem + LinkableEmblems
 
-        internal List<(string id, string name)> AllySyncableEmblems { get; } = new() // AllyEngageableEmblems +
+        internal static List<(string id, string name)> AllySyncableEmblems { get; } = new() // AllyEngageableEmblems +
         {
             ("GID_エフラム", "Ephraim"), ("GID_ディミトリ", "Dimitri"), ("GID_クロード", "Claude")
         };
 
-        internal List<(string id, string name)> EnemyEngageableEmblems { get; } = new()
+        internal static List<(string id, string name)> EnemyEngageableEmblems { get; } = new()
         {
             ("GID_M002_シグルド", "Sigurd (Chapter 2)"), ("GID_M007_敵ルキナ", "Corrupted Lucina"),
             ("GID_M008_敵リーフ", "Corrupted Leif (Chapter 8)"),
@@ -1295,14 +1807,14 @@ namespace ALittleSecretIngredient
             ("GID_E006_敵エーデルガルト", "Corrupted Edelgard")
         };
 
-        internal List<(string id, string name)> EnemySyncableEmblems { get; } = new() // EnemyEngageableEmblems + 
+        internal static List<(string id, string name)> EnemySyncableEmblems { get; } = new() // EnemyEngageableEmblems + 
         {
             ("GID_E006_敵ディミトリ", "Corrupted Dimitri"), ("GID_E006_敵クロード", "Corrupted Claude")
         };
 
-        internal List<(string id, string name)> EngageableEmblems { get; } = new(); // AllyEngageableEmblems + EnemyEngageableEmblems
+        internal static List<(string id, string name)> EngageableEmblems { get; } = new(); // AllyEngageableEmblems + EnemyEngageableEmblems
 
-        internal List<(string id, string name)> BaseArenaEmblems { get; } = new()
+        internal static List<(string id, string name)> BaseArenaEmblems { get; } = new()
         {
             ("GID_相手マルス", "Marth (Arena)"), ("GID_相手シグルド", "Sigurd (Arena)"),
             ("GID_相手セリカ", "Celica (Arena)"), ("GID_相手ミカヤ", "Micaiah (Arena)"),
@@ -1317,27 +1829,27 @@ namespace ALittleSecretIngredient
             ("GID_相手クロム", "Chrom (Arena)"),
         };
 
-        internal List<(string id, string name)> ArenaEmblems { get; } = new() // BaseArenaEmblems +
+        internal static List<(string id, string name)> ArenaEmblems { get; } = new() // BaseArenaEmblems +
         {
             ("GID_相手エフラム", "Ephraim (Arena)"), ("GID_相手ディミトリ", "Dimitri (Arena)"),
             ("GID_相手クロード", "Claude (Arena)")
         };
 
-        internal List<(string id, string name)> AllyArenaSyncableEmblems { get; } = new(); // AllySyncableEmblems + ArenaEmblems
+        internal static List<(string id, string name)> AllyArenaSyncableEmblems { get; } = new(); // AllySyncableEmblems + ArenaEmblems
 
-        internal List<(string id, string name)> SyncableEmblems { get; } = new(); // AllyArenaSyncableEmblems + EnemySyncableEmblems
+        internal static List<(string id, string name)> SyncableEmblems { get; } = new(); // AllyArenaSyncableEmblems + EnemySyncableEmblems
 
-        internal List<(string id, string name)> Emblems { get; } = new() // SyncableEmblems +
+        internal static List<(string id, string name)> Emblems { get; } = new() // SyncableEmblems +
         {
             ("GID_M000_マルス", "Marth (Prologue)"), ("GID_ルフレ", "Robin")
         };
         #endregion
         #region HubAnim IDs
-        internal List<(string id, string name)> MaleHubAnims { get; } = new()
+        internal static List<(string id, string name)> MaleHubAnims { get; } = new()
         {
             ("AOC_Hub_Hum0M", "Male A"), ("AOC_Hub_Hum1M", "Male B"),
             ("AOC_Hub_Hum2M", "Male C"), ("AOC_Hub_c001", "Male Alear"),
-            ("AOC_Hub_c101", "Boucheron"), ("AOC_Hub_c102", "Louis"), 
+            ("AOC_Hub_c101", "Boucheron"), ("AOC_Hub_c102", "Louis"),
             ("AOC_Hub_c302", "Kagetsu"), ("AOC_Hub_c304", "Lindon"),
             ("AOC_Hub_c400", "Fogado"), ("AOC_Hub_c402", "Bunet"),
             ("AOC_Hub_c500", "Vander"), ("AOC_Hub_c502", "Mauvier"),
@@ -1345,7 +1857,7 @@ namespace ALittleSecretIngredient
             ("AOC_Hub_Shop3", "Pinet"), ("AOC_Hub_c809", "Old Man"),
         };
 
-        internal List<(string id, string name)> FemaleHubAnims { get; } = new()
+        internal static List<(string id, string name)> FemaleHubAnims { get; } = new()
         {
             ("AOC_Hub_Hum0F", "Female A"), ("AOC_Hub_Hum1F", "Female B"),
             ("AOC_Hub_Hum2F", "Female C"), ("AOC_Hub_Hum3F", "Female D"),
@@ -1364,9 +1876,9 @@ namespace ALittleSecretIngredient
         };
         #endregion
         #region InfoAnim IDs
-        internal List<(string id, string name)> UniqueMaleInfoAnims { get; } = new()
+        internal static List<(string id, string name)> UniqueMaleInfoAnims { get; } = new()
         {
-            ("AOC_Info_c000", "Default Male"), 
+            ("AOC_Info_c000", "Default Male"),
             ("AOC_Info_c001", "Male Alear"), ("AOC_Info_c001_Eng", "Male Alear Engaged"),
             ("AOC_Info_c049", "Rafal A"), ("AOC_Info_c049_Eng", "Rafal Engaged"),
             ("AOC_Info_c049b", "Rafal B"), ("AOC_Info_c049c", "Rafal C"),
@@ -1380,11 +1892,11 @@ namespace ALittleSecretIngredient
             ("AOC_Info_c201", "Alcryst A"), ("AOC_Info_c201b", "Alcryst B"),
             ("AOC_Info_c201_Eng", "Alcryst Engaged"), ("AOC_Info_c201c", "Alcryst C"),
             ("AOC_Info_c202", "Corrupted Morion"), ("AOC_Info_c203", "Amber"),
-            ("AOC_Info_c203_Eng", "Amber Engaged"), 
+            ("AOC_Info_c203_Eng", "Amber Engaged"),
             ("AOC_Info_c300", "Hyacinth"), ("AOC_Info_c301", "Zelkov"),
             ("AOC_Info_c301_Eng", "Zelkov Engaged"), ("AOC_Info_c302", "Kagetsu"),
             ("AOC_Info_c302_Eng", "Kagetsu Engaged"), ("AOC_Info_c304", "Lindon"),
-            ("AOC_Info_c304_Eng", "Lindon Engaged"), 
+            ("AOC_Info_c304_Eng", "Lindon Engaged"),
             ("AOC_Info_c400", "Fogado A"), ("AOC_Info_c400_Eng", "Fogado Engaged"),
             ("AOC_Info_c400b", "Fogado B"), ("AOC_Info_c401", "Pandreo"),
             ("AOC_Info_c401_Eng", "Pandreo"), ("AOC_Info_c402", "Bunet"),
@@ -1407,7 +1919,7 @@ namespace ALittleSecretIngredient
             ("AOC_Info_c512", "Chrom"), ("AOC_Info_c513", "Robin"),
         };
 
-        internal List<(string id, string name)> GenericMaleInfoAnims { get; } = new()
+        internal static List<(string id, string name)> GenericMaleInfoAnims { get; } = new()
         {
             ("AOC_Info_c702", "Default Corrupted Male"),
             ("AOC_Info_c604", "Male Sword Wielder"), ("AOC_Info_c720", "Corrupted Male Sword Wielder"),
@@ -1424,7 +1936,7 @@ namespace ALittleSecretIngredient
             ("AOC_Info_c695", "Male Mage Cannoneer"),
         };
 
-        internal List<(string id, string name)> UniqueFemaleInfoAnims { get; } = new()
+        internal static List<(string id, string name)> UniqueFemaleInfoAnims { get; } = new()
         {
             ("AOC_Info_c050", "Default Female"),
             ("AOC_Info_c051", "Female Alear"), ("AOC_Info_c051_Eng", "Female Alear Engaged"),
@@ -1464,7 +1976,7 @@ namespace ALittleSecretIngredient
             ("AOC_Info_c561", "Camilla"), ("AOC_Info_c562", "Veronica"),
         };
 
-        internal List<(string id, string name)> GenericFemaleInfoAnims { get; } = new()
+        internal static List<(string id, string name)> GenericFemaleInfoAnims { get; } = new()
         {
             ("AOC_Info_c703", "Default Corrupted Female"),
             ("AOC_Info_c605", "Female Sword Wielder"), ("AOC_Info_c721", "Corrupted Female Sword Wielder"),
@@ -1483,7 +1995,7 @@ namespace ALittleSecretIngredient
         };
         #endregion
         #region Item IDs
-        internal List<(string id, string name)> EngageWeapons { get; } = new()
+        internal static List<(string id, string name)> EngageWeapons { get; } = new()
         {
             ("IID_マルス_レイピア", "Rapier (Marth)"), ("IID_マルス_メリクルソード", "Mercurius"), ("IID_マルス_ファルシオン", "Falchion (Marth)"), ("IID_シグルド_ナイトキラー", "Ridersbane"),
             ("IID_シグルド_ゆうしゃのやり", "Brave Lance"), ("IID_シグルド_ティルフィング", "Tyrfing"), ("IID_セリカ_エンジェル", "Seraphim"), ("IID_セリカ_リカバー", "Recover"),
@@ -1509,241 +2021,241 @@ namespace ALittleSecretIngredient
             ("IID_クロム_サンダーソード", "Levin Sword"), ("IID_クロム_トロン", "Thoron"), ("IID_クロム_神剣ファルシオン", "Falchion (Chrom)")
         };
 
-        internal List<(string id, string name)> DSwordWeapons { get; } = new()
+        internal static List<(string id, string name)> DSwordWeapons { get; } = new()
         {
             ("IID_ほそみの剣", "Slim Sword"), ("IID_鉄の剣", "Iron Sword"), ("IID_フォルクヴァング", "Fólkvangr"), ("IID_チョコレート剣", "Biting Blade"),
         };
-        
-        internal List<(string id, string name)> CSwordWeapons { get; } = new()
+
+        internal static List<(string id, string name)> CSwordWeapons { get; } = new()
         {
             ("IID_鋼の剣", "Steel Sword"), ("IID_アーマーキラー", "Armorslayer"), ("IID_キルソード", "Killing Edge"), ("IID_いかづちの剣", "Levin Sword"),
             ("IID_鉄の大剣", "Iron Blade"),
         };
- 
-        internal List<(string id, string name)> BSwordWeapons { get; } = new()
+
+        internal static List<(string id, string name)> BSwordWeapons { get; } = new()
         {
             ("IID_銀の剣", "Silver Sword"), ("IID_倭刀", "Wo Dao"), ("IID_ドラゴンキラー", "Wyrmslayer"), ("IID_鋼の大剣", "Steel Blade"),
         };
 
-        internal List<(string id, string name)> ASwordWeapons { get; } = new()
+        internal static List<(string id, string name)> ASwordWeapons { get; } = new()
         {
             ("IID_勇者の剣", "Brave Sword"), ("IID_銀の大剣", "Silver Blade"),
         };
 
-        internal List<(string id, string name)> SSwordWeapons { get; } = new()
+        internal static List<(string id, string name)> SSwordWeapons { get; } = new()
         {
             ("IID_クラドホルグ", "Caladbolg"), ("IID_ゲオルギオス", "Georgios"),
         };
 
-        internal List<(string id, string name)> DLanceWeapons { get; } = new()
+        internal static List<(string id, string name)> DLanceWeapons { get; } = new()
         {
             ("IID_ほそみの槍", "Slim Lance"), ("IID_鉄の槍", "Iron Lance"), ("IID_手槍", "Javelin"), ("IID_ナイトキラー", "Ridersbane"),
             ("IID_フェンサリル", "Fensalir"), ("IID_ソフトクリーム槍", "Swirlance"),
         };
-         
- 
-        internal List<(string id, string name)> CLanceWeapons { get; } = new()
+
+
+        internal static List<(string id, string name)> CLanceWeapons { get; } = new()
         {
             ("IID_鋼の槍", "Steel Lance"), ("IID_キラーランス", "Killer Lance"), ("IID_ほのおの槍", "Flame Lance"), ("IID_鉄の大槍", "Iron Greatlance"),
         };
 
-        internal List<(string id, string name)> BLanceWeapons { get; } = new()
+        internal static List<(string id, string name)> BLanceWeapons { get; } = new()
         {
             ("IID_銀の槍", "Silver Lance"), ("IID_スレンドスピア", "Spear"), ("IID_鋼の大槍", "Steel Greatlance"),
         };
 
-        internal List<(string id, string name)> ALanceWeapons { get; } = new()
+        internal static List<(string id, string name)> ALanceWeapons { get; } = new()
         {
             ("IID_勇者の槍", "Brave Lance"), ("IID_銀の大槍", "Silver Greatlance"), ("IID_トライゾン", "Représailles"),
         };
 
-        internal List<(string id, string name)> SLanceWeapons { get; } = new()
+        internal static List<(string id, string name)> SLanceWeapons { get; } = new()
         {
             ("IID_ブリューナク", "Brionac"), ("IID_ヴェノマス", "Venomous"),
         };
 
-        internal List<(string id, string name)> DAxeWeapons { get; } = new()
+        internal static List<(string id, string name)> DAxeWeapons { get; } = new()
         {
             ("IID_ショートアクス", "Compact Axe"), ("IID_鉄の斧", "Iron Axe"), ("IID_手斧", "Hand Axe"), ("IID_ハンマー", "Hammer"),
             ("IID_ポールアクス", "Poleaxe"), ("IID_ノーアトゥーン", "Nóatún"), ("IID_ロリポップ斧", "Lollichop"),
         };
-     
-        internal List<(string id, string name)> CAxeWeapons { get; } = new()
+
+        internal static List<(string id, string name)> CAxeWeapons { get; } = new()
         {
             ("IID_鋼の斧", "Steel Axe"), ("IID_キラーアクス", "Killer Axe"), ("IID_鉄の大斧", "Iron Greataxe"),
         };
 
-        internal List<(string id, string name)> BAxeWeapons { get; } = new()
+        internal static List<(string id, string name)> BAxeWeapons { get; } = new()
         {
             ("IID_銀の斧", "Silver Axe"), ("IID_トマホーク", "Tomahawk"), ("IID_鋼の大斧", "Steel Greataxe"), ("IID_かぜの大斧", "Hurricane Axe"),
         };
 
-        internal List<(string id, string name)> AAxeWeapons { get; } = new()
+        internal static List<(string id, string name)> AAxeWeapons { get; } = new()
         {
             ("IID_勇者の斧", "Brave Axe"), ("IID_銀の大斧", "Silver Greataxe"), ("IID_ルヴァンシュ", "Revanche"), ("IID_ルヴァンシュ_E005", "Revanche (Xenologue 5)"),
         };
-         
- 
-        internal List<(string id, string name)> SAxeWeapons { get; } = new()
+
+
+        internal static List<(string id, string name)> SAxeWeapons { get; } = new()
         {
             ("IID_フラガラッハ", "Fragarach"), ("IID_ウコンバサラ", "Ukonvasara"),
         };
 
-        internal List<(string id, string name)> DBowWeapons { get; } = new()
+        internal static List<(string id, string name)> DBowWeapons { get; } = new()
         {
             ("IID_ショートボウ", "Mini Bow"), ("IID_鉄の弓", "Iron Bow"), ("IID_クロワッサン弓", "Croissbow"),
         };
- 
-        internal List<(string id, string name)> CBowWeapons { get; } = new()
+
+        internal static List<(string id, string name)> CBowWeapons { get; } = new()
         {
             ("IID_鋼の弓", "Steel Bow"), ("IID_長弓", "Longbow"), ("IID_キラーボウ", "Killer Bow"), ("IID_光の弓", "Radiant Bow"),
         };
- 
-        internal List<(string id, string name)> BBowWeapons { get; } = new()
+
+        internal static List<(string id, string name)> BBowWeapons { get; } = new()
         {
             ("IID_銀の弓", "Silver Bow"),
         };
 
-        internal List<(string id, string name)> ABowWeapons { get; } = new()
+        internal static List<(string id, string name)> ABowWeapons { get; } = new()
         {
             ("IID_勇者の弓", "Brave Bow"),
         };
 
-        internal List<(string id, string name)> SBowWeapons { get; } = new()
+        internal static List<(string id, string name)> SBowWeapons { get; } = new()
         {
             ("IID_レンダウィル", "Lendabair"),
         };
 
-        internal List<(string id, string name)> DDaggerWeapons { get; } = new()
+        internal static List<(string id, string name)> DDaggerWeapons { get; } = new()
         {
             ("IID_ショートナイフ", "Short Knife"), ("IID_鉄のナイフ", "Iron Dagger"), ("IID_おだんご短剣", "Confectioknife"),
         };
- 
-        internal List<(string id, string name)> CDaggerWeapons { get; } = new()
+
+        internal static List<(string id, string name)> CDaggerWeapons { get; } = new()
         {
             ("IID_鋼のナイフ", "Steel Dagger"), ("IID_カルド", "Kard"),
         };
 
-        internal List<(string id, string name)> BDaggerWeapons { get; } = new()
+        internal static List<(string id, string name)> BDaggerWeapons { get; } = new()
         {
             ("IID_銀のナイフ", "Silver Dagger"), ("IID_スティレット", "Stiletto"),
         };
 
-        internal List<(string id, string name)> ADaggerWeapons { get; } = new()
+        internal static List<(string id, string name)> ADaggerWeapons { get; } = new()
         {
             ("IID_ペシュカド", "Peshkatz"),
         };
 
-        internal List<(string id, string name)> SDaggerWeapons { get; } = new()
+        internal static List<(string id, string name)> SDaggerWeapons { get; } = new()
         {
             ("IID_シンクエディア", "Cinquedea"), ("IID_カルンウェナン", "Carnwenhan"),
         };
- 
-        internal List<(string id, string name)> DTomeWeapons { get; } = new()
+
+        internal static List<(string id, string name)> DTomeWeapons { get; } = new()
         {
             ("IID_サージ", "Surge"), ("IID_ファイアー", "Fire"), ("IID_サンダー", "Thunder"), ("IID_ティラミス魔道書", "Tiramistorm"),
         };
- 
-        internal List<(string id, string name)> CTomeWeapons { get; } = new()
+
+        internal static List<(string id, string name)> CTomeWeapons { get; } = new()
         {
             ("IID_ウィンド", "Wind"), ("IID_エルサージ", "Elsurge"), ("IID_エルファイアー", "Elfire"),
         };
- 
-        internal List<(string id, string name)> BTomeWeapons { get; } = new()
+
+        internal static List<(string id, string name)> BTomeWeapons { get; } = new()
         {
             ("IID_エルサンダー", "Elthunder"), ("IID_エルウィンド", "Elwind"),
         };
- 
-        internal List<(string id, string name)> ATomeWeapons { get; } = new()
+
+        internal static List<(string id, string name)> ATomeWeapons { get; } = new()
         {
             ("IID_ボルガノン", "Bolganone"), ("IID_トロン", "Thoron"), ("IID_エクスカリバー", "Excalibur"),
         };
- 
-        internal List<(string id, string name)> STomeWeapons { get; } = new()
+
+        internal static List<(string id, string name)> STomeWeapons { get; } = new()
         {
             ("IID_ノヴァ", "Nova"),
         };
 
-        internal List<(string id, string name)> DStaves { get; } = new()
+        internal static List<(string id, string name)> DStaves { get; } = new()
         {
             ("IID_ライブ", "Heal"), ("IID_リライブ", "Mend"), ("IID_トーチ", "Illume"), ("IID_アイスロック", "Obstruct"),
             ("IID_カップケーキ杖", "Treat"),
         };
- 
-        internal List<(string id, string name)> CStaves { get; } = new()
+
+        internal static List<(string id, string name)> CStaves { get; } = new()
         {
             ("IID_リブロー", "Physic"), ("IID_リブロー_G004", "Physic (Soren Paralogue)"), ("IID_レスト", "Restore"), ("IID_リワープ", "Rewarp"),
             ("IID_フリーズ", "Freeze"), ("IID_サイレス", "Silence"),
         };
 
-        internal List<(string id, string name)> BStaves { get; } = new()
+        internal static List<(string id, string name)> BStaves { get; } = new()
         {
             ("IID_リカバー", "Recover"), ("IID_ワープ", "Warp"), ("IID_レスキュー", "Rescue"), ("IID_コラプス", "Fracture"),
         };
 
-        internal List<(string id, string name)> AStaves { get; } = new()
+        internal static List<(string id, string name)> AStaves { get; } = new()
         {
             ("IID_リザーブ", "Fortify"), ("IID_ドロー", "Entrap"),
         };
 
-        internal List<(string id, string name)> SStaves { get; } = new()
+        internal static List<(string id, string name)> SStaves { get; } = new()
         {
             ("IID_ノードゥス", "Nodus"),
         };
 
-        internal List<(string id, string name)> DArtWeapons { get; } = new()
+        internal static List<(string id, string name)> DArtWeapons { get; } = new()
         {
             ("IID_初心の法", "Initiate Art"), ("IID_鉄身の法", "Iron-Body Art"), ("IID_ロールケーキ体術", "Scrollcake"),
         };
-                
-       
-        internal List<(string id, string name)> CArtWeapons { get; } = new()
+
+
+        internal static List<(string id, string name)> CArtWeapons { get; } = new()
         {
             ("IID_鋼身の法", "Steel-Hand Art"), ("IID_護身の法", "Shielding Art"),
         };
 
-        internal List<(string id, string name)> BArtWeapons { get; } = new()
+        internal static List<(string id, string name)> BArtWeapons { get; } = new()
         {
             ("IID_銀身の法", "Silver-Spirit Art"),
         };
 
-        internal List<(string id, string name)> AArtWeapons { get; } = new()
+        internal static List<(string id, string name)> AArtWeapons { get; } = new()
         {
             ("IID_閃進の法", "Flashing Fist Art"),
         };
 
-        internal List<(string id, string name)> SArtWeapons { get; } = new()
+        internal static List<(string id, string name)> SArtWeapons { get; } = new()
         {
             ("IID_覇神の法", "Divine Fist Art"),
         };
 
-        internal List<(string id, string name)> LiberationWeapons { get; } = new()
+        internal static List<(string id, string name)> LiberationWeapons { get; } = new()
         {
             ("IID_リベラシオン", "Libération"), ("IID_リベラシオン改", "Libération (Xenologue 6)"), ("IID_リベラシオン改_ノーマル", "Libération (Xenologue 6 Normal)"),
         };
 
-        internal List<(string id, string name)> WilleGlanzWeapons { get; } = new()
+        internal static List<(string id, string name)> WilleGlanzWeapons { get; } = new()
         {
             ("IID_ヴィレグランツ", "Wille Glanz"),
         };
 
-        internal List<(string id, string name)> MisericordeWeapons { get; } = new()
+        internal static List<(string id, string name)> MisericordeWeapons { get; } = new()
         {
             ("IID_ミセリコルデ", "Misericorde"),
         };
 
-        internal List<(string id, string name)> ObscuriteWeapons { get; } = new()
+        internal static List<(string id, string name)> ObscuriteWeapons { get; } = new()
         {
             ("IID_オヴスキュリテ", "Obscurité"),
         };
 
-        internal List<(string id, string name)> DragonStones { get; } = new()
+        internal static List<(string id, string name)> DragonStones { get; } = new()
         {
             ("IID_邪竜石", "Fell Stone"), ("IID_真邪竜石", "Fell Ruinstone"), ("IID_邪竜石_魔法攻撃", "Fell Magicstone"), ("IID_邪竜石_騎馬特効", "Fell Slaystone"),
             ("IID_邪竜石_飛行特効", "Fell Weightstone"), ("IID_邪竜石_E", "Fell Spark"), ("IID_邪竜石_E005", "Fell Spark (Xenologue 5)"), ("IID_邪竜石_魔法攻撃_E", "Fell Arcana"),
         };
 
-        internal List<(string id, string name)> Cannonballs { get; } = new()
+        internal static List<(string id, string name)> Cannonballs { get; } = new()
         {
             ("IID_弾_物理", "Standard Blast"), ("IID_弾_魔法", "Magic Blast"), ("IID_弾_フリーズ", "Freeze Blast"), ("IID_弾_サイレス", "Silence Blast"),
             ("IID_弾_ブレイク", "Break Blast"), ("IID_弾_毒", "Venom Blast"), ("IID_弾_飛行特効", "Tornado Blast"), ("IID_弾_重装特効", "Armor Blast"),
@@ -1751,7 +2263,7 @@ namespace ALittleSecretIngredient
             ("IID_弾_魔法_強", "Eldritch Blast"), ("IID_弾_防御無視", "Piercing Blast"),
         };
 
-        internal List<(string id, string name)> NormalEngageSwordWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageSwordWeapons { get; } = new()
         {
             ("IID_マルス_レイピア_通常", "Rapier (Marth)"), ("IID_マルス_メリクルソード_通常", "Mercurius"), ("IID_マルス_ファルシオン_通常", "Falchion (Marth)"), ("IID_シグルド_ティルフィング_通常", "Tyrfing"),
             ("IID_ロイ_ランスバスター_通常", "Lancereaver"), ("IID_ロイ_ドラゴンキラー_通常", "Wyrmslayer (Roy)"), ("IID_ロイ_封印の剣_通常", "Binding Blade"), ("IID_リーフ_ひかりの剣_通常", "Light Brand"),
@@ -1766,13 +2278,13 @@ namespace ALittleSecretIngredient
             ("IID_ヘクトル_ルーンソード＋_通常", "Runesword+"), ("IID_クロム_サンダーソード＋_通常", "Levin Sword+ (Chrom)"),
         };
 
-        internal List<(string id, string name)> NormalEngageLanceWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageLanceWeapons { get; } = new()
         {
             ("IID_シグルド_ナイトキラー_通常", "Ridersbane (Sigurd)"), ("IID_シグルド_ゆうしゃのやり_通常", "Brave Lance (Sigurd)"), ("IID_リーフ_マスターランス_通常", "Master Lance"), ("IID_三級長_アラドヴァル_通常", "Areadbhar"),
             ("IID_シグルド_ゆうしゃのやり＋_通常", "Brave Lance+ (Sigurd)"), ("IID_リーフ_マスターランス＋_通常", "Master Lance+"), ("IID_リーフ_マスターランス＋＋_通常", "Master Lance++"),
         };
 
-        internal List<(string id, string name)> NormalEngageAxeWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageAxeWeapons { get; } = new()
         {
             ("IID_リーフ_キラーアクス_通常", "Killer Axe (Leif)"), ("IID_アイク_ハンマー_通常", "Hammer (Ike)"), ("IID_アイク_ウルヴァン_通常", "Urvan"), ("IID_三級長_アイムール_通常", "Aymr"),
             ("IID_ヘクトル_ヴォルフバイル_通常", "Wolf Beil"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_低命中", "Wolf Beil A (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_最弱_低命中", "Wolf Beil B (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_最弱", "Wolf Beil C (Hector Paralogue)"),
@@ -1784,18 +2296,18 @@ namespace ALittleSecretIngredient
             ("IID_リーフ_キラーアクス＋＋_通常", "Killer Axe++ (Leif)"), ("IID_ヘクトル_ヴォルフバイル＋_通常", "Wolf Beil+"),
         };
 
-        internal List<(string id, string name)> NormalEngageBowWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageBowWeapons { get; } = new()
         {
             ("IID_ルキナ_パルティア_通常", "Parthia"), ("IID_リン_キラーボウ_通常", "Killer Bow (Lyn)"), ("IID_リン_ミュルグレ_通常", "Mulagir"), ("IID_三級長_フェイルノート_通常", "Failnaught"),
             ("IID_リン_キラーボウ＋_通常", "Killer Bow+ (Lyn)"), ("IID_リン_キラーボウ＋＋_通常", "Killer Bow++ (Lyn)"),
         };
 
-        internal List<(string id, string name)> NormalEngageDaggerWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageDaggerWeapons { get; } = new()
         {
 
         };
 
-        internal List<(string id, string name)> NormalEngageTomeWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageTomeWeapons { get; } = new()
         {
             ("IID_セリカ_エンジェル_通常", "Seraphim"), ("IID_セリカ_ライナロック_通常", "Ragnarok"), ("IID_ミカヤ_シャイン_通常", "Shine"), ("IID_ミカヤ_リザイア_通常", "Nosferatu"),
             ("IID_ミカヤ_セイニー_通常", "Thani"), ("IID_ヴェロニカ_フリズスキャルヴ_通常", "Hliðskjálf"), ("IID_ヴェロニカ_フリズスキャルヴ_通常_G003_最弱", "Hliðskjálf A (Veronica Paralogue)"), ("IID_ヴェロニカ_フリズスキャルヴ_通常_G003_弱", "Hliðskjálf B (Veronica Paralogue)"),
@@ -1807,17 +2319,17 @@ namespace ALittleSecretIngredient
             ("IID_クロム_トロン_通常_G006_最弱", "Thoron C (Chrom Paralogue)"), ("IID_カミラ_ライトニング＋_通常", "Lightning+"), ("IID_クロム_トロン＋_通常", "Thoron+ (Chrom)"),
         };
 
-        internal List<(string id, string name)> NormalEngageStaves { get; } = new()
+        internal static List<(string id, string name)> NormalEngageStaves { get; } = new()
         {
             ("IID_セリカ_リカバー_通常", "Recover (Celica)"), ("IID_ヴェロニカ_リザーブ＋_通常", "Fortify+"), ("IID_セネリオ_マジックシールド_通常", "Reflect"),
         };
 
-        internal List<(string id, string name)> NormalEngageArtWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageArtWeapons { get; } = new()
         {
             ("IID_ベレト_ヴァジュラ_通常", "Vajra-Mushti"), ("IID_リュール_竜神の法_通常", "Dragon's Fist"), ("IID_ベレト_ヴァジュラ＋_通常", "Vajra-Mushti+"),
         };
 
-        internal List<(string id, string name)> NormalEngageSpecialWeapons { get; } = new()
+        internal static List<(string id, string name)> NormalEngageSpecialWeapons { get; } = new()
         {
             ("IID_チキ_つめ_通常", "Eternal Claw"), ("IID_チキ_つめ_通常_G001_最弱", "Eternal Claw A (Tiki Paralogue)"), ("IID_チキ_つめ_通常_G001_弱", "Eternal Claw B (Tiki Paralogue)"), ("IID_チキ_つめ_通常_G001_微弱", "Eternal Claw C (Tiki Paralogue)"),
             ("IID_チキ_つめ_通常_G001_強", "Eternal Claw D (Tiki Paralogue)"), ("IID_チキ_つめ_通常_G001_最強", "Eternal Claw E (Tiki Paralogue)"), ("IID_チキ_しっぽ_通常", "Tail Smash"), ("IID_チキ_しっぽ_通常_G001_最弱", "Tail Smash A (Tiki Paralogue)"),
@@ -1826,9 +2338,9 @@ namespace ALittleSecretIngredient
             ("IID_チキ_ブレス_通常_G001_最強", "Fog Breath D (Tiki Paralogue)"),
         };
 
-        internal List<(string id, string name)> NormalWeapons { get; } = new();
+        internal static List<(string id, string name)> NormalWeapons { get; } = new();
 
-        internal List<(string id, string name)> BattleItems { get; } = new()
+        internal static List<(string id, string name)> BattleItems { get; } = new()
         {
             ("IID_傷薬", "Vulnerary"), ("IID_毒消し", "Antitoxin"), ("IID_特効薬", "Elixir"), ("IID_聖水", "Pure Water"),
             ("IID_たいまつ", "Torch"), ("IID_天使の衣", "Seraph Robe"), ("IID_力のしずく", "Energy Drop"), ("IID_精霊の粉", "Spirit Dust"),
@@ -1840,7 +2352,7 @@ namespace ALittleSecretIngredient
             ("IID_マージカノン専用プルフ", "Mage Cannon"),
         };
 
-        internal List<(string id, string name)> AllItems { get; } = new();
+        internal static List<(string id, string name)> AllItems { get; } = new();
 
         internal enum Proficiency
         {
@@ -1849,13 +2361,25 @@ namespace ALittleSecretIngredient
 
         internal enum ProficiencyLevel
         {
-            N, Np, D, Dp, C, Cp, B, Bp, A, Ap, S 
+            N, Np, D, Dp, C, Cp, B, Bp, A, Ap, S
         }
 
-        internal Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponTypeLookup = new();
+        internal static Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponTypeLookup = new();
+        #endregion
+        #region Map IDs
+        internal static List<(string id, string name)> MainMaps { get; } = new()
+        {
+            ("M001","Chapter 1"), ("M002","Chapter 2"), ("M003","Chapter 3"), ("M004","Chapter 4"),
+            ("M005","Chapter 5"), ("M006","Chapter 6"), ("M007","Chapter 7"), ("M008","Chapter 8"),
+            ("M009","Chapter 9"), ("M010","Chapter 10"), ("M011","Chapter 11"), ("M012","Chapter 12"),
+            ("M013","Chapter 13"), ("M014","Chapter 14"), ("M015","Chapter 15"), ("M016","Chapter 16"),
+            ("M017","Chapter 17"), ("M018","Chapter 18"), ("M019","Chapter 19"), ("M020","Chapter 20"),
+            ("M021","Chapter 21"), ("M022","Chapter 22"), ("M023","Chapter 23"), ("M024","Chapter 24"),
+            ("M025","Chapter 25"), ("M026","Chapter 26"),
+        };
         #endregion
         #region Ride Dress Model IDs
-        internal List<(string id, string name)> HorseRideDressModels { get; } = new()
+        internal static List<(string id, string name)> HorseRideDressModels { get; } = new()
         {
             ("uBody_Lnc2BR_c000", "Royal Knight Horse"), ("uBody_Lnc2BR_c707", "Corrupted Royal Knight Horse"),
             ("uBody_Amr2BR_c000", "Great Knight Horse"), ("uBody_Amr2BR_c707", "Corrupted Great Knight Horse"),
@@ -1866,18 +2390,18 @@ namespace ALittleSecretIngredient
             ("uBody_Avn0BR_c100", "Avenir Horse"), ("uBody_Cpd0BR_c400", "Cupido Horse"),
             ("uBody_Sig0BR_c531", "Sigurd's Horse"), ("uBody_Sig0BR_c538", "Corrupted Sigurd's Horse"),
         };
-        internal List<(string id, string name)> PegasusRideDressModels { get; } = new()
+        internal static List<(string id, string name)> PegasusRideDressModels { get; } = new()
         {
             ("uBody_Wng0ER_c000", "Sword/Lance/Axe Flier Pegasus"), ("uBody_Wng0ER_c707", "Corrupted Sword/Lance/Axe Flier Pegasus"),
             ("uBody_Slp0ER_c351", "Sleipnir Rider Pegasus"),
         };
-        internal List<(string id, string name)> WolfRideDressModels { get; } = new()
+        internal static List<(string id, string name)> WolfRideDressModels { get; } = new()
         {
             ("uBody_Cav2CR_c000", "Wolf Knight Wolf"), ("uBody_Cav2CR_c707", "Corrupted Wolf Knight Wolf"),
             ("uBody_Wlf0CT_c707", "Corrupted Wolf"), ("uBody_Wlf0CT_c715", "Phantom Wolf"),
             ("uBody_Wlf0CT_c751", "Rare Corrupted Wolf"), ("uBody_Cav2CR_c452", "Wolf Knight (Merrin) Wolf"),
         };
-        internal List<(string id, string name)> WyvernRideDressModels { get; } = new()
+        internal static List<(string id, string name)> WyvernRideDressModels { get; } = new()
         {
             ("uBody_Wng2DR_c000", "Wyvern Knight Wyvern"), ("uBody_Wng2DR_c707", "Corrupted Wyvern Knight Wyvern"),
             ("uBody_Wng2DR_c303", "Wyvern Knight (Rosado) Wyvern"), ("uBody_Lnd0DR_c350", "Lindwurm Wyvern"),
@@ -1887,7 +2411,7 @@ namespace ALittleSecretIngredient
         #endregion
         #region Skill IDs
 
-        internal List<(string id, string name)> TriggerAttackSkills { get; } = new()
+        internal static List<(string id, string name)> TriggerAttackSkills { get; } = new()
         {
             ("SID_マルスエンゲージ技", "Lodestar Rush"), ("SID_マルスエンゲージ技_竜族", "Lodestar Rush [Dragon]"),
             ("SID_マルスエンゲージ技_連携", "Lodestar Rush [Backup]"), ("SID_マルスエンゲージ技_魔法", "Lodestar Rush [Mystical]"),
@@ -1925,7 +2449,7 @@ namespace ALittleSecretIngredient
             ("SID_全弾発射", "Let Fly")
         };
 
-        internal List<(string id, string name)> CompatibleAsEngageAttacks { get; } = new() // TriggerAttackSkills +
+        internal static List<(string id, string name)> CompatibleAsEngageAttacks { get; } = new() // TriggerAttackSkills +
         {
             ("SID_シグルドエンゲージ技", "Override"), ("SID_シグルドエンゲージ技_竜族", "Override [Dragon]"),
             ("SID_シグルドエンゲージ技_重装", "Override [Armored]"), ("SID_シグルドエンゲージ技_魔法", "Override [Mystical]"),
@@ -1971,7 +2495,7 @@ namespace ALittleSecretIngredient
             ("SID_クロムエンゲージ技＋_飛行", "Giga Levin Sword+ [Flying]"), ("SID_クロムエンゲージ技＋_魔法", "Giga Levin Sword+ [Mystical]")
         };
 
-        internal List<(string id, string name)> BossSkills { get; } = new()
+        internal static List<(string id, string name)> BossSkills { get; } = new()
         {
             ("SID_ブレイク無効", "Unbreakable"), ("SID_特効耐性", "Stalwart"), ("SID_特効無効", "Unwavering"),
             ("SID_不動", "Anchor"), ("SID_熟練者", "Veteran"), ("SID_熟練者＋", "Veteran+"),
@@ -1979,7 +2503,7 @@ namespace ALittleSecretIngredient
             ("SID_チェインアタック威力軽減＋", "Bond Breaker+"),
         };
 
-        internal List<(string id, string name)> GeneralSkills { get; } = new() // TriggerAttackSkills + BossSkills +
+        internal static List<(string id, string name)> GeneralSkills { get; } = new() // TriggerAttackSkills + BossSkills +
         {
             ("SID_ＨＰ＋５_継承用", "HP +5"), ("SID_ＨＰ＋７_継承用", "HP +7"), ("SID_ＨＰ＋１０_継承用", "HP +10"), ("SID_ＨＰ＋１２_継承用", "HP +12"),
             ("SID_ＨＰ＋１５_継承用", "HP +15"), ("SID_力＋１_継承用", "Strength +1"), ("SID_力＋２_継承用", "Strength +2"), ("SID_力＋３_継承用", "Strength +3"),
@@ -2120,9 +2644,9 @@ namespace ALittleSecretIngredient
             ("SID_幻影狼連携", "Pack Hunter (Phantom)"),
         };
 
-        internal List<(string id, string name)> VisibleSkills { get; } = new(); // GeneralSkills + RestrictedSkills
+        internal static List<(string id, string name)> VisibleSkills { get; } = new(); // GeneralSkills + RestrictedSkills
 
-        internal List<(string id, string name)> RestrictedSkills { get; } = new()
+        internal static List<(string id, string name)> RestrictedSkills { get; } = new()
         {
             ("SID_バリア１", "Fell Barrier"), ("SID_バリア２", "Fell Barrier+"), ("SID_バリア３", "Fell Barrier++"), ("SID_バリア４", "Fell Barrier+++"), ("SID_バリア１_ノーマル用", "Dark Barrier"),
             ("SID_バリア２_ノーマル用", "Dark Barrier+"), ("SID_バリア３_ノーマル用", "Dark Barrier++"), ("SID_バリア４_ノーマル用", "Dark Barrier+++"),
@@ -2139,68 +2663,68 @@ namespace ALittleSecretIngredient
             ("SID_負けず嫌い_E005", "Rivalry (Xenologue 5)"),
         };
 
-        internal List<(string id, string name)> SyncHPSkills { get; } = new()
+        internal static List<(string id, string name)> SyncHPSkills { get; } = new()
         {
             ("SID_ＨＰ＋３", "HP +3"), ("SID_ＨＰ＋５", "HP +5"), ("SID_ＨＰ＋７", "HP +7"), ("SID_ＨＰ＋１０", "HP +10"),
             ("SID_ＨＰ＋１２", "HP +12"), ("SID_ＨＰ＋１５", "HP +15")
         };
 
-        internal List<(string id, string name)> SyncStrSkills { get; } = new()
+        internal static List<(string id, string name)> SyncStrSkills { get; } = new()
         {
             ("SID_力＋１", "Strength +1"), ("SID_力＋２", "Strength +2"), ("SID_力＋３", "Strength +3"), ("SID_力＋４", "Strength +4"),
             ("SID_力＋５", "Strength +5"), ("SID_力＋６", "Strength +6")
         };
 
-        internal List<(string id, string name)> SyncDexSkills { get; } = new()
+        internal static List<(string id, string name)> SyncDexSkills { get; } = new()
         {
             ("SID_技＋１", "Dexterity +1"), ("SID_技＋２", "Dexterity +2"), ("SID_技＋３", "Dexterity +3"), ("SID_技＋４", "Dexterity +4 "),
             ("SID_技＋５", "Dexterity +5")
         };
 
-        internal List<(string id, string name)> SyncSpdSkills { get; } = new()
+        internal static List<(string id, string name)> SyncSpdSkills { get; } = new()
         {
             ("SID_速さ＋１", "Speed +1"), ("SID_速さ＋２", "Speed +2"), ("SID_速さ＋３", "Speed +3"), ("SID_速さ＋４", "Speed +4"),
             ("SID_速さ＋５", "Speed +5")
         };
 
-        internal List<(string id, string name)> SyncLckSkills { get; } = new()
+        internal static List<(string id, string name)> SyncLckSkills { get; } = new()
         {
             ("SID_幸運＋２", "Luck +2"), ("SID_幸運＋４", "Luck +4"), ("SID_幸運＋６", "Luck +6"), ("SID_幸運＋８", "Luck +8"),
             ("SID_幸運＋１０", "Luck +10"), ("SID_幸運＋１２", "Luck +12")
         };
 
-        internal List<(string id, string name)> SyncDefSkills { get; } = new()
+        internal static List<(string id, string name)> SyncDefSkills { get; } = new()
         {
             ("SID_守備＋１", "Defense +1"), ("SID_守備＋２", "Defense +2"), ("SID_守備＋３", "Defense +3"), ("SID_守備＋４", "Defense +4"),
             ("SID_守備＋５", "Defense +5")
         };
 
-        internal List<(string id, string name)> SyncMagSkills { get; } = new()
+        internal static List<(string id, string name)> SyncMagSkills { get; } = new()
         {
             ("SID_魔力＋１", "Magic +1"), ("SID_魔力＋２", "Magic +2"), ("SID_魔力＋３", "Magic +3"), ("SID_魔力＋４", "Magic +4"),
             ("SID_魔力＋５", "Magic +5")
         };
 
-        internal List<(string id, string name)> SyncResSkills { get; } = new()
+        internal static List<(string id, string name)> SyncResSkills { get; } = new()
         {
             ("SID_魔防＋１", "Resistance +1"), ("SID_魔防＋２", "Resistance +2"), ("SID_魔防＋３", "Resistance +3"), ("SID_魔防＋４", "Resistance +4"),
             ("SID_魔防＋５", "Resistance +5")
         };
 
-        internal List<(string id, string name)> SyncBldSkills { get; } = new()
+        internal static List<(string id, string name)> SyncBldSkills { get; } = new()
         {
             ("SID_体格＋１", "Build +1"), ("SID_体格＋２", "Build +2"), ("SID_体格＋３", "Build +3"), ("SID_体格＋４", "Build +4"),
             ("SID_体格＋５", "Build +5 ")
         };
 
-        internal List<(string id, string name)> SyncMovSkills { get; } = new()
+        internal static List<(string id, string name)> SyncMovSkills { get; } = new()
         {
             ("SID_移動＋１", "Movement +1")
         };
 
-        internal List<(string id, string name)> SyncStatSkills { get; } = new();
+        internal static List<(string id, string name)> SyncStatSkills { get; } = new();
 
-        internal Dictionary<string, ushort> DefaultSPCost { get; } = new()
+        internal static Dictionary<string, ushort> DefaultSPCost { get; } = new()
         {
             { "Movement +1", 1000 }, { "Poison Strike", 300 }, { "Savage Blow", 300 }, { "Swordbreaker", 300 },
             { "Lancebreaker", 300 }, { "Axebreaker", 300 }, { "Tomebreaker", 300 }, { "Bowbreaker", 300 },
@@ -2313,7 +2837,7 @@ namespace ALittleSecretIngredient
             { "Giga Levin Sword+ [Dragon]", 8000 }, { "Giga Levin Sword+ [Flying]", 8000 }, { "Giga Levin Sword+ [Mystical]", 8000 }, { "Let Fly", 300 }
         };
 
-        internal Dictionary<string, string> EngageAttackToBondLinkSkill { get; } = new()
+        internal static Dictionary<string, string> EngageAttackToBondLinkSkill { get; } = new()
         {
             { "SID_リュールエンゲージ技", "SID_リュールエンゲージ技共同" }, // Dragon Blast
             { "SID_三級長エンゲージ技", "SID_三級長エンゲージ技＋" }, // Houses Unite
@@ -2324,7 +2848,7 @@ namespace ALittleSecretIngredient
             { "SID_クロムエンゲージ技", "SID_クロムエンゲージ技＋" } // Giga Levin Sword
         };
 
-        internal Dictionary<string, sbyte> EngageAttackToAIEngageAttackType { get; } = new()
+        internal static Dictionary<string, sbyte> EngageAttackToAIEngageAttackType { get; } = new()
         {
             { "SID_マルスエンゲージ技", 1 }, // Lodestar Rush
             { "SID_シグルドエンゲージ技", 2 }, // Override
@@ -2350,17 +2874,17 @@ namespace ALittleSecretIngredient
 
         internal enum SyncStat { HP, Str, Dex, Spd, Lck, Def, Mag, Res, Bld, Mov, None }
 
-        internal List<List<string>> SyncStatLookup = new();
+        internal static List<List<string>> SyncStatLookup = new();
         #endregion
         #region Support Category IDs
-        internal List<(string id, string name)> SupportCategories { get; } = new()
+        internal static List<(string id, string name)> SupportCategories { get; } = new()
         {
             ("デフォルト", "Default"), ("バランス", "Balanced"), ("回避", "Avoid"), ("必殺", "Critical"),
             ("命中", "Hit"), ("必殺回避", "Dodge"),
         };
         #endregion
         #region TalkAnim IDs
-        internal List<(string id, string name)> MaleTalkAnims { get; } = new()
+        internal static List<(string id, string name)> MaleTalkAnims { get; } = new()
         {
             ("AOC_Talk_c000", "Default Male"), ("AOC_Talk_c001", "Male Alear"),
             ("AOC_Talk_c049", "Rafal"), ("AOC_Talk_c100", "Alfred A"),
@@ -2385,7 +2909,7 @@ namespace ALittleSecretIngredient
             ("AOC_Talk_c513", "Robin"),
         };
 
-        internal List<(string id, string name)> FemaleTalkAnims { get; } = new()
+        internal static List<(string id, string name)> FemaleTalkAnims { get; } = new()
         {
             ("AOC_Talk_c050", "Default Female"), ("AOC_Talk_c051", "Female Alear"),
             ("AOC_Talk_c099", "Nel"), ("AOC_Talk_c150", "Céline A"),
@@ -2412,7 +2936,7 @@ namespace ALittleSecretIngredient
         };
         #endregion
         #region Unit Type IDs
-        internal List<(string id, string name)> UnitTypes { get; } = new()
+        internal static List<(string id, string name)> UnitTypes { get; } = new()
         {
             ("スタイル無し", "None"), ("連携スタイル", "Backup"), ("騎馬スタイル", "Cavalry"), ("隠密スタイル", "Covert"),
             ("重装スタイル", "Armor"), ("飛行スタイル", "Flier"), ("魔法スタイル", "Mystical"), ("気功スタイル", "Qi Adept"),
@@ -2420,12 +2944,12 @@ namespace ALittleSecretIngredient
         };
         #endregion
         #region Other
-        internal List<(int id, string name)> Proficiencies { get; } = new()
+        internal static List<(int id, string name)> Proficiencies { get; } = new()
         {
             (0, "None"), (1, "Sword"), (2, "Lance"), (3, "Axe"), (4, "Bow"), (5, "Dagger"), (6, "Tome"), (7, "Staff"),
             (8, "Arts"), (9, "Special")
         };
-        internal List<(int id, string name)> BasicProficiencies { get; } = new()
+        internal static List<(int id, string name)> BasicProficiencies { get; } = new()
         {
             (1, "Sword"), (2, "Lance"), (3, "Axe"), (4, "Bow"), (5, "Dagger"), (6, "Tome"), (7, "Staff"), (8, "Arts"),
         };
@@ -2466,14 +2990,14 @@ namespace ALittleSecretIngredient
             }
         }
 
-        internal List<AssetShuffleEntity> ProtagonistAssetShuffleData { get; } = new()
+        internal static List<AssetShuffleEntity> ProtagonistAssetShuffleData { get; } = new()
         {
             new("Alear", "PID_リュール", new() { "MPID_Lueur_M000", "PID_M000_リュール", "JID_M000_神竜ノ子", "MPID_MorphLueur",
                 "PID_デモ用_神竜王リュール"}, Gender.Both,
                 "001Lueur", false, "MPID_Lueur", "Face_Lueur", "Lueur", Color.FromArgb(97, 184, 231), null)
         };
 
-        internal List<AssetShuffleEntity> PlayableAssetShuffleData { get; } = new()
+        internal static List<AssetShuffleEntity> PlayableAssetShuffleData { get; } = new()
         {
             new("Vander", "PID_ヴァンドレ", new() { }, Gender.Male,
                 "500Vandre", false, "MPID_Vandre", "Face_DarkEmblem", "Vandre", Color.FromArgb(241, 227, 217), null),
@@ -2561,7 +3085,7 @@ namespace ALittleSecretIngredient
                 "554Madeline", false, "MPID_Madeline", "Face_DarkEmblem", "Madeline", Color.FromArgb(246, 228, 166), null)
         };
 
-        internal List<AssetShuffleEntity> NamedNPCAssetShuffleData { get; } = new()
+        internal static List<AssetShuffleEntity> NamedNPCAssetShuffleData { get; } = new()
         {
             new("Lumera", "PID_ルミエル", new() { "PID_M025_ルミエル", "MPID_MorphLumiere", "PID_M002_ルミエル" }, Gender.Female,
                 "555Lumiere", false, "MPID_Lumiere", "Face_DarkEmblem", null, Color.FromArgb(125, 175, 255), null),
@@ -2613,7 +3137,7 @@ namespace ALittleSecretIngredient
                 "", false, "MPID_BlackSmith", "Face_DarkEmblem", null, Color.FromArgb(197, 179, 141), null),
         };
 
-        internal List<AssetShuffleEntity> AllyEmblemAssetShuffleData { get; } = new()
+        internal static List<AssetShuffleEntity> AllyEmblemAssetShuffleData { get; } = new()
         {
             new("Marth", "GID_マルス", new() { "PID_S014_マルス", "PID_闘技場_マルス", "GID_M000_マルス", "GID_相手マルス" }, Gender.Male,
                 "530Marth", false, "MGID_Marth", "Face_Marth", "Marth", Color.FromArgb(129, 198, 255), "EID_マルス"),
@@ -2665,7 +3189,7 @@ namespace ALittleSecretIngredient
                 "513Robin", false, "MGID_Reflet", "Face_Reflet", "Reflet", Color.FromArgb(48, 92, 129), null),
         };
 
-        internal List<AssetShuffleEntity> EnemyEmblemAssetShuffleData { get; } = new()
+        internal static List<AssetShuffleEntity> EnemyEmblemAssetShuffleData { get; } = new()
         {
             new("Corrupted Marth", "GID_M011_敵マルス", new() { "PID_E003_召喚_マルス", "PID_E006_召喚_マルス", "GID_M017_敵マルス",
                 "GID_M021_敵マルス", "GID_M024_敵マルス" }, Gender.Male,
@@ -2717,7 +3241,7 @@ namespace ALittleSecretIngredient
                 "513Robin", true, "MGID_Reflet", "Face_RefletDarkness", "Reflet", Color.FromArgb(255, 0, 0), null),
         };
 
-        internal List<string> ExclusiveClassesList { get; } = new()
+        internal static List<string> ExclusiveClassesList { get; } = new()
         {
             "JID_神竜ノ子", "JID_神竜ノ王", "JID_邪竜ノ子", "JID_M002_神竜ノ王",
             "JID_邪竜ノ娘", "JID_邪竜ノ娘_敵", "JID_邪竜ノ王", "JID_アヴニール下級",
@@ -2737,30 +3261,59 @@ namespace ALittleSecretIngredient
             "JID_紋章士_ルキナ_召喚", "JID_紋章士_ヘクトル_召喚"
         };
 
-        internal List<string> RemoveAccList { get; } = new()
+        internal static List<string> RemoveAccList { get; } = new()
         {
             "uAcc_spine2_Hair051", "uAcc_spine2_Hair052", "uAcc_spine2_Hair150", "uAcc_spine2_Hair150k",
             "uAcc_spine2_Hair201", "uAcc_spine2_Hair201k", "uAcc_spine2_Hair350", "uAcc_spine2_Hair350k",
             "uAcc_spine2_Hair865"
         };
 
-        internal List<(int id, string name)> Attributes { get; } = new()
+        internal static List<(int id, string name)> Attributes { get; } = new()
         {
             (0, "Infantry"), (1, "Cavalry"), (2, "Armored"), (3, "Flying"), (4, "Dragon"), (5, "Fell Dragon"), (6, "Corrupted"), (7, "Medeus"),
             (8, "Duma"), (9, "Loptous"), (10, "Veld"), (11, "Idunn"), (12, "Nergal"), (13, "Fomortiis"), (14, "Ashnard"), (15, "Ashera"),
             (16, "Grima"), (17, "Anankos"), (18, "Nemesis"),
         };
 
-        internal List<(int id, string name)> MovementTypes { get; } = new()
+        internal static List<(int id, string name)> MovementTypes { get; } = new()
         {
             (1, "Infantry"), (2, "Cavalry"), (3, "Flier"),
         };
+
+        internal static List<string> FlierTerrain { get; } = new()
+        {
+            "TID_川", "TID_水路", "TID_海", "TID_海_全戦禁", "TID_海_影無", "TID_山", "TID_崖", "TID_空",
+            "TID_岩", "TID_土嚢", "TID_低障害物", "TID_防柵", "TID_防壁", "TID_瓦礫", "TID_瓦礫_全戦禁", "TID_溶岩",
+            "TID_長椅子", "TID_森", "TID_植込", "TID_崩れた床", "TID_低い壁", "TID_荷車", "TID_井戸", "TID_積み荷",
+            "TID_瓦礫_ターゲット・ワープ禁", "TID_湖", "TID_池", "TID_噴火口",
+        };
         #endregion
 
-        internal GameData(XmlParser xp, FileManager fm)
+        static GameDataLookup()
         {
-            XP = xp;
-            FM = fm;
+            Bind(FileEnum.AssetTable, DataSetEnum.Asset, typeof(Asset), "アセット");
+            Bind(FileEnum.God, DataSetEnum.GodGeneral, typeof(GodGeneral), "神将");
+            Bind(FileEnum.God, DataSetEnum.GrowthTable, typeof(GrowthTable), "成長表");
+            Bind(FileEnum.God, DataSetEnum.BondLevel, typeof(BondLevel), "絆レベル");
+            Bind(FileEnum.Item, DataSetEnum.Item, typeof(Item), "アイテム");
+            Bind(FileEnum.Item, DataSetEnum.ItemCategory, typeof(ItemCategory), "カテゴリ");
+            Bind(FileEnum.Item, DataSetEnum.Alchemy, typeof(Alchemy), "錬成");
+            Bind(FileEnum.Item, DataSetEnum.Evolution, typeof(Evolution), "進化");
+            Bind(FileEnum.Item, DataSetEnum.RefiningMaterialExchange, typeof(RefiningMaterialExchange), "錬成素材交換");
+            Bind(FileEnum.Item, DataSetEnum.WeaponLevel, typeof(WeaponLevel), "武器レベル");
+            Bind(FileEnum.Item, DataSetEnum.Compatibility, typeof(Compatibility), "相性");
+            Bind(FileEnum.Item, DataSetEnum.Accessory, typeof(Accessory), "アクセサリ");
+            Bind(FileEnum.Item, DataSetEnum.Gift, typeof(Gift), "贈り物");
+            Bind(FileEnum.Item, DataSetEnum.Reward, typeof(Reward), "報酬");
+            Bind(FileEnum.Item, DataSetEnum.EngageWeaponEnhancement, typeof(EngageWeaponEnhancement), "エンゲージ武器強化");
+            Bind(FileEnum.Item, DataSetEnum.BattleReward, typeof(BattleReward), "対戦報酬");
+            Bind(FileEnum.Job, DataSetEnum.TypeOfSoldier, typeof(TypeOfSoldier), "兵種");
+            Bind(FileEnum.Job, DataSetEnum.FightingStyle, typeof(FightingStyle), "戦闘スタイル");
+            Bind(FileEnum.Person, DataSetEnum.Individual, typeof(Individual), "個人");
+            Bind(FileEnum.Skill, DataSetEnum.Skill, typeof(Skill), "スキル");
+            Bind(FileGroupEnum.Dispos, DataSetEnum.Arrangement, typeof(Arrangement), "配置");
+            Bind(FileGroupEnum.Terrains, DataSetEnum.MapTerrain, typeof(MapTerrain), "");
+
             BondLevels.AddRange(BondLevelsFromExp);
             AllyBondLevelTables.AddRange(InheritableBondLevelTables);
             BondLevelTables.AddRange(AllyBondLevelTables);
@@ -2769,7 +3322,7 @@ namespace ALittleSecretIngredient
             AllyNPCCharacters.AddRange(FixedLevelAllyNPCCharacters);
             AllyCharacters.AddRange(PlayableCharacters);
             AllyCharacters.AddRange(AllyNPCCharacters);
-            EnemyCharacters.AddRange(FixedLevelEnemyCharacters);
+            NonArenaEnemyCharacters.AddRange(FixedLevelEnemyCharacters);
             EnemyCharacters.AddRange(NonArenaEnemyCharacters);
             EnemyCharacters.AddRange(ArenaCharacters);
             Characters.AddRange(AllyCharacters);
@@ -2896,7 +3449,6 @@ namespace ALittleSecretIngredient
             SyncStatSkills.AddRange(SyncResSkills);
             SyncStatSkills.AddRange(SyncBldSkills);
             SyncStatSkills.AddRange(SyncMovSkills);
-
             WeaponTypeLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
             WeaponTypeLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
             WeaponTypeLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
@@ -2919,305 +3471,4 @@ namespace ALittleSecretIngredient
             SyncStatLookup.Add(SyncMovSkills.GetIDs());
         }
     }
-
-    internal static class GameDataLookup
-    {
-        internal static List<T> FilterData<T>(this IEnumerable<T> data, Func<T, string> getID, List<(string id, string name)> entities)
-        {
-            HashSet<string> entityIDs = entities.Select(t => t.id).ToHashSet();
-            return data.Where(o => entityIDs.Contains(getID(o))).ToList();
-        }
-        internal static List<T> GetIDs<T>(this List<(T id, string name)> entities) => entities.Select(t => t.id).ToList();
-        internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
-        internal static sbyte GetInternalLevel(this Individual i, List<TypeOfSoldier> toss) =>
-            i.InternalLevel != 0 ? i.InternalLevel : i.GetTOS(toss).InternalLevel;
-        internal static TypeOfSoldier GetTOS(this Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
-        internal static GameData.Gender GetGender(this Individual i)
-        {
-            if (i.Name == "MPID_Lueur" || i.Name == "MPID_PastLueur")
-                return GameData.Gender.Both;
-            if (i.GetFlag(5))
-                return GameData.Gender.Rosado;
-            if (i.Gender == 2)
-                return GameData.Gender.Female;
-            return GameData.Gender.Male;
-        }
-
-        internal static GameData.ProficiencyLevel ToProficiencyLevel(this string s) => s switch
-        {
-            "N" => GameData.ProficiencyLevel.N,
-            "N+" => GameData.ProficiencyLevel.Np,
-            "D" => GameData.ProficiencyLevel.D,
-            "D+" => GameData.ProficiencyLevel.Dp,
-            "C" => GameData.ProficiencyLevel.C,
-            "C+" => GameData.ProficiencyLevel.Cp,
-            "B" => GameData.ProficiencyLevel.B,
-            "B+" => GameData.ProficiencyLevel.Bp,
-            "A" => GameData.ProficiencyLevel.A,
-            "A+" => GameData.ProficiencyLevel.Ap,
-            "S" => GameData.ProficiencyLevel.S,
-            _ => throw new ArgumentException("Unsupported proficiency level: " + s)
-        };
-
-        internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
-        {
-            { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleHead, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleNeck, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleTorso, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleShoulders, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleArms, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleHands, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleLegs, DataSetEnum.Asset },
-            { RandomizerDistribution.ScaleFeet, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeArms, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeLegs, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeBust, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeAbdomen, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeTorso, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeScaleArms, DataSetEnum.Asset },
-            { RandomizerDistribution.VolumeScaleLegs, DataSetEnum.Asset },
-            { RandomizerDistribution.MapScaleAll, DataSetEnum.Asset },
-            { RandomizerDistribution.MapScaleHead, DataSetEnum.Asset },
-            { RandomizerDistribution.MapScaleWing, DataSetEnum.Asset },
-            { RandomizerDistribution.Link, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngageCount, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngageAttackAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngageAttackEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngageAttackLink, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.LinkGid, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngravePower, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngraveWeight, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngraveHit, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngraveCritical, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngraveAvoid, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.EngraveSecure, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceHpAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceStrAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceTechAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceQuickAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceLuckAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceDefAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceMagicAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceMdefAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhancePhysAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceMoveAlly, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceHpEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceStrEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceTechEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceQuickEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceLuckEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceDefEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceMagicEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceMdefEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhancePhysEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.SynchroEnhanceMoveEnemy, DataSetEnum.GodGeneral },
-            { RandomizerDistribution.InheritanceSkills, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.SynchroStatSkillsAlly, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.SynchroStatSkillsEnemy, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.SynchroGeneralSkillsAlly, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.SynchroGeneralSkillsEnemy, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.EngageSkills, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.EngageItems, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.GrowthTableAptitude, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.SkillInheritanceLevel, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.StrongBondLevel, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.DeepSynergyLevel, DataSetEnum.GrowthTable },
-            { RandomizerDistribution.Exp, DataSetEnum.BondLevel },
-            { RandomizerDistribution.Cost, DataSetEnum.BondLevel },
-            { RandomizerDistribution.StyleName, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.MoveType, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.Weapon, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.WeaponBaseCount, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.WeaponAdvancedCount, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.MaxWeaponLevelBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.MaxWeaponLevelAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseHpBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseStrBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseTechBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseQuickBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseLuckBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseDefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseMagicBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseMdefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BasePhysBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseSightBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseMoveBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseHpAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseStrAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseTechAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseQuickAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseLuckAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseDefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseMagicAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseMdefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BasePhysAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseSightAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseMoveAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseTotalBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseTotalAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitHpBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitStrBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitTechBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitQuickBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitLuckBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitDefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitMagicBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitMdefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitPhysBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitSightBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitMoveBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitHpAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitStrAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitTechAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitQuickAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitLuckAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitDefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitMagicAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitMdefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitPhysAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitSightAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitMoveAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitTotalBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LimitTotalAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowHpBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowStrBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowTechBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowQuickBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowLuckBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowDefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowMagicBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowMdefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowPhysBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowSightBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowMoveBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowHpAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowStrAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowTechAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowQuickAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowLuckAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowDefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowMagicAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowMdefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowPhysAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowSightAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowMoveAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowTotalBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.BaseGrowTotalAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowHpBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowStrBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowTechBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowQuickBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowLuckBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowDefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowMagicBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowMdefBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowPhysBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowSightBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowMoveBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowHpAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowStrAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowTechAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowQuickAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowLuckAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowDefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowMagicAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowMdefAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowPhysAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowSightAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowMoveAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowTotalBase, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.DiffGrowTotalAdvanced, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LearningSkill, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.LunaticSkill, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.Attrs, DataSetEnum.TypeOfSoldier },
-            { RandomizerDistribution.JidAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.JidEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.Age, DataSetEnum.Individual },
-            { RandomizerDistribution.LevelAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.LevelEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.InternalLevel, DataSetEnum.Individual },
-            { RandomizerDistribution.SupportCategory, DataSetEnum.Individual },
-            { RandomizerDistribution.SkillPoint, DataSetEnum.Individual },
-            { RandomizerDistribution.IndividualAptitude, DataSetEnum.Individual },
-            { RandomizerDistribution.SubAptitude, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNHpAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNStrAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNTechAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNQuickAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNLuckAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNDefAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNMagicAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNMdefAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNPhysAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNSightAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNMoveAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNTotalAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNHpEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNStrEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNTechEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNQuickEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNLuckEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNDefEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNMagicEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNMdefEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNPhysEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNSightEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNMoveEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetNTotalEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHHpEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHStrEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHTechEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHQuickEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHLuckEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHDefEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHMagicEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHMdefEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHPhysEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHSightEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHMoveEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetHTotalEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLHpEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLStrEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLTechEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLQuickEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLLuckEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLDefEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLMagicEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLMdefEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLPhysEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLSightEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLMoveEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.OffsetLTotalEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitHp, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitStr, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitTech, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitQuick, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitLuck, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitDef, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitMagic, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitMdef, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitPhys, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitSight, DataSetEnum.Individual },
-            { RandomizerDistribution.LimitMove, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowHp, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowStr, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowTech, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowQuick, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowLuck, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowDef, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowMagic, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowMdef, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowPhys, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowSight, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowMove, DataSetEnum.Individual },
-            { RandomizerDistribution.GrowTotal, DataSetEnum.Individual },
-            { RandomizerDistribution.ItemsWeapons, DataSetEnum.Individual },
-            { RandomizerDistribution.ItemsItems, DataSetEnum.Individual },
-            { RandomizerDistribution.AttrsAlly, DataSetEnum.Individual },
-            { RandomizerDistribution.AttrsEnemy, DataSetEnum.Individual },
-            { RandomizerDistribution.CommonSids, DataSetEnum.Individual },
-        };
-    }
-
 }

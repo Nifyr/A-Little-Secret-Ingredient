@@ -15,9 +15,9 @@ namespace ALittleSecretIngredient
         internal GlobalData()
         {
             FM = new();
-            ABP = new(FM);
-            XP = new(FM, ABP);
-            GD = new(XP, FM);
+            ABP = new();
+            XP = new();
+            GD = new(XP, ABP, FM);
             R = new(GD);
             DDS = new(GD);
         }
@@ -26,9 +26,11 @@ namespace ALittleSecretIngredient
         {
             if (!targets.Any()) return ExportResult.NoExportTargets;
             List<FileEnum> changedFiles = FM.DirtyFiles();
-            if (changedFiles.Count == 0) return ExportResult.NoChanges;
+            List<(FileGroupEnum, string)> changedGroupFiles = FM.DirtyGroupFiles();
+            if (changedFiles.Count == 0 && changedGroupFiles.Count == 0) return ExportResult.NoChanges;
             FileManager.CleanOutputDir();
-            XP.Export(changedFiles, targets);
+            GD.Export(changedFiles, targets);
+            GD.Export(changedGroupFiles, targets);
             FileManager.CleanTempDir();
             StringBuilder? changelog = R.PopChangelog();
             if (changelog != null)

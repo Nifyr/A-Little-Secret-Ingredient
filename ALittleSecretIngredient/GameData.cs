@@ -1386,7 +1386,7 @@ namespace ALittleSecretIngredient
             ("JID_ピッチフォーク_E", "Watcher (Timerra)"), ("JID_紋章士_ルキナ_召喚", "Emblem (Lucina Summon)"),
         };
 
-        internal static List<(string id, string name)> NonEmblemGeneralClasses { get; } = new(); // MaleNonEmblemNPCExclusiveClasses + FemaleNonEmblemNPCExclusiveClasses
+        internal static List<(string id, string name)> NonEmblemGeneralClasses { get; } = new(); // PlayableClasses + MaleNonEmblemNPCExclusiveClasses + FemaleNonEmblemNPCExclusiveClasses
 
         internal static List<(string id, string name)> BeastClasses { get; } = new()
         {
@@ -3341,6 +3341,7 @@ namespace ALittleSecretIngredient
             FemaleNPCExclusiveClasses.AddRange(FemaleEmblemClasses);
             EmblemClasses.AddRange(MaleEmblemClasses);
             EmblemClasses.AddRange(FemaleEmblemClasses);
+            NonEmblemGeneralClasses.AddRange(PlayableClasses);
             NonEmblemGeneralClasses.AddRange(MaleNonEmblemNPCExclusiveClasses);
             NonEmblemGeneralClasses.AddRange(FemaleNonEmblemNPCExclusiveClasses);
             PlayableClasses.AddRange(UniversalClasses);

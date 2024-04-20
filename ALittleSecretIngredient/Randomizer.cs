@@ -1829,6 +1829,8 @@ namespace ALittleSecretIngredient
         {
             List<Individual> npcClassCharacters = individuals.Where(i => generalClassIDs.Contains(i.Jid)).ToList();
             List<int> totalLevels = npcClassCharacters.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
+            List<(string id, DataSet ds)> staticUnitArrangements = GD.GetGroup(DataSetEnum.Arrangement, StaticUnitMaps);
+            List<(string id, DataSet ds)> staticUnitMapTerrains = GD.GetGroup(DataSetEnum.MapTerrain, StaticUnitMaps);
             if (settings.JidEnemy.GetArg<bool>(0))
             {
                 Dictionary<string, string> classMapping = new();
@@ -1870,7 +1872,7 @@ namespace ALittleSecretIngredient
                 legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 // This is specifically to avoid placing non-fliers on flier terrain.
-                if (IsOnFlierTile(i.Pid))
+                if (IsOnFlierTile(i.Pid, staticUnitArrangements, staticUnitMapTerrains))
                     legalClassIDs = legalClassIDs.Where(s => toss.First(tos => tos.Jid == s).MoveType == 3).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
                 EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon, false);
@@ -2101,16 +2103,14 @@ namespace ALittleSecretIngredient
             i.Level = (byte)(totalLevel - (i.GetTOS(toss).Rank == 1 ? 20 : 0));
         }
 
-        private bool IsOnFlierTile(string pid)
+        private static bool IsOnFlierTile(string pid, List<(string id, DataSet ds)> arrangements, List<(string id, DataSet ds)> terrains)
         {
-            List<(string id, DataSet ds)> mainMapArrangements = GD.GetGroup(DataSetEnum.Arrangement, MainMaps);
-            List<(string id, DataSet ds)> mainMapTerrains = GD.GetGroup(DataSetEnum.MapTerrain, MainMaps);
-            foreach ((string disposID, DataSet ds) in mainMapArrangements)
+            foreach ((string disposID, DataSet ds) in arrangements)
                 foreach (ParamGroup pg in ds.Params.Cast<ParamGroup>())
                     foreach (Arrangement a in pg.Group.Cast<Arrangement>())
                         if (a.Pid == pid)
                         {
-                            MapTerrain mt = (MapTerrain)mainMapTerrains.First(t => t.id == disposID).ds.Single;
+                            MapTerrain mt = (MapTerrain)terrains.First(t => t.id == disposID).ds.Single;
                             string disposTerrain = mt.GetTerrain(a.DisposX, a.DisposY);
                             string appearTerrain = mt.GetTerrain(a.AppearX, a.AppearY);
                             if ((a.DisposX, a.DisposY) != (0, 0) && FlierTerrain.Contains(disposTerrain) ||

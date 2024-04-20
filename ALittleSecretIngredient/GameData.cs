@@ -2367,7 +2367,19 @@ namespace ALittleSecretIngredient
         internal static Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponTypeLookup = new();
         #endregion
         #region Map IDs
-        internal static List<(string id, string name)> MainMaps { get; } = new()
+        internal static List<(string id, string name)> XenologueMaps { get; } = new()
+        {
+            ("E001", "Xenologue 1"), ("E002", "Xenologue 2"), ("E003", "Xenologue 3"), ("E004", "Xenologue 4"),
+            ("E005", "Xenologue 5"), ("E006", "Xenologue 6"),
+        };
+
+        internal static List<(string id, string name)> DivineParalogueMaps { get; } = new()
+        {
+            ("G001", "Divine Paralogue 1"), ("G002", "Divine Paralogue 2"), ("G003", "Divine Paralogue 3"), ("G004", "Divine Paralogue 4"),
+            ("G005", "Divine Paralogue 5"), ("G006", "Divine Paralogue 6"),
+        };
+
+        internal static List<(string id, string name)> ChapterMaps { get; } = new()
         {
             ("M001","Chapter 1"), ("M002","Chapter 2"), ("M003","Chapter 3"), ("M004","Chapter 4"),
             ("M005","Chapter 5"), ("M006","Chapter 6"), ("M007","Chapter 7"), ("M008","Chapter 8"),
@@ -2377,6 +2389,16 @@ namespace ALittleSecretIngredient
             ("M021","Chapter 21"), ("M022","Chapter 22"), ("M023","Chapter 23"), ("M024","Chapter 24"),
             ("M025","Chapter 25"), ("M026","Chapter 26"),
         };
+
+        internal static List<(string id, string name)> ParalogueMaps { get; } = new()
+        {
+            ("S001","Paralogue 1"), ("S002","Paralogue 2"), ("S003","Paralogue 3"), ("S004","Paralogue 4"),
+            ("S005","Paralogue 5"), ("S006","Paralogue 6"), ("S007","Paralogue 7"), ("S008","Paralogue 8"),
+            ("S009","Paralogue 9"), ("S010","Paralogue 10"), ("S011","Paralogue 11"), ("S012","Paralogue 12"),
+            ("S013","Paralogue 13"), ("S014","Paralogue 14"), ("S015","Paralogue 15"),
+        };
+
+        internal static List<(string id, string name)> StaticUnitMaps { get; } = new(); // FellXenologueMaps + DivineParalogueMaps + ChapterMaps + ParalogueMaps
         #endregion
         #region Ride Dress Model IDs
         internal static List<(string id, string name)> HorseRideDressModels { get; } = new()
@@ -3435,6 +3457,10 @@ namespace ALittleSecretIngredient
             AllItems.AddRange(NormalWeapons);
             AllItems.AddRange(BattleItems);
             AllItems.AddRange(EngageWeapons);
+            StaticUnitMaps.AddRange(XenologueMaps);
+            StaticUnitMaps.AddRange(DivineParalogueMaps);
+            StaticUnitMaps.AddRange(ChapterMaps);
+            StaticUnitMaps.AddRange(ParalogueMaps);
             CompatibleAsEngageAttacks.AddRange(TriggerAttackSkills);
             GeneralSkills.AddRange(TriggerAttackSkills);
             GeneralSkills.AddRange(BossSkills);

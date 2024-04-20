@@ -1738,8 +1738,8 @@ namespace ALittleSecretIngredient
                     List<string> bossSkillIDs = BossSkills.GetIDs();
                     selectedSkillIDs = selectedSkillIDs.Where(s => !bossSkillIDs.Contains(s)).ToList();
                 }
-                targets.ForEach(i => i.CommonSids = i.CommonSids.Concat(i.NormalSids).Concat(i.HardSids).Concat(i.LunaticSids).Distinct()
-                    .Where(selectedSkillIDs.Contains).ToArray());
+                targets.ForEach(i => i.CommonSids = i.CommonSids.Concat(i.NormalSids.Concat(i.HardSids).Concat(i.LunaticSids)
+                    .Where(selectedSkillIDs.Contains)).Distinct().ToArray());
                 targets.ForEach(i => i.NormalSids = i.NormalSids.Where(s => !selectedSkillIDs.Contains(s)).ToArray());
                 targets.ForEach(i => i.HardSids = i.HardSids.Where(s => !selectedSkillIDs.Contains(s)).ToArray());
                 targets.ForEach(i => i.LunaticSids = i.LunaticSids.Where(s => !selectedSkillIDs.Contains(s)).ToArray());

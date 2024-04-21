@@ -1,5 +1,4 @@
-﻿using ALittleSecretIngredient.Structs;
-using System.Text;
+﻿using System.Text;
 
 namespace ALittleSecretIngredient
 {

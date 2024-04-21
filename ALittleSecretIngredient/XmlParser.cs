@@ -47,7 +47,7 @@ namespace ALittleSecretIngredient
             (FileGroupEnum fge, string sheetName) = GameDataLookup.GroupDataSetToSheetName[dse];
             XmlDocument xml = new();
             xml.Load(new StringReader(xmlString));
-            Book b = new(this, xml.ChildNodes[1]!, fge);
+            Book b = new(xml.ChildNodes[1]!, fge);
             GroupBooks[(fge, fileName)] = b;
             return b.Sheets.First(s => s.Name == sheetName).Data;
         }
@@ -104,7 +104,7 @@ namespace ALittleSecretIngredient
                 Count = n.Attributes!["Count"]!.Value;
                 Sheets = n.SelectChildren().Select(c => new Sheet(c, fe)).ToArray();
             }
-            internal Book(XmlParser xp, XmlNode n, FileGroupEnum fge)
+            internal Book(XmlNode n, FileGroupEnum fge)
             {
                 Count = n.Attributes!["Count"]!.Value;
                 Sheets = n.SelectChildren().Select(c => new Sheet(c, fge)).ToArray();

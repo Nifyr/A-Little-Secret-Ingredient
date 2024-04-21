@@ -17,6 +17,7 @@ namespace ALittleSecretIngredient.Structs
         public BondLevelSettings BondLevel { get; set; } = new();
         public TypeOfSoldierSettings TypeOfSoldier { get; set; } = new();
         public IndividualSettings Individual { get; set; } = new();
+        public ArrangementSettings Arrangement { get; set; } = new();
 
         public abstract class RandomizerTableSettings
         {
@@ -455,6 +456,11 @@ namespace ALittleSecretIngredient.Structs
                 GrowLuck, GrowDef, GrowMagic, GrowMdef,
                 GrowPhys, GrowSight, GrowMove, GrowTotal,
             };
+        }
+
+        public class ArrangementSettings : RandomizerTableSettings
+        {
+            public RandomizerFieldSettings DeploymentSlots { get; set; } = new();
         }
     }
 

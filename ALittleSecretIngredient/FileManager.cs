@@ -17,6 +17,7 @@ namespace ALittleSecretIngredient
             ( FileEnum.Job, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\job.xml.bundle" ),
             ( FileEnum.Person, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\person.xml.bundle" ),
             ( FileEnum.Skill, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\skill.xml.bundle" ),
+            ( FileEnum.Terrain, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\terrain.xml.bundle" ),
         };
         private readonly List<(FileGroupEnum fge, string localPath)> targetFileGroups = new()
         {
@@ -31,6 +32,7 @@ namespace ALittleSecretIngredient
             { FileEnum.Job, "Job.xml" },
             { FileEnum.Person, "Person.xml" },
             { FileEnum.Skill, "Skill.xml" },
+            { FileEnum.Terrain, "Terrain.xml" },
         };
         private Dictionary<FileGroupEnum, string> CobaltFileGroupDirs { get; } = new()
         {

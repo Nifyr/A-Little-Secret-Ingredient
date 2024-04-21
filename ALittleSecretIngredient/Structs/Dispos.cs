@@ -3,7 +3,7 @@
 namespace ALittleSecretIngredient.Structs
 {
 
-    internal class Arrangement : GroupedParam
+    internal class Arrangement : GroupedParam, ICloneable
     {
         internal string Group { get; set; }
         internal string Pid { get; set; }
@@ -55,6 +55,27 @@ namespace ALittleSecretIngredient.Structs
         internal uint AI_BandNo { get; set; }
         internal string AI_MoveLimit { get; set; }
         internal uint AI_Flag { get; set; }
+
+        public object Clone() => MemberwiseClone();
+
+        // 0: Normal
+        // 1: Hard
+        // 2: Lunatic
+        // 3: Create
+        // 4: Leader
+        // 5: NotMove
+        // 6: Edge
+        // 7: Pos
+        // 8: Must
+        // 9: Fix
+        // 10: Guest
+        internal bool GetFlag(int index) => (Flag & (1 << index)) > 0;
+        internal void SetFlag(int index, bool value)
+        {
+            if (value ^ GetFlag(index))
+                Flag ^= (byte)(1 << index);
+        }
+
 
         internal override string? GetGroupName()
         {

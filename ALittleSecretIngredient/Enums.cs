@@ -8,6 +8,7 @@
         Job,
         Person,
         Skill,
+        Terrain
     }
 
     internal enum FileGroupEnum
@@ -39,7 +40,9 @@
         Individual,
         Skill,
         Arrangement,
-        MapTerrain
+        MapTerrain,
+        Terrain,
+        TerrainCost
     }
 
     internal enum RandomizerDistribution
@@ -300,6 +303,7 @@
         AttrsAlly,
         AttrsEnemy,
         CommonSids,
+        DeploymentSlots
     }
 
     internal enum ExportFormat

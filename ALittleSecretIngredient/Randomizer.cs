@@ -56,6 +56,8 @@ namespace ALittleSecretIngredient
                 AddTable(innerChangelog, RandomizeTypeOfSoldier(settings.TypeOfSoldier));
             if (settings.Individual.Any())
                 AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
+            if (settings.Arrangement.Any())
+                AddTable(innerChangelog, RandomizeArrangement(settings.Arrangement));
 
             DataPostAdjustment(settings);
 
@@ -156,6 +158,83 @@ namespace ALittleSecretIngredient
                 }
                 GD.SetDirty(DataSetEnum.Item);
             }
+        }
+
+        private StringBuilder RandomizeArrangement(RandomizerSettings.ArrangementSettings settings)
+        {
+            List<(string id, DataSet ds)> arrangements = GD.GetGroup(DataSetEnum.Arrangement, AllMaps);
+            Dictionary<(string id, DataSet ds), StringBuilder> entries = CreateStringBuilderDictionary(arrangements);
+
+            if (settings.DeploymentSlots.Enabled || settings.DeploymentSlots.GetArg<bool>(0))
+            {
+                List<(string id, DataSet ds)> mapTerrains = GD.GetGroup(DataSetEnum.MapTerrain, AllMaps.ToMapTerrains());
+                List<Terrain> terrains = GD.Get(DataSetEnum.Terrain).Params.Cast<Terrain>().ToList();
+                List<TerrainCost> terrainCosts = GD.Get(DataSetEnum.TerrainCost).Params.Cast<TerrainCost>().ToList();
+                HashSet<string> footTerrain = terrains.Where(t => terrainCosts.First(tc => tc.Name == t.CostName).Foot < 255)
+                    .Select(t => t.Tid).ToHashSet();
+                List<Node<int>> deploymentSlotCounts;
+                if (settings.DeploymentSlots.GetArg<bool>(0))
+                    deploymentSlotCounts = arrangements.Select(t => new Node<int>(MaxDeployment[t.id])).ToList();
+                else
+                {
+                    deploymentSlotCounts = arrangements.Select(t => new Node<int>(t.ds.GetDeploymentCount())).ToList();
+                    deploymentSlotCounts.Randomize(n => n.value, (n, i) => n.value = i, settings.DeploymentSlots.Distribution, 0, PlayableCharacters.Count);
+                }
+                for (int i = 0; i < arrangements.Count; i++)
+                {
+                    DataSet ads = arrangements[i].ds;
+                    MapTerrain mt = (MapTerrain)mapTerrains[i].ds.Single;
+                    ParamGroup pg = ads.GetDeploymentGroup();
+                    int newCount = deploymentSlotCounts[i].value;
+                    while (ads.GetDeploymentCount() > newCount)
+                        pg.Group.Remove(pg.Group.Cast<Arrangement>().Where(a => a.GetFlag(7)).GetRandom());
+                    List<(sbyte x, sbyte y)> legalPositions = new();
+                    sbyte expandArea = 0;
+                    List<Arrangement> oldUnitsInArea = pg.Group.Cast<Arrangement>().ToList();
+                    List<Arrangement> newUnits = new();
+                    while ((ads.GetDeploymentCount() + newUnits.Count).Between(0, newCount))
+                    {
+                        Arrangement newUnit = (Arrangement)pg.Group.Cast<Arrangement>().Where(a => a.GetFlag(7)).GetRandom().Clone();
+                        while (!legalPositions.Any())
+                        {
+                            (sbyte min, sbyte max) xRange = (oldUnitsInArea.Select(a => a.DisposX).Min(),
+                                oldUnitsInArea.Select(a => a.DisposX).Max());
+                            (sbyte min, sbyte max) yRange = (oldUnitsInArea.Select(a => a.DisposY).Min(),
+                                oldUnitsInArea.Select(a => a.DisposY).Max());
+                            if (new int[] { xRange.min, yRange.min }.Any(i => i < 1) || new int[] { xRange.max, yRange.max }.Any(i => i > 31))
+                            {
+
+                            }
+                            xRange = ((sbyte)Math.Max(xRange.min - expandArea, 1), (sbyte)Math.Min(xRange.max + expandArea, mt.m_Width - 2));
+                            yRange = ((sbyte)Math.Max(yRange.min - expandArea, 1), (sbyte)Math.Min(yRange.max + expandArea, mt.m_Height - 2));
+                            for (sbyte x = xRange.min; x <= xRange.max; x++)
+                                for (sbyte y = yRange.min; y <= yRange.max; y++)
+                                    if (footTerrain.Contains(mt.GetTerrain(x, y)) && !ads.Params.Cast<ParamGroup>().Any(pg =>
+                                        pg.Group.Cast<Arrangement>().Any(a => a.DisposX == x && a.DisposY == y)))
+                                        legalPositions.Add((x, y));
+                            if (!legalPositions.Any())
+                                expandArea++;
+                        }
+                        (sbyte x, sbyte y) newPos = legalPositions.GetRandom();
+                        legalPositions.Remove(newPos);
+                        (newUnit.DisposX, newUnit.DisposY) = newPos;
+                        newUnits.Add(newUnit);
+                    }
+                    pg.Group.AddRange(newUnits);
+                }
+                WriteToChangelog(entries, arrangements, t => t.ds.GetDeploymentCount(), "Deployment Slots");
+                GD.SetDirty(DataSetEnum.Arrangement, arrangements);
+            }
+
+            StringBuilder innerTable = new();
+            foreach ((string id, DataSet ds) t in arrangements)
+                if (entries[t].Length > 0)
+                {
+                    innerTable.AppendLine($"\t{AllMaps.IDToName(t.id)}:");
+                    innerTable.AppendLine(entries[t].ToString());
+                }
+
+            return ApplyTableTitle(innerTable, "Map Units");
         }
 
         private StringBuilder RandomizeAssetTable(RandomizerSettings.AssetTableSettings settings)
@@ -1461,7 +1540,8 @@ namespace ALittleSecretIngredient
             IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> baseStructure = tosRankStructure.Where(t => !t.tos.IsAdvancedOrSpecial());
             IEnumerable<(List<Node<int>> ranks, TypeOfSoldier tos)> advancedStructure = tosRankStructure.Where(t => t.tos.IsAdvancedOrSpecial());
             baseStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i, settings.MaxWeaponLevelBase.Distribution, 1, 10);
-            advancedStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i, settings.MaxWeaponLevelAdvanced.Distribution, 1, 10);
+            advancedStructure.SelectMany(t => t.ranks).ToList().Randomize(n => n.value, (n, i) => n.value = i,
+                settings.MaxWeaponLevelAdvanced.Distribution, 1, 10);
             IEnumerable<string> proficiencyLevels = Enum.GetNames(typeof(ProficiencyLevel)).Select(s => s.Replace('p', '+'));
             foreach ((List<Node<int>> newRanks, TypeOfSoldier tos) in tosRankStructure)
             {
@@ -1831,6 +1911,10 @@ namespace ALittleSecretIngredient
             List<int> totalLevels = npcClassCharacters.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
             List<(string id, DataSet ds)> staticUnitArrangements = GD.GetGroup(DataSetEnum.Arrangement, StaticUnitMaps);
             List<(string id, DataSet ds)> staticUnitMapTerrains = GD.GetGroup(DataSetEnum.MapTerrain, StaticUnitMaps);
+            List<Terrain> terrains = GD.Get(DataSetEnum.Terrain).Params.Cast<Terrain>().ToList();
+            List<TerrainCost> terrainCost = GD.Get(DataSetEnum.TerrainCost).Params.Cast<TerrainCost>().ToList();
+            HashSet<string> flierTerrain = terrains.Select(t => (t.Tid, terrainCost.First(tc => tc.Name == t.CostName)))
+                .Where(t => t.Item2.Fly < 255 && t.Item2.Foot == 255).Select(t => t.Tid).ToHashSet();
             if (settings.JidEnemy.GetArg<bool>(0))
             {
                 Dictionary<string, string> classMapping = new();
@@ -1872,7 +1956,7 @@ namespace ALittleSecretIngredient
                 legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 // This is specifically to avoid placing non-fliers on flier terrain.
-                if (IsOnFlierTile(i.Pid, staticUnitArrangements, staticUnitMapTerrains))
+                if (IsOnTargetTerrain(i.Pid, staticUnitArrangements, staticUnitMapTerrains, flierTerrain))
                     legalClassIDs = legalClassIDs.Where(s => toss.First(tos => tos.Jid == s).MoveType == 3).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
                 EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon, false);
@@ -2103,18 +2187,19 @@ namespace ALittleSecretIngredient
             i.Level = (byte)(totalLevel - (i.GetTOS(toss).Rank == 1 ? 20 : 0));
         }
 
-        private static bool IsOnFlierTile(string pid, List<(string id, DataSet ds)> arrangements, List<(string id, DataSet ds)> terrains)
+        private static bool IsOnTargetTerrain(string pid, List<(string id, DataSet ds)> arrangements, List<(string id, DataSet ds)> mapTerrains,
+            HashSet<string> targetTerrain)
         {
             foreach ((string disposID, DataSet ds) in arrangements)
                 foreach (ParamGroup pg in ds.Params.Cast<ParamGroup>())
                     foreach (Arrangement a in pg.Group.Cast<Arrangement>())
                         if (a.Pid == pid)
                         {
-                            MapTerrain mt = (MapTerrain)terrains.First(t => t.id == disposID).ds.Single;
+                            MapTerrain mt = (MapTerrain)mapTerrains.First(t => t.id == disposID).ds.Single;
                             string disposTerrain = mt.GetTerrain(a.DisposX, a.DisposY);
                             string appearTerrain = mt.GetTerrain(a.AppearX, a.AppearY);
-                            if ((a.DisposX, a.DisposY) != (0, 0) && FlierTerrain.Contains(disposTerrain) ||
-                                (a.AppearX, a.AppearY) != (0, 0) && FlierTerrain.Contains(appearTerrain))
+                            if ((a.DisposX, a.DisposY) != (0, 0) && targetTerrain.Contains(disposTerrain) ||
+                                (a.AppearX, a.AppearY) != (0, 0) && targetTerrain.Contains(appearTerrain))
                                 return true;
                         }
             return false;
@@ -2175,7 +2260,8 @@ namespace ALittleSecretIngredient
                 primaryMatches + Math.Min(secondaryMatches, 1) - secondaryTotal + Math.Min(tertiaryMatches, 2) - tertiaryTotal;
         }
 
-        private void RandomizeStatLimits(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters, Dictionary<Individual, StringBuilder> entries)
+        private void RandomizeStatLimits(RandomizerSettings.IndividualSettings settings, List<Individual> playableCharacters,
+            Dictionary<Individual, StringBuilder> entries)
         {
             playableCharacters.Randomize(i => i.LimitHp, (i, s) => i.LimitHp = s, settings.LimitHp.Distribution,
                                 sbyte.MinValue, sbyte.MaxValue);

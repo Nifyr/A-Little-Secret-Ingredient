@@ -13,6 +13,7 @@ namespace ALittleSecretIngredient.Forms
         private TypeOfSoldierForm TypeOfSoldier { get; set; }
         private BondLevelForm BondLevel { get; set; }
         private IndividualForm Individual { get; set; }
+        private ArrangementForm Arrangement { get; set; }
         public MainForm()
         {
             GlobalData = new();
@@ -23,6 +24,7 @@ namespace ALittleSecretIngredient.Forms
             BondLevel = new(GlobalData);
             TypeOfSoldier = new(GlobalData);
             Individual = new(GlobalData);
+            Arrangement = new(GlobalData);
         }
         private static DialogResult LoadDumpDialog()
         {
@@ -473,6 +475,8 @@ namespace ALittleSecretIngredient.Forms
                     new object[] { Individual.checkBox43.Checked, Individual.checkBox45.Checked });
                 rs.Individual.CommonSidsCount = new(Individual.checkBox41.Checked, Individual.CommonSidsCount.Get(), Array.Empty<object>());
 
+                rs.Arrangement.DeploymentSlots = new(Arrangement.checkBox2.Checked, Arrangement.DeploymentSlots.Get(), new object[] { Arrangement.checkBox1.Checked });
+
                 return rs;
             }
             set
@@ -895,6 +899,10 @@ namespace ALittleSecretIngredient.Forms
                 Individual.CommonSidsCount.Set(value.Individual.CommonSidsCount.Distribution);
                 Individual.checkBox43.Checked = value.Individual.CommonSids.GetArg<bool>(0);
                 Individual.checkBox45.Checked = value.Individual.CommonSids.GetArg<bool>(1);
+
+                Arrangement.checkBox2.Checked = value.Arrangement.DeploymentSlots.Enabled;
+                Arrangement.DeploymentSlots.Set(value.Arrangement.DeploymentSlots.Distribution);
+                Arrangement.checkBox1.Checked = value.Arrangement.DeploymentSlots.GetArg<bool>(0);
             }
         }
 
@@ -1042,6 +1050,12 @@ namespace ALittleSecretIngredient.Forms
         {
             TypeOfSoldier.Show();
             TypeOfSoldier.Activate();
+        }
+
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            Arrangement.Show();
+            Arrangement.Activate();
         }
     }
 }

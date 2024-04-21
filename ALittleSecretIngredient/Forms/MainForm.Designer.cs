@@ -46,6 +46,7 @@
             button6 = new Button();
             button5 = new Button();
             toolTip1 = new ToolTip(components);
+            button7 = new Button();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -164,6 +165,7 @@
             flowLayoutPanel1.Controls.Add(button3);
             flowLayoutPanel1.Controls.Add(button6);
             flowLayoutPanel1.Controls.Add(button5);
+            flowLayoutPanel1.Controls.Add(button7);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(3, 23);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -236,6 +238,16 @@
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
             // 
+            // button7
+            // 
+            button7.Location = new Point(3, 213);
+            button7.Name = "button7";
+            button7.Size = new Size(200, 29);
+            button7.TabIndex = 9;
+            button7.Text = "Map Units";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += Button7_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -273,5 +285,6 @@
         private CheckBox exportLayeredFSCheckBox;
         private CheckBox exportCobaltCheckBox;
         private Button button6;
+        private Button button7;
     }
 }

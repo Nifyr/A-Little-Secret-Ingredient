@@ -17,7 +17,7 @@ namespace ALittleSecretIngredient.Structs
         internal OverlapData[] m_Overlaps { get; set; }
         internal string[] m_Terrains { get; set; }
 
-        internal string GetTerrain(int x, int y) => m_Terrains[y * 32 + x];
+        internal string GetTerrain(sbyte x, sbyte y) => m_Terrains[y * 32 + x];
     }
 
     internal class GameObject

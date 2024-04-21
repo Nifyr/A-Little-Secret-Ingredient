@@ -15,7 +15,9 @@ namespace ALittleSecretIngredient
         internal NumericDistributionSetup GetNumericDistributionSetup(RandomizerDistribution dfe)
         {
             DataSetEnum dse = DistributionToDataSet[dfe];
-            DataSet dataSet = GD.Get(dse);
+            DataSet dataSet = null!;
+            if (DataSetToSheetName.ContainsKey(dse))
+                dataSet = GD.Get(dse);
             switch (dse)
             {
                 case DataSetEnum.GodGeneral:
@@ -847,6 +849,18 @@ namespace ALittleSecretIngredient
                             nds27.distributions[1] = new UniformRelative(10, -1, 1);
                             nds27.idx = 1;
                             return nds27;
+                        default:
+                            throw new ArgumentException("Unsupported data field: " + dfe);
+                    }
+                case DataSetEnum.Arrangement:
+                    List<(string id, DataSet ds)> dispos = GD.GetGroup(dse, AllMaps);
+                    switch (dfe)
+                    {
+                        case RandomizerDistribution.DeploymentSlots:
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(dispos, t => t.ds.Params.Cast<ParamGroup>().First(pg =>
+                                PlayerArrangementGroups.Contains(((Arrangement)pg.GroupMarker).Group)).Group.Cast<Arrangement>().Count(a => a.GetFlag(7)));
+                            nds0.idx = 4;
+                            return nds0;
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }

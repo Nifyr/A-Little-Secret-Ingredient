@@ -303,7 +303,8 @@
         AttrsAlly,
         AttrsEnemy,
         CommonSids,
-        DeploymentSlots
+        DeploymentSlots,
+        EnemyCount
     }
 
     internal enum ExportFormat

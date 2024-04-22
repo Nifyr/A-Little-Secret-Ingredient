@@ -94,6 +94,8 @@ namespace ALittleSecretIngredient.Structs
     {
         internal static DataParam Create(XmlNode n, Type paramType)
         {
+            if (paramType.Name == "Arrangement" && n.SelectAttributes().Any(xa => xa.Name == "LevelMin"))
+                paramType = typeof(GArrangement);
             DataParam dp = (DataParam)paramType.GetConstructor(Array.Empty<Type>())!.Invoke(Array.Empty<object>());
             foreach (PropertyInfo p in paramType.GetRuntimeProperties())
                 p.SetValue(dp, n.ParseTo(p));

@@ -32,18 +32,23 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangementForm));
             flowLayoutPanel1 = new FlowLayoutPanel();
             groupBox1 = new GroupBox();
+            checkBox1 = new CheckBox();
             button2 = new Button();
             checkBox2 = new CheckBox();
+            groupBox2 = new GroupBox();
+            button1 = new Button();
+            checkBox4 = new CheckBox();
             toolTip1 = new ToolTip(components);
-            checkBox1 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoScroll = true;
             flowLayoutPanel1.Controls.Add(groupBox1);
+            flowLayoutPanel1.Controls.Add(groupBox2);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
@@ -65,6 +70,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Deployment Slots";
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(9, 91);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(177, 24);
+            checkBox1.TabIndex = 4;
+            checkBox1.Text = "Max deployment slots";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
             // button2
             // 
             button2.Location = new Point(9, 56);
@@ -85,35 +100,60 @@
             checkBox2.Text = "Randomize count";
             checkBox2.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            groupBox2.AutoSize = true;
+            groupBox2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox2.Controls.Add(button1);
+            groupBox2.Controls.Add(checkBox4);
+            groupBox2.Location = new Point(3, 150);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(203, 111);
+            groupBox2.TabIndex = 2;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Enemy Count";
+            // 
+            // button1
+            // 
+            button1.Location = new Point(9, 56);
+            button1.Name = "button1";
+            button1.Size = new Size(188, 29);
+            button1.TabIndex = 3;
+            button1.Text = "Enemy Count";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Button1_Click;
+            // 
+            // checkBox4
+            // 
+            checkBox4.AutoSize = true;
+            checkBox4.Location = new Point(9, 26);
+            checkBox4.Name = "checkBox4";
+            checkBox4.Size = new Size(147, 24);
+            checkBox4.TabIndex = 2;
+            checkBox4.Text = "Randomize count";
+            checkBox4.UseVisualStyleBackColor = true;
+            // 
             // toolTip1
             // 
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
             // 
-            // checkBox1
-            // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(9, 91);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(177, 24);
-            checkBox1.TabIndex = 4;
-            checkBox1.Text = "Max deployment slots";
-            checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // DisposForm
+            // ArrangementForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(836, 433);
             Controls.Add(flowLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "DisposForm";
-            Text = "Bond Level Table Settings";
+            Name = "ArrangementForm";
+            Text = "Map Unit Settings";
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -125,5 +165,8 @@
         public CheckBox checkBox2;
         private ToolTip toolTip1;
         public CheckBox checkBox1;
+        private GroupBox groupBox2;
+        public Button button1;
+        public CheckBox checkBox4;
     }
 }

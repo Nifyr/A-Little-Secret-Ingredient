@@ -461,6 +461,7 @@ namespace ALittleSecretIngredient.Structs
         public class ArrangementSettings : RandomizerTableSettings
         {
             public RandomizerFieldSettings DeploymentSlots { get; set; } = new();
+            public RandomizerFieldSettings EnemyCount { get; set; } = new();
         }
     }
 

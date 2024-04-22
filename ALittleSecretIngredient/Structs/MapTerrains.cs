@@ -17,7 +17,14 @@ namespace ALittleSecretIngredient.Structs
         internal OverlapData[] m_Overlaps { get; set; }
         internal string[] m_Terrains { get; set; }
 
-        internal string GetTerrain(sbyte x, sbyte y) => m_Terrains[y * 32 + x];
+        internal List<string> GetTerrain(sbyte x, sbyte y)
+        {
+            List<string> terrains = new() {  m_Terrains[y * 32 + x] };
+            foreach (LayerData ld in m_Layers)
+                if (((int)x).Between(ld.X - 1, ld.X + ld.W) && ((int)y).Between(ld.Y - 1, ld.Y + ld.H))
+                    terrains.Add(ld.Attr);
+            return terrains;
+        }
     }
 
     internal class GameObject

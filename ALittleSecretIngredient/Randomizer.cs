@@ -3,6 +3,7 @@ using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
 using static ALittleSecretIngredient.GameDataLookup;
+using System.Net;
 
 namespace ALittleSecretIngredient
 {
@@ -162,72 +163,98 @@ namespace ALittleSecretIngredient
 
         private StringBuilder RandomizeArrangement(RandomizerSettings.ArrangementSettings settings)
         {
-            List<(string id, DataSet ds)> arrangements = GD.GetGroup(DataSetEnum.Arrangement, AllMaps);
-            Dictionary<(string id, DataSet ds), StringBuilder> entries = CreateStringBuilderDictionary(arrangements);
+            List<(string id, DataSet ds)> mapArrangements = GD.GetGroup(DataSetEnum.Arrangement, AllMaps);
+            List<(string id, DataSet ds)> mapTerrains = GD.GetGroup(DataSetEnum.MapTerrain, AllMaps.ToMapTerrains());
+            List<Terrain> terrains = GD.Get(DataSetEnum.Terrain).Params.Cast<Terrain>().ToList();
+            List<TerrainCost> terrainCosts = GD.Get(DataSetEnum.TerrainCost).Params.Cast<TerrainCost>().ToList();
+            Dictionary<string, Individual> individuals = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToDictionary(i => i.Pid);
+            Dictionary<(string id, DataSet ds), StringBuilder> entries = CreateStringBuilderDictionary(mapArrangements);
+            HashSet<string> footTerrain = terrains.Where(t => terrainCosts.First(tc => tc.Name == t.CostName).Foot < 255)
+                .Select(t => t.Tid).ToHashSet();
+            HashSet<string> flierTerrain = terrains.Where(t => terrainCosts.First(tc => tc.Name == t.CostName).Fly < 255)
+                .Select(t => t.Tid).ToHashSet();
 
             if (settings.DeploymentSlots.Enabled || settings.DeploymentSlots.GetArg<bool>(0))
             {
-                List<(string id, DataSet ds)> mapTerrains = GD.GetGroup(DataSetEnum.MapTerrain, AllMaps.ToMapTerrains());
-                List<Terrain> terrains = GD.Get(DataSetEnum.Terrain).Params.Cast<Terrain>().ToList();
-                List<TerrainCost> terrainCosts = GD.Get(DataSetEnum.TerrainCost).Params.Cast<TerrainCost>().ToList();
-                HashSet<string> footTerrain = terrains.Where(t => terrainCosts.First(tc => tc.Name == t.CostName).Foot < 255)
-                    .Select(t => t.Tid).ToHashSet();
                 List<Node<int>> deploymentSlotCounts;
                 if (settings.DeploymentSlots.GetArg<bool>(0))
-                    deploymentSlotCounts = arrangements.Select(t => new Node<int>(MaxDeployment[t.id])).ToList();
+                    deploymentSlotCounts = mapArrangements.Select(t => new Node<int>(MaxDeployment[t.id])).ToList();
                 else
                 {
-                    deploymentSlotCounts = arrangements.Select(t => new Node<int>(t.ds.GetDeploymentCount())).ToList();
+                    deploymentSlotCounts = mapArrangements.Select(t => new Node<int>(t.ds.GetDeploymentCount())).ToList();
                     deploymentSlotCounts.Randomize(n => n.value, (n, i) => n.value = i, settings.DeploymentSlots.Distribution, 0, PlayableCharacters.Count);
                 }
-                for (int i = 0; i < arrangements.Count; i++)
+                for (int idx = 0; idx < mapArrangements.Count; idx++)
                 {
-                    DataSet ads = arrangements[i].ds;
-                    MapTerrain mt = (MapTerrain)mapTerrains[i].ds.Single;
-                    ParamGroup pg = ads.GetDeploymentGroup();
-                    int newCount = deploymentSlotCounts[i].value;
-                    while (ads.GetDeploymentCount() > newCount)
-                        pg.Group.Remove(pg.Group.Cast<Arrangement>().Where(a => a.GetFlag(7)).GetRandom());
+                    DataSet ds = mapArrangements[idx].ds;
+                    MapTerrain mt = (MapTerrain)mapTerrains[idx].ds.Single;
+                    ParamGroup pg = ds.GetDeploymentGroup();
+                    int newCount = deploymentSlotCounts[idx].value;
+                    IEnumerable<Arrangement> genericDeployments;
+                    while ((genericDeployments = ds.GetGenericDeployments()).Any() && ds.GetDeploymentCount() > newCount)
+                        pg.Group.Remove(genericDeployments.GetRandom());
+                    List<Arrangement> areaUnits = pg.Group.Cast<Arrangement>().ToList();
+                    List<Arrangement> srcUnits = ds.GetGenericDeployments().ToList();
                     List<(sbyte x, sbyte y)> legalPositions = new();
-                    sbyte expandArea = 0;
-                    List<Arrangement> oldUnitsInArea = pg.Group.Cast<Arrangement>().ToList();
-                    List<Arrangement> newUnits = new();
-                    while ((ads.GetDeploymentCount() + newUnits.Count).Between(0, newCount))
+                    while (srcUnits.Any() && ds.GetDeploymentCount() < newCount)
                     {
-                        Arrangement newUnit = (Arrangement)pg.Group.Cast<Arrangement>().Where(a => a.GetFlag(7)).GetRandom().Clone();
-                        while (!legalPositions.Any())
-                        {
-                            (sbyte min, sbyte max) xRange = (oldUnitsInArea.Select(a => a.DisposX).Min(),
-                                oldUnitsInArea.Select(a => a.DisposX).Max());
-                            (sbyte min, sbyte max) yRange = (oldUnitsInArea.Select(a => a.DisposY).Min(),
-                                oldUnitsInArea.Select(a => a.DisposY).Max());
-                            if (new int[] { xRange.min, yRange.min }.Any(i => i < 1) || new int[] { xRange.max, yRange.max }.Any(i => i > 31))
-                            {
-
-                            }
-                            xRange = ((sbyte)Math.Max(xRange.min - expandArea, 1), (sbyte)Math.Min(xRange.max + expandArea, mt.m_Width - 2));
-                            yRange = ((sbyte)Math.Max(yRange.min - expandArea, 1), (sbyte)Math.Min(yRange.max + expandArea, mt.m_Height - 2));
-                            for (sbyte x = xRange.min; x <= xRange.max; x++)
-                                for (sbyte y = yRange.min; y <= yRange.max; y++)
-                                    if (footTerrain.Contains(mt.GetTerrain(x, y)) && !ads.Params.Cast<ParamGroup>().Any(pg =>
-                                        pg.Group.Cast<Arrangement>().Any(a => a.DisposX == x && a.DisposY == y)))
-                                        legalPositions.Add((x, y));
-                            if (!legalPositions.Any())
-                                expandArea++;
-                        }
+                        Arrangement newUnit = (Arrangement)srcUnits.GetRandom().Clone();
+                        if (!legalPositions.Any())
+                            legalPositions = GetBestPositions(ds, areaUnits, mt, null, footTerrain, individuals);
+                        if (!legalPositions.Any())
+                            break;
                         (sbyte x, sbyte y) newPos = legalPositions.GetRandom();
                         legalPositions.Remove(newPos);
                         (newUnit.DisposX, newUnit.DisposY) = newPos;
-                        newUnits.Add(newUnit);
+                        pg.Group.Add(newUnit);
                     }
-                    pg.Group.AddRange(newUnits);
                 }
-                WriteToChangelog(entries, arrangements, t => t.ds.GetDeploymentCount(), "Deployment Slots");
-                GD.SetDirty(DataSetEnum.Arrangement, arrangements);
+                WriteToChangelog(entries, mapArrangements, t => t.ds.GetDeploymentCount(), "Deployment Slots");
+                GD.SetDirty(DataSetEnum.Arrangement, mapArrangements);
+            }
+
+            if (settings.EnemyCount.Enabled)
+            {
+                List<TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToList();
+                List<int> before = mapArrangements.Select(t => t.ds.GetEnemyCount()).ToList();
+                List<Node<int>> enemyCounts = mapArrangements.Select(t => new Node<int>(t.ds.GetEnemies().Count())).ToList();
+                enemyCounts.Randomize(n => n.value, (n, i) => n.value = i, settings.EnemyCount.Distribution, 0, ushort.MaxValue);
+                for (int idx = 0; idx < mapArrangements.Count; idx++)
+                {
+                    DataSet ds = mapArrangements[idx].ds;
+                    MapTerrain mt = (MapTerrain)mapTerrains[idx].ds.Single;
+                    int newCount = enemyCounts[idx].value;
+                    while (ds.GetGenericEnemies().Any() && ds.GetEnemies().Count() > newCount)
+                    {
+                        Arrangement remove = ds.GetGenericEnemies().GetRandom();
+                        ParamGroup targetPG = ds.Params.Cast<ParamGroup>().First(pg => pg.Group.Contains(remove));
+                        targetPG.Group.Remove(remove);
+                    }
+                    List<Arrangement> srcUnits = ds.GetGenericEnemies().ToList();
+                    while (srcUnits.Any() && ds.GetEnemies().Count() < newCount)
+                    {
+                        Arrangement srcUnit = srcUnits.GetRandom();
+                        Arrangement newUnit = (Arrangement)srcUnit.Clone();
+                        individuals.TryGetValue(newUnit.Pid, out Individual? i);
+                        HashSet<string> legalTerrain = i is not null && i.GetTOS(toss).MoveType == 3 ? flierTerrain : footTerrain;
+                        ParamGroup targetPG = ds.Params.Cast<ParamGroup>().First(pg => pg.Group.Contains(srcUnit));
+                        List<Arrangement> areaUnits = targetPG.Group.Cast<Arrangement>().ToList();
+                        List<(sbyte x, sbyte y)> legalPositions = GetBestPositions(ds, areaUnits, mt, i, legalTerrain, individuals);
+                        if (!legalPositions.Any())
+                            break;
+                        (newUnit.DisposX, newUnit.DisposY) = legalPositions.GetRandom();
+                        targetPG.Group.Add(newUnit);
+                    }
+                }
+                List<int> diff = new();
+                for (int i = 0; i < mapArrangements.Count; i++)
+                    diff.Add(mapArrangements[i].ds.GetEnemyCount() - before[i]);
+                WriteDiffToChangelog(entries, mapArrangements, diff, "Enemy Count");
+                GD.SetDirty(DataSetEnum.Arrangement, mapArrangements);
             }
 
             StringBuilder innerTable = new();
-            foreach ((string id, DataSet ds) t in arrangements)
+            foreach ((string id, DataSet ds) t in mapArrangements)
                 if (entries[t].Length > 0)
                 {
                     innerTable.AppendLine($"\t{AllMaps.IDToName(t.id)}:");
@@ -235,6 +262,45 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innerTable, "Map Units");
+        }
+
+        private static void WriteDiffToChangelog<A>(Dictionary<A, StringBuilder> changelogEntries, List<A> objects, List<int> diff,
+            string propertyName) where A : notnull
+        {
+            for (int i = 0; i < objects.Count; i++)
+                changelogEntries[objects[i]].AppendLine(propertyName + ":\t" + (diff[i] < 0 ? "" : "+") + diff[i]);
+        }
+
+        private static List<(sbyte x, sbyte y)> GetBestPositions(DataSet mapArrangement, IEnumerable<Arrangement> areaUnits, MapTerrain mt,
+            Individual? newIndividual, HashSet<string> legalTerrain, Dictionary<string, Individual> individuals)
+        {
+            (sbyte minX, sbyte maxX, sbyte minY, sbyte maxY) = (areaUnits.Select(a => a.DisposX).Min(),
+                areaUnits.Select(a => a.DisposX).Max(), areaUnits.Select(a => a.DisposY).Min(), areaUnits.Select(a => a.DisposY).Max());
+            bool[,] occupation = new bool[mt.m_Width, mt.m_Height];
+            foreach (Arrangement a in mapArrangement.Params.Cast<ParamGroup>().SelectMany(pg => pg.Group.Cast<Arrangement>()))
+            {
+                byte size = individuals.TryGetValue(a.Pid, out Individual? i) ? i.BmapSize : (byte)1;
+                for (sbyte x = a.DisposX; x < a.DisposX + size; x++)
+                    for (sbyte y = a.DisposY; y < a.DisposY + size; y++)
+                        occupation[x, y] = true;
+            }
+            List<(sbyte x, sbyte y)> legalPositions = new();
+            sbyte expandArea = 0;
+            int limit = Math.Max(mt.m_Width, mt.m_Height) - 3;
+            while (!legalPositions.Any() && expandArea <= limit)
+            {
+                (sbyte minX, sbyte maxX, sbyte minY, sbyte maxY) candidateArea =
+                    ((sbyte)Math.Max(minX - expandArea, 1), (sbyte)Math.Min(maxX + expandArea, mt.m_Width - 2),
+                    (sbyte)Math.Max(minY - expandArea, 1), (sbyte)Math.Min(maxY + expandArea, mt.m_Height - 2));
+                for (sbyte x = candidateArea.minX; x <= candidateArea.maxX; x++)
+                    for (sbyte y = candidateArea.minY; y <= candidateArea.maxY; y++)
+                        if ((expandArea == 0 || !(x.Between(candidateArea.minX, candidateArea.maxX) && y.Between(candidateArea.minY, candidateArea.maxY))) &&
+                            mt.IsValidPosition(newIndividual, x, y, legalTerrain, occupation))
+                            legalPositions.Add((x, y));
+                if (!legalPositions.Any())
+                    expandArea++;
+            }
+            return legalPositions;
         }
 
         private StringBuilder RandomizeAssetTable(RandomizerSettings.AssetTableSettings settings)
@@ -1956,7 +2022,7 @@ namespace ALittleSecretIngredient
                 legalClassIDs = legalClassIDs.Select(s => toss.First(tos => tos.Jid == s)).Where(tos => tos.MaxLevel == 40 ||
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 // This is specifically to avoid placing non-fliers on flier terrain.
-                if (IsOnTargetTerrain(i.Pid, staticUnitArrangements, staticUnitMapTerrains, flierTerrain))
+                if (IsOnTargetTerrain(i, staticUnitArrangements, staticUnitMapTerrains, flierTerrain))
                     legalClassIDs = legalClassIDs.Where(s => toss.First(tos => tos.Jid == s).MoveType == 3).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
                 EnsureUsableWeapons(toss, weaponIDs, i, settings.ForceUsableWeapon, false);
@@ -2187,21 +2253,19 @@ namespace ALittleSecretIngredient
             i.Level = (byte)(totalLevel - (i.GetTOS(toss).Rank == 1 ? 20 : 0));
         }
 
-        private static bool IsOnTargetTerrain(string pid, List<(string id, DataSet ds)> arrangements, List<(string id, DataSet ds)> mapTerrains,
+        private static bool IsOnTargetTerrain(Individual i, List<(string id, DataSet ds)> arrangements, List<(string id, DataSet ds)> mapTerrains,
             HashSet<string> targetTerrain)
         {
             foreach ((string disposID, DataSet ds) in arrangements)
                 foreach (ParamGroup pg in ds.Params.Cast<ParamGroup>())
                     foreach (Arrangement a in pg.Group.Cast<Arrangement>())
-                        if (a.Pid == pid)
-                        {
-                            MapTerrain mt = (MapTerrain)mapTerrains.First(t => t.id == disposID).ds.Single;
-                            string disposTerrain = mt.GetTerrain(a.DisposX, a.DisposY);
-                            string appearTerrain = mt.GetTerrain(a.AppearX, a.AppearY);
-                            if ((a.DisposX, a.DisposY) != (0, 0) && targetTerrain.Contains(disposTerrain) ||
-                                (a.AppearX, a.AppearY) != (0, 0) && targetTerrain.Contains(appearTerrain))
-                                return true;
-                        }
+                        if (a.Pid == i.Pid)
+                            for (sbyte x = a.DisposX; x < a.DisposX + i.BmapSize; x++)
+                                for (sbyte y = a.DisposY; y < a.DisposY + i.BmapSize; y++)
+                                    if ((a.DisposX, a.DisposY) != (0, 0) && ((MapTerrain)mapTerrains.First(t => t.id == disposID).ds.Single)
+                                        .GetTerrain(x, y).Any(targetTerrain.Contains))
+                                        return true;
+                                            // What is this, functional programming?
             return false;
         }
 

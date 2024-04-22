@@ -476,6 +476,7 @@ namespace ALittleSecretIngredient.Forms
                 rs.Individual.CommonSidsCount = new(Individual.checkBox41.Checked, Individual.CommonSidsCount.Get(), Array.Empty<object>());
 
                 rs.Arrangement.DeploymentSlots = new(Arrangement.checkBox2.Checked, Arrangement.DeploymentSlots.Get(), new object[] { Arrangement.checkBox1.Checked });
+                rs.Arrangement.EnemyCount = new(Arrangement.checkBox4.Checked, Arrangement.EnemyCount.Get(), Array.Empty<object>());
 
                 return rs;
             }
@@ -903,6 +904,8 @@ namespace ALittleSecretIngredient.Forms
                 Arrangement.checkBox2.Checked = value.Arrangement.DeploymentSlots.Enabled;
                 Arrangement.DeploymentSlots.Set(value.Arrangement.DeploymentSlots.Distribution);
                 Arrangement.checkBox1.Checked = value.Arrangement.DeploymentSlots.GetArg<bool>(0);
+                Arrangement.checkBox4.Checked = value.Arrangement.EnemyCount.Enabled;
+                Arrangement.EnemyCount.Set(value.Arrangement.EnemyCount.Distribution);
             }
         }
 

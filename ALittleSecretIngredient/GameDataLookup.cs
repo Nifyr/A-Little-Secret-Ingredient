@@ -13,7 +13,8 @@ namespace ALittleSecretIngredient
         internal static string IDToName<T>(this List<(T id, string name)> entities, T id) => entities.First(t => t.id!.Equals(id)).name;
         internal static sbyte GetInternalLevel(this Individual i, List<TypeOfSoldier> toss) =>
             i.InternalLevel != 0 ? i.InternalLevel : i.GetTOS(toss).InternalLevel;
-        internal static TypeOfSoldier GetTOS(this Individual i, List<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
+        internal static TypeOfSoldier GetTOS(this Individual i, IEnumerable<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
+        internal static Individual? GetIndividual(this Arrangement a, IEnumerable<Individual> ins) => ins.FirstOrDefault(i => i.Pid == a.Pid);
         internal static Gender GetGender(this Individual i)
         {
             if (i.Name == "MPID_Lueur" || i.Name == "MPID_PastLueur")
@@ -27,7 +28,45 @@ namespace ALittleSecretIngredient
 
         internal static ParamGroup GetDeploymentGroup(this DataSet ds) => ds.Params.Cast<ParamGroup>().First(pg =>
                         PlayerArrangementGroups.Contains(((Arrangement)pg.GroupMarker).Group));
+        internal static IEnumerable<Arrangement> GetGenericDeployments(this DataSet ds) =>
+            ds.GetDeploymentGroup().Group.Cast<Arrangement>().Where(a => a.GetFlag(7) && DeploymentSlotPids.Contains(a.Pid));
         internal static int GetDeploymentCount(this DataSet ds) => ds.GetDeploymentGroup().Group.Cast<Arrangement>().Count(a => a.GetFlag(7));
+        internal static IEnumerable<Arrangement> GetEnemies(this DataSet ds) => ds.Params.Cast<ParamGroup>()
+            .SelectMany(pg => pg.Group.Cast<Arrangement>()).Where(a => a.Force == 1);
+
+        internal static IEnumerable<Arrangement> GetGenericEnemies(this DataSet ds) => ds.GetEnemies().Where(a => !a.GetFlag(4));
+
+        // Assuming maddening and high level where relevant
+        internal static int GetEnemyCount(this DataSet ds) => ds.Params.Cast<ParamGroup>().SelectMany(pg => pg.Group.Cast<Arrangement>())
+            .Count(a => a.GetFlag(2) && a.Force == 1 && (a is not GArrangement ga || !ga.LevelMax.Between<byte>(0, 255)));
+
+        internal static bool Occupies(this Arrangement a, int x, int y, Dictionary<string, Individual> ins)
+        {
+            byte size = ins.TryGetValue(a.Pid, out Individual? i) ? i.BmapSize : (byte)1;
+            return x.Between(a.DisposX - 1, a.DisposX + size) && y.Between(a.DisposY - 1, a.DisposY + size);
+        }
+
+        internal static bool IsLegalTerrain(this MapTerrain mt, byte size, sbyte x, sbyte y, HashSet<string> legalTerrain)
+        {
+            for (sbyte x0 = x; x0 < x + size; x0++)
+                for (sbyte y0 = y; y0 < y + size; y0++)
+                    if (!mt.GetTerrain(x0, y0).All(legalTerrain.Contains))
+                        return false;
+            return true;
+        }
+
+        internal static bool IsValidPosition(this MapTerrain mt, Individual? i, sbyte x, sbyte y, HashSet<string> legalTerrain,
+            bool[,] occupation)
+        {
+            byte size = i is null ? (byte)1 : i.BmapSize;
+            if (!mt.IsLegalTerrain(size, x, y, legalTerrain))
+                return false;
+            for (sbyte x0 = x; x0 < x + size; x0++)
+                for (sbyte y0 = y; y0 < y + size; y0++)
+                    if (occupation[x0, y0])
+                        return false;
+            return true;
+        }
 
         internal static List<(string id, string name)> ToMapTerrains(this List<(string id, string name)> maps) =>
             maps.Select(t => (t.id.TrimEnd('E'), t.name)).ToList();
@@ -324,6 +363,7 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.AttrsEnemy, DataSetEnum.Individual },
             { RandomizerDistribution.CommonSids, DataSetEnum.Individual },
             { RandomizerDistribution.DeploymentSlots, DataSetEnum.Arrangement },
+            { RandomizerDistribution.EnemyCount, DataSetEnum.Arrangement },
         };
 
         internal static Dictionary<(FileEnum fe, string sheetName), Type> DataParamTypes { get; } = new();
@@ -2240,7 +2280,7 @@ namespace ALittleSecretIngredient
             ("M009E","Skirmish Chapter 9"), ("M010E","Skirmish Chapter 10"), ("M011E","Skirmish Chapter 11"), ("M012E","Skirmish Chapter 12"),
             ("M013E","Skirmish Chapter 13"), ("M014E","Skirmish Chapter 14"), ("M015E","Skirmish Chapter 15"), ("M016E","Skirmish Chapter 16"),
             ("M017E","Skirmish Chapter 17"), ("M018E","Skirmish Chapter 18"), ("M019E","Skirmish Chapter 19"), ("M020E","Skirmish Chapter 20"),
-            ("M021E","Skirmish Chapter 21"), ("M022E","Skirmish Chapter 22"), ("M023E","Skirmish Chapter 23"),
+            ("M022E","Skirmish Chapter 22"), ("M023E","Skirmish Chapter 23"),
             ("M025E","Skirmish Chapter 25"),
             ("S001E","Skirmish Paralogue 1"), ("S002E","Skirmish Paralogue 2"), ("S003E","Skirmish Paralogue 3"), ("S004E","Skirmish Paralogue 4"),
             ("S005E","Skirmish Paralogue 5"), ("S006E","Skirmish Paralogue 6"), ("S007E","Skirmish Paralogue 7"), ("S008E","Skirmish Paralogue 8"),
@@ -2299,9 +2339,6 @@ namespace ALittleSecretIngredient
             ("SID_リンエンゲージ技_隠密", "Astra Storm [Covert]"), ("SID_リンエンゲージ技_気功", "Astra Storm [Qi Adept]"),
             ("SID_リンエンゲージ技_威力減", "Weak Astra Storm"), ("SID_リンエンゲージ技_闇_気功", "Weak Astra Storm [Qi Adept]"),
             ("SID_カムイエンゲージ技", "Torrential Roar"), ("SID_カムイエンゲージ技_竜族", "Torrential Roar [Dragon]"),
-            ("SID_リュールエンゲージ技", "Dragon Blast"),
-            ("SID_リュールエンゲージ技_竜族", "Dragon Blast [Dragon]"), ("SID_リュールエンゲージ技_連携", "Dragon Blast [Backup]"),
-            ("SID_リュールエンゲージ技_魔法", "Dragon Blast [Mystical]"), ("SID_リュールエンゲージ技_気功", "Dragon Blast [Qi Adept]"),
             ("SID_切り抜け", "Run Through"),
             ("SID_幻月", "Paraselene"), ("SID_計略_引込の計", "Assembly Gambit"),
             ("SID_計略_猛火計", "Flame Gambit"), ("SID_計略_聖盾の備え", "Shield Gambit"),
@@ -2347,6 +2384,9 @@ namespace ALittleSecretIngredient
             ("SID_ベレトエンゲージ技_気功", "Goddess Dance [Qi Adept]"), ("SID_ベレトエンゲージ技_闇", "Diabolical Dance"),
             ("SID_エイリークエンゲージ技", "Twin Strike"), ("SID_エイリークエンゲージ技_竜族", "Twin Strike [Dragon]"),
             ("SID_エイリークエンゲージ技_騎馬", "Twin Strike [Cavalry]"),
+            ("SID_リュールエンゲージ技", "Dragon Blast"),
+            ("SID_リュールエンゲージ技_竜族", "Dragon Blast [Dragon]"), ("SID_リュールエンゲージ技_連携", "Dragon Blast [Backup]"),
+            ("SID_リュールエンゲージ技_魔法", "Dragon Blast [Mystical]"), ("SID_リュールエンゲージ技_気功", "Dragon Blast [Qi Adept]"),
             ("SID_リュールエンゲージ技共同", "Bond Blast"), ("SID_リュールエンゲージ技共同_竜族", "Bond Blast [Dragon]"),
             ("SID_リュールエンゲージ技共同_連携", "Bond Blast [Backup]"), ("SID_リュールエンゲージ技共同_魔法", "Bond Blast [Mystical]"),
             ("SID_リュールエンゲージ技共同_気功", "Bond Blast [Qi Adept]"),
@@ -3162,10 +3202,10 @@ namespace ALittleSecretIngredient
 
         internal static Dictionary<string, int> MaxDeployment { get; } = new()
         {
-            { "E001", 35 }, { "E002", 35 }, { "E003", 35 }, { "E004", 35 }, { "E005", 35 }, { "E006", 35 },
+            { "E001", 35 }, { "E002", 35 }, { "E003", 36 }, { "E004", 36 }, { "E005", 36 }, { "E006", 36 },
             { "G001", 41 }, { "G002", 41 }, { "G003", 41 }, { "G004", 41 }, { "G005", 41 }, { "G006", 41 },
-            { "M001", 0 }, { "M002", 0 }, { "M003", 0 }, { "M004", 6 }, { "M005", 7 }, { "M006", 10 }, { "M007", 17 }, { "M008", 20 },
-            { "M009", 22 }, { "M010", 23 }, { "M011", 23 }, { "M012", 20 }, { "M013", 29 }, { "M014", 30 }, { "M015", 33 }, { "M016", 34 },
+            { "M001", 0 }, { "M002", 0 }, { "M003", 0 }, { "M004", 6 }, { "M005", 9 }, { "M006", 10 }, { "M007", 17 }, { "M008", 20 },
+            { "M009", 22 }, { "M010", 23 }, { "M011", 23 }, { "M012", 20 }, { "M013", 29 }, { "M014", 32 }, { "M015", 33 }, { "M016", 34 },
             { "M017", 36 }, { "M018", 36 }, { "M019", 37 }, { "M020", 38 }, { "M021", 38 }, { "M022", 39 }, { "M023", 40 }, { "M024", 40 },
             { "M025", 40 }, { "M026", 40 },
             { "S001", 39 }, { "S002", 39 }, { "S003", 40 }, { "S004", 40 }, { "S005", 40 }, { "S006", 40 }, { "S007", 40 }, { "S008", 40 },
@@ -3174,10 +3214,15 @@ namespace ALittleSecretIngredient
             { "G001E", 41 }, { "G002E", 41 }, { "G003E", 41 }, { "G004E", 41 }, { "G005E", 41 }, { "G006E", 41 },
             { "M004E", 41 }, { "M005E", 41 }, { "M006E", 41 }, { "M007E", 41 }, { "M008E", 41 },
             { "M009E", 41 }, { "M010E", 41 }, { "M011E", 41 }, { "M012E", 41 }, { "M013E", 41 }, { "M014E", 41 }, { "M015E", 41 }, { "M016E", 41 },
-            { "M017E", 41 }, { "M018E", 41 }, { "M019E", 41 }, { "M020E", 41 }, { "M021E", 41 }, { "M022E", 41 }, { "M023E", 41 },
+            { "M017E", 41 }, { "M018E", 41 }, { "M019E", 41 }, { "M020E", 41 }, { "M022E", 41 }, { "M023E", 41 },
             { "M025E", 41 },
             { "S001E", 41 }, { "S002E", 41 }, { "S003E", 41 }, { "S004E", 41 }, { "S005E", 41 }, { "S006E", 41 }, { "S007E", 41 }, { "S008E", 41 },
             { "S009E", 41 }, { "S010E", 41 }, { "S011E", 41 }, { "S012E", 41 }, { "S013E", 41 }, { "S014E", 41 }, { "S015E", 41 },
+        };
+
+        internal static List<string> DeploymentSlotPids { get; } = new()
+        {
+            "PID_ダミー", ""
         };
         #endregion
 

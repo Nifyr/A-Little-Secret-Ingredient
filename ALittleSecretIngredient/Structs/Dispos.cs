@@ -82,4 +82,10 @@ namespace ALittleSecretIngredient.Structs
             return Group == "" ? null : Group;
         }
     }
+
+    internal class GArrangement : Arrangement
+    {
+        internal byte LevelMin { get; set; }
+        internal byte LevelMax { get; set; }
+    }
 }

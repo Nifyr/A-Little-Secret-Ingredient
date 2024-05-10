@@ -29,6 +29,7 @@ Made with artistic passion!
 - Character Personal Skills
 - Character Proficiencies
 - Character Starting Classes
+- Character Starting Inventories
 - Character Starting Levels
 - Character Starting SP
 - Character Stat Growths
@@ -63,10 +64,19 @@ Made with artistic passion!
 - Enemy Base Stat Modifiers
 - Enemy Class Stat Growths
 - Enemy Classes
+- Enemy Emblems
+- Enemy Extra Skills
+- Enemy Inventories
+- Enemy Item Drops
 - Enemy Levels
 - Enemy Maddening Skills
 - Enemy Personal Skills
+- Enemy Revival Stones
 - Enemy Static Starting Inventories
+- Map Deployment Slots
+- Map Enemy Counts
+- Map Forced Deployments
+- Map Unit Positions
 
 ## About
 You may have noticed that buttons are littered all over the settings windows, all of which open one of two types of windows: a numeric distribution control or a selection distribution control. These windows serve as ways for you to edit the probability distributions of each individual randomization option. If this sounds like a bother to learn and to deal with, know that it is entirely optional. All of them come pre-set with an acceptable - "mid-heat," so to speak - configuration.

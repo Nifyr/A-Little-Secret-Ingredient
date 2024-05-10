@@ -45,8 +45,8 @@
             button3 = new Button();
             button6 = new Button();
             button5 = new Button();
-            toolTip1 = new ToolTip(components);
             button7 = new Button();
+            toolTip1 = new ToolTip(components);
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -217,7 +217,7 @@
             button6.Location = new Point(3, 143);
             button6.Name = "button6";
             button6.Size = new Size(200, 29);
-            button6.TabIndex = 8;
+            button6.TabIndex = 7;
             button6.Text = "Class Data";
             button6.UseVisualStyleBackColor = true;
             button6.Click += Button6_Click;
@@ -227,16 +227,10 @@
             button5.Location = new Point(3, 178);
             button5.Name = "button5";
             button5.Size = new Size(200, 29);
-            button5.TabIndex = 7;
+            button5.TabIndex = 8;
             button5.Text = "Character Data";
             button5.UseVisualStyleBackColor = true;
             button5.Click += Button5_Click;
-            // 
-            // toolTip1
-            // 
-            toolTip1.AutoPopDelay = 60000;
-            toolTip1.InitialDelay = 0;
-            toolTip1.ReshowDelay = 0;
             // 
             // button7
             // 
@@ -247,6 +241,12 @@
             button7.Text = "Map Units";
             button7.UseVisualStyleBackColor = true;
             button7.Click += Button7_Click;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 60000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 0;
             // 
             // MainForm
             // 

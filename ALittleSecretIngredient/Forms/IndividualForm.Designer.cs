@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IndividualForm));
             flowLayoutPanel1 = new FlowLayoutPanel();
             groupBox14 = new GroupBox();
-            checkBox30 = new CheckBox();
             checkBox26 = new CheckBox();
             button71 = new Button();
             checkBox24 = new CheckBox();
@@ -181,13 +180,13 @@
             button89 = new Button();
             checkBox38 = new CheckBox();
             groupBox18 = new GroupBox();
+            checkBox45 = new CheckBox();
             checkBox43 = new CheckBox();
             button92 = new Button();
             checkBox41 = new CheckBox();
             button93 = new Button();
             checkBox42 = new CheckBox();
             toolTip1 = new ToolTip(components);
-            checkBox45 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox14.SuspendLayout();
             groupBox7.SuspendLayout();
@@ -241,7 +240,6 @@
             // 
             groupBox14.AutoSize = true;
             groupBox14.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            groupBox14.Controls.Add(checkBox30);
             groupBox14.Controls.Add(checkBox26);
             groupBox14.Controls.Add(button71);
             groupBox14.Controls.Add(checkBox24);
@@ -251,26 +249,15 @@
             groupBox14.Location = new Point(3, 3);
             groupBox14.MinimumSize = new Size(200, 0);
             groupBox14.Name = "groupBox14";
-            groupBox14.Size = new Size(200, 266);
+            groupBox14.Size = new Size(200, 236);
             groupBox14.TabIndex = 0;
             groupBox14.TabStop = false;
             groupBox14.Text = "Starting Class";
             // 
-            // checkBox30
-            // 
-            checkBox30.AutoSize = true;
-            checkBox30.Location = new Point(6, 121);
-            checkBox30.Name = "checkBox30";
-            checkBox30.Size = new Size(171, 24);
-            checkBox30.TabIndex = 10;
-            checkBox30.Text = "Force usable weapon";
-            toolTip1.SetToolTip(checkBox30, "This compels every unit to begin with a weapon they can utilize if their class was randomized, *regardless* of the situation.");
-            checkBox30.UseVisualStyleBackColor = true;
-            // 
             // checkBox26
             // 
             checkBox26.AutoSize = true;
-            checkBox26.Location = new Point(6, 216);
+            checkBox26.Location = new Point(6, 186);
             checkBox26.Name = "checkBox26";
             checkBox26.Size = new Size(133, 24);
             checkBox26.TabIndex = 13;
@@ -280,7 +267,7 @@
             // 
             // button71
             // 
-            button71.Location = new Point(6, 181);
+            button71.Location = new Point(6, 151);
             button71.Name = "button71";
             button71.Size = new Size(188, 29);
             button71.TabIndex = 12;
@@ -291,7 +278,7 @@
             // checkBox24
             // 
             checkBox24.AutoSize = true;
-            checkBox24.Location = new Point(6, 151);
+            checkBox24.Location = new Point(6, 121);
             checkBox24.Name = "checkBox24";
             checkBox24.Size = new Size(165, 24);
             checkBox24.TabIndex = 11;
@@ -337,7 +324,7 @@
             groupBox7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox7.Controls.Add(button1);
             groupBox7.Controls.Add(checkBox20);
-            groupBox7.Location = new Point(3, 275);
+            groupBox7.Location = new Point(3, 245);
             groupBox7.MinimumSize = new Size(200, 0);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new Size(200, 111);
@@ -371,7 +358,7 @@
             groupBox1.AutoSize = true;
             groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox1.Controls.Add(checkBox1);
-            groupBox1.Location = new Point(3, 392);
+            groupBox1.Location = new Point(3, 362);
             groupBox1.MinimumSize = new Size(200, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(200, 76);
@@ -1953,6 +1940,18 @@
             groupBox18.TabStop = false;
             groupBox18.Text = "Personal Skills";
             // 
+            // checkBox45
+            // 
+            checkBox45.AutoSize = true;
+            checkBox45.Location = new Point(21, 186);
+            checkBox45.Margin = new Padding(18, 3, 3, 3);
+            checkBox45.Name = "checkBox45";
+            checkBox45.Size = new Size(155, 24);
+            checkBox45.TabIndex = 9;
+            checkBox45.Text = "Preserve boss skills";
+            toolTip1.SetToolTip(checkBox45, "This ensures that boss skills like Anchor and Bond Breaker remain *unchanged.*");
+            checkBox45.UseVisualStyleBackColor = true;
+            // 
             // checkBox43
             // 
             checkBox43.AutoSize = true;
@@ -2011,18 +2010,6 @@
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
-            // 
-            // checkBox45
-            // 
-            checkBox45.AutoSize = true;
-            checkBox45.Location = new Point(21, 186);
-            checkBox45.Margin = new Padding(18, 3, 3, 3);
-            checkBox45.Name = "checkBox45";
-            checkBox45.Size = new Size(155, 24);
-            checkBox45.TabIndex = 9;
-            checkBox45.Text = "Preserve boss skills";
-            toolTip1.SetToolTip(checkBox45, "This ensures that boss skills like Anchor and Bond Breaker remain *unchanged.*");
-            checkBox45.UseVisualStyleBackColor = true;
             // 
             // IndividualForm
             // 
@@ -2205,7 +2192,6 @@
         private Button button83;
         public CheckBox checkBox28;
         public CheckBox checkBox29;
-        public CheckBox checkBox30;
         private GroupBox groupBox16;
         private Button button87;
         public CheckBox checkBox35;

@@ -462,6 +462,19 @@ namespace ALittleSecretIngredient.Structs
         {
             public RandomizerFieldSettings DeploymentSlots { get; set; } = new();
             public RandomizerFieldSettings EnemyCount { get; set; } = new();
+            public RandomizerFieldSettings ForcedDeployment { get; set; } = new();
+            public RandomizerFieldSettings UnitPosition { get; set; } = new();
+            public RandomizerFieldSettings ItemsWeaponsAlly { get; set; } = new();
+            public RandomizerFieldSettings ItemsWeaponsAllyCount { get; set; } = new();
+            public RandomizerFieldSettings ItemsItemsAlly { get; set; } = new();
+            public RandomizerFieldSettings ItemsItemsAllyCount { get; set; } = new();
+            public RandomizerFieldSettings ItemsWeaponsEnemy { get; set; } = new();
+            public RandomizerFieldSettings ItemsWeaponsEnemyCount { get; set; } = new();
+            public RandomizerFieldSettings ItemsItemsEnemy { get; set; } = new();
+            public RandomizerFieldSettings ItemsItemsEnemyCount { get; set; } = new();
+            public RandomizerFieldSettings Sid { get; set; } = new();
+            public RandomizerFieldSettings Gid { get; set; } = new();
+            public RandomizerFieldSettings HpStockCount { get; set; } = new();
         }
     }
 

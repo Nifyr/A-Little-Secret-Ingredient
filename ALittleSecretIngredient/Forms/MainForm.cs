@@ -25,6 +25,7 @@ namespace ALittleSecretIngredient.Forms
             TypeOfSoldier = new(GlobalData);
             Individual = new(GlobalData);
             Arrangement = new(GlobalData);
+            GlobalData.SubscribeToStatusUpdate(StatusUpdate);
         }
         private static DialogResult LoadDumpDialog()
         {
@@ -254,7 +255,8 @@ namespace ALittleSecretIngredient.Forms
                     BondLevel.Cost.Get(), Array.Empty<object>());
 
                 rs.TypeOfSoldier.StyleName = new(TypeOfSoldier.checkBox20.Checked, TypeOfSoldier.StyleName.Get(), Array.Empty<object>());
-                rs.TypeOfSoldier.MoveType = new(TypeOfSoldier.checkBox1.Checked, TypeOfSoldier.MoveType.Get(), new object[] { TypeOfSoldier.checkBox2.Checked });
+                rs.TypeOfSoldier.MoveType = new(TypeOfSoldier.checkBox1.Checked, TypeOfSoldier.MoveType.Get(),
+                    new object[] { TypeOfSoldier.checkBox2.Checked });
                 rs.TypeOfSoldier.Weapon = new(TypeOfSoldier.checkBox3.Checked, TypeOfSoldier.Weapon.Get(), new object[] { TypeOfSoldier.checkBox5.Checked });
                 rs.TypeOfSoldier.RandomizeWeaponTypeCount = TypeOfSoldier.checkBox4.Checked;
                 rs.TypeOfSoldier.WeaponBaseCount = new(false, TypeOfSoldier.WeaponBaseCount.Get(), Array.Empty<object>());
@@ -336,8 +338,10 @@ namespace ALittleSecretIngredient.Forms
                 rs.TypeOfSoldier.BaseGrowSightAdvanced = new(false, TypeOfSoldier.BaseGrowSightAdvanced.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.BaseGrowMoveAdvanced = new(false, TypeOfSoldier.BaseGrowMoveAdvanced.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.BaseGrowTotalBase = new(TypeOfSoldier.checkBox12.Checked, TypeOfSoldier.BaseGrowTotalBase.Get(), Array.Empty<object>());
-                rs.TypeOfSoldier.BaseGrowTotalAdvanced = new(TypeOfSoldier.checkBox12.Checked, TypeOfSoldier.BaseGrowTotalAdvanced.Get(), Array.Empty<object>());
-                rs.TypeOfSoldier.RandomizeStatGrowthModifiers = new(TypeOfSoldier.checkBox15.Checked, null!, new object[] { TypeOfSoldier.checkBox14.Checked });
+                rs.TypeOfSoldier.BaseGrowTotalAdvanced = new(TypeOfSoldier.checkBox12.Checked,
+                    TypeOfSoldier.BaseGrowTotalAdvanced.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.RandomizeStatGrowthModifiers = new(TypeOfSoldier.checkBox15.Checked, null!,
+                    new object[] { TypeOfSoldier.checkBox14.Checked });
                 rs.TypeOfSoldier.DiffGrowHpBase = new(false, TypeOfSoldier.DiffGrowHpBase.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.DiffGrowStrBase = new(false, TypeOfSoldier.DiffGrowStrBase.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.DiffGrowTechBase = new(false, TypeOfSoldier.DiffGrowTechBase.Get(), Array.Empty<object>());
@@ -361,7 +365,8 @@ namespace ALittleSecretIngredient.Forms
                 rs.TypeOfSoldier.DiffGrowSightAdvanced = new(false, TypeOfSoldier.DiffGrowSightAdvanced.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.DiffGrowMoveAdvanced = new(false, TypeOfSoldier.DiffGrowMoveAdvanced.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.DiffGrowTotalBase = new(TypeOfSoldier.checkBox14.Checked, TypeOfSoldier.DiffGrowTotalBase.Get(), Array.Empty<object>());
-                rs.TypeOfSoldier.DiffGrowTotalAdvanced = new(TypeOfSoldier.checkBox14.Checked, TypeOfSoldier.DiffGrowTotalAdvanced.Get(), Array.Empty<object>());
+                rs.TypeOfSoldier.DiffGrowTotalAdvanced = new(TypeOfSoldier.checkBox14.Checked,
+                    TypeOfSoldier.DiffGrowTotalAdvanced.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.LearningSkill = new(TypeOfSoldier.checkBox17.Checked, TypeOfSoldier.LearningSkill.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.LunaticSkill = new(TypeOfSoldier.checkBox16.Checked, TypeOfSoldier.LunaticSkill.Get(), Array.Empty<object>());
                 rs.TypeOfSoldier.Attrs = new(TypeOfSoldier.checkBox18.Checked, TypeOfSoldier.Attrs.Get(), new object[] { TypeOfSoldier.checkBox21.Checked });
@@ -369,7 +374,9 @@ namespace ALittleSecretIngredient.Forms
 
                 rs.Individual.JidAlly = new(Individual.checkBox22.Checked, Individual.JidAlly.Get(), new object[] { Individual.checkBox23.Checked });
                 rs.Individual.JidEnemy = new(Individual.checkBox24.Checked, Individual.JidEnemy.Get(), new object[] { Individual.checkBox26.Checked });
+                /* Removed
                 rs.Individual.ForceUsableWeapon = Individual.checkBox30.Checked;
+                */
                 rs.Individual.Age = new(Individual.checkBox20.Checked, Individual.Age.Get(), Array.Empty<object>());
                 rs.Individual.RandomizeBirthday = Individual.checkBox1.Checked;
                 rs.Individual.LevelAlly = new(Individual.checkBox2.Checked, Individual.LevelAlly.Get(), Array.Empty<object>());
@@ -475,8 +482,37 @@ namespace ALittleSecretIngredient.Forms
                     new object[] { Individual.checkBox43.Checked, Individual.checkBox45.Checked });
                 rs.Individual.CommonSidsCount = new(Individual.checkBox41.Checked, Individual.CommonSidsCount.Get(), Array.Empty<object>());
 
-                rs.Arrangement.DeploymentSlots = new(Arrangement.checkBox2.Checked, Arrangement.DeploymentSlots.Get(), new object[] { Arrangement.checkBox1.Checked });
+                rs.Arrangement.DeploymentSlots = new(Arrangement.checkBox2.Checked, Arrangement.DeploymentSlots.Get(),
+                    new object[] { Arrangement.checkBox1.Checked });
                 rs.Arrangement.EnemyCount = new(Arrangement.checkBox4.Checked, Arrangement.EnemyCount.Get(), Array.Empty<object>());
+                rs.Arrangement.ForcedDeployment = new(Arrangement.checkBox3.Checked, Arrangement.ForcedDeployment.Get(),
+                    new object[] { Arrangement.checkBox5.Checked });
+                rs.Arrangement.UnitPosition = new(false, null!,
+                    new object[] { Arrangement.checkBox6.Checked, Arrangement.checkBox7.Checked, Arrangement.checkBox8.Checked,
+                        Arrangement.checkBox9.Checked, (double)Arrangement.numericUpDown2.Value, (byte)Arrangement.numericUpDown1.Value });
+                rs.Arrangement.ItemsWeaponsAlly = new(Arrangement.checkBox10.Checked, Arrangement.ItemsWeaponsAlly.Get(),
+                    new object[] { Arrangement.checkBox12.Checked, Arrangement.checkBox13.Checked });
+                rs.Arrangement.ItemsWeaponsAllyCount = new(Arrangement.checkBox11.Checked, Arrangement.ItemsWeaponsAllyCount.Get(),
+                    Array.Empty<object>());
+                rs.Arrangement.ItemsItemsAlly = new(Arrangement.checkBox14.Checked, Arrangement.ItemsItemsAlly.Get(),
+                    Array.Empty<object>());
+                rs.Arrangement.ItemsItemsAllyCount = new(Arrangement.checkBox15.Checked, Arrangement.ItemsItemsAllyCount.Get(),
+                    Array.Empty<object>());
+                rs.Arrangement.ItemsWeaponsEnemy = new(Arrangement.checkBox21.Checked, Arrangement.ItemsWeaponsEnemy.Get(),
+                    new object[] { Arrangement.checkBox19.Checked, Arrangement.checkBox18.Checked, Arrangement.checkBox22.Checked,
+                        (double)Arrangement.numericUpDown3.Value });
+                rs.Arrangement.ItemsWeaponsEnemyCount = new(Arrangement.checkBox20.Checked, Arrangement.ItemsWeaponsEnemyCount.Get(),
+                    Array.Empty<object>());
+                rs.Arrangement.ItemsItemsEnemy = new(Arrangement.checkBox17.Checked, Arrangement.ItemsItemsEnemy.Get(),
+                    new object[] { Arrangement.checkBox23.Checked, (double)Arrangement.numericUpDown4.Value, Arrangement.checkBox24.Checked });
+                rs.Arrangement.ItemsItemsEnemyCount = new(Arrangement.checkBox16.Checked, Arrangement.ItemsItemsEnemyCount.Get(),
+                    Array.Empty<object>());
+                rs.Arrangement.Sid = new(Arrangement.checkBox25.Checked, Arrangement.Sid.Get(),
+                    new object[] { Arrangement.checkBox26.Checked, (double)Arrangement.numericUpDown5.Value, (double)Arrangement.numericUpDown6.Value });
+                rs.Arrangement.Gid = new(Arrangement.checkBox28.Checked, Arrangement.Gid.Get(),
+                    new object[] { Arrangement.checkBox27.Checked, (double)Arrangement.numericUpDown8.Value, (double)Arrangement.numericUpDown7.Value });
+                rs.Arrangement.HpStockCount = new(Arrangement.checkBox30.Checked, Arrangement.HpStockCount.Get(),
+                    new object[] { Arrangement.checkBox29.Checked, (double)Arrangement.numericUpDown10.Value, (double)Arrangement.numericUpDown9.Value });
 
                 return rs;
             }
@@ -769,7 +805,9 @@ namespace ALittleSecretIngredient.Forms
                 Individual.JidEnemy.Set(value.Individual.JidEnemy.Distribution);
                 Individual.checkBox26.Checked = value.Individual.JidEnemy.GetArg<bool>(0);
                 Individual.checkBox20.Checked = value.Individual.Age.Enabled;
+                /* Removed
                 Individual.checkBox30.Checked = value.Individual.ForceUsableWeapon;
+                */
                 Individual.Age.Set(value.Individual.Age.Distribution);
                 Individual.checkBox1.Checked = value.Individual.RandomizeBirthday;
                 Individual.checkBox2.Checked = value.Individual.LevelAlly.Enabled;
@@ -906,7 +944,62 @@ namespace ALittleSecretIngredient.Forms
                 Arrangement.checkBox1.Checked = value.Arrangement.DeploymentSlots.GetArg<bool>(0);
                 Arrangement.checkBox4.Checked = value.Arrangement.EnemyCount.Enabled;
                 Arrangement.EnemyCount.Set(value.Arrangement.EnemyCount.Distribution);
+                Arrangement.checkBox3.Checked = value.Arrangement.ForcedDeployment.Enabled;
+                Arrangement.checkBox5.Checked = value.Arrangement.ForcedDeployment.GetArg<bool>(0);
+                Arrangement.ForcedDeployment.Set(value.Arrangement.ForcedDeployment.Distribution);
+                Arrangement.checkBox6.Checked = value.Arrangement.UnitPosition.GetArg<bool>(0);
+                Arrangement.checkBox7.Checked = value.Arrangement.UnitPosition.GetArg<bool>(1);
+                Arrangement.checkBox8.Checked = value.Arrangement.UnitPosition.GetArg<bool>(2);
+                Arrangement.checkBox9.Checked = value.Arrangement.UnitPosition.GetArg<bool>(3);
+                Arrangement.numericUpDown2.Value = (decimal)value.Arrangement.UnitPosition.GetArg<double>(4);
+                Arrangement.numericUpDown1.Value = value.Arrangement.UnitPosition.GetArg<byte>(5);
+                Arrangement.checkBox10.Checked = value.Arrangement.ItemsWeaponsAlly.Enabled;
+                Arrangement.ItemsWeaponsAlly.Set(value.Arrangement.ItemsWeaponsAlly.Distribution);
+                Arrangement.checkBox11.Checked = value.Arrangement.ItemsWeaponsAllyCount.Enabled;
+                Arrangement.ItemsWeaponsAllyCount.Set(value.Arrangement.ItemsWeaponsAllyCount.Distribution);
+                Arrangement.checkBox12.Checked = value.Arrangement.ItemsWeaponsAlly.GetArg<bool>(0);
+                Arrangement.checkBox13.Checked = value.Arrangement.ItemsWeaponsAlly.GetArg<bool>(1);
+                Arrangement.checkBox14.Checked = value.Arrangement.ItemsItemsAlly.Enabled;
+                Arrangement.ItemsItemsAlly.Set(value.Arrangement.ItemsItemsAlly.Distribution);
+                Arrangement.checkBox15.Checked = value.Arrangement.ItemsItemsAllyCount.Enabled;
+                Arrangement.ItemsItemsAllyCount.Set(value.Arrangement.ItemsItemsAllyCount.Distribution);
+                Arrangement.checkBox21.Checked = value.Arrangement.ItemsWeaponsEnemy.Enabled;
+                Arrangement.ItemsWeaponsEnemy.Set(value.Arrangement.ItemsWeaponsEnemy.Distribution);
+                Arrangement.checkBox20.Checked = value.Arrangement.ItemsWeaponsEnemyCount.Enabled;
+                Arrangement.ItemsWeaponsEnemyCount.Set(value.Arrangement.ItemsWeaponsEnemyCount.Distribution);
+                Arrangement.checkBox19.Checked = value.Arrangement.ItemsWeaponsEnemy.GetArg<bool>(0);
+                Arrangement.checkBox18.Checked = value.Arrangement.ItemsWeaponsEnemy.GetArg<bool>(1);
+                Arrangement.checkBox22.Checked = value.Arrangement.ItemsWeaponsEnemy.GetArg<bool>(2);
+                Arrangement.numericUpDown3.Value = (decimal)value.Arrangement.ItemsWeaponsEnemy.GetArg<double>(3);
+                Arrangement.checkBox17.Checked = value.Arrangement.ItemsItemsEnemy.Enabled;
+                Arrangement.ItemsItemsEnemy.Set(value.Arrangement.ItemsItemsEnemy.Distribution);
+                Arrangement.checkBox16.Checked = value.Arrangement.ItemsItemsEnemyCount.Enabled;
+                Arrangement.ItemsItemsEnemyCount.Set(value.Arrangement.ItemsItemsEnemyCount.Distribution);
+                Arrangement.checkBox23.Checked = value.Arrangement.ItemsItemsEnemy.GetArg<bool>(0);
+                Arrangement.numericUpDown4.Value = (decimal)value.Arrangement.ItemsItemsEnemy.GetArg<double>(1);
+                Arrangement.checkBox24.Checked = value.Arrangement.ItemsItemsEnemy.GetArg<bool>(2);
+                Arrangement.checkBox25.Checked = value.Arrangement.Sid.Enabled;
+                Arrangement.Sid.Set(value.Arrangement.Sid.Distribution);
+                Arrangement.checkBox26.Checked = value.Arrangement.Sid.GetArg<bool>(0);
+                Arrangement.numericUpDown5.Value = (decimal)value.Arrangement.Sid.GetArg<double>(1);
+                Arrangement.numericUpDown6.Value = (decimal)value.Arrangement.Sid.GetArg<double>(2);
+                Arrangement.checkBox28.Checked = value.Arrangement.Gid.Enabled;
+                Arrangement.Gid.Set(value.Arrangement.Gid.Distribution);
+                Arrangement.checkBox27.Checked = value.Arrangement.Gid.GetArg<bool>(0);
+                Arrangement.numericUpDown8.Value = (decimal)value.Arrangement.Gid.GetArg<double>(1);
+                Arrangement.numericUpDown7.Value = (decimal)value.Arrangement.Gid.GetArg<double>(2);
+                Arrangement.checkBox30.Checked = value.Arrangement.HpStockCount.Enabled;
+                Arrangement.HpStockCount.Set(value.Arrangement.HpStockCount.Distribution);
+                Arrangement.checkBox29.Checked = value.Arrangement.HpStockCount.GetArg<bool>(0);
+                Arrangement.numericUpDown10.Value = (decimal)value.Arrangement.HpStockCount.GetArg<double>(1);
+                Arrangement.numericUpDown9.Value = (decimal)value.Arrangement.HpStockCount.GetArg<double>(2);
             }
+        }
+
+        private void StatusUpdate(string message)
+        {
+            Text = message;
+            //Activate();
         }
 
         private void MainForm_Load(object sender, EventArgs e)

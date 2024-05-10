@@ -244,11 +244,11 @@ namespace ALittleSecretIngredient
                     {
                         case RandomizerDistribution.ScaleAll:
                             NumericDistributionSetup nds0 = GetNumericDistributionSetup(assets.Where(a => a.ScaleAll != 0), a => a.ScaleAll);
-                            nds0.idx = 3;
+                            nds0.idx = 5;
                             return nds0;
                         case RandomizerDistribution.ScaleHead:
                             NumericDistributionSetup nds1 = GetNumericDistributionSetup(assets.Where(a => a.ScaleHead != 0), a => a.ScaleHead);
-                            nds1.idx = 4;
+                            nds1.idx = 5;
                             return nds1;
                         case RandomizerDistribution.ScaleNeck:
                             NumericDistributionSetup nds2 = GetNumericDistributionSetup(assets.Where(a => a.ScaleNeck != 0), a => a.ScaleNeck);
@@ -310,11 +310,11 @@ namespace ALittleSecretIngredient
                             return nds15;
                         case RandomizerDistribution.MapScaleAll:
                             NumericDistributionSetup nds16 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleAll != 0), a => a.MapScaleAll);
-                            nds16.idx = 4;
+                            nds16.idx = 5;
                             return nds16;
                         case RandomizerDistribution.MapScaleHead:
                             NumericDistributionSetup nds17 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleHead != 0), a => a.MapScaleHead);
-                            nds17.idx = 4;
+                            nds17.idx = 5;
                             return nds17;
                         case RandomizerDistribution.MapScaleWing:
                             NumericDistributionSetup nds18 = GetNumericDistributionSetup(assets.Where(a => a.MapScaleWing != 0), a => a.MapScaleWing);
@@ -360,7 +360,8 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.BasePhysBase:
                             return GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BasePhys);
                         case RandomizerDistribution.BaseSightBase:
-                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.BaseSight);
+                            NumericDistributionSetup nds0 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()),
+                                tos => tos.BaseSight);
                             nds0.distributions[0] = new UniformConstant(10, 2, 4);
                             nds0.idx = 0;
                             return nds0;
@@ -423,7 +424,8 @@ namespace ALittleSecretIngredient
                             nds3.idx = 3;
                             return nds3;
                         case RandomizerDistribution.LimitMoveBase:
-                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()), tos => tos.LimitMove);
+                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(allClasses.Where(tos => !tos.IsAdvancedOrSpecial()),
+                                tos => tos.LimitMove);
                             nds4.distributions[3] = new NormalConstant(10, 20, 5);
                             nds4.idx = 3;
                             return nds4;
@@ -446,12 +448,14 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.LimitPhysAdvanced:
                             return GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitPhys);
                         case RandomizerDistribution.LimitSightAdvanced:
-                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitSight);
+                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()),
+                                tos => tos.LimitSight);
                             nds5.distributions[3] = new NormalConstant(10, 20, 5);
                             nds5.idx = 3;
                             return nds5;
                         case RandomizerDistribution.LimitMoveAdvanced:
-                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()), tos => tos.LimitMove);
+                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(allClasses.Where(tos => tos.IsAdvancedOrSpecial()),
+                                tos => tos.LimitMove);
                             nds6.distributions[3] = new NormalConstant(10, 20, 5);
                             nds6.idx = 3;
                             return nds6;
@@ -696,7 +700,8 @@ namespace ALittleSecretIngredient
                             nds7.idx = 0;
                             return nds7;
                         case RandomizerDistribution.OffsetNTotalAlly:
-                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(allyCharacters, i => i.GetBasicOffsetN().Select(s => (int)s).Sum());
+                            NumericDistributionSetup nds8 = GetNumericDistributionSetup(allyCharacters, i =>
+                                i.GetBasicOffsetN().Select(s => (int)s).Sum());
                             nds8.idx = 4;
                             return nds8;
                         case RandomizerDistribution.OffsetNHpEnemy:
@@ -728,7 +733,8 @@ namespace ALittleSecretIngredient
                             nds10.idx = 0;
                             return nds10;
                         case RandomizerDistribution.OffsetNTotalEnemy:
-                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetN().Select(s => (int)s).Sum());
+                            NumericDistributionSetup nds11 = GetNumericDistributionSetup(enemyCharacters, i =>
+                                i.GetBasicOffsetN().Select(s => (int)s).Sum());
                             nds11.idx = 4;
                             return nds11;
                         case RandomizerDistribution.OffsetHHpEnemy:
@@ -760,7 +766,8 @@ namespace ALittleSecretIngredient
                             nds13.idx = 0;
                             return nds13;
                         case RandomizerDistribution.OffsetHTotalEnemy:
-                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetH().Select(s => (int)s).Sum());
+                            NumericDistributionSetup nds14 = GetNumericDistributionSetup(enemyCharacters, i =>
+                                i.GetBasicOffsetH().Select(s => (int)s).Sum());
                             nds14.idx = 4;
                             return nds14;
                         case RandomizerDistribution.OffsetLHpEnemy:
@@ -792,7 +799,8 @@ namespace ALittleSecretIngredient
                             nds16.idx = 0;
                             return nds16;
                         case RandomizerDistribution.OffsetLTotalEnemy:
-                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(enemyCharacters, i => i.GetBasicOffsetL().Select(s => (int)s).Sum());
+                            NumericDistributionSetup nds17 = GetNumericDistributionSetup(enemyCharacters, i =>
+                                i.GetBasicOffsetL().Select(s => (int)s).Sum());
                             nds17.idx = 4;
                             return nds17;
                         case RandomizerDistribution.LimitHp:
@@ -863,14 +871,14 @@ namespace ALittleSecretIngredient
                             nds24.idx = 4;
                             return nds24;
                         case RandomizerDistribution.ItemsWeapons:
-                            List<string> weaponIDs = NormalWeapons.GetIDs();
+                            List<string> weaponIDs = NormalAllyWeapons.GetIDs();
                             NumericDistributionSetup nds25 = GetNumericDistributionSetup(playableCharacters, i =>
                                 i.Items.Where(weaponIDs.Contains).Count());
                             nds25.distributions[4] = new NormalRelative(100, 0.4);
                             nds25.idx = 4;
                             return nds25;
                         case RandomizerDistribution.ItemsItems:
-                            List<string> itemIDs = BattleItems.GetIDs();
+                            List<string> itemIDs = AllyItems.GetIDs();
                             NumericDistributionSetup nds26 = GetNumericDistributionSetup(playableCharacters, i =>
                                 i.Items.Where(itemIDs.Contains).Count());
                             nds26.distributions[4] = new NormalRelative(100, 0.4);
@@ -892,6 +900,11 @@ namespace ALittleSecretIngredient
                     }
                 case DataSetEnum.Arrangement:
                     List<(string id, DataSet ds)> arrangements = GD.GetGroup(dse, AllMaps);
+                    HashSet<string> playableCharacterIDs = PlayableCharacters.GetIDs().ToHashSet();
+                    HashSet<string> allWeaponIDs = NormalEnemyWeapons.GetIDs().ToHashSet();
+                    HashSet<string> allItemIDs = EnemyItems.GetIDs().ToHashSet();
+                    List<Arrangement> newRecruits = arrangements.GetNewRecruits(playableCharacterIDs).ToList();
+                    List<Arrangement> enemies = arrangements.GetEnemies().ToList();
                     switch (dfe)
                     {
                         case RandomizerDistribution.DeploymentSlots:
@@ -899,9 +912,37 @@ namespace ALittleSecretIngredient
                             nds0.idx = 5;
                             return nds0;
                         case RandomizerDistribution.EnemyCount:
-                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(arrangements, t => t.ds.GetEnemyCount());
+                            NumericDistributionSetup nds1 = GetNumericDistributionSetup(arrangements, t => t.GetEnemyCount());
                             nds1.idx = 5;
                             return nds1;
+                        case RandomizerDistribution.ForcedDeployment:
+                            NumericDistributionSetup nds2 = GetNumericDistributionSetup(arrangements, t =>
+                                t.ds.GetDeployments().Count(a => a.GetFlag(8)));
+                            nds2.distributions[4] = new NormalRelative(100, 1);
+                            nds2.idx = 4;
+                            return nds2;
+                        case RandomizerDistribution.ItemsWeaponsAlly:
+                            NumericDistributionSetup nds3 = GetNumericDistributionSetup(newRecruits, a => a.GetItems()
+                                .Count(ai => allWeaponIDs.Contains(ai.iid)));
+                            nds3.idx = 4;
+                            return nds3;
+                        case RandomizerDistribution.ItemsItemsAlly:
+                            NumericDistributionSetup nds4 = GetNumericDistributionSetup(newRecruits, a => a.GetItems()
+                                .Count(ai => allItemIDs.Contains(ai.iid)));
+                            nds4.idx = 4;
+                            return nds4;
+                        case RandomizerDistribution.ItemsWeaponsEnemy:
+                            NumericDistributionSetup nds5 = GetNumericDistributionSetup(enemies, a => a.GetItems()
+                                .Count(ai => allWeaponIDs.Contains(ai.iid)));
+                            nds5.idx = 4;
+                            return nds5;
+                        case RandomizerDistribution.ItemsItemsEnemy:
+                            NumericDistributionSetup nds6 = GetNumericDistributionSetup(enemies, a => a.GetItems()
+                                .Count(ai => allItemIDs.Contains(ai.iid)));
+                            nds6.idx = 4;
+                            return nds6;
+                        case RandomizerDistribution.HpStockCount:
+                            return GetNumericDistributionSetup(enemies.Where(a => a.HpStockCount > 0), a => a.HpStockCount);
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
@@ -913,7 +954,9 @@ namespace ALittleSecretIngredient
         internal SelectionDistributionSetup GetSelectionDistributionSetup(RandomizerDistribution dfe)
         {
             DataSetEnum dse = DistributionToDataSet[dfe];
-            DataSet dataSet = GD.Get(dse);
+            DataSet dataSet = null!;
+            if (DataSetToSheetName.ContainsKey(dse))
+                dataSet = GD.Get(dse);
             switch (dse)
             {
                 case DataSetEnum.GodGeneral:
@@ -1019,7 +1062,8 @@ namespace ALittleSecretIngredient
                         case RandomizerDistribution.MoveType:
                             return GetSelectionDistributionSetup(generalClasses, tos => tos.MoveType, MovementTypes);
                         case RandomizerDistribution.Weapon:
-                            SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(generalClasses.SelectMany(tos => tos.GetBasicWeaponRequirements()),
+                            SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(generalClasses.SelectMany(tos =>
+                            tos.GetBasicWeaponRequirements()),
                                 i => i, BasicProficiencies);
                             sds0.idx = 1;
                             return sds0;
@@ -1054,15 +1098,15 @@ namespace ALittleSecretIngredient
                             return GetSelectionDistributionSetup(playableCharacters.SelectMany(i => i.GetSubAptitudes()), i => i,
                                 Proficiencies);
                         case RandomizerDistribution.ItemsWeapons:
-                            List<string> weaponIDs = NormalWeapons.GetIDs();
+                            List<string> weaponIDs = NormalAllyWeapons.GetIDs();
                             SelectionDistributionSetup sds0 = GetSelectionDistributionSetup(playableCharacters.SelectMany(i =>
-                                i.Items.Where(weaponIDs.Contains)), i => i, NormalWeapons);
+                                i.Items.Where(weaponIDs.Contains)), i => i, NormalAllyWeapons);
                             sds0.idx = 1;
                             return sds0;
                         case RandomizerDistribution.ItemsItems:
-                            List<string> itemIDs = BattleItems.GetIDs();
+                            List<string> itemIDs = AllyItems.GetIDs();
                             SelectionDistributionSetup sds1 = GetSelectionDistributionSetup(playableCharacters.SelectMany(i =>
-                                i.Items.Where(itemIDs.Contains)), i => i, BattleItems);
+                                i.Items.Where(itemIDs.Contains)), i => i, AllyItems);
                             sds1.idx = 1;
                             return sds1;
                         case RandomizerDistribution.AttrsAlly:
@@ -1077,6 +1121,44 @@ namespace ALittleSecretIngredient
                         default:
                             throw new ArgumentException("Unsupported data field: " + dfe);
                     }
+                case DataSetEnum.Arrangement:
+                    List<(string id, DataSet ds)> arrangements = GD.GetGroup(dse, AllMaps);
+                    HashSet<string> playableCharacterIDs = PlayableCharacters.GetIDs().ToHashSet();
+                    List<Arrangement> newRecruits = arrangements.GetNewRecruits(playableCharacterIDs).ToList();
+                    List<Arrangement> enemies = arrangements.GetEnemies().ToList();
+                    switch (dfe)
+                    {
+                        case RandomizerDistribution.ItemsWeaponsAlly:
+                            HashSet<string> allyWeaponIDs = NormalAllyWeapons.GetIDs().ToHashSet();
+                            return GetSelectionDistributionSetup(newRecruits.SelectMany(a =>
+                                a.GetItems().Where(ai => allyWeaponIDs.Contains(ai.iid))), ai => ai.iid, NormalAllyWeapons);
+                        case RandomizerDistribution.ItemsItemsAlly:
+                            HashSet<string> allyItemIDs = AllyItems.GetIDs().ToHashSet();
+                            return GetSelectionDistributionSetup(newRecruits.SelectMany(a =>
+                                a.GetItems().Where(ai => allyItemIDs.Contains(ai.iid))), ai => ai.iid, AllyItems);
+                        case RandomizerDistribution.ItemsWeaponsEnemy:
+                            HashSet<string> enemyWeaponIDs = NormalEnemyWeapons.GetIDs().ToHashSet();
+                            return GetSelectionDistributionSetup(enemies.SelectMany(a =>
+                                a.GetItems().Where(ai => enemyWeaponIDs.Contains(ai.iid))), ai => ai.iid, NormalEnemyWeapons);
+                        case RandomizerDistribution.ItemsItemsEnemy:
+                            HashSet<string> enemyItemIDs = EnemyItems.GetIDs().ToHashSet();
+                            return GetSelectionDistributionSetup(enemies.SelectMany(a =>
+                                a.GetItems().Where(ai => enemyItemIDs.Contains(ai.iid))), ai => ai.iid, EnemyItems);
+                        case RandomizerDistribution.Sid:
+                            HashSet<string> skillIDs = GeneralSkills.GetIDs().ToHashSet();
+                            SelectionDistributionSetup sds4 = GetSelectionDistributionSetup(enemies.Where(a =>
+                                skillIDs.Contains(a.Sid)), a => a.Sid, GeneralSkills);
+                            sds4.idx = 1;
+                            return sds4;
+                        case RandomizerDistribution.Gid:
+                            HashSet<string> enemyEmblemIDs = EnemyEngageableEmblems.GetIDs().ToHashSet();
+                            SelectionDistributionSetup sds5 = GetSelectionDistributionSetup(enemies.Where(a =>
+                                enemyEmblemIDs.Contains(a.Gid)), a => a.Gid, EnemyEngageableEmblems);
+                            sds5.idx = 1;
+                            return sds5;
+                        default:
+                            throw new ArgumentException("Unsupported data field: " + dfe);
+                    }
                 default:
                     throw new ArgumentException("Unsupported data set: " + dse);
             }
@@ -1088,6 +1170,8 @@ namespace ALittleSecretIngredient
         private static NumericDistributionSetup GetNumericDistributionSetup<T>(IEnumerable<T> objects, Func<T, double> f)
         {
             List<double> observations = new();
+            if (objects is not IList<T>)
+                objects = objects.ToArray();
             for (int item = 0; item < objects.Count(); item++)
                 observations.Add(f(objects.ElementAt(item)));
             return GetNumericDistributionSetup(observations);
@@ -1129,6 +1213,8 @@ namespace ALittleSecretIngredient
         {
             int[] instances = new int[entities.Count()];
             List<string> ids = entities.Select(t => t.id).ToList();
+            if (objects is not IList<T>)
+                objects = objects.ToArray();
             for (int i = 0; i < objects.Count(); i++)
             {
                 string id = getID(objects.ElementAt(i));
@@ -1146,6 +1232,8 @@ namespace ALittleSecretIngredient
         {
             int[] instances = new int[entities.Count()];
             List<int> ids = entities.Select(t => t.id).ToList();
+            if (objects is not IList<T>)
+                objects = objects.ToArray();
             for (int i = 0; i < objects.Count(); i++)
             {
                 int id = getID(objects.ElementAt(i));

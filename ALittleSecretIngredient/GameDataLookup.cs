@@ -15,6 +15,17 @@ namespace ALittleSecretIngredient
             i.InternalLevel != 0 ? i.InternalLevel : i.GetTOS(toss).InternalLevel;
         internal static TypeOfSoldier GetTOS(this Individual i, IEnumerable<TypeOfSoldier> toss) => toss.First(tos => tos.Jid == i.Jid);
         internal static Individual? GetIndividual(this Arrangement a, IEnumerable<Individual> ins) => ins.FirstOrDefault(i => i.Pid == a.Pid);
+        internal static TypeOfSoldier? GetTOS(this Arrangement a, Dictionary<string, Individual> ins,
+            Dictionary<string, TypeOfSoldier> toss)
+        {
+            string jid = a.Jid;
+            ins.TryGetValue(a.Pid, out Individual? i);
+            if (jid == "" && i != null)
+                jid = i.Jid;
+            if (jid == "")
+                return null;
+            return toss[jid];
+        }
         internal static Gender GetGender(this Individual i)
         {
             if (i.Name == "MPID_Lueur" || i.Name == "MPID_PastLueur")
@@ -29,21 +40,70 @@ namespace ALittleSecretIngredient
         internal static ParamGroup GetDeploymentGroup(this DataSet ds) => ds.Params.Cast<ParamGroup>().First(pg =>
                         PlayerArrangementGroups.Contains(((Arrangement)pg.GroupMarker).Group));
         internal static IEnumerable<Arrangement> GetGenericDeployments(this DataSet ds) =>
-            ds.GetDeploymentGroup().Group.Cast<Arrangement>().Where(a => a.GetFlag(7) && DeploymentSlotPids.Contains(a.Pid));
-        internal static int GetDeploymentCount(this DataSet ds) => ds.GetDeploymentGroup().Group.Cast<Arrangement>().Count(a => a.GetFlag(7));
-        internal static IEnumerable<Arrangement> GetEnemies(this DataSet ds) => ds.Params.Cast<ParamGroup>()
-            .SelectMany(pg => pg.Group.Cast<Arrangement>()).Where(a => a.Force == 1);
+            ds.GetDeployments().Where(a => a.GetFlag(7) && !a.GetFlag(8));
 
-        internal static IEnumerable<Arrangement> GetGenericEnemies(this DataSet ds) => ds.GetEnemies().Where(a => !a.GetFlag(4));
+        internal static IEnumerable<Arrangement> GetDeployments(this DataSet ds) => ds.GetDeploymentGroup().Group.Cast<Arrangement>();
+
+        internal static int GetDeploymentCount(this DataSet ds) => ds.GetDeployments().Count(a => a.GetFlag(7));
+
+        internal static IEnumerable<Arrangement> GetForcedDeployments(this DataSet ds) => ds.GetDeployments().Where(a => a.GetFlag(8) && !a.GetFlag(10));
+
+        internal static IEnumerable<Arrangement> GetEnemies(this (string id, DataSet ds) t) => t.ds.Params.Cast<ParamGroup>()
+            .SelectMany(pg => pg.Group.Cast<Arrangement>()).Where(a => a.Force == 1 || EnemyNPCMaps.Contains(t.id) && a.Force == 2);
+
+        internal static IEnumerable<Arrangement> GetEnemies(this IEnumerable<(string id, DataSet ds)> mapArrangements) =>
+            mapArrangements.SelectMany(t => t.GetEnemies());
+
+        internal static IEnumerable<Arrangement> GetGenericEnemies(this (string id, DataSet ds) t) => t.GetEnemies().Where(a => !a.GetFlag(4));
+
+        internal static IEnumerable<Arrangement> GetGenericEnemies(this IEnumerable<(string id, DataSet ds)> mapArrangements) =>
+            mapArrangements.SelectMany(t => t.GetGenericEnemies());
+
+        internal static IEnumerable<Arrangement> GetBosses(this (string id, DataSet ds) t) => t.GetEnemies().Where(a => a.GetFlag(4));
+
+        internal static IEnumerable<Arrangement> GetBosses(this IEnumerable<(string id, DataSet ds)> mapArrangements) =>
+            mapArrangements.SelectMany(t => t.GetBosses());
 
         // Assuming maddening and high level where relevant
-        internal static int GetEnemyCount(this DataSet ds) => ds.Params.Cast<ParamGroup>().SelectMany(pg => pg.Group.Cast<Arrangement>())
-            .Count(a => a.GetFlag(2) && a.Force == 1 && (a is not GArrangement ga || !ga.LevelMax.Between<byte>(0, 255)));
+        internal static int GetEnemyCount(this (string id, DataSet ds) t) => t.GetEnemies()
+            .Count(a => a.GetFlag(2) && (a is not GArrangement ga || !ga.LevelMax.Between<byte>(0, 255)));
 
-        internal static bool Occupies(this Arrangement a, int x, int y, Dictionary<string, Individual> ins)
+        internal static IEnumerable<Arrangement> GetNewRecruits(this IEnumerable<(string id, DataSet ds)> mapArrangements,
+            HashSet<string> playableCharacterIDs) => mapArrangements.SelectMany(t => t.GetNewRecruits(playableCharacterIDs));
+
+        internal static IEnumerable<Arrangement> GetNewRecruits(this (string id, DataSet ds) t, HashSet<string> playableCharacterIDs) =>
+            t.ds.Params.Cast<ParamGroup>().SelectMany(pg => pg.Group.Cast<Arrangement>().Where(a => playableCharacterIDs.Contains(a.Pid) &&
+                (a.Force == 2 || a.GetFlag(3) || a.Force == 0 && t.id == "M001")));
+
+        internal static IEnumerable<Arrangement> GetAllies(this (string id, DataSet ds) t, HashSet<string> playableCharacterIDs) =>
+            t.GetNewRecruits(playableCharacterIDs).Concat(t.ds.GetDeployments()).Distinct();
+
+        internal static IEnumerable<Arrangement> GetNPCs(this IEnumerable<(string id, DataSet ds)> mapArrangements,
+            HashSet<string> playableCharacterIDs) => mapArrangements.SelectMany(t => t.GetNPCs(playableCharacterIDs));
+
+        internal static IEnumerable<Arrangement> GetNPCs(this (string id, DataSet ds) t, HashSet<string> playableCharacterIDs) =>
+            t.ds.Params.Cast<ParamGroup>().SelectMany(pg => pg.Group.Cast<Arrangement>()).Where(a => !playableCharacterIDs.Contains(a.Pid) &&
+            a.Force == 2 && !EnemyNPCMaps.Contains(t.id) || a.GetFlag(10));
+
+        internal static bool IsOnTargetTerrain(this Individual i, List<(string id, DataSet ds)> arrangements, List<(string id, DataSet ds)> mapTerrains,
+            HashSet<string> targetTerrain)
         {
-            byte size = ins.TryGetValue(a.Pid, out Individual? i) ? i.BmapSize : (byte)1;
-            return x.Between(a.DisposX - 1, a.DisposX + size) && y.Between(a.DisposY - 1, a.DisposY + size);
+            foreach ((string disposID, DataSet ds) in arrangements)
+                foreach (ParamGroup pg in ds.Params.Cast<ParamGroup>())
+                    foreach (Arrangement a in pg.Group.Cast<Arrangement>())
+                        if (a.Pid == i.Pid)
+                            return a.IsOnTargetTerrain(i.BmapSize, (MapTerrain)mapTerrains.First(t => t.id == disposID).ds.Single, targetTerrain);
+            return false;
+        }
+
+        internal static bool IsOnTargetTerrain(this Arrangement a, byte size, MapTerrain mt, HashSet<string> targetTerrain)
+        {
+            for (sbyte x = a.DisposX; x < a.DisposX + size; x++)
+                for (sbyte y = a.DisposY; y < a.DisposY + size; y++)
+                    if ((a.DisposX, a.DisposY) != (0, 0) && mt
+                        .GetTerrain(x, y).Any(targetTerrain.Contains))
+                        return true;
+            return false;
         }
 
         internal static bool IsLegalTerrain(this MapTerrain mt, byte size, sbyte x, sbyte y, HashSet<string> legalTerrain)
@@ -364,6 +424,15 @@ namespace ALittleSecretIngredient
             { RandomizerDistribution.CommonSids, DataSetEnum.Individual },
             { RandomizerDistribution.DeploymentSlots, DataSetEnum.Arrangement },
             { RandomizerDistribution.EnemyCount, DataSetEnum.Arrangement },
+            { RandomizerDistribution.ForcedDeployment, DataSetEnum.Arrangement },
+            { RandomizerDistribution.UnitPosition, DataSetEnum.Arrangement },
+            { RandomizerDistribution.ItemsWeaponsAlly, DataSetEnum.Arrangement },
+            { RandomizerDistribution.ItemsItemsAlly, DataSetEnum.Arrangement },
+            { RandomizerDistribution.ItemsWeaponsEnemy, DataSetEnum.Arrangement },
+            { RandomizerDistribution.ItemsItemsEnemy, DataSetEnum.Arrangement },
+            { RandomizerDistribution.Sid, DataSetEnum.Arrangement },
+            { RandomizerDistribution.Gid, DataSetEnum.Arrangement },
+            { RandomizerDistribution.HpStockCount, DataSetEnum.Arrangement },
         };
 
         internal static Dictionary<(FileEnum fe, string sheetName), Type> DataParamTypes { get; } = new();
@@ -445,17 +514,33 @@ namespace ALittleSecretIngredient
 
         internal static List<(string id, string name)> PlayableCharacters { get; } = new() // ProtagonistCharacters +
         {
-            ("PID_ヴァンドレ", "Vander"), ("PID_クラン", "Clanne"), ("PID_フラン", "Framme"),
-            ("PID_アルフレッド", "Alfred"), ("PID_エーティエ", "Etie"), ("PID_ブシュロン", "Boucheron"), ("PID_セリーヌ", "Céline"),
-            ("PID_クロエ", "Chloé"), ("PID_ルイ", "Louis"), ("PID_ユナカ", "Yunaka"), ("PID_スタルーク", "Alcryst"),
-            ("PID_シトリニカ", "Citrinne"), ("PID_ラピス", "Lapis"), ("PID_ディアマンド", "Diamant"), ("PID_アンバー", "Amber"),
-            ("PID_ジェーデ", "Jade"), ("PID_アイビー", "Ivy"), ("PID_カゲツ", "Kagetsu"), ("PID_ゼルコバ", "Zelkov"),
-            ("PID_フォガート", "Fogado"), ("PID_パンドロ", "Pandreo"), ("PID_ボネ", "Bunet"), ("PID_ミスティラ", "Timerra"),
-            ("PID_パネトネ", "Panette"), ("PID_メリン", "Merrin"), ("PID_オルテンシア", "Hortensia"), ("PID_セアダス", "Seadall"),
-            ("PID_ロサード", "Rosado"), ("PID_ゴルドマリー", "Goldmary"), ("PID_リンデン", "Lindon"), ("PID_ザフィーア", "Saphir"),
-            ("PID_ヴェイル", "Veyle"), ("PID_モーヴ", "Mauvier"), ("PID_アンナ", "Anna"), ("PID_ジャン", "Jean"),
-            ("PID_エル", "Nel"), ("PID_ラファール", "Rafal"), ("PID_セレスティア", "Zelestia"), ("PID_グレゴリー", "Gregory"),
-            ("PID_マデリーン", "Madeline")
+            ("PID_ヴァンドレ", "Vander"),
+            ("PID_クラン", "Clanne"), ("PID_フラン", "Framme"),
+            ("PID_アルフレッド", "Alfred"), ("PID_エーティエ", "Etie"), ("PID_ブシュロン", "Boucheron"),
+            ("PID_セリーヌ", "Céline"), ("PID_クロエ", "Chloé"), ("PID_ルイ", "Louis"),
+            
+            ("PID_ユナカ", "Yunaka"),
+            ("PID_スタルーク", "Alcryst"), ("PID_シトリニカ", "Citrinne"), ("PID_ラピス", "Lapis"),
+            ("PID_ディアマンド", "Diamant"), ("PID_アンバー", "Amber"),
+            ("PID_ジェーデ", "Jade"),
+            
+            ("PID_アイビー", "Ivy"), ("PID_カゲツ", "Kagetsu"), ("PID_ゼルコバ", "Zelkov"),
+            ("PID_フォガート", "Fogado"), ("PID_パンドロ", "Pandreo"), ("PID_ボネ", "Bunet"),
+            ("PID_ミスティラ", "Timerra"), ("PID_パネトネ", "Panette"), ("PID_メリン", "Merrin"),
+            ("PID_オルテンシア", "Hortensia"),
+            ("PID_セアダス", "Seadall"),
+            ("PID_ロサード", "Rosado"), ("PID_ゴルドマリー", "Goldmary"),
+            
+            ("PID_リンデン", "Lindon"),
+            ("PID_ザフィーア", "Saphir"),
+
+            ("PID_モーヴ", "Mauvier"),
+            ("PID_ヴェイル", "Veyle"),
+
+            ("PID_ジャン", "Jean"),
+            ("PID_アンナ", "Anna"),
+
+            ("PID_エル", "Nel"), ("PID_ラファール", "Rafal"), ("PID_セレスティア", "Zelestia"), ("PID_グレゴリー", "Gregory"), ("PID_マデリーン", "Madeline")
         };
 
         internal static List<(string id, string name)> FixedLevelAllyNPCCharacters { get; } = new()
@@ -566,7 +651,17 @@ namespace ALittleSecretIngredient
 
         internal static List<(string id, string name)> AllyCharacters { get; } = new(); // PlayableCharacters + AllyNPCCharacters
 
-        internal static List<(string id, string name)> FixedLevelEnemyCharacters { get; } = new()
+        internal static List<(string id, string name)> FixedLevelEmblemCharacters { get; } = new()
+        {
+            ("PID_S003_ルキナ", "Lucina Paralogue Lucina"), ("PID_S004_リン", "Lyn Paralogue Lyn"),
+            ("PID_S005_アイク", "Ike Paralogue Ike"), ("PID_S006_ベレト", "Byleth Paralogue Byleth"),
+            ("PID_S007_カムイ", "Corrin Paralogue Corrin"), ("PID_S008_エイリーク", "Eirika Paralogue Eirika"),
+            ("PID_S009_シグルド", "Sigurd Paralogue Sigurd"), ("PID_S010_リーフ", "Leif Paralogue Leif"),
+            ("PID_S011_ミカヤ", "Micaiah Paralogue Micaiah"), ("PID_S012_ロイ", "Roy Paralogue Roy"),
+            ("PID_S013_セリカ", "Celica Paralogue Celica"), ("PID_S014_マルス", "Marth Paralogue Marth"),
+        };
+
+        internal static List<(string id, string name)> FixedLevelEnemyCharacters { get; } = new() // FixedLevelEmblemCharacters +
         {
             ("PID_M001_異形兵_蛮族_ボス", "Chapter 1 Boss"), ("PID_M001_異形兵_蛮族_雑魚A", "Chapter 1 Corrupted 1"),
             ("PID_M001_異形兵_蛮族_雑魚B", "Chapter 1 Corrupted 2"), ("PID_M001_異形兵_蛮族_雑魚C", "Chapter 1 Corrupted 3"),
@@ -684,13 +779,13 @@ namespace ALittleSecretIngredient
             ("PID_M014_イルシオン兵_ベルセルク", "Chapter 14 Soldier 14"), ("PID_M014_イルシオン兵_ランスアーマー", "Chapter 14 Soldier 15"),
             ("PID_M014_イルシオン兵_ランスナイト", "Chapter 14 Soldier 16"), ("PID_M014_イルシオン兵_パラディン", "Chapter 14 Soldier 17"),
             ("PID_M014_イルシオン兵_ウルフナイト", "Chapter 14 Soldier 18"), ("PID_M014_イルシオン兵_ランスファイター", "Chapter 14 Soldier 19"),
-            ("PID_M014_イルシオン兵_ハルバーディア", "Chapter 14 Soldier 20"), ("PID_S003_ルキナ", "Lucina Paralogue Lucina"),
+            ("PID_M014_イルシオン兵_ハルバーディア", "Chapter 14 Soldier 20"),
             ("PID_S003_幻影兵_アクスファイター", "Lucina Paralogue Fabrication 1"), ("PID_S003_幻影兵_ベルセルク", "Lucina Paralogue Fabrication 2"),
             ("PID_S003_幻影兵_ランスアーマー", "Lucina Paralogue Fabrication 3"), ("PID_S003_幻影兵_ジェネラル", "Lucina Paralogue Fabrication 4"),
             ("PID_S003_幻影兵_マージ", "Lucina Paralogue Fabrication 5"), ("PID_S003_幻影兵_セイジ", "Lucina Paralogue Fabrication 6"),
             ("PID_S003_幻影兵_アーチャー", "Lucina Paralogue Fabrication 7"), ("PID_S003_幻影兵_スナイパー", "Lucina Paralogue Fabrication 8"),
             ("PID_S003_幻影兵_ウルフナイト", "Lucina Paralogue Fabrication 9"), ("PID_S003_幻影兵_ソードファイター", "Lucina Paralogue Fabrication 10"),
-            ("PID_S003_幻影兵_ソードマスター", "Lucina Paralogue Fabrication 11"), ("PID_S004_リン", "Lyn Paralogue Lyn"),
+            ("PID_S003_幻影兵_ソードマスター", "Lucina Paralogue Fabrication 11"),
             ("PID_S004_幻影兵_トリオル", "Lyn Paralogue Toril"), ("PID_S004_幻影兵_クドカ", "Lyn Paralogue Kudoka"),
             ("PID_S004_幻影兵_カブル", "Lyn Paralogue Kabul"), ("PID_S004_幻影兵_ブラクル", "Lyn Paralogue Brakul"),
             ("PID_S004_幻影兵_マラル", "Lyn Paralogue Maral"), ("PID_S004_幻影兵_チャン", "Lyn Paralogue Chan"),
@@ -716,7 +811,6 @@ namespace ALittleSecretIngredient
             ("PID_M016_イルシオン兵_マージナイト", "Chapter 16 Soldier 10"), ("PID_M016_イルシオン兵_マスターモンク", "Chapter 16 Soldier 11"),
             ("PID_M016_イルシオン兵_ソードペガサス", "Chapter 16 Soldier 12"), ("PID_M016_イルシオン兵_ソードペガサス_魔攻", "Chapter 16 Soldier 13"),
             ("PID_M016_イルシオン兵_グリフォンナイト", "Chapter 16 Soldier 14"), ("PID_M016_イルシオン兵_シーフ", "Chapter 16 Soldier 15"),
-            ("PID_S005_アイク", "Ike Paralogue Ike"),
             ("PID_S005_幻影兵_ハルバーディア", "Ike Paralogue Fabrication 1"), ("PID_S005_幻影兵_ジェネラル", "Ike Paralogue Fabrication 2"),
             ("PID_S005_幻影兵_ブレイブヒーロー", "Ike Paralogue Fabrication 3"), ("PID_S005_幻影兵_ソードマスター", "Ike Paralogue Fabrication 4"),
             ("PID_S005_幻影兵_ロイヤルナイト", "Ike Paralogue Fabrication 5"), ("PID_S005_幻影兵_パラディン", "Ike Paralogue Fabrication 6"),
@@ -733,14 +827,14 @@ namespace ALittleSecretIngredient
             ("PID_M017_イルシオン兵_グリフォンナイト", "Chapter 17 Soldier 6"), ("PID_M017_イルシオン兵_ベルセルク", "Chapter 17 Soldier 7"),
             ("PID_M017_イルシオン兵_セイジ", "Chapter 17 Soldier 8"), ("PID_M017_イルシオン兵_ハイプリースト", "Chapter 17 Soldier 9"),
             ("PID_M017_イルシオン兵_ハルバーディア_増援", "Chapter 17 Soldier 10"), ("PID_M017_イルシオン兵_スナイパー", "Chapter 17 Soldier 11"),
-            ("PID_M017_イルシオン兵_異形竜", "Chapter 17 Corrupted Wyrm"), ("PID_S006_ベレト", "Byleth Paralogue Byleth"),
+            ("PID_M017_イルシオン兵_異形竜", "Chapter 17 Corrupted Wyrm"),
             ("PID_S006_幻影兵_ジェネラル", "Byleth Paralogue Fabrication 1"), ("PID_S006_幻影兵_セイジ", "Byleth Paralogue Fabrication 2"),
             ("PID_S006_幻影兵_ベルセルク", "Byleth Paralogue Fabrication 3"), ("PID_S006_幻影兵_スナイパー", "Byleth Paralogue Fabrication 4"),
             ("PID_S006_幻影兵_ソードマスター", "Byleth Paralogue Fabrication 5"), ("PID_S006_幻影兵_シーフ", "Byleth Paralogue Fabrication 6"),
             ("PID_S006_幻影兵_マスターモンク_ベレト側近", "Byleth Paralogue Fabrication 7"), ("PID_S006_幻影兵_スナイパー_ベレト側近", "Byleth Paralogue Fabrication 8"),
             ("PID_S006_幻影兵_エーデルガルト", "Byleth Paralogue Edelgard"), ("PID_S006_幻影兵_ディミトリ", "Byleth Paralogue Dimitri"),
             ("PID_S006_幻影兵_クロード", "Byleth Paralogue Claude"), ("PID_S006_幻影兵_グリフォンナイト", "Byleth Paralogue Fabrication 9"),
-            ("PID_S006_幻影竜", "Byleth Paralogue Fabrication 10"), ("PID_S009_シグルド", "Sigurd Paralogue Sigurd"),
+            ("PID_S006_幻影竜", "Byleth Paralogue Fabrication 10"),
             ("PID_S009_幻影兵_ユリウス", "Sigurd Paralogue Julius"), ("PID_S009_幻影兵_イシュタル", "Sigurd Paralogue Ishtar"),
             ("PID_S009_幻影兵_ザガム", "Sigurd Paralogue Zagam"), ("PID_S009_幻影兵_ジェネラル", "Sigurd Paralogue Fabrication 1"),
             ("PID_S009_幻影兵_マージナイト", "Sigurd Paralogue Fabrication 2"), ("PID_S009_幻影兵_グレートナイト", "Sigurd Paralogue Fabrication 3"),
@@ -754,7 +848,7 @@ namespace ALittleSecretIngredient
             ("PID_M018_イルシオン兵_ジェネラル", "Chapter 18 Soldier 4"), ("PID_M018_イルシオン兵_セイジ", "Chapter 18 Soldier 5"),
             ("PID_M018_イルシオン兵_ドラゴンナイト", "Chapter 18 Soldier 6"), ("PID_M018_イルシオン兵_グリフォンナイト", "Chapter 18 Soldier 7"),
             ("PID_M018_シーフ", "Chapter 18 Thief"), ("PID_M018_イルシオン兵_スナイパー2", "Chapter 18 Soldier 8"),
-            ("PID_S007_カムイ", "Corrin Paralogue Corrin"), ("PID_S007_幻影兵_マークス", "Corrin Paralogue Xander"),
+            ("PID_S007_幻影兵_マークス", "Corrin Paralogue Xander"),
             ("PID_S007_幻影兵_カミラ", "Corrin Paralogue Camilla"), ("PID_S007_幻影兵_レオン", "Corrin Paralogue Leo"),
             ("PID_S007_幻影兵_エリーゼ", "Corrin Paralogue Elise"), ("PID_S007_幻影兵_リョウマ", "Corrin Paralogue Ryoma"),
             ("PID_S007_幻影兵_ヒノカ", "Corrin Paralogue Hinoka"), ("PID_S007_幻影兵_タクミ", "Corrin Paralogue Takumi"),
@@ -767,13 +861,13 @@ namespace ALittleSecretIngredient
             ("PID_M019_異形兵_ロイヤルナイト", "Chapter 19 Corrupted 2"), ("PID_M019_異形兵_グレートナイト", "Chapter 19 Corrupted 3"),
             ("PID_M019_異形兵_ウルフナイト", "Chapter 19 Corrupted 4"), ("PID_M019_異形兵_ウォーリアー", "Chapter 19 Corrupted 5"),
             ("PID_M019_異形兵_ベルセルク", "Chapter 19 Corrupted 6"), ("PID_M019_異形兵_スナイパー", "Chapter 19 Corrupted 7"),
-            ("PID_M019_異形竜", "Chapter 19 Corrupted Wyrm"), ("PID_S008_エイリーク", "Eirika Paralogue Eirika"),
+            ("PID_M019_異形竜", "Chapter 19 Corrupted Wyrm"),
             ("PID_S008_ドラゴンゾンビ", "Eirika Paralogue Fabrication 1"), ("PID_S008_幻影兵_ゴーゴン魔法", "Eirika Paralogue Fabrication 2"),
             ("PID_S008_幻影兵_ゴーゴン杖", "Eirika Paralogue Fabrication 3"), ("PID_S008_幻影兵_マグダイル", "Eirika Paralogue Fabrication 4"),
             ("PID_S008_幻影兵_ケルベロス", "Eirika Paralogue Fabrication 5"), ("PID_S008_幻影兵_ヘルボーン剣槍", "Eirika Paralogue Fabrication 6"),
             ("PID_S008_幻影兵_ヘルボーン弓", "Eirika Paralogue Fabrication 7"), ("PID_S008_幻影兵_エルダバール", "Eirika Paralogue Fabrication 8"),
             ("PID_S008_幻影兵_デスガーゴイル", "Eirika Paralogue Fabrication 9"), ("PID_S008_幻影兵_アークビグル", "Eirika Paralogue Fabrication 10"),
-            ("PID_S008_幻影兵_シーフ", "Eirika Paralogue Fabrication 11"), ("PID_S010_リーフ", "Leif Paralogue Leif"),
+            ("PID_S008_幻影兵_シーフ", "Eirika Paralogue Fabrication 11"),
             ("PID_S010_幻影兵_コーエン", "Leif Paralogue Coen"), ("PID_S010_幻影兵_サイアス", "Leif Paralogue Cyas"),
             ("PID_S010_幻影兵_ジェネラル", "Leif Paralogue Fabrication 1"), ("PID_S010_幻影兵_マージナイト", "Leif Paralogue Fabrication 2"),
             ("PID_S010_幻影兵_パラディン", "Leif Paralogue Fabrication 3"), ("PID_S010_幻影兵_ボウナイト", "Leif Paralogue Fabrication 4"),
@@ -781,7 +875,7 @@ namespace ALittleSecretIngredient
             ("PID_S010_幻影兵_スナイパー", "Leif Paralogue Fabrication 7"), ("PID_S010_幻影兵_ブレイブヒーロー", "Leif Paralogue Fabrication 8"),
             ("PID_S010_幻影兵_ランスナイト", "Leif Paralogue Fabrication 9"), ("PID_S010_幻影兵_アクスナイト", "Leif Paralogue Fabrication 10"),
             ("PID_S010_幻影兵_ランスファイター", "Leif Paralogue Fabrication 11"), ("PID_S010_幻影兵_ソードアーマー", "Leif Paralogue Fabrication 12"),
-            ("PID_S010_幻影兵_アクスアーマー", "Leif Paralogue Fabrication 13"), ("PID_S011_ミカヤ", "Micaiah Paralogue Micaiah"),
+            ("PID_S010_幻影兵_アクスアーマー", "Leif Paralogue Fabrication 13"),
             ("PID_S011_幻影兵_サザ", "Micaiah Paralogue Sothe"), ("PID_S011_幻影兵_エディ", "Micaiah Paralogue Edward"),
             ("PID_S011_幻影兵_レオナルド", "Micaiah Paralogue Leonardo"), ("PID_S011_幻影兵_ノイス", "Micaiah Paralogue Nolan"),
             ("PID_S011_幻影兵_ジル", "Micaiah Paralogue Jill"), ("PID_S011_幻影兵_ツイハーク", "Micaiah Paralogue Zihark"),
@@ -799,7 +893,7 @@ namespace ALittleSecretIngredient
             ("PID_M020_イルシオン兵_ハルバーディア", "Chapter 20 Soldier 1"), ("PID_M020_イルシオン兵_パラディン", "Chapter 20 Soldier 2"),
             ("PID_M020_イルシオン兵_マージナイト", "Chapter 20 Soldier 3"), ("PID_M020_イルシオン兵_マスターモンク", "Chapter 20 Soldier 4"),
             ("PID_M020_イルシオン兵_ハイプリースト", "Chapter 20 Soldier 5"), ("PID_M020_シーフ", "Chapter 20 Thief"),
-            ("PID_S012_ロイ", "Roy Paralogue Roy"), ("PID_S012_幻影兵_リリーナ", "Roy Paralogue Lilina"),
+            ("PID_S012_幻影兵_リリーナ", "Roy Paralogue Lilina"),
             ("PID_S012_幻影兵_セイジ_ロイ周辺", "Roy Paralogue Fabrication 1"), ("PID_S012_幻影兵_セイジ_ロイ周辺2", "Roy Paralogue Fabrication 2"),
             ("PID_S012_幻影兵_ジェネラル_ロイ周辺", "Roy Paralogue Fabrication 3"), ("PID_S012_幻影兵_ジェネラル_ロイ周辺2", "Roy Paralogue Fabrication 4"),
             ("PID_S012_幻影兵_スナイパー_ロイ周辺", "Roy Paralogue Fabrication 5"), ("PID_S012_幻影兵_スナイパー_ロイ周辺2", "Roy Paralogue Fabrication 6"),
@@ -809,7 +903,7 @@ namespace ALittleSecretIngredient
             ("PID_S012_幻影兵_スナイパー", "Roy Paralogue Fabrication 12"), ("PID_S012_幻影兵_スナイパー_増援1", "Roy Paralogue Fabrication 13"),
             ("PID_S012_幻影兵_マスターモンク", "Roy Paralogue Fabrication 14"), ("PID_S012_幻影兵_ハルバーディア", "Roy Paralogue Fabrication 15"),
             ("PID_S012_幻影兵_パラディン", "Roy Paralogue Fabrication 16"), ("PID_S012_幻影兵_パラディン_増援4", "Roy Paralogue Fabrication 17"),
-            ("PID_S012_幻影竜", "Roy Paralogue Fabrication 18"), ("PID_S013_セリカ", "Celica Paralogue Celica"),
+            ("PID_S012_幻影竜", "Roy Paralogue Fabrication 18"),
             ("PID_S013_幻影兵_召喚師１", "Celica Paralogue Fabrication 1"), ("PID_S013_幻影兵_召喚師２", "Celica Paralogue Fabrication 2"),
             ("PID_S013_幻影兵_召喚師３", "Celica Paralogue Fabrication 3"), ("PID_S013_幻影兵_ワープ１", "Celica Paralogue Fabrication 4"),
             ("PID_S013_幻影兵_ワープ２", "Celica Paralogue Fabrication 5"), ("PID_S013_幻影兵_ワープ３", "Celica Paralogue Fabrication 6"),
@@ -842,7 +936,7 @@ namespace ALittleSecretIngredient
             ("PID_M022_異形兵_マスターモンク", "Chapter 22 Corrupted 16"), ("PID_M022_異形兵_ハイプリースト", "Chapter 22 Corrupted 17"),
             ("PID_M022_異形兵_グリフォンナイト", "Chapter 22 Corrupted 18"), ("PID_M022_異形兵_ドラゴンナイト", "Chapter 22 Corrupted 19"),
             ("PID_M022_異形兵_シーフ", "Chapter 22 Corrupted 20"),
-            ("PID_S014_マルス", "Marth Paralogue Marth"), ("PID_S014_幻影兵_アストリア", "Marth Paralogue Astram"),
+            ("PID_S014_幻影兵_アストリア", "Marth Paralogue Astram"),
             ("PID_S014_幻影兵_ジェネラル", "Marth Paralogue Fabrication 1"), ("PID_S014_幻影兵_ハルバーディア", "Marth Paralogue Fabrication 2"),
             ("PID_S014_幻影兵_セイジ", "Marth Paralogue Fabrication 3"), ("PID_S014_幻影兵_マスターモンク", "Marth Paralogue Fabrication 4"),
             ("PID_S014_幻影兵_ハイプリースト", "Marth Paralogue Fabrication 5"), ("PID_S014_幻影兵_ウォーリアー", "Marth Paralogue Fabrication 6"),
@@ -978,7 +1072,23 @@ namespace ALittleSecretIngredient
             ("PID_E006_召喚異形兵_異形狼", "Xenologue 6 Corrupted Wolf Summon 1"), ("PID_E006_召喚異形兵強_異形狼", "Xenologue 6 Corrupted Wolf Summon 2"),
         };
 
-        internal static List<(string id, string name)> NonArenaEnemyCharacters { get; } = new() // FixedLevelEnemyCharacters +
+        internal static List<(string id, string name)> DivineParalogueEmblemCharacters { get; } = new()
+        {
+            ("PID_G001_チキ", "Tiki Paralogue Tiki"),
+            ("PID_G001_チキ_特効無効", "Tiki Paralogue No Effectiveness Tiki"), ("PID_G001_チキ_竜化", "Tiki Paralogue Transformed Tiki"),
+            ("PID_G001_チキ_竜化_特効無効", "Tiki Paralogue Transformed No Effectiveness Tiki"), ("PID_G002_ヘクトル", "Hector Paralogue Hector"),
+            ("PID_G003_ヴェロニカ_ノーマル", "Veronica Paralogue Veronica Normal"),
+            ("PID_G003_ヴェロニカ", "Veronica Paralogue Veronica"), ("PID_G004_セネリオ", "Soren Paralogue Soren"),
+            ("PID_G004_セネリオ_移動－１", "Soren Paralogue Mov -1 Soren"), ("PID_G004_セネリオ_ルナ", "Soren Paralogue Soren Maddening"),
+            ("PID_G004_セネリオ_ルナ_移動－１", "Soren Paralogue Mov -1 Soren Maddening"), ("PID_G005_カミラ", "Camilla Paralogue Camilla"),
+            ("PID_G006_クロム", "Chrom Paralogue Chrom"),
+            ("PID_G006_クロム_移動－１", "Chrom Paralogue Mov -1 Chrom"), ("PID_G006_ルフレ", "Chrom Paralogue Robin"),
+            ("PID_G006_ルフレ_移動－１", "Chrom Paralogue Mov -1 Robin"),
+        };
+
+        internal static List<(string id, string name)> EmblemBossCharacters { get; } = new(); // FixedLevelEmblemCharacters + DivineParalogueEmblemCharacters
+
+        internal static List<(string id, string name)> NonArenaEnemyCharacters { get; } = new() // FixedLevelEnemyCharacters + DivineParalogueEmblemCharacters +
         {
             ("PID_遭遇戦_異形兵_男", "Skirmish Corrupted Male"), ("PID_遭遇戦_異形兵_女", "Skirmish Corrupted Female"),
             ("PID_遭遇戦_異形兵_男_上級", "Skirmish Strong Corrupted Male"), ("PID_遭遇戦_異形兵_女_上級", "Skirmish Strong Corrupted Female"),
@@ -1002,27 +1112,20 @@ namespace ALittleSecretIngredient
             ("PID_G000_幻影兵_シーフ", "Divine Paralogue Fabrication 18"), ("PID_G000_幻影竜", "Divine Paralogue Fabrication 19"),
             ("PID_G000_幻影飛竜", "Divine Paralogue Fabrication 20"), ("PID_G000_幻影狼", "Divine Paralogue Fabrication 21"),
             ("PID_G000_幻影兵_ソードペガサス_経験値なし", "Divine Paralogue Fabrication 22"), ("PID_G000_幻影兵_ランスペガサス_経験値なし", "Divine Paralogue Fabrication 23"),
-            ("PID_G000_幻影兵_アクスナイト_経験値なし", "Divine Paralogue Fabrication 24"), ("PID_G001_チキ", "Tiki Paralogue Tiki"),
-            ("PID_G001_チキ_特効無効", "Tiki Paralogue No Effectiveness Tiki"), ("PID_G001_チキ_竜化", "Tiki Paralogue Transformed Tiki"),
-            ("PID_G001_チキ_竜化_特効無効", "Tiki Paralogue Transformed No Effectiveness Tiki"), ("PID_G000_幻影飛竜_弱", "Divine Paralogue 0 Fabrication 25"),
-            ("PID_G002_ヘクトル", "Hector Paralogue Hector"), ("PID_G002_幻影兵_オズイン", "Hector Paralogue Oswin"),
+            ("PID_G000_幻影兵_アクスナイト_経験値なし", "Divine Paralogue Fabrication 24"), ("PID_G000_幻影飛竜_弱", "Divine Paralogue 0 Fabrication 25"),
+            ("PID_G002_幻影兵_オズイン", "Hector Paralogue Oswin"),
             ("PID_G002_幻影兵_マシュー", "Hector Paralogue Matthew"), ("PID_G002_幻影兵_ウルフナイト", "Hector Paralogue Fabrication 1"),
             ("PID_G002_幻影兵_ソードペガサス_増援", "Hector Paralogue Fabrication 2"), ("PID_G002_幻影兵_ランスペガサス_増援", "Hector Paralogue Fabrication 3"),
             ("PID_G002_幻影兵_ソードナイト_増援", "Hector Paralogue Fabrication 4"), ("PID_G002_幻影兵_ランスナイト_増援", "Hector Paralogue Fabrication 5"),
             ("PID_G002_幻影兵_アクスペガサス_増援", "Hector Paralogue Fabrication 6"), ("PID_G002_幻影兵_アクスアーマー_増援", "Hector Paralogue Fabrication 7"),
-            ("PID_G002_幻影兵_ランスファイター_増援", "Hector Paralogue Fabrication 8"), ("PID_G003_ヴェロニカ_ノーマル", "Veronica Paralogue Veronica Normal"),
-            ("PID_G003_ヴェロニカ", "Veronica Paralogue Veronica"), ("PID_G004_セネリオ", "Soren Paralogue Soren"),
-            ("PID_G004_セネリオ_移動－１", "Soren Paralogue Mov -1 Soren"), ("PID_G004_セネリオ_ルナ", "Soren Paralogue Soren Maddening"),
-            ("PID_G004_セネリオ_ルナ_移動－１", "Soren Paralogue Mov -1 Soren Maddening"), ("PID_G004_幻影兵_シーフ_移動－１", "Soren Paralogue Fabrication 1"),
+            ("PID_G002_幻影兵_ランスファイター_増援", "Hector Paralogue Fabrication 8"), ("PID_G004_幻影兵_シーフ_移動－１", "Soren Paralogue Fabrication 1"),
             ("PID_G004_幻影兵_シーフ_移動－３", "Soren Paralogue Fabrication 2"), ("PID_G004_幻影兵_ソードペガサス_経験値なし", "Soren Paralogue Fabrication 3"),
             ("PID_G004_幻影兵_ランスペガサス_経験値なし", "Soren Paralogue Fabrication 4"), ("PID_G004_幻影兵_ソードナイト_経験値なし", "Soren Paralogue Fabrication 5"),
-            ("PID_G004_幻影兵_アクスナイト_経験値なし", "Soren Paralogue Fabrication 6"), ("PID_G005_カミラ", "Camilla Paralogue Camilla"),
+            ("PID_G004_幻影兵_アクスナイト_経験値なし", "Soren Paralogue Fabrication 6"),
             ("PID_G005_幻影兵_ベルカ", "Camilla Paralogue Beruka"), ("PID_G005_幻影兵_ベルカ_スキル持ち", "Camilla Paralogue Skilled Beruka"),
             ("PID_G005_幻影兵_ルーナ", "Camilla Paralogue Severa"), ("PID_G005_幻影兵_ルーナ_スキル持ち", "Camilla Paralogue Skilled Severa"),
             ("PID_G005_幻影兵_シーフ", "Camilla Paralogue Fabrication 1"), ("PID_G005_幻影兵_ドラゴンナイト", "Camilla Paralogue Fabrication 2"),
-            ("PID_G005_幻影兵_グリフォンナイト", "Camilla Paralogue Fabrication 3"), ("PID_G006_クロム", "Chrom Paralogue Chrom"),
-            ("PID_G006_クロム_移動－１", "Chrom Paralogue Mov -1 Chrom"), ("PID_G006_ルフレ", "Chrom Paralogue Robin"),
-            ("PID_G006_ルフレ_移動－１", "Chrom Paralogue Mov -1 Robin"), ("PID_G006_幻影兵_セイジ", "Chrom Paralogue Fabrication 1"),
+            ("PID_G005_幻影兵_グリフォンナイト", "Camilla Paralogue Fabrication 3"), ("PID_G006_幻影兵_セイジ", "Chrom Paralogue Fabrication 1"),
             ("PID_G006_幻影狼_移動－１", "Chrom Paralogue Fabrication 2"), ("PID_遭遇戦_異形狼", "Skirmish Corrupted Wolf"),
             ("PID_遭遇戦_異形飛竜", "Skirmish Corrupted Wyvern"), ("PID_遭遇戦_レア経験値_異形狼", "Skirmish Silver Corrupted Wolf"),
             ("PID_遭遇戦_レアお金_異形飛竜", "Skirmish Gold Corrupted Wyvern"),
@@ -1173,8 +1276,7 @@ namespace ALittleSecretIngredient
         internal static List<(string id, string name)> Characters { get; } = new(); // PlayableCharacters + NPCCharacters
         internal static List<(string id, string name)> NPCCharacters { get; } = new(); // AllyNPCCharacters + EnemyCharacters
         internal static List<(string id, string name)> NonArenaNPCCharacters { get; } = new(); // AllyNPCCharacters + NonArenaEnemyCharacters
-        internal static List<(string id, string name)> FixedLevelCharacters { get; } = new(); // PlayableCharacters + FixedLevelAllyNPCCharacters +
-                                                                                              // FixedLevelEnemyCharacters
+        internal static List<(string id, string name)> FixedLevelCharacters { get; } = new(); // PlayableCharacters + FixedLevelAllyNPCCharacters + FixedLevelEnemyCharacters
         #endregion
         #region Class IDs
         internal static List<(string id, string name)> UniversalClasses { get; } = new()
@@ -2032,6 +2134,11 @@ namespace ALittleSecretIngredient
             ("IID_ボルガノン", "Bolganone"), ("IID_トロン", "Thoron"), ("IID_エクスカリバー", "Excalibur"),
         };
 
+        internal static List<(string id, string name)> EnemyATomeWeapons { get; } = new()
+        {
+            ("IID_トロン_セピア専用", "Thoron (Zephia)"), ("IID_エクスカリバー_グリ専用", "Excalibur (Griss)"), ("IID_メティオ", "Meteor"), ("IID_メティオ_G004", "Meteor (Soren Paralogue)"),
+        };
+
         internal static List<(string id, string name)> STomeWeapons { get; } = new()
         {
             ("IID_ノヴァ", "Nova"),
@@ -2049,9 +2156,19 @@ namespace ALittleSecretIngredient
             ("IID_フリーズ", "Freeze"), ("IID_サイレス", "Silence"),
         };
 
+        internal static List<(string id, string name)> EnemyCStaves { get; } = new()
+        {
+            ("IID_フリーズ_S010", "Freeze (Leif Paralogue)"), ("IID_サイレス_S010", "Silence (Leif Paralogue)"),
+        };
+
         internal static List<(string id, string name)> BStaves { get; } = new()
         {
             ("IID_リカバー", "Recover"), ("IID_ワープ", "Warp"), ("IID_レスキュー", "Rescue"), ("IID_コラプス", "Fracture"),
+        };
+
+        internal static List<(string id, string name)> EnemyBStaves { get; } = new()
+        {
+            ("IID_レスキュー_M019", "Rescue (Chapter 19)"), ("IID_コラプス_M014", "Fracture (Chapter 14)"), ("IID_コラプス_S010", "Fracture (Leif Paralogue)")
         };
 
         internal static List<(string id, string name)> AStaves { get; } = new()
@@ -2088,6 +2205,28 @@ namespace ALittleSecretIngredient
         internal static List<(string id, string name)> SArtWeapons { get; } = new()
         {
             ("IID_覇神の法", "Divine Fist Art"),
+        };
+
+        internal static List<(string id, string name)> DSpecialWeapons { get; } = new()
+        {
+            ("IID_火のブレス", "Fire Breath"), ("IID_炎塊", "Fireball"),
+        };
+
+        internal static List<(string id, string name)> CSpecialWeapons { get; } = new()
+        {
+            ("IID_氷のブレス", "Freezing Breath"), ("IID_氷塊", "Iceball"),
+        };
+
+        internal static List<(string id, string name)> BSpecialWeapons { get; } = new()
+        {
+            ("IID_牙", "Fangs"), ("IID_瘴気のブレス", "Miasma Breath"), ("IID_瘴気の塊", "Miasma Ball"),
+        };
+
+        internal static List<(string id, string name)> SSpecialWeapons { get; } = new()
+        {
+            ("IID_ソンブル_物理攻撃", "Fell Assault (Sombron)"), ("IID_ソンブル_魔法攻撃", "Fell Surge"), ("IID_ソンブル_回転アタック", "Whirling Death"), ("IID_ソンブル_ビーム", "Howling Beam"),
+            ("IID_ソンブル_エンゲージブレイク", "Disengage"), ("IID_イル_反撃", "Fell Assault (Nil)"), ("IID_イル_薙払いビーム", "Fell Beam"), ("IID_イル_突進", "Devastation"),
+            ("IID_イル_吸収", "Drain Essence"), ("IID_イル_召喚", "Summon Vortex"),
         };
 
         internal static List<(string id, string name)> LiberationWeapons { get; } = new()
@@ -2152,7 +2291,7 @@ namespace ALittleSecretIngredient
             ("IID_ヘクトル_ヴォルフバイル_通常_G002_弱_低命中", "Wolf Beil D (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_弱", "Wolf Beil E (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_強", "Wolf Beil F (Hector Paralogue)"), ("IID_ヘクトル_ヴォルフバイル_通常_G002_最強", "Wolf Beil G (Hector Paralogue)"),
             ("IID_ヘクトル_アルマーズ_通常", "Armads"), ("IID_ヘクトル_アルマーズ_通常_G002_最弱_低命中", "Armads A (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_最弱", "Armads B (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_弱_低命中", "Armads C (Hector Paralogue)"),
             ("IID_ヘクトル_アルマーズ_通常_G002_弱", "Armads D (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_微弱_低命中", "Armads E (Hector Paralogue)"), ("IID_ヘクトル_アルマーズ_通常_G002_微弱", "Armads F (Hector Paralogue)"), ("IID_カミラ_ボルトアクス_通常", "Bolt Axe"),
-            ("IID_カミラ_ボルトアクス_通常", "Bolt Axe A (Camilla Paralogue)"), ("IID_カミラ_ボルトアクス_通常_G005", "Bolt Axe B (Camilla Paralogue)"), ("IID_カミラ_ボルトアクス_通常_G005_弱", "Bolt Axe C (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常", "Camilla's Axe"),
+            ("IID_カミラ_ボルトアクス_通常_G005", "Bolt Axe A (Camilla Paralogue)"), ("IID_カミラ_ボルトアクス_通常_G005_弱", "Bolt Axe B (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常", "Camilla's Axe"),
             ("IID_カミラ_カミラの艶斧_通常_G005_微弱", "Camilla's Axe A (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常_G005_弱", "Camilla's Axe B (Camilla Paralogue)"), ("IID_カミラ_カミラの艶斧_通常_G005_最弱", "Camilla's Axe C (Camilla Paralogue)"), ("IID_リーフ_キラーアクス＋_通常", "Killer Axe+ (Leif)"),
             ("IID_リーフ_キラーアクス＋＋_通常", "Killer Axe++ (Leif)"), ("IID_ヘクトル_ヴォルフバイル＋_通常", "Wolf Beil+"),
         };
@@ -2199,19 +2338,52 @@ namespace ALittleSecretIngredient
             ("IID_チキ_ブレス_通常_G001_最強", "Fog Breath D (Tiki Paralogue)"),
         };
 
-        internal static List<(string id, string name)> NormalWeapons { get; } = new();
+        internal static List<(string id, string name)> NormalAllyWeapons { get; } = new();
 
-        internal static List<(string id, string name)> BattleItems { get; } = new()
+        internal static List<(string id, string name)> NormalEnemyWeapons { get; } = new();
+
+        internal static List<(string id, string name)> HealItems { get; } = new()
         {
-            ("IID_傷薬", "Vulnerary"), ("IID_毒消し", "Antitoxin"), ("IID_特効薬", "Elixir"), ("IID_聖水", "Pure Water"),
-            ("IID_たいまつ", "Torch"), ("IID_天使の衣", "Seraph Robe"), ("IID_力のしずく", "Energy Drop"), ("IID_精霊の粉", "Spirit Dust"),
+            ("IID_傷薬", "Vulnerary"), ("IID_毒消し", "Antitoxin"), ("IID_特効薬", "Elixir"),
+        };
+
+        internal static List<(string id, string name)> EnemyUsableItems { get; } = new(); // HealItems
+
+        internal static List<(string id, string name)> NonHealEnchantItems { get; } = new()
+        {
+            ("IID_聖水", "Pure Water"),
+            ("IID_たいまつ", "Torch"), ("IID_HPの薬", "HP Tonic"), ("IID_力の薬", "Strength Tonic"), ("IID_技の薬", "Dexterity Tonic"),
+            ("IID_速さの薬", "Speed Tonic"), ("IID_幸運の薬", "Luck Tonic"), ("IID_守備の薬", "Defense Tonic"), ("IID_魔力の薬", "Magic Tonic"),
+            ("IID_魔防の薬", "Resistance Tonic"),
+        };
+
+        internal static List<(string id, string name)> EnchantItems { get; } = new(); // HealItems + NonHealEnchantItems
+
+        internal static List<(string id, string name)> EnemyNonUsableItems { get; } = new() // NonHealEnchantItems +
+        {
+            ("IID_天使の衣", "Seraph Robe"), ("IID_力のしずく", "Energy Drop"), ("IID_精霊の粉", "Spirit Dust"),
             ("IID_秘伝の書", "Secret Book"), ("IID_はやての羽", "Speedwing"), ("IID_女神の像", "Goddess Icon"), ("IID_竜の盾", "Dracoshield"),
             ("IID_魔よけ", "Talisman"), ("IID_ブーツ", "Boots"), ("IID_スキルの書・守", "Novice Book"), ("IID_スキルの書・破", "Adept Book"),
-            ("IID_スキルの書・離", "Expert Book"), ("IID_HPの薬", "HP Tonic"), ("IID_力の薬", "Strength Tonic"), ("IID_技の薬", "Dexterity Tonic"),
-            ("IID_速さの薬", "Speed Tonic"), ("IID_幸運の薬", "Luck Tonic"), ("IID_守備の薬", "Defense Tonic"), ("IID_魔力の薬", "Magic Tonic"),
-            ("IID_魔防の薬", "Resistance Tonic"), ("IID_マスタープルフ", "Master Seal"), ("IID_チェンジプルフ", "Second Seal"), ("IID_エンチャント専用プルフ", "Mystic Satchel"),
+            ("IID_スキルの書・離", "Expert Book"), ("IID_マスタープルフ", "Master Seal"), ("IID_チェンジプルフ", "Second Seal"), ("IID_エンチャント専用プルフ", "Mystic Satchel"),
             ("IID_マージカノン専用プルフ", "Mage Cannon"),
         };
+
+        internal static List<(string id, string name)> AllyItems { get; } = new(); // EnemyUsableItems + EnemyNonUsableItems
+
+        internal static List<(string id, string name)> GoldItems { get; } = new()
+        {
+            ("IID_100G", "100 Gold"), ("IID_200G", "200 Gold"), ("IID_300G", "300 Gold"), ("IID_400G", "400 Gold"),
+            ("IID_500G", "500 Gold"), ("IID_600G", "600 Gold"), ("IID_700G", "700 Gold"), ("IID_800G", "800 Gold"),
+            ("IID_900G", "900 Gold"), ("IID_1000G", "1000 Gold"), ("IID_1100G", "1100 Gold"), ("IID_1200G", "1200 Gold"),
+            ("IID_1300G", "1300 Gold"), ("IID_1400G", "1400 Gold"), ("IID_1500G", "1500 Gold"), ("IID_1600G", "1600 Gold"),
+            ("IID_1700G", "1700 Gold"), ("IID_1800G", "1800 Gold"), ("IID_1900G", "1900 Gold"), ("IID_2000G", "2000 Gold"),
+            ("IID_3000G", "3000 Gold"), ("IID_5000G", "5000 Gold"), ("IID_7000G", "7000 Gold"), ("IID_10000G", "10000 Gold"),
+            ("IID_20000G", "20000 Gold"), ("IID_50000G", "50000 Gold"),
+        };
+
+        internal static List<(string id, string name)> EnemyDropItems { get; } = new(); // EnemyNonUsableItems + GoldItems
+
+        internal static List<(string id, string name)> EnemyItems { get; } = new(); // EnemyUsableItems + EnemyDropItems
 
         internal static List<(string id, string name)> AllItems { get; } = new();
 
@@ -2225,7 +2397,8 @@ namespace ALittleSecretIngredient
             N, Np, D, Dp, C, Cp, B, Bp, A, Ap, S
         }
 
-        internal static Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponTypeLookup = new();
+        internal static Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponLookup = new();
+        internal static Dictionary<Proficiency, List<List<(string id, string name)>>> EnemyWeaponLookup = new();
         #endregion
         #region Map IDs
         internal static List<(string id, string name)> TempestTrialsMaps { get; } = new() // Okay, this might not be accurate. Let's just pretend these don't exist.
@@ -2246,8 +2419,8 @@ namespace ALittleSecretIngredient
 
         internal static List<(string id, string name)> DivineParalogueMaps { get; } = new()
         {
-            ("G001", "Divine Paralogue 1"), ("G002", "Divine Paralogue 2"), ("G003", "Divine Paralogue 3"), ("G004", "Divine Paralogue 4"),
-            ("G005", "Divine Paralogue 5"), ("G006", "Divine Paralogue 6"),
+            ("G001", "Tiki Paralogue"), ("G002", "Hector Paralogue"), ("G003", "Veronica Paralogue"), ("G004", "Soren Paralogue"),
+            ("G005", "Camilla Paralogue"), ("G006", "Chrom Paralogue"),
         };
 
         internal static List<(string id, string name)> ChapterMaps { get; } = new()
@@ -2263,18 +2436,18 @@ namespace ALittleSecretIngredient
 
         internal static List<(string id, string name)> ParalogueMaps { get; } = new()
         {
-            ("S001","Paralogue 1"), ("S002","Paralogue 2"), ("S003","Paralogue 3"), ("S004","Paralogue 4"),
-            ("S005","Paralogue 5"), ("S006","Paralogue 6"), ("S007","Paralogue 7"), ("S008","Paralogue 8"),
-            ("S009","Paralogue 9"), ("S010","Paralogue 10"), ("S011","Paralogue 11"), ("S012","Paralogue 12"),
-            ("S013","Paralogue 13"), ("S014","Paralogue 14"), ("S015","Paralogue 15"),
+            ("S001","Jean Paralogue"), ("S002","Anna Paralogue"), ("S003","Lucina Paralogue"), ("S004","Lyn Paralogue"),
+            ("S005","Ike Paralogue"), ("S006","Byleth Paralogue"), ("S007","Corrin Paralogue"), ("S008","Eirika Paralogue"),
+            ("S009","Sigurd Paralogue"), ("S010","Leif Paralogue"), ("S011","Micaiah Paralogue"), ("S012","Roy Paralogue"),
+            ("S013","Celica Paralogue"), ("S014","Marth Paralogue"), ("S015","Alear Paralogue"),
         };
 
         internal static List<(string id, string name)> SkirmishMaps { get; } = new()
         {
             ("E001E", "Skirmish Xenologue 1"), ("E002E", "Skirmish Xenologue 2"), ("E003E", "Skirmish Xenologue 3"), ("E004E", "Skirmish Xenologue 4"),
             ("E005E", "Skirmish Xenologue 5"),
-            ("G001E", "Skirmish Divine Paralogue 1"), ("G002E", "Skirmish Divine Paralogue 2"), ("G003E", "Skirmish Divine Paralogue 3"), ("G004E", "Skirmish Divine Paralogue 4"),
-            ("G005E", "Skirmish Divine Paralogue 5"), ("G006E", "Skirmish Divine Paralogue 6"),
+            ("G001E", "Skirmish Tiki Paralogue"), ("G002E", "Skirmish Hector Paralogue"), ("G003E", "Skirmish Veronica Paralogue"), ("G004E", "Skirmish Soren Paralogue"),
+            ("G005E", "Skirmish Camilla Paralogue"), ("G006E", "Skirmish Chrom Paralogue"),
             ("M004E","Skirmish Chapter 4"),
             ("M005E","Skirmish Chapter 5"), ("M006E","Skirmish Chapter 6"), ("M007E","Skirmish Chapter 7"), ("M008E","Skirmish Chapter 8"),
             ("M009E","Skirmish Chapter 9"), ("M010E","Skirmish Chapter 10"), ("M011E","Skirmish Chapter 11"), ("M012E","Skirmish Chapter 12"),
@@ -2282,10 +2455,10 @@ namespace ALittleSecretIngredient
             ("M017E","Skirmish Chapter 17"), ("M018E","Skirmish Chapter 18"), ("M019E","Skirmish Chapter 19"), ("M020E","Skirmish Chapter 20"),
             ("M022E","Skirmish Chapter 22"), ("M023E","Skirmish Chapter 23"),
             ("M025E","Skirmish Chapter 25"),
-            ("S001E","Skirmish Paralogue 1"), ("S002E","Skirmish Paralogue 2"), ("S003E","Skirmish Paralogue 3"), ("S004E","Skirmish Paralogue 4"),
-            ("S005E","Skirmish Paralogue 5"), ("S006E","Skirmish Paralogue 6"), ("S007E","Skirmish Paralogue 7"), ("S008E","Skirmish Paralogue 8"),
-            ("S009E","Skirmish Paralogue 9"), ("S010E","Skirmish Paralogue 10"), ("S011E","Skirmish Paralogue 11"), ("S012E","Skirmish Paralogue 12"),
-            ("S013E","Skirmish Paralogue 13"), ("S014E","Skirmish Paralogue 14"), ("S015E","Skirmish Paralogue 15"),
+            ("S001E","Skirmish Jean Paralogue"), ("S002E","Skirmish Anna Paralogue"), ("S003E","Skirmish Lucina Paralogue"), ("S004E","Skirmish Lyn Paralogue"),
+            ("S005E","Skirmish Ike Paralogue"), ("S006E","Skirmish Byleth Paralogue"), ("S007E","Skirmish Corrin Paralogue"), ("S008E","Skirmish Eirika Paralogue"),
+            ("S009E","Skirmish Sigurd Paralogue"), ("S010E","Skirmish Leif Paralogue"), ("S011E","Skirmish Micaiah Paralogue"), ("S012E","Skirmish Roy Paralogue"),
+            ("S013E","Skirmish Celica Paralogue"), ("S014E","Skirmish Marth Paralogue"), ("S015E","Skirmish Alear Paralogue"),
         };
 
         internal static List<(string id, string name)> StaticUnitMaps { get; } = new(); // FellXenologueMaps + DivineParalogueMaps + ChapterMaps + ParalogueMaps
@@ -2554,7 +2727,7 @@ namespace ALittleSecretIngredient
             ("SID_ムードメーカー", "Friendly Boost"), ("SID_生存戦略", "Survival Plan"), ("SID_理想の騎士像", "Knightly Code"),
             ("SID_保身", "Self-Defense"), ("SID_戦場の花", "Fierce Bloom"), ("SID_促す決着", "This Ends Here"), ("SID_能力誇示", "Show-Off"),
             ("SID_傷をつけたわね", "Final Say"), ("SID_密かな支援", "Stealth Assist"), ("SID_王の尊厳", "Dignity of Solm"), ("SID_殺戮者", "Wear Down"),
-            ("SID_輸送隊", "Convoy"), ("SID_瘴気の領域", "Miasma Domain "), ("SID_氷の領域", "Frost Domain"), ("SID_裏邪竜ノ娘_兵種スキル", "Resist Emblems"), ("SID_裏邪竜ノ子_兵種スキル", "Spur Emblems"), ("SID_受けるダメージ-50", "Sigil Protection"),
+            ("SID_輸送隊", "Convoy"), ("SID_瘴気の領域", "Miasma Domain "), ("SID_氷の領域", "Frost Domain"), ("SID_裏邪竜ノ娘_兵種スキル", "Resist Emblems"), ("SID_裏邪竜ノ子_兵種スキル", "Spur Emblems"),
             ("SID_異形狼連携", "Pack Hunter (Corrupted)"),
             ("SID_幻影狼連携", "Pack Hunter (Phantom)"),
         };
@@ -3220,9 +3393,164 @@ namespace ALittleSecretIngredient
             { "S009E", 41 }, { "S010E", 41 }, { "S011E", 41 }, { "S012E", 41 }, { "S013E", 41 }, { "S014E", 41 }, { "S015E", 41 },
         };
 
-        internal static List<string> DeploymentSlotPids { get; } = new()
+        internal static HashSet<string> NoPrepMaps { get; } = new()
         {
-            "PID_ダミー", ""
+            "M001", "M002", "M003"
+        };
+
+        internal static HashSet<string> EnemyNPCMaps { get; } = new()
+        {
+            "E004", "M002"
+        };
+
+        internal struct MapNode
+        {
+            internal string? prevMap;
+            internal List<string> newUnits;
+
+            internal MapNode(string? prevMap, List<string> newUnits)
+            {
+                this.prevMap = prevMap;
+                this.newUnits = newUnits;
+            }
+
+            internal readonly IEnumerable<string> GetPreMapMustUnits()
+            {
+                if (prevMap is null)
+                    return Array.Empty<string>();
+                MapNode parent = MapNodes[prevMap];
+                return parent.GetPreMapMustUnits().Concat(parent.newUnits);
+            }
+        }
+
+        internal static Dictionary<string, MapNode> MapNodes { get; } = new()
+        {
+            { "E001", new("M006", new()) },
+            { "E002", new("E001", new()) },
+            { "E003", new("E002", new()) },
+            { "E004", new("E003", new()) },
+            { "E005", new("E004", new()) },
+            { "E006", new("E005", new() { "PID_エル", "PID_ラファール", "PID_セレスティア", "PID_グレゴリー", "PID_マデリーン" }) },
+            { "G001", new("M006", new()) },
+            { "G002", new("G001", new()) },
+            { "G003", new("G001", new()) },
+            { "G004", new("G001", new()) },
+            { "G005", new("G001", new()) },
+            { "G006", new("G001", new()) },
+            { "M001", new(null, new() { "PID_リュール", "PID_ヴァンドレ" }) },
+            { "M002", new("M001", new() { "PID_クラン", "PID_フラン" }) },
+            { "M003", new("M002", new() { "PID_アルフレッド", "PID_エーティエ", "PID_ブシュロン" }) },
+            { "M004", new("M003", new() { "PID_セリーヌ", "PID_クロエ", "PID_ルイ" }) },
+            { "M005", new("M004", new()) },
+            { "M006", new("M005", new() { "PID_ユナカ" }) },
+            { "M007", new("M006", new() { "PID_スタルーク", "PID_シトリニカ", "PID_ラピス" }) },
+            { "M008", new("M007", new() { "PID_ディアマンド", "PID_アンバー" }) },
+            { "M009", new("M008", new() { "PID_ジェーデ" }) },
+            { "M010", new("M009", new()) },
+            { "M011", new("M010", new() { "PID_アイビー", "PID_カゲツ", "PID_ゼルコバ" }) },
+            { "M012", new("M011", new() { "PID_フォガート", "PID_パンドロ", "PID_ボネ" }) },
+            { "M013", new("M012", new() { "PID_ミスティラ", "PID_パネトネ", "PID_メリン" }) },
+            { "M014", new("M013", new() { "PID_オルテンシア" }) },
+            { "M015", new("M014", new() { "PID_セアダス" }) },
+            { "M016", new("M015", new() { "PID_ロサード", "PID_ゴルドマリー" }) },
+            { "M017", new("M016", new()) },
+            { "M018", new("M017", new() { "PID_リンデン" }) },
+            { "M019", new("M018", new() { "PID_ザフィーア" }) },
+            { "M020", new("M019", new()) },
+            { "M021", new("M020", new() { "PID_モーヴ" }) },
+            { "M022", new("M021", new() { "PID_ヴェイル" }) },
+            { "M023", new("M022", new()) },
+            { "M024", new("M023", new()) },
+            { "M025", new("M024", new()) },
+            { "M026", new("M025", new()) },
+            { "S001", new("M005", new() { "PID_ジャン" }) },
+            { "S002", new("M006", new() { "PID_アンナ" }) },
+            { "S003", new("M011", new()) },
+            { "S004", new("M012", new()) },
+            { "S005", new("M013", new()) },
+            { "S006", new("M014", new()) },
+            { "S007", new("M015", new()) },
+            { "S008", new("M016", new()) },
+            { "S009", new("M017", new()) },
+            { "S010", new("M017", new()) },
+            { "S011", new("M018", new()) },
+            { "S012", new("M018", new()) },
+            { "S013", new("M020", new()) },
+            { "S014", new("M022", new()) },
+            { "S015", new("M022", new()) },
+            { "E001E", new("E001", new()) },
+            { "E002E", new("E002", new()) },
+            { "E003E", new("E003", new()) },
+            { "E004E", new("E004", new()) },
+            { "E005E", new("E005", new()) },
+            { "G001E", new("G001", new()) },
+            { "G002E", new("G002", new()) },
+            { "G003E", new("G003", new()) },
+            { "G004E", new("G004", new()) },
+            { "G005E", new("G005", new()) },
+            { "G006E", new("G006", new()) },
+            { "M004E", new("M004", new()) },
+            { "M005E", new("M005", new()) },
+            { "M006E", new("M006", new()) },
+            { "M007E", new("M007", new()) },
+            { "M008E", new("M008", new()) },
+            { "M009E", new("M009", new()) },
+            { "M010E", new("M010", new()) },
+            { "M011E", new("M011", new()) },
+            { "M012E", new("M012", new()) },
+            { "M013E", new("M013", new()) },
+            { "M014E", new("M014", new()) },
+            { "M015E", new("M015", new()) },
+            { "M016E", new("M016", new()) },
+            { "M017E", new("M017", new()) },
+            { "M018E", new("M018", new()) },
+            { "M019E", new("M019", new()) },
+            { "M020E", new("M020", new()) },
+            { "M022E", new("M022", new()) },
+            { "M023E", new("M023", new()) },
+            { "M025E", new("M025", new()) },
+            { "S001E", new("S001", new()) },
+            { "S002E", new("S002", new()) },
+            { "S003E", new("S003", new()) },
+            { "S004E", new("S004", new()) },
+            { "S005E", new("S005", new()) },
+            { "S006E", new("S006", new()) },
+            { "S007E", new("S007", new()) },
+            { "S008E", new("S008", new()) },
+            { "S009E", new("S009", new()) },
+            { "S010E", new("S010", new()) },
+            { "S011E", new("S011", new()) },
+            { "S012E", new("S012", new()) },
+            { "S013E", new("S013", new()) },
+            { "S014E", new("S014", new()) },
+            { "S015E", new("S015", new()) },
+        };
+
+        internal static HashSet<string> SupportedEnemyAttackAIs { get; } = new()
+        {
+            "AI_AT_EngageBlessPerson", "AI_AT_Attack", "AI_AT_EngageWait", "AI_AT_Enchant",
+            "AI_AT_EngageCamilla", "AI_AT_Heal", "AI_AT_EngageAttack", "AI_AT_HealToAttack",
+            "AI_AT_Interference", "AI_AT_AttackToHeal", "AI_AT_AttackToInterference", "AI_AT_EngagePierce",
+            "AI_AT_EngageAttackNoGuard", "AI_AT_EngageCSBattle", "AI_AT_RodWarp", "AI_AT_EngageDance",
+            "AI_AT_EngageOverlap"
+        };
+
+        internal static HashSet<string> HealStaves { get; } = new()
+        {
+            "IID_ライブ", "IID_リライブ", "IID_リブロー", "IID_リブロー_G004",
+            "IID_リカバー", "IID_カップケーキ杖", "IID_セリカ_リカバー_通常", "IID_リザーブ",
+            "IID_ヴェロニカ_リザーブ＋_通常"
+        };
+
+        internal static HashSet<string> EnemyTargetStaves { get; } = new()
+        {
+            "IID_ドロー", "IID_フリーズ", "IID_フリーズ_S010", "IID_サイレス",
+            "IID_サイレス_S010", "IID_コラプス", "IID_コラプス_M014", "IID_コラプス_S010"
+        };
+
+        internal static HashSet<string> TeleportStaves { get; } = new()
+        {
+            "IID_ワープ", "IID_リワープ", "IID_レスキュー", "IID_レスキュー_M019"
         };
         #endregion
 
@@ -3261,6 +3589,10 @@ namespace ALittleSecretIngredient
             AllyNPCCharacters.AddRange(FixedLevelAllyNPCCharacters);
             AllyCharacters.AddRange(PlayableCharacters);
             AllyCharacters.AddRange(AllyNPCCharacters);
+            FixedLevelEnemyCharacters.AddRange(FixedLevelEmblemCharacters);
+            EmblemBossCharacters.AddRange(FixedLevelEmblemCharacters);
+            EmblemBossCharacters.AddRange(DivineParalogueEmblemCharacters);
+            NonArenaEnemyCharacters.AddRange(DivineParalogueEmblemCharacters);
             NonArenaEnemyCharacters.AddRange(FixedLevelEnemyCharacters);
             EnemyCharacters.AddRange(NonArenaEnemyCharacters);
             EnemyCharacters.AddRange(ArenaCharacters);
@@ -3316,63 +3648,81 @@ namespace ALittleSecretIngredient
             SyncableEmblems.AddRange(AllyArenaSyncableEmblems);
             SyncableEmblems.AddRange(EnemySyncableEmblems);
             Emblems.AddRange(SyncableEmblems);
-            NormalWeapons.AddRange(DSwordWeapons);
-            NormalWeapons.AddRange(CSwordWeapons);
-            NormalWeapons.AddRange(BSwordWeapons);
-            NormalWeapons.AddRange(ASwordWeapons);
-            NormalWeapons.AddRange(SSwordWeapons);
-            NormalWeapons.AddRange(DLanceWeapons);
-            NormalWeapons.AddRange(CLanceWeapons);
-            NormalWeapons.AddRange(BLanceWeapons);
-            NormalWeapons.AddRange(ALanceWeapons);
-            NormalWeapons.AddRange(SLanceWeapons);
-            NormalWeapons.AddRange(DAxeWeapons);
-            NormalWeapons.AddRange(CAxeWeapons);
-            NormalWeapons.AddRange(BAxeWeapons);
-            NormalWeapons.AddRange(AAxeWeapons);
-            NormalWeapons.AddRange(SAxeWeapons);
-            NormalWeapons.AddRange(DBowWeapons);
-            NormalWeapons.AddRange(CBowWeapons);
-            NormalWeapons.AddRange(BBowWeapons);
-            NormalWeapons.AddRange(ABowWeapons);
-            NormalWeapons.AddRange(SBowWeapons);
-            NormalWeapons.AddRange(DDaggerWeapons);
-            NormalWeapons.AddRange(CDaggerWeapons);
-            NormalWeapons.AddRange(BDaggerWeapons);
-            NormalWeapons.AddRange(ADaggerWeapons);
-            NormalWeapons.AddRange(SDaggerWeapons);
-            NormalWeapons.AddRange(DTomeWeapons);
-            NormalWeapons.AddRange(CTomeWeapons);
-            NormalWeapons.AddRange(BTomeWeapons);
-            NormalWeapons.AddRange(ATomeWeapons);
-            NormalWeapons.AddRange(STomeWeapons);
-            NormalWeapons.AddRange(DStaves);
-            NormalWeapons.AddRange(CStaves);
-            NormalWeapons.AddRange(BStaves);
-            NormalWeapons.AddRange(AStaves);
-            NormalWeapons.AddRange(SStaves);
-            NormalWeapons.AddRange(DArtWeapons);
-            NormalWeapons.AddRange(CArtWeapons);
-            NormalWeapons.AddRange(BArtWeapons);
-            NormalWeapons.AddRange(AArtWeapons);
-            NormalWeapons.AddRange(SArtWeapons);
-            NormalWeapons.AddRange(LiberationWeapons);
-            NormalWeapons.AddRange(WilleGlanzWeapons);
-            NormalWeapons.AddRange(MisericordeWeapons);
-            NormalWeapons.AddRange(ObscuriteWeapons);
-            NormalWeapons.AddRange(DragonStones);
-            NormalWeapons.AddRange(Cannonballs);
-            NormalWeapons.AddRange(NormalEngageSwordWeapons);
-            NormalWeapons.AddRange(NormalEngageLanceWeapons);
-            NormalWeapons.AddRange(NormalEngageAxeWeapons);
-            NormalWeapons.AddRange(NormalEngageBowWeapons);
-            NormalWeapons.AddRange(NormalEngageDaggerWeapons);
-            NormalWeapons.AddRange(NormalEngageTomeWeapons);
-            NormalWeapons.AddRange(NormalEngageStaves);
-            NormalWeapons.AddRange(NormalEngageArtWeapons);
-            NormalWeapons.AddRange(NormalEngageSpecialWeapons);
-            AllItems.AddRange(NormalWeapons);
-            AllItems.AddRange(BattleItems);
+            NormalAllyWeapons.AddRange(DSwordWeapons);
+            NormalAllyWeapons.AddRange(CSwordWeapons);
+            NormalAllyWeapons.AddRange(BSwordWeapons);
+            NormalAllyWeapons.AddRange(ASwordWeapons);
+            NormalAllyWeapons.AddRange(SSwordWeapons);
+            NormalAllyWeapons.AddRange(DLanceWeapons);
+            NormalAllyWeapons.AddRange(CLanceWeapons);
+            NormalAllyWeapons.AddRange(BLanceWeapons);
+            NormalAllyWeapons.AddRange(ALanceWeapons);
+            NormalAllyWeapons.AddRange(SLanceWeapons);
+            NormalAllyWeapons.AddRange(DAxeWeapons);
+            NormalAllyWeapons.AddRange(CAxeWeapons);
+            NormalAllyWeapons.AddRange(BAxeWeapons);
+            NormalAllyWeapons.AddRange(AAxeWeapons);
+            NormalAllyWeapons.AddRange(SAxeWeapons);
+            NormalAllyWeapons.AddRange(DBowWeapons);
+            NormalAllyWeapons.AddRange(CBowWeapons);
+            NormalAllyWeapons.AddRange(BBowWeapons);
+            NormalAllyWeapons.AddRange(ABowWeapons);
+            NormalAllyWeapons.AddRange(SBowWeapons);
+            NormalAllyWeapons.AddRange(DDaggerWeapons);
+            NormalAllyWeapons.AddRange(CDaggerWeapons);
+            NormalAllyWeapons.AddRange(BDaggerWeapons);
+            NormalAllyWeapons.AddRange(ADaggerWeapons);
+            NormalAllyWeapons.AddRange(SDaggerWeapons);
+            NormalAllyWeapons.AddRange(DTomeWeapons);
+            NormalAllyWeapons.AddRange(CTomeWeapons);
+            NormalAllyWeapons.AddRange(BTomeWeapons);
+            NormalAllyWeapons.AddRange(ATomeWeapons);
+            NormalAllyWeapons.AddRange(STomeWeapons);
+            NormalAllyWeapons.AddRange(DStaves);
+            NormalAllyWeapons.AddRange(CStaves);
+            NormalAllyWeapons.AddRange(BStaves);
+            NormalAllyWeapons.AddRange(AStaves);
+            NormalAllyWeapons.AddRange(SStaves);
+            NormalAllyWeapons.AddRange(DArtWeapons);
+            NormalAllyWeapons.AddRange(CArtWeapons);
+            NormalAllyWeapons.AddRange(BArtWeapons);
+            NormalAllyWeapons.AddRange(AArtWeapons);
+            NormalAllyWeapons.AddRange(SArtWeapons);
+            NormalAllyWeapons.AddRange(DSpecialWeapons);
+            NormalAllyWeapons.AddRange(CSpecialWeapons);
+            NormalAllyWeapons.AddRange(BSpecialWeapons);
+            NormalAllyWeapons.AddRange(SSpecialWeapons);
+            NormalAllyWeapons.AddRange(LiberationWeapons);
+            NormalAllyWeapons.AddRange(WilleGlanzWeapons);
+            NormalAllyWeapons.AddRange(MisericordeWeapons);
+            NormalAllyWeapons.AddRange(ObscuriteWeapons);
+            NormalAllyWeapons.AddRange(DragonStones);
+            NormalAllyWeapons.AddRange(Cannonballs);
+            NormalAllyWeapons.AddRange(NormalEngageSwordWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageLanceWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageAxeWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageBowWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageDaggerWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageTomeWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageStaves);
+            NormalAllyWeapons.AddRange(NormalEngageArtWeapons);
+            NormalAllyWeapons.AddRange(NormalEngageSpecialWeapons);
+            NormalEnemyWeapons.AddRange(NormalAllyWeapons);
+            NormalEnemyWeapons.AddRange(EnemyATomeWeapons);
+            NormalEnemyWeapons.AddRange(EnemyCStaves);
+            NormalEnemyWeapons.AddRange(EnemyBStaves);
+            EnemyUsableItems.AddRange(HealItems);
+            EnchantItems.AddRange(HealItems);
+            EnchantItems.AddRange(NonHealEnchantItems);
+            EnemyNonUsableItems.AddRange(NonHealEnchantItems);
+            AllyItems.AddRange(EnemyUsableItems);
+            AllyItems.AddRange(EnemyNonUsableItems);
+            EnemyDropItems.AddRange(EnemyNonUsableItems);
+            EnemyDropItems.AddRange(GoldItems);
+            EnemyItems.AddRange(EnemyUsableItems);
+            EnemyItems.AddRange(EnemyDropItems);
+            AllItems.AddRange(NormalAllyWeapons);
+            AllItems.AddRange(AllyItems);
             AllItems.AddRange(EngageWeapons);
             StaticUnitMaps.AddRange(XenologueMaps);
             StaticUnitMaps.AddRange(DivineParalogueMaps);
@@ -3398,16 +3748,28 @@ namespace ALittleSecretIngredient
             SyncStatSkills.AddRange(SyncResSkills);
             SyncStatSkills.AddRange(SyncBldSkills);
             SyncStatSkills.AddRange(SyncMovSkills);
-            WeaponTypeLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
-            WeaponTypeLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
-            WeaponTypeLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
-            WeaponTypeLookup.Add(Proficiency.Axe, new() { DAxeWeapons, CAxeWeapons, BAxeWeapons, AAxeWeapons, SAxeWeapons, NormalEngageAxeWeapons });
-            WeaponTypeLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
-            WeaponTypeLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
-            WeaponTypeLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons, ATomeWeapons, STomeWeapons, NormalEngageTomeWeapons });
-            WeaponTypeLookup.Add(Proficiency.Staff, new() { DStaves, CStaves, BStaves, AStaves, SStaves, NormalEngageStaves });
-            WeaponTypeLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
-            WeaponTypeLookup.Add(Proficiency.Special, new() { new(), new(), new(), new(), new(), NormalEngageSpecialWeapons });
+            WeaponLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
+            WeaponLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
+            WeaponLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
+            WeaponLookup.Add(Proficiency.Axe, new() { DAxeWeapons, CAxeWeapons, BAxeWeapons, AAxeWeapons, SAxeWeapons, NormalEngageAxeWeapons });
+            WeaponLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
+            WeaponLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
+            WeaponLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons, ATomeWeapons, STomeWeapons, NormalEngageTomeWeapons });
+            WeaponLookup.Add(Proficiency.Staff, new() { DStaves, CStaves, BStaves, AStaves, SStaves, NormalEngageStaves });
+            WeaponLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
+            WeaponLookup.Add(Proficiency.Special, new() { DSpecialWeapons, CSpecialWeapons, BSpecialWeapons, new(), SSpecialWeapons, NormalEngageSpecialWeapons });
+            EnemyWeaponLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
+            EnemyWeaponLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Axe, new() { DAxeWeapons, CAxeWeapons, BAxeWeapons, AAxeWeapons, SAxeWeapons, NormalEngageAxeWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons,
+                ATomeWeapons.Concat(EnemyATomeWeapons).ToList(), STomeWeapons, NormalEngageTomeWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Staff, new() { DStaves, CStaves.Concat(EnemyCStaves).ToList(), BStaves.Concat(EnemyBStaves).ToList(),
+                AStaves, SStaves, NormalEngageStaves });
+            EnemyWeaponLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Special, new() { DSpecialWeapons, CSpecialWeapons, BSpecialWeapons, new(), SSpecialWeapons, NormalEngageSpecialWeapons });
             SyncStatLookup.Add(SyncHPSkills.GetIDs());
             SyncStatLookup.Add(SyncStrSkills.GetIDs());
             SyncStatLookup.Add(SyncDexSkills.GetIDs());

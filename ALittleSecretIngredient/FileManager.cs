@@ -45,6 +45,7 @@ namespace ALittleSecretIngredient
         private const string TempFolderName = "Temp";
         private const string RandomizerSettingsFileName = "RandomizerSettings.xml";
         private const string ChangelogFileName = "Changelog.txt";
+        private const string IpsPatchFileName = "8C08B9719E085F91847B5E0F935D9488.ips";
 
         private class FileData
         {
@@ -222,6 +223,29 @@ namespace ALittleSecretIngredient
         {
             Directory.CreateDirectory(GetTempDir());
             return File.Create(GetTempFilePath(fileName));
+        }
+
+        private static string GetIpsPatchOutputPath(ExportFormat ef)
+        {
+            string outputPath = $"{GetOutputModDir(ef)}";
+            outputPath += ef switch
+            {
+                ExportFormat.Cobalt => $"",
+                ExportFormat.LayeredFS => $"exefs\\",
+                _ => throw new NotImplementedException(),
+            };
+            outputPath += IpsPatchFileName;
+            return outputPath;
+        }
+
+        internal static void CopyIpsPatch(IEnumerable<ExportFormat> targets)
+        {
+            foreach (ExportFormat ef in targets)
+            {
+                string outputPath = GetIpsPatchOutputPath(ef);
+                Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+                File.Copy($"{Directory.GetCurrentDirectory()}\\{IpsPatchFileName}", outputPath);
+            }
         }
     }
 }

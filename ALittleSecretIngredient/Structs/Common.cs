@@ -62,6 +62,8 @@ namespace ALittleSecretIngredient.Structs
                     n.AppendChild(n.FirstChild!.Clone());
                 Params[i].Write(n.ChildNodes[i]!);
             }
+            while (n.ChildNodes.Count > Params.Count)
+                n.RemoveChild(n.ChildNodes[^1]!);
             if (GroupedParams())
                 Group();
         }

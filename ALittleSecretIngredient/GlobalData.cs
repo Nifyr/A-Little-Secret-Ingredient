@@ -21,6 +21,8 @@ namespace ALittleSecretIngredient
             DDS = new(GD);
         }
 
+        internal void SubscribeToStatusUpdate(Action<string> update) => GD.OnStatusUpdate += update;
+
         internal ExportResult Export(IEnumerable<ExportFormat> targets)
         {
             if (!targets.Any()) return ExportResult.NoExportTargets;

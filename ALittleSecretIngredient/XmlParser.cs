@@ -65,7 +65,7 @@ namespace ALittleSecretIngredient
             return bytes;
         }
 
-        internal byte[] GetNewXml(FileGroupEnum fge, string fileName, string oldXmlString)
+        internal byte[] ExportXml(FileGroupEnum fge, string fileName, string oldXmlString)
         {
             XmlDocument xml = new();
             xml.Load(new StringReader(oldXmlString));

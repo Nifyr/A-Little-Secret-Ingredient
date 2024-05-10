@@ -304,7 +304,16 @@
         AttrsEnemy,
         CommonSids,
         DeploymentSlots,
-        EnemyCount
+        EnemyCount,
+        ForcedDeployment,
+        UnitPosition,
+        ItemsWeaponsAlly,
+        ItemsItemsAlly,
+        ItemsWeaponsEnemy,
+        ItemsItemsEnemy,
+        Sid,
+        Gid,
+        HpStockCount,
     }
 
     internal enum ExportFormat

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Text;
 
 namespace ALittleSecretIngredient
 {
@@ -11,6 +9,7 @@ namespace ALittleSecretIngredient
         private Dictionary<(FileGroupEnum fge, string fileName), FileData> FileGroups { get; } = new();
         private readonly List<(FileEnum fe, string localPath)> targetFiles = new()
         {
+            ( FileEnum.AI, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\ai.xml.bundle" ),
             ( FileEnum.AssetTable, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\assettable.xml.bundle" ),
             ( FileEnum.God, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\god.xml.bundle" ),
             ( FileEnum.Item, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\item.xml.bundle" ),
@@ -26,6 +25,7 @@ namespace ALittleSecretIngredient
         };
         private Dictionary<FileEnum, string> CobaltFilePatches { get; } = new()
         {
+            { FileEnum.AI, "AI.xml" },
             { FileEnum.AssetTable, "AssetTable.xml" },
             { FileEnum.God, "God.xml" },
             { FileEnum.Item, "Item.xml" },

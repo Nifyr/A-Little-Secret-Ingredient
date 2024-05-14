@@ -163,6 +163,9 @@ namespace ALittleSecretIngredient
             // Fix enemy AI
             if (settings.Arrangement.ItemsItemsEnemy.Enabled || settings.Arrangement.Gid.Enabled)
             {
+                const string MY_AI = "AI_ALittle*Secret*AI";
+                const string V_Default = "V_Default";
+                const string V_Max = "V_Max";
                 HashSet<string> playableCharacters = PlayableCharacters.GetIDs().ToHashSet();
                 HashSet<string> weaponIDs = NormalEnemyWeapons.GetIDs().ToHashSet();
                 HashSet<string> emblemCharacters = EmblemBossCharacters.GetIDs().ToHashSet();
@@ -171,103 +174,60 @@ namespace ALittleSecretIngredient
                 Dictionary<string, TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToDictionary(tos => tos.Jid);
                 List<(string id, DataSet ds)> maps = GD.GetGroup(DataSetEnum.Arrangement, StaticUnitMaps);
                 foreach (Arrangement a in maps.GetEnemies().Concat(maps.GetNPCs(playableCharacters)))
+                    if (SupportedEnemyAttackAIs.Contains(a.AI_AttackName))
+                    {
+                        a.AI_AttackName = MY_AI;
+                        a.AI_AttackVal = "";
+                    }
+                Command groupMarker = new(0, 0, 0, "", "") { Group = MY_AI };
+                ParamGroup pg = new(groupMarker)
                 {
-                    if (!SupportedEnemyAttackAIs.Contains(a.AI_AttackName)) continue;
-                    if (emblemCharacters.Contains(a.Pid)) continue;
-                    string atk = "AI_AT_Attack";
-                    string atkVal = "";
-                    HashSet<string> itemIDs = a.GetItems().Select(ai => ai.iid).ToHashSet();
-                    if (itemIDs.Overlaps(HealStaves))
+                    Group = new()
                     {
-                        if (!itemIDs.Any(s => weaponIDs.Contains(s) && !HealStaves.Contains(s)))
-                            atk = RNG.Next(3) switch
-                            {
-                                0 => "AI_AT_Heal",
-                                1 => "AI_AT_HealToAttack",
-                                2 => "AI_AT_AttackToHeal",
-                                _ => throw new Exception("What")
-                            };
-                        else
-                            atk = RNG.Next(4) switch
-                            {
-                                0 => atk,
-                                1 => "AI_AT_Heal",
-                                2 => "AI_AT_HealToAttack",
-                                3 => "AI_AT_AttackToHeal",
-                                _ => throw new Exception("What")
-                            };
+                        new Command(0, 3, 58, "1", "3"),
+                        new Command(0, 3, 53, V_Default, V_Default),
+                        new Command(0, 3, 50, "1", "3"),
+                        new Command(0, 3, 51, "1", "3"),
+                        new Command(0, 3, 57, "1", "3"),
+                        new Command(0, 3, 118, V_Default, V_Default),
+                        new Command(0, 3, 110, V_Default, V_Default),
+                        new Command(0, 3, 117, V_Default, V_Default),
+                        new Command(0, 3, 12, V_Default, V_Default),
+                        new Command(0, 3, 0, V_Default, V_Default),
+                        new Command(0, 3, -8, V_Default, V_Default),
+                        new Command(0, 3, -12, V_Default, V_Default),
+                        new Command(0, 3, 54, "1", "3"),
+                        new Command(0, 3, 56, "1", "3"),
+                        new Command(0, 3, -3, V_Default, V_Default),
+                        new Command(0, 3, 52, V_Default, V_Default),
+                        new Command(0, 3, 24, V_Default, V_Default),
+                        new Command(0, 3, 66, V_Default, V_Default),
+                        new Command(0, 3, 119, V_Default, V_Default),
+                        new Command(0, 3, -10, V_Default, V_Default),
+                        new Command(0, 3, 120, V_Default, V_Default),
+                        new Command(0, 3, 114, V_Default, V_Default),
+                        new Command(0, 3, -5, "1", V_Default),
+                        new Command(0, 3, -5, "0", V_Default),
+                        new Command(0, 3, 30, V_Default, V_Default),
+                        new Command(0, 3, 20, V_Default, V_Default),
+                        new Command(0, 3, 21, "1", "1"),
+                        new Command(0, 3, 23, "1", "1"),
+                        new Command(0, 3, 71, V_Default, V_Default),
+                        new Command(0, 3, 41, V_Default, V_Default),
+                        new Command(0, 3, 108, V_Default, V_Default),
+                        new Command(0, 3, 68, V_Default, V_Default),
+                        new Command(0, 3, 86, V_Default, V_Default),
+                        new Command(0, 3, 82, V_Max, V_Default),
+                        new Command(0, 3, 88, V_Max, V_Default),
+                        new Command(0, 3, 97, V_Default, V_Default),
+                        new Command(0, 3, 99, V_Default, V_Default),
+                        new Command(-2, 3, 74, V_Default, V_Default),
+                        new Command(0, 0, 0, V_Default, V_Default),
                     }
-                    if (itemIDs.Overlaps(EnemyTargetStaves))
-                    {
-                        atk = "AI_AT_Interference";
-                        if (itemIDs.Any(s => weaponIDs.Contains(s) && !EnemyTargetStaves.Contains(s)))
-                            atk = "AI_AT_AttackToInterference";
-                    }
-                    if (itemIDs.Overlaps(TeleportStaves))
-                    {
-                        atk = "AI_AT_RodWarp";
-                        atkVal = "1,1";
-                    }
-                    TypeOfSoldier? tos = a.GetTOS(ins, toss);
-                    if (tos != null && tos.Jid == "JID_エンチャント")
-                        atk = "AI_AT_Enchant";
-                    ggs.TryGetValue(a.Gid, out GodGeneral? gg);
-                    if (gg != null && gg.EngageAttack.Contains("SID_チキエンゲージ技"))
-                        atk = "AI_AT_EngageBlessPerson";
-                    if (gg != null && gg.EngageAttack.Contains("SID_ヘクトルエンゲージ技"))
-                    {
-                        atk = "AI_AT_EngageWait";
-                        atkVal = "2,2";
-                    }
-                    if (gg != null && gg.EngageAttack.Contains("SID_カミラエンゲージ技"))
-                    {
-                        atk = "AI_AT_EngageCamilla";
-                        if (0.5.Occur())
-                            atkVal = "2, 2, 255, 255";
-                        else
-                            atkVal = "3, 3, 255, 255";
-                    }
-                    if (gg != null && (gg.EngageAttack.Contains("SID_クロムエンゲージ") || gg.EngageAttack.Contains("SID_セネリオエンゲージ技") ||
-                        gg.EngageAttack.Contains("SID_三級長エンゲージ技") || gg.EngageAttack.Contains("SID_マルスエンゲージ技") ||
-                        gg.EngageAttack.Contains("SID_セリカエンゲージ技") || gg.EngageAttack.Contains("SID_ルキナエンゲージ技") ||
-                        gg.EngageAttack.Contains("SID_リンエンゲージ技") || gg.EngageAttack.Contains("SID_エイリークエンゲージ技") ||
-                        gg.EngageAttack.Contains("SID_リーフエンゲージ技")))
-                    {
-                        atk = RNG.Next(3) switch
-                        {
-                            0 => "AI_AT_EngageAttack",
-                            1 => "AI_AT_EngageAttackNoGuard",
-                            2 => "AI_AT_EngageCSBattle",
-                            _ => throw new Exception("What")
-                        };
-                        atkVal = RNG.Next(3) switch
-                        {
-                            0 => "1,1",
-                            1 => "2,2",
-                            2 => "3,3",
-                            _ => throw new Exception("What")
-                        };
-                    }
-                    if (gg != null && gg.EngageAttack.Contains("SID_シグルドエンゲージ技"))
-                        atk = "AI_AT_EngagePierce";
-                    if (gg != null && gg.EngageAttack.Contains("SID_ロイエンゲージ技"))
-                    {
-                        atk = "AI_AT_EngageCSBattle";
-                        atkVal = "2,2";
-                    }
-                    if (gg != null && gg.EngageAttack.Contains("SID_ベレトエンゲージ技"))
-                    {
-                        atk = "AI_AT_EngageDance";
-                        atkVal = "1,1";
-                    }
-                    if (gg != null && gg.EngageAttack.Contains("SID_カムイエンゲージ技"))
-                    {
-                        atk = "AI_AT_EngageOverlap";
-                        atkVal = "255, 255, 3, 3";
-                    }
-                    a.AI_AttackName = atk;
-                    a.AI_AttackVal = atkVal;
-                }
+                };
+                DataSet ds = GD.Get(DataSetEnum.Command);
+                ds.Params.Add(pg);
+                GD.SetDirty(DataSetEnum.Command);
             }
         }
 

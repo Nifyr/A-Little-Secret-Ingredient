@@ -3530,7 +3530,9 @@ namespace ALittleSecretIngredient
         {
             "AI_AT_EngageBlessPerson", "AI_AT_Attack", "AI_AT_EngageWait", "AI_AT_Enchant",
             "AI_AT_EngageCamilla", "AI_AT_Heal", "AI_AT_EngageAttack", "AI_AT_HealToAttack",
-            "AI_AT_Interference", "AI_AT_AttackToHeal", "AI_AT_AttackToInterference", "AI_AT_EngagePierce",
+            "AI_AT_EngageWaitGaze", "AI_AT_Interference", "AI_AT_EngageMagicShield",
+            "AI_AT_AttackToHeal", "AI_AT_EngageCSYell", "AI_AT_AttackHealHigh", "AI_AT_EngageVision",
+            "AI_AT_AttackToInterference", "AI_AT_EngagePierce",
             "AI_AT_EngageAttackNoGuard", "AI_AT_EngageCSBattle", "AI_AT_RodWarp", "AI_AT_EngageDance",
             "AI_AT_EngageOverlap"
         };
@@ -3556,6 +3558,7 @@ namespace ALittleSecretIngredient
 
         static GameDataLookup()
         {
+            Bind(FileEnum.AI, DataSetEnum.Command, typeof(Command), "コマンド");
             Bind(FileEnum.AssetTable, DataSetEnum.Asset, typeof(Asset), "アセット");
             Bind(FileEnum.God, DataSetEnum.GodGeneral, typeof(GodGeneral), "神将");
             Bind(FileEnum.God, DataSetEnum.GrowthTable, typeof(GrowthTable), "成長表");

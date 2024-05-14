@@ -326,7 +326,7 @@
             button8.Name = "button8";
             button8.Size = new Size(188, 29);
             button8.TabIndex = 6;
-            button8.Text = "Enemy Stat Skills";
+            button8.Text = "Enemy Skills";
             button8.UseVisualStyleBackColor = true;
             button8.Click += Button8_Click;
             // 
@@ -449,7 +449,7 @@
             groupBox5.Controls.Add(checkBox16);
             groupBox5.Controls.Add(button12);
             groupBox5.Controls.Add(checkBox13);
-            groupBox5.Location = new Point(827, 3);
+            groupBox5.Location = new Point(621, 185);
             groupBox5.Name = "groupBox5";
             groupBox5.Size = new Size(200, 234);
             groupBox5.TabIndex = 11;
@@ -513,7 +513,7 @@
             groupBox6.Controls.Add(checkBox17);
             groupBox6.Controls.Add(button16);
             groupBox6.Controls.Add(checkBox18);
-            groupBox6.Location = new Point(1033, 3);
+            groupBox6.Location = new Point(827, 3);
             groupBox6.Name = "groupBox6";
             groupBox6.Size = new Size(200, 176);
             groupBox6.TabIndex = 12;
@@ -568,7 +568,7 @@
             groupBox8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox8.Controls.Add(button17);
             groupBox8.Controls.Add(checkBox19);
-            groupBox8.Location = new Point(1033, 185);
+            groupBox8.Location = new Point(827, 185);
             groupBox8.Name = "groupBox8";
             groupBox8.Size = new Size(200, 111);
             groupBox8.TabIndex = 14;
@@ -602,7 +602,7 @@
             groupBox9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox9.Controls.Add(button19);
             groupBox9.Controls.Add(checkBox21);
-            groupBox9.Location = new Point(1033, 302);
+            groupBox9.Location = new Point(827, 302);
             groupBox9.Name = "groupBox9";
             groupBox9.Size = new Size(200, 111);
             groupBox9.TabIndex = 15;

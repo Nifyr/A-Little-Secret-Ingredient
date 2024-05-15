@@ -215,12 +215,12 @@ namespace ALittleSecretIngredient
                         new Command(0, 3, 71, V_Default, V_Default),
                         new Command(0, 3, 41, V_Default, V_Default),
                         new Command(0, 3, 108, V_Default, V_Default),
-                        new Command(0, 3, 68, V_Default, V_Default),
                         new Command(0, 3, 86, V_Default, V_Default),
                         new Command(0, 3, 82, V_Max, V_Default),
                         new Command(0, 3, 88, V_Max, V_Default),
                         new Command(0, 3, 97, V_Default, V_Default),
                         new Command(0, 3, 99, V_Default, V_Default),
+                        new Command(0, 3, 89, V_Default, V_Default),
                         new Command(-2, 3, 74, V_Default, V_Default),
                         new Command(0, 0, 0, V_Default, V_Default),
                     }

@@ -3536,24 +3536,6 @@ namespace ALittleSecretIngredient
             "AI_AT_EngageAttackNoGuard", "AI_AT_EngageCSBattle", "AI_AT_RodWarp", "AI_AT_EngageDance",
             "AI_AT_EngageOverlap"
         };
-
-        internal static HashSet<string> HealStaves { get; } = new()
-        {
-            "IID_ライブ", "IID_リライブ", "IID_リブロー", "IID_リブロー_G004",
-            "IID_リカバー", "IID_カップケーキ杖", "IID_セリカ_リカバー_通常", "IID_リザーブ",
-            "IID_ヴェロニカ_リザーブ＋_通常"
-        };
-
-        internal static HashSet<string> EnemyTargetStaves { get; } = new()
-        {
-            "IID_ドロー", "IID_フリーズ", "IID_フリーズ_S010", "IID_サイレス",
-            "IID_サイレス_S010", "IID_コラプス", "IID_コラプス_M014", "IID_コラプス_S010"
-        };
-
-        internal static HashSet<string> TeleportStaves { get; } = new()
-        {
-            "IID_ワープ", "IID_リワープ", "IID_レスキュー", "IID_レスキュー_M019"
-        };
         #endregion
 
         static GameDataLookup()

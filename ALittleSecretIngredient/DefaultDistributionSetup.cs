@@ -901,7 +901,7 @@ namespace ALittleSecretIngredient
                 case DataSetEnum.Arrangement:
                     List<(string id, DataSet ds)> arrangements = GD.GetGroup(dse, AllMaps);
                     HashSet<string> playableCharacterIDs = PlayableCharacters.GetIDs().ToHashSet();
-                    HashSet<string> allWeaponIDs = NormalEnemyWeapons.GetIDs().ToHashSet();
+                    HashSet<string> allWeaponIDs = NormalWeapons.GetIDs().ToHashSet();
                     HashSet<string> allItemIDs = EnemyItems.GetIDs().ToHashSet();
                     List<Arrangement> newRecruits = arrangements.GetNewRecruits(playableCharacterIDs).ToList();
                     List<Arrangement> enemies = arrangements.GetEnemies().ToList();

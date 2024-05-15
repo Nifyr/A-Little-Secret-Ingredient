@@ -167,11 +167,6 @@ namespace ALittleSecretIngredient
                 const string V_Default = "V_Default";
                 const string V_Max = "V_Max";
                 HashSet<string> playableCharacters = PlayableCharacters.GetIDs().ToHashSet();
-                HashSet<string> weaponIDs = NormalEnemyWeapons.GetIDs().ToHashSet();
-                HashSet<string> emblemCharacters = EmblemBossCharacters.GetIDs().ToHashSet();
-                Dictionary<string, GodGeneral> ggs = GD.Get(DataSetEnum.GodGeneral).Params.Cast<GodGeneral>().ToDictionary(g => g.Gid);
-                Dictionary<string, Individual> ins = GD.Get(DataSetEnum.Individual).Params.Cast<Individual>().ToDictionary(i => i.Pid);
-                Dictionary<string, TypeOfSoldier> toss = GD.Get(DataSetEnum.TypeOfSoldier).Params.Cast<TypeOfSoldier>().ToDictionary(tos => tos.Jid);
                 List<(string id, DataSet ds)> maps = GD.GetGroup(DataSetEnum.Arrangement, StaticUnitMaps);
                 foreach (Arrangement a in maps.GetEnemies().Concat(maps.GetNPCs(playableCharacters)))
                     if (SupportedEnemyAttackAIs.Contains(a.AI_AttackName))
@@ -459,29 +454,28 @@ namespace ALittleSecretIngredient
                 ars[iIdx].SetItems(structure[iIdx].Select(n => n.value).ToList());
         }
 
-        private static void RandomizeArrangementItemsCount(IDistribution distribution, HashSet<string> allyWeapons,
-            List<Arrangement> newRecruits)
+        private static void RandomizeArrangementItemsCount(IDistribution distribution, HashSet<string> targetItems,
+            List<Arrangement> targetArrangements)
         {
-            List<Node<int>> newCounts = newRecruits.Select(a => new Node<int>(a.GetItems().Count(ai => allyWeapons.Contains(ai.iid)))).ToList();
+            List<Node<int>> newCounts = targetArrangements.Select(a => new Node<int>(a.GetItems().Count(ai => targetItems.Contains(ai.iid)))).ToList();
             newCounts.Randomize(n => n.value, (n, i) => n.value = i, distribution, 0, 6);
-            List<ArrangementItem> activePool = newRecruits.SelectMany(a => a.GetItems().Where(ai => allyWeapons.Contains(ai.iid))).ToList();
-            for (int i = 0; i < newRecruits.Count; i++)
+            List<ArrangementItem> activePool = targetArrangements.SelectMany(a => a.GetItems().Where(ai => targetItems.Contains(ai.iid))).ToList();
+            for (int i = 0; i < targetArrangements.Count; i++)
             {
-                Arrangement a = newRecruits[i];
+                Arrangement a = targetArrangements[i];
                 int newCount = newCounts[i].value;
-                while (a.GetItems().Count(ai => allyWeapons.Contains(ai.iid)) < newCount)
+                List<ArrangementItem> oldValues;
+                while ((oldValues = a.GetItems()).Count(ai => targetItems.Contains(ai.iid)) < newCount && oldValues.Count < 6)
                 {
-                    List<ArrangementItem> oldValues = a.GetItems();
                     if (activePool.Any())
                         oldValues.Add(activePool.GetRandom());
                     else
-                        oldValues.Add(new(allyWeapons.GetRandom(), false));
+                        oldValues.Add(new(targetItems.GetRandom(), false));
                     a.SetItems(oldValues);
                 }
-                while (a.GetItems().Count(ai => allyWeapons.Contains(ai.iid)) > newCount)
+                while ((oldValues = a.GetItems()).Count(ai => targetItems.Contains(ai.iid)) > newCount)
                 {
-                    List<ArrangementItem> oldValues = a.GetItems();
-                    oldValues.Remove(oldValues.Where(ai => allyWeapons.Contains(ai.iid)).GetRandom());
+                    oldValues.Remove(oldValues.Where(ai => targetItems.Contains(ai.iid)).GetRandom());
                     a.SetItems(oldValues);
                 }
             }
@@ -2576,7 +2570,7 @@ namespace ALittleSecretIngredient
         private static List<string> GetLegalWeapons(Proficiency p, ProficiencyLevel pl, int totalLevel, bool enemyWeapons)
         {
             List<string> legalWeapons = new();
-            List<List<(string id, string name)>> weapons = enemyWeapons ? EnemyWeaponLookup[p] : WeaponLookup[p]; 
+            List<List<(string id, string name)>> weapons = enemyWeapons ? EnemyWeaponLookup[p] : AllyWeaponLookup[p]; 
             if ((int)pl >= (int)ProficiencyLevel.D)
                 legalWeapons.AddRange(weapons[0].GetIDs());
             if ((int)pl >= (int)ProficiencyLevel.C && totalLevel > 8)

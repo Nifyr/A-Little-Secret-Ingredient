@@ -49,7 +49,7 @@ namespace ALittleSecretIngredient
         internal static IEnumerable<Arrangement> GetForcedDeployments(this DataSet ds) => ds.GetDeployments().Where(a => a.GetFlag(8) && !a.GetFlag(10));
 
         internal static IEnumerable<Arrangement> GetEnemies(this (string id, DataSet ds) t) => t.ds.Params.Cast<ParamGroup>()
-            .SelectMany(pg => pg.Group.Cast<Arrangement>()).Where(a => a.Force == 1 || EnemyNPCMaps.Contains(t.id) && a.Force == 2);
+            .SelectMany(pg => pg.Group.Cast<Arrangement>()).Where(a => a.Force == 1 && a.Pid != "PID_リンデン" || EnemyNPCMaps.Contains(t.id) && a.Force == 2);
 
         internal static IEnumerable<Arrangement> GetEnemies(this IEnumerable<(string id, DataSet ds)> mapArrangements) =>
             mapArrangements.SelectMany(t => t.GetEnemies());
@@ -2129,7 +2129,7 @@ namespace ALittleSecretIngredient
             ("IID_エルサンダー", "Elthunder"), ("IID_エルウィンド", "Elwind"),
         };
 
-        internal static List<(string id, string name)> ATomeWeapons { get; } = new()
+        internal static List<(string id, string name)> CommonATomeWeapons { get; } = new()
         {
             ("IID_ボルガノン", "Bolganone"), ("IID_トロン", "Thoron"), ("IID_エクスカリバー", "Excalibur"),
         };
@@ -2144,16 +2144,26 @@ namespace ALittleSecretIngredient
             ("IID_ノヴァ", "Nova"),
         };
 
-        internal static List<(string id, string name)> DStaves { get; } = new()
+        internal static List<(string id, string name)> CommonDStaves { get; } = new()
         {
-            ("IID_ライブ", "Heal"), ("IID_リライブ", "Mend"), ("IID_トーチ", "Illume"), ("IID_アイスロック", "Obstruct"),
+            ("IID_ライブ", "Heal"), ("IID_リライブ", "Mend"),
             ("IID_カップケーキ杖", "Treat"),
         };
 
-        internal static List<(string id, string name)> CStaves { get; } = new()
+        internal static List<(string id, string name)> AllyDStaves { get; } = new()
         {
-            ("IID_リブロー", "Physic"), ("IID_リブロー_G004", "Physic (Soren Paralogue)"), ("IID_レスト", "Restore"), ("IID_リワープ", "Rewarp"),
+            ("IID_トーチ", "Illume"), ("IID_アイスロック", "Obstruct"),
+        };
+
+        internal static List<(string id, string name)> CommonCStaves { get; } = new()
+        {
+            ("IID_リブロー", "Physic"), ("IID_リブロー_G004", "Physic (Soren Paralogue)"), ("IID_リワープ", "Rewarp"),
             ("IID_フリーズ", "Freeze"), ("IID_サイレス", "Silence"),
+        };
+
+        internal static List<(string id, string name)> AllyCStaves { get; } = new()
+        {
+            ("IID_レスト", "Restore"),
         };
 
         internal static List<(string id, string name)> EnemyCStaves { get; } = new()
@@ -2161,7 +2171,7 @@ namespace ALittleSecretIngredient
             ("IID_フリーズ_S010", "Freeze (Leif Paralogue)"), ("IID_サイレス_S010", "Silence (Leif Paralogue)"),
         };
 
-        internal static List<(string id, string name)> BStaves { get; } = new()
+        internal static List<(string id, string name)> CommonBStaves { get; } = new()
         {
             ("IID_リカバー", "Recover"), ("IID_ワープ", "Warp"), ("IID_レスキュー", "Rescue"), ("IID_コラプス", "Fracture"),
         };
@@ -2176,7 +2186,7 @@ namespace ALittleSecretIngredient
             ("IID_リザーブ", "Fortify"), ("IID_ドロー", "Entrap"),
         };
 
-        internal static List<(string id, string name)> SStaves { get; } = new()
+        internal static List<(string id, string name)> AllySStaves { get; } = new()
         {
             ("IID_ノードゥス", "Nodus"),
         };
@@ -2338,9 +2348,13 @@ namespace ALittleSecretIngredient
             ("IID_チキ_ブレス_通常_G001_最強", "Fog Breath D (Tiki Paralogue)"),
         };
 
+        internal static List<(string id, string name)> NormalCommonWeapons { get; } = new();
+
         internal static List<(string id, string name)> NormalAllyWeapons { get; } = new();
 
         internal static List<(string id, string name)> NormalEnemyWeapons { get; } = new();
+
+        internal static List<(string id, string name)> NormalWeapons { get; } = new();
 
         internal static List<(string id, string name)> HealItems { get; } = new()
         {
@@ -2397,7 +2411,7 @@ namespace ALittleSecretIngredient
             N, Np, D, Dp, C, Cp, B, Bp, A, Ap, S
         }
 
-        internal static Dictionary<Proficiency, List<List<(string id, string name)>>> WeaponLookup = new();
+        internal static Dictionary<Proficiency, List<List<(string id, string name)>>> AllyWeaponLookup = new();
         internal static Dictionary<Proficiency, List<List<(string id, string name)>>> EnemyWeaponLookup = new();
         #endregion
         #region Map IDs
@@ -3735,69 +3749,76 @@ namespace ALittleSecretIngredient
             SyncableEmblems.AddRange(AllyArenaSyncableEmblems);
             SyncableEmblems.AddRange(EnemySyncableEmblems);
             Emblems.AddRange(SyncableEmblems);
-            NormalAllyWeapons.AddRange(DSwordWeapons);
-            NormalAllyWeapons.AddRange(CSwordWeapons);
-            NormalAllyWeapons.AddRange(BSwordWeapons);
-            NormalAllyWeapons.AddRange(ASwordWeapons);
-            NormalAllyWeapons.AddRange(SSwordWeapons);
-            NormalAllyWeapons.AddRange(DLanceWeapons);
-            NormalAllyWeapons.AddRange(CLanceWeapons);
-            NormalAllyWeapons.AddRange(BLanceWeapons);
-            NormalAllyWeapons.AddRange(ALanceWeapons);
-            NormalAllyWeapons.AddRange(SLanceWeapons);
-            NormalAllyWeapons.AddRange(DAxeWeapons);
-            NormalAllyWeapons.AddRange(CAxeWeapons);
-            NormalAllyWeapons.AddRange(BAxeWeapons);
-            NormalAllyWeapons.AddRange(AAxeWeapons);
-            NormalAllyWeapons.AddRange(SAxeWeapons);
-            NormalAllyWeapons.AddRange(DBowWeapons);
-            NormalAllyWeapons.AddRange(CBowWeapons);
-            NormalAllyWeapons.AddRange(BBowWeapons);
-            NormalAllyWeapons.AddRange(ABowWeapons);
-            NormalAllyWeapons.AddRange(SBowWeapons);
-            NormalAllyWeapons.AddRange(DDaggerWeapons);
-            NormalAllyWeapons.AddRange(CDaggerWeapons);
-            NormalAllyWeapons.AddRange(BDaggerWeapons);
-            NormalAllyWeapons.AddRange(ADaggerWeapons);
-            NormalAllyWeapons.AddRange(SDaggerWeapons);
-            NormalAllyWeapons.AddRange(DTomeWeapons);
-            NormalAllyWeapons.AddRange(CTomeWeapons);
-            NormalAllyWeapons.AddRange(BTomeWeapons);
-            NormalAllyWeapons.AddRange(ATomeWeapons);
-            NormalAllyWeapons.AddRange(STomeWeapons);
-            NormalAllyWeapons.AddRange(DStaves);
-            NormalAllyWeapons.AddRange(CStaves);
-            NormalAllyWeapons.AddRange(BStaves);
-            NormalAllyWeapons.AddRange(AStaves);
-            NormalAllyWeapons.AddRange(SStaves);
-            NormalAllyWeapons.AddRange(DArtWeapons);
-            NormalAllyWeapons.AddRange(CArtWeapons);
-            NormalAllyWeapons.AddRange(BArtWeapons);
-            NormalAllyWeapons.AddRange(AArtWeapons);
-            NormalAllyWeapons.AddRange(SArtWeapons);
-            NormalAllyWeapons.AddRange(DSpecialWeapons);
-            NormalAllyWeapons.AddRange(CSpecialWeapons);
-            NormalAllyWeapons.AddRange(BSpecialWeapons);
-            NormalAllyWeapons.AddRange(SSpecialWeapons);
-            NormalAllyWeapons.AddRange(LiberationWeapons);
-            NormalAllyWeapons.AddRange(WilleGlanzWeapons);
-            NormalAllyWeapons.AddRange(MisericordeWeapons);
-            NormalAllyWeapons.AddRange(ObscuriteWeapons);
-            NormalAllyWeapons.AddRange(DragonStones);
-            NormalAllyWeapons.AddRange(Cannonballs);
-            NormalAllyWeapons.AddRange(NormalEngageSwordWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageLanceWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageAxeWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageBowWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageDaggerWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageTomeWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageStaves);
-            NormalAllyWeapons.AddRange(NormalEngageArtWeapons);
-            NormalAllyWeapons.AddRange(NormalEngageSpecialWeapons);
-            NormalEnemyWeapons.AddRange(NormalAllyWeapons);
+            NormalCommonWeapons.AddRange(DSwordWeapons);
+            NormalCommonWeapons.AddRange(CSwordWeapons);
+            NormalCommonWeapons.AddRange(BSwordWeapons);
+            NormalCommonWeapons.AddRange(ASwordWeapons);
+            NormalCommonWeapons.AddRange(SSwordWeapons);
+            NormalCommonWeapons.AddRange(DLanceWeapons);
+            NormalCommonWeapons.AddRange(CLanceWeapons);
+            NormalCommonWeapons.AddRange(BLanceWeapons);
+            NormalCommonWeapons.AddRange(ALanceWeapons);
+            NormalCommonWeapons.AddRange(SLanceWeapons);
+            NormalCommonWeapons.AddRange(DAxeWeapons);
+            NormalCommonWeapons.AddRange(CAxeWeapons);
+            NormalCommonWeapons.AddRange(BAxeWeapons);
+            NormalCommonWeapons.AddRange(AAxeWeapons);
+            NormalCommonWeapons.AddRange(SAxeWeapons);
+            NormalCommonWeapons.AddRange(DBowWeapons);
+            NormalCommonWeapons.AddRange(CBowWeapons);
+            NormalCommonWeapons.AddRange(BBowWeapons);
+            NormalCommonWeapons.AddRange(ABowWeapons);
+            NormalCommonWeapons.AddRange(SBowWeapons);
+            NormalCommonWeapons.AddRange(DDaggerWeapons);
+            NormalCommonWeapons.AddRange(CDaggerWeapons);
+            NormalCommonWeapons.AddRange(BDaggerWeapons);
+            NormalCommonWeapons.AddRange(ADaggerWeapons);
+            NormalCommonWeapons.AddRange(SDaggerWeapons);
+            NormalCommonWeapons.AddRange(DTomeWeapons);
+            NormalCommonWeapons.AddRange(CTomeWeapons);
+            NormalCommonWeapons.AddRange(BTomeWeapons);
+            NormalCommonWeapons.AddRange(CommonATomeWeapons);
+            NormalCommonWeapons.AddRange(STomeWeapons);
+            NormalCommonWeapons.AddRange(CommonDStaves);
+            NormalCommonWeapons.AddRange(CommonCStaves);
+            NormalCommonWeapons.AddRange(CommonBStaves);
+            NormalCommonWeapons.AddRange(AStaves);
+            NormalCommonWeapons.AddRange(DArtWeapons);
+            NormalCommonWeapons.AddRange(CArtWeapons);
+            NormalCommonWeapons.AddRange(BArtWeapons);
+            NormalCommonWeapons.AddRange(AArtWeapons);
+            NormalCommonWeapons.AddRange(SArtWeapons);
+            NormalCommonWeapons.AddRange(DSpecialWeapons);
+            NormalCommonWeapons.AddRange(CSpecialWeapons);
+            NormalCommonWeapons.AddRange(BSpecialWeapons);
+            NormalCommonWeapons.AddRange(SSpecialWeapons);
+            NormalCommonWeapons.AddRange(LiberationWeapons);
+            NormalCommonWeapons.AddRange(WilleGlanzWeapons);
+            NormalCommonWeapons.AddRange(MisericordeWeapons);
+            NormalCommonWeapons.AddRange(ObscuriteWeapons);
+            NormalCommonWeapons.AddRange(DragonStones);
+            NormalCommonWeapons.AddRange(Cannonballs);
+            NormalCommonWeapons.AddRange(NormalEngageSwordWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageLanceWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageAxeWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageBowWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageDaggerWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageTomeWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageStaves);
+            NormalCommonWeapons.AddRange(NormalEngageArtWeapons);
+            NormalCommonWeapons.AddRange(NormalEngageSpecialWeapons);
+            NormalAllyWeapons.AddRange(NormalCommonWeapons);
+            NormalAllyWeapons.AddRange(AllyDStaves);
+            NormalAllyWeapons.AddRange(AllyCStaves);
+            NormalAllyWeapons.AddRange(AllySStaves);
+            NormalEnemyWeapons.AddRange(NormalCommonWeapons);
             NormalEnemyWeapons.AddRange(EnemyATomeWeapons);
             NormalEnemyWeapons.AddRange(EnemyCStaves);
             NormalEnemyWeapons.AddRange(EnemyBStaves);
+            NormalWeapons.AddRange(NormalAllyWeapons);
+            NormalWeapons.AddRange(EnemyATomeWeapons);
+            NormalWeapons.AddRange(EnemyCStaves);
+            NormalWeapons.AddRange(EnemyBStaves);
             EnemyUsableItems.AddRange(HealItems);
             EnchantItems.AddRange(HealItems);
             EnchantItems.AddRange(NonHealEnchantItems);
@@ -3808,7 +3829,7 @@ namespace ALittleSecretIngredient
             EnemyDropItems.AddRange(GoldItems);
             EnemyItems.AddRange(EnemyUsableItems);
             EnemyItems.AddRange(EnemyDropItems);
-            AllItems.AddRange(NormalAllyWeapons);
+            AllItems.AddRange(NormalWeapons);
             AllItems.AddRange(AllyItems);
             AllItems.AddRange(EngageWeapons);
             StaticUnitMaps.AddRange(XenologueMaps);
@@ -3835,16 +3856,17 @@ namespace ALittleSecretIngredient
             SyncStatSkills.AddRange(SyncResSkills);
             SyncStatSkills.AddRange(SyncBldSkills);
             SyncStatSkills.AddRange(SyncMovSkills);
-            WeaponLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
-            WeaponLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
-            WeaponLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
-            WeaponLookup.Add(Proficiency.Axe, new() { DAxeWeapons, CAxeWeapons, BAxeWeapons, AAxeWeapons, SAxeWeapons, NormalEngageAxeWeapons });
-            WeaponLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
-            WeaponLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
-            WeaponLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons, ATomeWeapons, STomeWeapons, NormalEngageTomeWeapons });
-            WeaponLookup.Add(Proficiency.Staff, new() { DStaves, CStaves, BStaves, AStaves, SStaves, NormalEngageStaves });
-            WeaponLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
-            WeaponLookup.Add(Proficiency.Special, new() { DSpecialWeapons, CSpecialWeapons, BSpecialWeapons, new(), SSpecialWeapons, NormalEngageSpecialWeapons });
+            AllyWeaponLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
+            AllyWeaponLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
+            AllyWeaponLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
+            AllyWeaponLookup.Add(Proficiency.Axe, new() { DAxeWeapons, CAxeWeapons, BAxeWeapons, AAxeWeapons, SAxeWeapons, NormalEngageAxeWeapons });
+            AllyWeaponLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
+            AllyWeaponLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
+            AllyWeaponLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons, CommonATomeWeapons, STomeWeapons, NormalEngageTomeWeapons });
+            AllyWeaponLookup.Add(Proficiency.Staff, new() { CommonDStaves.Concat(AllyDStaves).ToList(), CommonCStaves.Concat(AllyCStaves).ToList(), CommonBStaves,
+                AStaves, AllySStaves, NormalEngageStaves });
+            AllyWeaponLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
+            AllyWeaponLookup.Add(Proficiency.Special, new() { DSpecialWeapons, CSpecialWeapons, BSpecialWeapons, new(), SSpecialWeapons, NormalEngageSpecialWeapons });
             EnemyWeaponLookup.Add(Proficiency.None, new() { new(), new(), new(), new(), new(), new() });
             EnemyWeaponLookup.Add(Proficiency.Sword, new() { DSwordWeapons, CSwordWeapons, BSwordWeapons, ASwordWeapons, SSwordWeapons, NormalEngageSwordWeapons });
             EnemyWeaponLookup.Add(Proficiency.Lance, new() { DLanceWeapons, CLanceWeapons, BLanceWeapons, ALanceWeapons, SLanceWeapons, NormalEngageLanceWeapons });
@@ -3852,9 +3874,9 @@ namespace ALittleSecretIngredient
             EnemyWeaponLookup.Add(Proficiency.Bow, new() { DBowWeapons, CBowWeapons, BBowWeapons, ABowWeapons, SBowWeapons, NormalEngageBowWeapons });
             EnemyWeaponLookup.Add(Proficiency.Dagger, new() { DDaggerWeapons, CDaggerWeapons, BDaggerWeapons, ADaggerWeapons, SDaggerWeapons, NormalEngageDaggerWeapons });
             EnemyWeaponLookup.Add(Proficiency.Tome, new() { DTomeWeapons, CTomeWeapons, BTomeWeapons,
-                ATomeWeapons.Concat(EnemyATomeWeapons).ToList(), STomeWeapons, NormalEngageTomeWeapons });
-            EnemyWeaponLookup.Add(Proficiency.Staff, new() { DStaves, CStaves.Concat(EnemyCStaves).ToList(), BStaves.Concat(EnemyBStaves).ToList(),
-                AStaves, SStaves, NormalEngageStaves });
+                CommonATomeWeapons.Concat(EnemyATomeWeapons).ToList(), STomeWeapons, NormalEngageTomeWeapons });
+            EnemyWeaponLookup.Add(Proficiency.Staff, new() { CommonDStaves, CommonCStaves.Concat(EnemyCStaves).ToList(), CommonBStaves.Concat(EnemyBStaves).ToList(),
+                AStaves, new(), NormalEngageStaves });
             EnemyWeaponLookup.Add(Proficiency.Arts, new() { DArtWeapons, CArtWeapons, BArtWeapons, AArtWeapons, SArtWeapons, NormalEngageArtWeapons });
             EnemyWeaponLookup.Add(Proficiency.Special, new() { DSpecialWeapons, CSpecialWeapons, BSpecialWeapons, new(), SSpecialWeapons, NormalEngageSpecialWeapons });
             SyncStatLookup.Add(SyncHPSkills.GetIDs());

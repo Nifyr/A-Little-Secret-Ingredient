@@ -1286,7 +1286,7 @@ namespace ALittleSecretIngredient
                 Propagate(allyEngageableEmblems, allySyncableEmblems, gg => gg.EngageAttackLink, (gg, s) => gg.EngageAttackLink = s);
                 // Correct AIEngageAttackType field if possible
                 allyEngageableEmblems.ForEach(gg => gg.AIEngageAttackType = EngageAttackToAIEngageAttackType.TryGetValue(gg.
-                    EngageAttack, out sbyte value) ? value : (sbyte)0);
+                    EngageAttack, out sbyte value) ? value : (sbyte)1);
                 WriteToChangelog(entries, allySyncableEmblems, gg => gg.EngageAttack, "Engage Attack", CompatibleAsEngageAttacks);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }
@@ -1297,6 +1297,8 @@ namespace ALittleSecretIngredient
                     EngageAttackEnemy.Distribution, compatibleAsEngageAttackIDs);
                 // Propagate to assosiated emblems
                 Propagate(enemyEngageableEmblems, enemySyncableEmblems, gg => gg.EngageAttack, (gg, s) => gg.EngageAttack = s);
+                enemyEngageableEmblems.ForEach(gg => gg.AIEngageAttackType = EngageAttackToAIEngageAttackType.TryGetValue(gg.
+                    EngageAttack, out sbyte value) ? value : (sbyte)1);
                 WriteToChangelog(entries, enemySyncableEmblems, gg => gg.EngageAttack, "Engage Attack", CompatibleAsEngageAttacks);
                 GD.SetDirty(DataSetEnum.GodGeneral);
             }

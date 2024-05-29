@@ -2234,9 +2234,7 @@ namespace ALittleSecretIngredient
 
         internal static List<(string id, string name)> SSpecialWeapons { get; } = new()
         {
-            ("IID_ソンブル_物理攻撃", "Fell Assault (Sombron)"), ("IID_ソンブル_魔法攻撃", "Fell Surge"), ("IID_ソンブル_回転アタック", "Whirling Death"), ("IID_ソンブル_ビーム", "Howling Beam"),
-            ("IID_ソンブル_エンゲージブレイク", "Disengage"), ("IID_イル_反撃", "Fell Assault (Nil)"), ("IID_イル_薙払いビーム", "Fell Beam"), ("IID_イル_突進", "Devastation"),
-            ("IID_イル_吸収", "Drain Essence"), ("IID_イル_召喚", "Summon Vortex"),
+            ("IID_ソンブル_物理攻撃", "Fell Assault (Sombron)"), ("IID_ソンブル_魔法攻撃", "Fell Surge"), ("IID_イル_反撃", "Fell Assault (Nil)"),
         };
 
         internal static List<(string id, string name)> LiberationWeapons { get; } = new()

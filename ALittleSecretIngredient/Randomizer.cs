@@ -179,35 +179,35 @@ namespace ALittleSecretIngredient
                 {
                     Group = new()
                     {
-                        new Command(0, 3, -3, V_Default, V_Default),
-                        new Command(0, 3, -10, V_Default, V_Default),
-                        new Command(0, 3, 118, V_Default, V_Default),
-                        new Command(0, 3, 110, V_Default, V_Default),
-                        new Command(0, 3, 117, V_Default, V_Default),
-                        new Command(0, 3, 12, V_Default, V_Default),
-                        new Command(0, 3, 0, V_Default, V_Default),
-                        new Command(0, 3, -8, V_Default, V_Default),
-                        new Command(0, 3, -12, V_Default, V_Default),
-                        new Command(0, 3, 52, V_Default, V_Default),
-                        new Command(0, 3, 24, V_Default, V_Default),
-                        new Command(0, 3, 66, V_Default, V_Default),
-                        new Command(0, 3, 119, V_Default, V_Default),
-                        new Command(0, 3, 120, V_Default, V_Default),
-                        new Command(0, 3, 114, V_Default, V_Default),
-                        new Command(0, 3, -5, "1", V_Default),
-                        new Command(0, 3, -5, "0", V_Default),
-                        new Command(0, 3, 30, V_Default, V_Default),
-                        new Command(0, 3, 20, V_Default, V_Default),
-                        new Command(0, 3, 21, "1", "1"),
-                        new Command(0, 3, 23, "1", "1"),
-                        new Command(0, 3, 71, V_Default, V_Default),
-                        new Command(0, 3, 41, V_Default, V_Default),
-                        new Command(0, 3, 108, V_Default, V_Default),
-                        new Command(0, 3, 86, V_Default, V_Default),
-                        new Command(0, 3, 82, V_Max, V_Default),
-                        new Command(0, 3, 88, V_Max, V_Default),
-                        new Command(0, 3, 89, V_Default, V_Default),
-                        new Command(-2, 3, 74, V_Default, V_Default),
+                        new Command(0, 3, -3, V_Default, V_Default), // VS_EG_Attack
+                        new Command(0, 3, -10, V_Default, V_Default), // VS_CS_Enchant
+                        new Command(0, 3, 118, V_Default, V_Default), // CS_Trimasteries
+                        new Command(0, 3, 110, V_Default, V_Default), // CS_Battle
+                        new Command(0, 3, 117, V_Default, V_Default), // CS_Strategy
+                        new Command(0, 3, 12, V_Default, V_Default), // AT_Breath
+                        new Command(0, 3, 0, V_Default, V_Default), // AT_Default
+                        new Command(0, 3, -8, V_Default, V_Default), // VS_MI_FireCannon
+                        new Command(0, 3, -12, V_Default, V_Default), // VS_CS_FullBullet
+                        new Command(0, 3, 52, V_Default, V_Default), // EG_Vision
+                        new Command(0, 3, 24, V_Default, V_Default), // RD_MagicShield
+                        new Command(0, 3, 66, V_Default, V_Default), // MI_Dance
+                        new Command(0, 3, 119, V_Default, V_Default), // CS_Contract
+                        new Command(0, 3, 120, V_Default, V_Default), // CS_Yell
+                        new Command(0, 3, 114, V_Default, V_Default), // CS_Decoy
+                        new Command(0, 3, -5, "1", V_Default), // VS_GodSkill
+                        new Command(0, 3, -5, "0", V_Default), // VS_GodSkill
+                        new Command(0, 3, 30, V_Default, V_Default), // IR_Default
+                        new Command(0, 3, 20, V_Default, V_Default), // RD_Heal
+                        new Command(0, 3, 21, "1", "1"), // RD_Warp
+                        new Command(0, 3, 23, "1", "1"), // RD_Rescue
+                        new Command(0, 3, 71, V_Default, V_Default), // MI_Guard
+                        new Command(0, 3, 41, V_Default, V_Default), // HE_MiddleLow
+                        new Command(0, 3, 108, V_Default, V_Default), // MV_Rewarp
+                        new Command(0, 3, 86, V_Default, V_Default), // MV_WeakRange
+                        new Command(0, 3, 82, V_Max, V_Default), // MV_AttackRange
+                        new Command(0, 3, 88, V_Max, V_Default), // MV_HealRange
+                        new Command(0, 3, 89, V_Default, V_Default), // MV_Hero
+                        new Command(-2, 3, 74, V_Default, V_Default), // MI_GuardNoMove
                         new Command(0, 0, 0, V_Default, V_Default),
                     }
                 };

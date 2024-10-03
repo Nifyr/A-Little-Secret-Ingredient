@@ -206,7 +206,8 @@ namespace ALittleSecretIngredient
                         new Command(0, 3, 86, V_Default, V_Default), // MV_WeakRange
                         new Command(0, 3, 82, V_Max, V_Default), // MV_AttackRange
                         new Command(0, 3, 88, V_Max, V_Default), // MV_HealRange
-                        new Command(0, 3, 89, V_Default, V_Default), // MV_Hero
+                        // new Command(0, 3, 89, V_Default, V_Default), // MV_Hero
+                        // This one seems to take priority at random, causing weird enemy behaviour...
                         new Command(-2, 3, 74, V_Default, V_Default), // MI_GuardNoMove
                         new Command(0, 0, 0, V_Default, V_Default),
                     }

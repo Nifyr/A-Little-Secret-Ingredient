@@ -38,26 +38,29 @@ namespace ALittleSecretIngredient.Forms
             argLabel1 = new Label();
             button1 = new Button();
             button2 = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pNumericUpDown).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
+            label1.Location = new Point(6, 3);
             label1.Name = "label1";
-            label1.Size = new Size(51, 20);
+            label1.Size = new Size(41, 15);
             label1.TabIndex = 3;
             label1.Text = "Mode:";
             // 
             // distributionSelectComboBox
             // 
+            distributionSelectComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             distributionSelectComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             distributionSelectComboBox.FormattingEnabled = true;
-            distributionSelectComboBox.Location = new Point(12, 32);
+            distributionSelectComboBox.Location = new Point(6, 21);
             distributionSelectComboBox.Name = "distributionSelectComboBox";
-            distributionSelectComboBox.Size = new Size(189, 28);
+            distributionSelectComboBox.Size = new Size(172, 23);
             distributionSelectComboBox.TabIndex = 2;
             // 
             // dataGridView1
@@ -68,13 +71,16 @@ namespace ALittleSecretIngredient.Forms
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.ColumnHeadersVisible = false;
-            dataGridView1.Location = new Point(207, 32);
+            tableLayoutPanel1.SetColumnSpan(dataGridView1, 2);
+            dataGridView1.Dock = DockStyle.Fill;
+            dataGridView1.Location = new Point(184, 6);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            tableLayoutPanel1.SetRowSpan(dataGridView1, 7);
             dataGridView1.RowTemplate.Height = 29;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
-            dataGridView1.Size = new Size(400, 609);
+            dataGridView1.Size = new Size(352, 478);
             dataGridView1.TabIndex = 4;
             dataGridView1.CellEndEdit += CommitEdit;
             dataGridView1.DataError += DataError;
@@ -82,37 +88,39 @@ namespace ALittleSecretIngredient.Forms
             // descriptionLabel
             // 
             descriptionLabel.AutoSize = true;
-            descriptionLabel.Location = new Point(12, 117);
-            descriptionLabel.MaximumSize = new Size(189, 0);
+            descriptionLabel.Location = new Point(6, 91);
             descriptionLabel.Name = "descriptionLabel";
-            descriptionLabel.Size = new Size(85, 20);
+            descriptionLabel.Size = new Size(67, 15);
             descriptionLabel.TabIndex = 10;
             descriptionLabel.Text = "Description";
             // 
             // pNumericUpDown
             // 
+            pNumericUpDown.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pNumericUpDown.DecimalPlaces = 3;
-            pNumericUpDown.Location = new Point(12, 87);
+            pNumericUpDown.Location = new Point(6, 65);
             pNumericUpDown.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             pNumericUpDown.Minimum = new decimal(new int[] { int.MinValue, 0, 0, int.MinValue });
             pNumericUpDown.Name = "pNumericUpDown";
-            pNumericUpDown.Size = new Size(189, 27);
+            pNumericUpDown.Size = new Size(172, 23);
             pNumericUpDown.TabIndex = 12;
             // 
             // argLabel1
             // 
             argLabel1.AutoSize = true;
-            argLabel1.Location = new Point(12, 63);
+            argLabel1.Location = new Point(6, 47);
             argLabel1.Name = "argLabel1";
-            argLabel1.Size = new Size(186, 20);
+            argLabel1.Size = new Size(147, 15);
             argLabel1.TabIndex = 11;
             argLabel1.Text = "Randomization Probability";
             // 
             // button1
             // 
-            button1.Location = new Point(111, 577);
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.Location = new Point(99, 437);
+            button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
-            button1.Size = new Size(90, 29);
+            button1.Size = new Size(79, 22);
             button1.TabIndex = 13;
             button1.Text = "Empty";
             button1.UseVisualStyleBackColor = true;
@@ -120,29 +128,54 @@ namespace ALittleSecretIngredient.Forms
             // 
             // button2
             // 
-            button2.Location = new Point(111, 612);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button2.Location = new Point(99, 463);
+            button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
-            button2.Size = new Size(90, 29);
+            button2.Size = new Size(79, 22);
             button2.TabIndex = 14;
             button2.Text = "Fill";
             button2.UseVisualStyleBackColor = true;
             button2.Click += Fill_Click;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33333F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(button2, 0, 6);
+            tableLayoutPanel1.Controls.Add(dataGridView1, 1, 0);
+            tableLayoutPanel1.Controls.Add(button1, 0, 5);
+            tableLayoutPanel1.Controls.Add(distributionSelectComboBox, 0, 1);
+            tableLayoutPanel1.Controls.Add(descriptionLabel, 0, 4);
+            tableLayoutPanel1.Controls.Add(pNumericUpDown, 0, 3);
+            tableLayoutPanel1.Controls.Add(argLabel1, 0, 2);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.Padding = new Padding(3);
+            tableLayoutPanel1.RowCount = 7;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(542, 490);
+            tableLayoutPanel1.TabIndex = 15;
+            // 
             // SelectionDistributionForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(619, 653);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(pNumericUpDown);
-            Controls.Add(argLabel1);
-            Controls.Add(descriptionLabel);
-            Controls.Add(dataGridView1);
-            Controls.Add(label1);
-            Controls.Add(distributionSelectComboBox);
+            ClientSize = new Size(542, 490);
+            Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "SelectionDistributionForm";
@@ -150,8 +183,9 @@ namespace ALittleSecretIngredient.Forms
             Load += SelectionDistributionForm_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pNumericUpDown).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -164,5 +198,6 @@ namespace ALittleSecretIngredient.Forms
         private System.Windows.Forms.Label argLabel1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

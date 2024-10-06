@@ -39,120 +39,154 @@ namespace ALittleSecretIngredient.Forms
             argNumericUpDown3 = new NumericUpDown();
             argLabel3 = new Label();
             descriptionLabel = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)argNumericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)argNumericUpDown2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)argNumericUpDown3).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // distributionSelectComboBox
             // 
+            distributionSelectComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             distributionSelectComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             distributionSelectComboBox.FormattingEnabled = true;
-            distributionSelectComboBox.Location = new Point(12, 32);
+            distributionSelectComboBox.Location = new Point(6, 21);
             distributionSelectComboBox.Name = "distributionSelectComboBox";
-            distributionSelectComboBox.Size = new Size(189, 28);
+            distributionSelectComboBox.Size = new Size(171, 23);
             distributionSelectComboBox.TabIndex = 0;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
+            label1.Location = new Point(6, 3);
             label1.Name = "label1";
-            label1.Size = new Size(166, 20);
+            label1.Size = new Size(132, 15);
             label1.TabIndex = 1;
             label1.Text = "Probability Distribution:";
             // 
             // argLabel1
             // 
             argLabel1.AutoSize = true;
-            argLabel1.Location = new Point(208, 9);
+            argLabel1.Location = new Point(183, 3);
             argLabel1.Name = "argLabel1";
-            argLabel1.Size = new Size(41, 20);
+            argLabel1.Size = new Size(32, 15);
             argLabel1.TabIndex = 2;
             argLabel1.Text = "Arg1";
             // 
             // argNumericUpDown1
             // 
+            argNumericUpDown1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            argNumericUpDown1.AutoSize = true;
             argNumericUpDown1.DecimalPlaces = 3;
-            argNumericUpDown1.Location = new Point(208, 33);
+            argNumericUpDown1.Location = new Point(183, 21);
             argNumericUpDown1.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             argNumericUpDown1.Minimum = new decimal(new int[] { int.MinValue, 0, 0, int.MinValue });
             argNumericUpDown1.Name = "argNumericUpDown1";
-            argNumericUpDown1.Size = new Size(189, 27);
+            argNumericUpDown1.Size = new Size(171, 23);
             argNumericUpDown1.TabIndex = 3;
             // 
             // argLabel2
             // 
             argLabel2.AutoSize = true;
-            argLabel2.Location = new Point(208, 63);
+            argLabel2.Location = new Point(183, 47);
             argLabel2.Name = "argLabel2";
-            argLabel2.Size = new Size(41, 20);
+            argLabel2.Size = new Size(32, 15);
             argLabel2.TabIndex = 4;
             argLabel2.Text = "Arg2";
             // 
             // argNumericUpDown2
             // 
+            argNumericUpDown2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            argNumericUpDown2.AutoSize = true;
             argNumericUpDown2.DecimalPlaces = 3;
-            argNumericUpDown2.Location = new Point(208, 86);
+            argNumericUpDown2.Location = new Point(183, 65);
             argNumericUpDown2.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             argNumericUpDown2.Minimum = new decimal(new int[] { int.MinValue, 0, 0, int.MinValue });
             argNumericUpDown2.Name = "argNumericUpDown2";
-            argNumericUpDown2.Size = new Size(189, 27);
+            argNumericUpDown2.Size = new Size(171, 23);
             argNumericUpDown2.TabIndex = 5;
             // 
             // argNumericUpDown3
             // 
+            argNumericUpDown3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            argNumericUpDown3.AutoSize = true;
             argNumericUpDown3.DecimalPlaces = 3;
-            argNumericUpDown3.Location = new Point(208, 139);
+            argNumericUpDown3.Location = new Point(183, 109);
             argNumericUpDown3.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             argNumericUpDown3.Minimum = new decimal(new int[] { int.MinValue, 0, 0, int.MinValue });
             argNumericUpDown3.Name = "argNumericUpDown3";
-            argNumericUpDown3.Size = new Size(189, 27);
+            argNumericUpDown3.Size = new Size(171, 23);
             argNumericUpDown3.TabIndex = 7;
             // 
             // argLabel3
             // 
             argLabel3.AutoSize = true;
-            argLabel3.Location = new Point(208, 116);
+            argLabel3.Location = new Point(183, 91);
             argLabel3.Name = "argLabel3";
-            argLabel3.Size = new Size(41, 20);
+            argLabel3.Size = new Size(32, 15);
             argLabel3.TabIndex = 6;
             argLabel3.Text = "Arg3";
             // 
             // descriptionLabel
             // 
             descriptionLabel.AutoSize = true;
-            descriptionLabel.Location = new Point(12, 63);
-            descriptionLabel.MaximumSize = new Size(189, 0);
+            descriptionLabel.Location = new Point(6, 47);
             descriptionLabel.Name = "descriptionLabel";
-            descriptionLabel.Size = new Size(85, 20);
+            tableLayoutPanel1.SetRowSpan(descriptionLabel, 4);
+            descriptionLabel.Size = new Size(67, 15);
             descriptionLabel.TabIndex = 9;
             descriptionLabel.Text = "Description";
             // 
-            // NumericDistribution
+            // tableLayoutPanel1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(argNumericUpDown3, 1, 5);
+            tableLayoutPanel1.Controls.Add(descriptionLabel, 0, 2);
+            tableLayoutPanel1.Controls.Add(argLabel3, 1, 4);
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(argNumericUpDown2, 1, 3);
+            tableLayoutPanel1.Controls.Add(distributionSelectComboBox, 0, 1);
+            tableLayoutPanel1.Controls.Add(argLabel2, 1, 2);
+            tableLayoutPanel1.Controls.Add(argLabel1, 1, 0);
+            tableLayoutPanel1.Controls.Add(argNumericUpDown1, 1, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.Padding = new Padding(3);
+            tableLayoutPanel1.RowCount = 6;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(360, 137);
+            tableLayoutPanel1.TabIndex = 10;
+            // 
+            // NumericDistributionForm
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(412, 183);
-            Controls.Add(descriptionLabel);
-            Controls.Add(argNumericUpDown3);
-            Controls.Add(argLabel3);
-            Controls.Add(argNumericUpDown2);
-            Controls.Add(argLabel2);
-            Controls.Add(argNumericUpDown1);
-            Controls.Add(argLabel1);
-            Controls.Add(label1);
-            Controls.Add(distributionSelectComboBox);
+            ClientSize = new Size(360, 137);
+            Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "NumericDistribution";
+            Name = "NumericDistributionForm";
             Text = "Randomizer Options";
             Load += NumericDistribution_Load;
             ((System.ComponentModel.ISupportInitialize)argNumericUpDown1).EndInit();
             ((System.ComponentModel.ISupportInitialize)argNumericUpDown2).EndInit();
             ((System.ComponentModel.ISupportInitialize)argNumericUpDown3).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -168,5 +202,6 @@ namespace ALittleSecretIngredient.Forms
         private System.Windows.Forms.NumericUpDown argNumericUpDown3;
         private System.Windows.Forms.Label argLabel3;
         private System.Windows.Forms.Label descriptionLabel;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

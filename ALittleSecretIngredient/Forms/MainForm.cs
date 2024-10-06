@@ -1002,6 +1002,11 @@ namespace ALittleSecretIngredient.Forms
             //Activate();
         }
 
+        private bool WarningPrompt(string message)
+        {
+            return MessageBox.Show(message, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK;
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (!InitFromConfig())
@@ -1088,6 +1093,8 @@ namespace ALittleSecretIngredient.Forms
                 NoExportTargetsMessage();
                 return;
             }
+            if (!Randomizer.SettingsWarningCheck(rs, WarningPrompt))
+                return;
             GlobalData.R.Randomize(rs);
             switch (GlobalData.Export(targets))
             {

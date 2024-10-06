@@ -34,6 +34,77 @@ namespace ALittleSecretIngredient
             CharacterNameMapping = Characters.Concat(Emblems).Select(t => t.name).ToDictionary(s => s);
         }
 
+        static internal bool SettingsWarningCheck(RandomizerSettings settings, Func<string, bool> continuePrompt)
+        {
+            // Protagonist in model swaps info
+            if (settings.AssetTable.ModelSwap.GetArg<bool>(0) && settings.AssetTable.ModelSwap.GetArg<bool>(1))
+                if (!continuePrompt("Ah, you have enabled model swaps, including the *protagonist*. " +
+                    "This will render one of the *gender options* invisible during the selection screen. " +
+                    "To ensure the protagonist receives the correct animations, you must select the *visible option*."))
+                    return false;
+
+            // Janky options warnings
+            if (settings.AssetTable.ModelSwap.GetArg<bool>(0) || settings.AssetTable.ModelSwap.GetArg<bool>(2)
+                || settings.AssetTable.ModelSwap.GetArg<bool>(3))
+                if (!continuePrompt("You've enabled model swaps. " +
+                    "This is an *experimental* feature and may result in *visual bugs*—such as missing animations, placeholder sprites, " +
+                    "or absent map models."))
+                    return false;
+            if (settings.AssetTable.OutfitSwap.GetArg<bool>(5) && settings.AssetTable.OutfitSwap.GetArg<bool>(6))
+                if (!continuePrompt("Ah, you are *shuffling* shop outfits while *mixing* outfit groups. " +
+                    "Since these outfits lack *map models*, this could lead to a visual bug causing units' map models to become invisible. " +
+                    "A rather disconcerting prospect."))
+                    return false;
+            if (settings.GodGeneral.Link.GetArg<bool>(0))
+                if (!continuePrompt("You are randomizing the Engage+ links for normal emblems. " +
+                    "This feature is still in an *experimental* phase and may cause buggy behavior in the *skill inheritance* menu."))
+                    return false;
+            if (settings.GodGeneral.EngageCount.Enabled)
+                if (!continuePrompt("You are randomizing the sizes of the engage meters. " +
+                    "This is an experimental option and could cause *visual bugs* within the engage meter *UI*."))
+                    return false;
+            if (settings.TypeOfSoldier.Weapon.Enabled)
+                if (!continuePrompt("You are randomizing each class's weapon types. " +
+                    "This is an *experimental feature* and may cause visual bugs, such as *missing battle animations*. " +
+                    "A consequence that could prove... disruptive to immersion."))
+                    return false;
+
+            // Unusable weapons warnings
+            if (settings.Individual.JidAlly.Enabled && !settings.Individual.ItemsWeapons.Enabled)
+                if (!continuePrompt("Ah, you are *randomizing* the classes of your *allies*, " +
+                    "but leaving their static starting inventories untouched. " +
+                    "This could lead to a most *unfortunate* outcome—characters may find themselves without usable weapons. " +
+                    "Such a situation could prove to be... quite disadvantageous in the heat of battle."))
+                    return false;
+            if (settings.Individual.JidAlly.Enabled && !settings.Arrangement.ItemsWeaponsAlly.Enabled)
+                if (!continuePrompt("Ah, you are *randomizing* the *classes* of your allies, yet not their map data inventories. " +
+                    "This may lead to a rather *troublesome* predicament—characters could find themselves bereft of any usable weapons " +
+                    "at the start of a battle. Such an oversight would be most... regrettable."))
+                    return false;
+            if (settings.Individual.JidEnemy.Enabled && !settings.Individual.RandomizeEnemyInventories)
+                if (!continuePrompt("Ah, you are *randomizing* the classes of enemy units, but leaving their static inventories untouched. " +
+                    "This may result in enemies starting without usable weapons. A rather disappointing turn of events."))
+                    return false;
+            if (settings.Individual.JidEnemy.Enabled && !settings.Arrangement.ItemsWeaponsEnemy.Enabled)
+                if (!continuePrompt("You are *randomizing* enemy classes but not their *map data inventories*. " +
+                    "This will lead to the majority of enemies being *weaponless*. A situation most... unfortunate."))
+                    return false;
+            if (settings.Individual.ItemsWeapons.Enabled && !settings.Individual.ItemsWeapons.GetArg<bool>(0))
+                if (!continuePrompt("You are *randomizing* the weapons of characters, yet without ensuring they remain usable. " +
+                    "Such oversight may result in characters being left defenseless. Quite... *dangerous*."))
+                    return false;
+            if (settings.Arrangement.ItemsWeaponsAlly.Enabled && !settings.Arrangement.ItemsWeaponsAlly.GetArg<bool>(0))
+                if (!continuePrompt("Ah, you are *randomizing* the weapons of your *allied map units*, but without enforcing *usable* choices. " +
+                    "This may result in allies beginning without usable weapons. A rather perilous outcome."))
+                    return false;
+            if (settings.Arrangement.ItemsWeaponsEnemy.Enabled && !settings.Arrangement.ItemsWeaponsEnemy.GetArg<bool>(0))
+                if (!continuePrompt("You are *randomizing* enemy weapons but not ensuring they remain usable. " +
+                    "This will render most enemies *unarmed*. Such a situation is... less than ideal."))
+                    return false;
+
+            return true;
+        }
+
         internal void Randomize(RandomizerSettings settings)
         {
             // This calls a function called with a function that returns a function called with a function called with a function that returns a

@@ -316,7 +316,7 @@
             button6.Name = "button6";
             button6.Size = new Size(168, 25);
             button6.TabIndex = 3;
-            button6.Text = "Enemy Engage Atttacks";
+            button6.Text = "Enemy Engage Attacks";
             button6.UseVisualStyleBackColor = true;
             button6.Click += Button6_Click;
             // 

@@ -1699,6 +1699,9 @@ namespace ALittleSecretIngredient
                     SetUnitTypeSpecificItems(settings.EngageItems.GetArg<double>(1), bondLevelTables);
                 // Randomize engage weapons
                 RandomizeEngageItems(settings.EngageItems.Distribution, bondLevelTables, engageWeaponIDs);
+                // Adjust first engage weapons to enable engage attacks if toggled
+                if (settings.EngageItems.GetArg<bool>(2))
+                    EnsureEngageAttacksUsable(bondLevelTables);
                 // Setting emblem classes' weapon types to match their engage weapons. Mostly to fix the arena
                 AdjustEmblemClasses(inheritableBondLevelTables);
                 WriteEngageItemsToChangelog(bondLevelTables, levelEntries);
@@ -1758,6 +1761,25 @@ namespace ALittleSecretIngredient
                 }
 
             return ApplyTableTitle(innertable, "Bond Level Tables");
+        }
+
+        private void EnsureEngageAttacksUsable(List<ParamGroup> bondLevelTables)
+        {
+            List<GodGeneral> ggs = GD.Get(DataSetEnum.GodGeneral).Params.Cast<GodGeneral>().ToList();
+            foreach (ParamGroup pg in bondLevelTables)
+            {
+                GodGeneral gg = ggs.First(gg => gg.GrowTable == pg.Name);
+                if (EngageAttackToEngageWeapons.TryGetValue(gg.EngageAttack, out IEnumerable<string>? legalWeapons))
+                {
+                    GrowthTable? firstWeaponGT = pg.Group.Cast<GrowthTable>().FirstOrDefault(gt => gt.GetAllEngageItems().Any(a => a.Any()));
+                    if (firstWeaponGT == null)
+                        continue;
+                    foreach (string[] weapons in firstWeaponGT.GetAllEngageItems())
+                        for (int i = 0; i < weapons.Length; i++)
+                            if (!legalWeapons.Contains(weapons[i]))
+                                weapons[i] = legalWeapons.GetRandom();
+                }
+            }
         }
 
         private void AdjustEmblemClasses(List<ParamGroup> inheritableBondLevelTables)

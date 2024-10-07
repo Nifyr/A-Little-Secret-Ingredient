@@ -86,6 +86,7 @@
             button19 = new Button();
             checkBox21 = new CheckBox();
             toolTip1 = new ToolTip(components);
+            checkBox10 = new CheckBox();
             flowLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -587,11 +588,11 @@
             groupBox5.AutoSize = true;
             groupBox5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox5.Controls.Add(tableLayoutPanel5);
-            groupBox5.Location = new Point(561, 143);
+            groupBox5.Location = new Point(747, 3);
             groupBox5.MaximumSize = new Size(180, 0);
             groupBox5.MinimumSize = new Size(180, 0);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(180, 162);
+            groupBox5.Size = new Size(180, 202);
             groupBox5.TabIndex = 11;
             groupBox5.TabStop = false;
             groupBox5.Text = "Engage Weapons";
@@ -602,21 +603,23 @@
             tableLayoutPanel5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel5.ColumnCount = 1;
             tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Controls.Add(numericUpDown1, 0, 4);
+            tableLayoutPanel5.Controls.Add(checkBox10, 0, 2);
             tableLayoutPanel5.Controls.Add(checkBox13, 0, 0);
-            tableLayoutPanel5.Controls.Add(label1, 0, 3);
             tableLayoutPanel5.Controls.Add(button12, 0, 1);
-            tableLayoutPanel5.Controls.Add(checkBox16, 0, 2);
+            tableLayoutPanel5.Controls.Add(numericUpDown1, 0, 5);
+            tableLayoutPanel5.Controls.Add(label1, 0, 4);
+            tableLayoutPanel5.Controls.Add(checkBox16, 0, 3);
             tableLayoutPanel5.Dock = DockStyle.Fill;
             tableLayoutPanel5.Location = new Point(3, 19);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
-            tableLayoutPanel5.RowCount = 5;
+            tableLayoutPanel5.RowCount = 6;
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
-            tableLayoutPanel5.Size = new Size(174, 140);
+            tableLayoutPanel5.RowStyles.Add(new RowStyle());
+            tableLayoutPanel5.Size = new Size(174, 180);
             tableLayoutPanel5.TabIndex = 7;
             // 
             // numericUpDown1
@@ -624,7 +627,7 @@
             numericUpDown1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             numericUpDown1.AutoSize = true;
             numericUpDown1.DecimalPlaces = 3;
-            numericUpDown1.Location = new Point(3, 114);
+            numericUpDown1.Location = new Point(3, 154);
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(168, 23);
             numericUpDown1.TabIndex = 6;
@@ -645,7 +648,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(3, 81);
+            label1.Location = new Point(3, 121);
             label1.Name = "label1";
             label1.Size = new Size(140, 30);
             label1.TabIndex = 5;
@@ -667,11 +670,11 @@
             // checkBox16
             // 
             checkBox16.AutoSize = true;
-            checkBox16.Location = new Point(3, 59);
+            checkBox16.Location = new Point(3, 84);
             checkBox16.Name = "checkBox16";
-            checkBox16.Size = new Size(168, 19);
+            checkBox16.Size = new Size(135, 34);
             checkBox16.TabIndex = 4;
-            checkBox16.Text = "Randomize unit type specific weapons";
+            checkBox16.Text = "Randomize unit type\r\nspecific weapons";
             toolTip1.SetToolTip(checkBox16, "Certain engage weapons are exclusive to particular unit types. This option modifies *which* engage weapons have this property.");
             checkBox16.UseVisualStyleBackColor = true;
             // 
@@ -680,7 +683,7 @@
             groupBox6.AutoSize = true;
             groupBox6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox6.Controls.Add(tableLayoutPanel6);
-            groupBox6.Location = new Point(747, 3);
+            groupBox6.Location = new Point(933, 3);
             groupBox6.MaximumSize = new Size(180, 0);
             groupBox6.MinimumSize = new Size(180, 0);
             groupBox6.Name = "groupBox6";
@@ -763,7 +766,7 @@
             groupBox8.AutoSize = true;
             groupBox8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox8.Controls.Add(tableLayoutPanel7);
-            groupBox8.Location = new Point(747, 143);
+            groupBox8.Location = new Point(933, 143);
             groupBox8.MaximumSize = new Size(180, 0);
             groupBox8.MinimumSize = new Size(180, 0);
             groupBox8.Name = "groupBox8";
@@ -820,7 +823,7 @@
             groupBox9.AutoSize = true;
             groupBox9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox9.Controls.Add(tableLayoutPanel8);
-            groupBox9.Location = new Point(747, 227);
+            groupBox9.Location = new Point(933, 227);
             groupBox9.MaximumSize = new Size(180, 0);
             groupBox9.MinimumSize = new Size(180, 0);
             groupBox9.Name = "groupBox9";
@@ -875,6 +878,17 @@
             toolTip1.AutoPopDelay = 60000;
             toolTip1.InitialDelay = 0;
             toolTip1.ReshowDelay = 0;
+            // 
+            // checkBox10
+            // 
+            checkBox10.AutoSize = true;
+            checkBox10.Location = new Point(3, 59);
+            checkBox10.Name = "checkBox10";
+            checkBox10.Size = new Size(163, 19);
+            checkBox10.TabIndex = 8;
+            checkBox10.Text = "Engage attack compatible";
+            toolTip1.SetToolTip(checkBox10, "Certain engage attacks require specific weapon types to be executed. This option ensures that the first *engage weapon* assigned will enable the use of the engage attack, if applicable.");
+            checkBox10.UseVisualStyleBackColor = true;
             // 
             // GrowthTableForm
             // 
@@ -982,5 +996,6 @@
         private TableLayoutPanel tableLayoutPanel6;
         private TableLayoutPanel tableLayoutPanel7;
         private TableLayoutPanel tableLayoutPanel8;
+        public CheckBox checkBox10;
     }
 }

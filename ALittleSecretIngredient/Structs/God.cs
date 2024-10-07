@@ -103,6 +103,15 @@ namespace ALittleSecretIngredient.Structs
             return Ggid == "" ? null : Ggid;
         }
 
+        internal List<string[]> GetAllEngageItems()
+        {
+            return new() {
+                EngageItems, EngageCooperations, EngageHorses, EngageCoverts,
+                EngageHeavys, EngageFlys, EngageMagics, EngagePranas,
+                EngageDragons,
+            };
+        }
+
         internal List<int> GetAptitudes()
         {
             List<int> l = new();

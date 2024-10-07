@@ -231,7 +231,8 @@ namespace ALittleSecretIngredient.Forms
                 rs.GrowthTable.EngageSkillsCount = new(GrowthTable.checkBox14.Checked,
                     GrowthTable.EngageSkillsCount.Get(), Array.Empty<object>());
                 rs.GrowthTable.EngageItems = new(GrowthTable.checkBox13.Checked,
-                    GrowthTable.EngageItems.Get(), new object[] { GrowthTable.checkBox16.Checked, (double)GrowthTable.numericUpDown1.Value });
+                    GrowthTable.EngageItems.Get(), new object[] { GrowthTable.checkBox16.Checked, (double)GrowthTable.numericUpDown1.Value,
+                    GrowthTable.checkBox10.Checked});
                 /* Removed
                 rs.GrowthTable.EngageItemsCount = new(GrowthTable.checkBox10.Checked,
                     GrowthTable.EngageItemsCount.Get(), Array.Empty<object>());
@@ -651,6 +652,7 @@ namespace ALittleSecretIngredient.Forms
                 */
                 GrowthTable.checkBox16.Checked = value.GrowthTable.EngageItems.GetArg<bool>(0);
                 GrowthTable.numericUpDown1.Value = (decimal)value.GrowthTable.EngageItems.GetArg<double>(1);
+                GrowthTable.checkBox10.Checked = value.GrowthTable.EngageItems.GetArg<bool>(2);
                 GrowthTable.checkBox18.Checked = value.GrowthTable.Aptitude.Enabled;
                 GrowthTable.Aptitude.Set(value.GrowthTable.Aptitude.Distribution);
                 GrowthTable.checkBox17.Checked = value.GrowthTable.AptitudeCount.Enabled;

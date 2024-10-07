@@ -1958,31 +1958,85 @@ namespace ALittleSecretIngredient
         };
         #endregion
         #region Item IDs
-        internal static List<(string id, string name)> EngageWeapons { get; } = new()
+        internal static List<(string id, string name)> SwordEngageWeapons { get; } = new()
         {
-            ("IID_マルス_レイピア", "Rapier (Marth)"), ("IID_マルス_メリクルソード", "Mercurius"), ("IID_マルス_ファルシオン", "Falchion (Marth)"), ("IID_シグルド_ナイトキラー", "Ridersbane"),
-            ("IID_シグルド_ゆうしゃのやり", "Brave Lance"), ("IID_シグルド_ティルフィング", "Tyrfing"), ("IID_セリカ_エンジェル", "Seraphim"), ("IID_セリカ_リカバー", "Recover"),
-            ("IID_セリカ_ライナロック", "Ragnarok"), ("IID_ミカヤ_シャイン", "Shine"), ("IID_ミカヤ_リザイア", "Nosferatu"), ("IID_ミカヤ_セイニー", "Thani"),
-            ("IID_ロイ_ランスバスター", "Lancereaver"), ("IID_ロイ_ドラゴンキラー", "Wyrmslayer"), ("IID_ロイ_封印の剣", "Binding Blade"), ("IID_リーフ_キラーアクス", "Killer Axe"),
-            ("IID_リーフ_キラーアクス_M008", "Killer Axe (Chapter 8)"), ("IID_リーフ_キラーアクス_M011", "Killer Axe (Chapter 11)"), ("IID_リーフ_マスターランス", "Master Lance"), ("IID_リーフ_マスターランス_M008", "Master Lance (Chapter 8)"),
-            ("IID_リーフ_ひかりの剣", "Light Brand"), ("IID_リーフ_マスターボウ", "Master Bow"), ("IID_ルキナ_ノーブルレイピア", "Noble Rapier"), ("IID_ルキナ_ノーブルレイピア_M007", "Noble Rapier (Chapter 7)"),
-            ("IID_ルキナ_パルティア", "Parthia"), ("IID_ルキナ_裏剣ファルシオン", "Parallel Falchion"), ("IID_リン_キラーボウ", "Killer Bow"), ("IID_リン_キラーボウ_M010", "Killer Bow (Chapter 10)"),
-            ("IID_リン_マーニ・カティ", "Mani Katti"), ("IID_リン_マーニ・カティ_M010", "Mani Katti (Chapter 10)"), ("IID_リン_ミュルグレ", "Mulagir"), ("IID_アイク_ハンマー", "Hammer"),
-            ("IID_アイク_ウルヴァン", "Urvan"), ("IID_アイク_ラグネル", "Ragnell"), ("IID_ベレト_アイムール", "Aymr (Byleth)"), ("IID_ベレト_ブルトガング", "Blutgang"),
-            ("IID_ベレト_ルーン", "Lúin"), ("IID_ベレト_ルーン_M010", "Lúin (Chapter 10)"), ("IID_ベレト_アラドヴァル", "Areadbhar (Byleth)"), ("IID_ベレト_アイギスの盾", "Aegis Shield"),
-            ("IID_ベレト_フェイルノート", "Failnaught"), ("IID_ベレト_テュルソスの杖", "Thyrsus"), ("IID_ベレト_ラファイルの宝珠", "Rafail Gem"), ("IID_ベレト_ヴァジュラ", "Vajra-Mushti"),
+            ("IID_マルス_レイピア", "Rapier (Marth)"), ("IID_マルス_メリクルソード", "Mercurius"), ("IID_マルス_ファルシオン", "Falchion (Marth)"), ("IID_シグルド_ティルフィング", "Tyrfing"),
+            ("IID_ロイ_ランスバスター", "Lancereaver"), ("IID_ロイ_ドラゴンキラー", "Wyrmslayer"), ("IID_ロイ_封印の剣", "Binding Blade"), ("IID_リーフ_ひかりの剣", "Light Brand"),
+            ("IID_ルキナ_ノーブルレイピア", "Noble Rapier"), ("IID_ルキナ_ノーブルレイピア_M007", "Noble Rapier (Chapter 7)"),
+            ("IID_ルキナ_裏剣ファルシオン", "Parallel Falchion"), ("IID_リン_マーニ・カティ", "Mani Katti"), ("IID_リン_マーニ・カティ_M010", "Mani Katti (Chapter 10)"), ("IID_アイク_ラグネル", "Ragnell"),
+            ("IID_ベレト_ブルトガング", "Blutgang"),
             ("IID_ベレト_天帝の覇剣", "Sword of the Creator"), ("IID_ベレト_天帝の覇剣_M014", "Sword of the Creator (Chapter 14)"), ("IID_カムイ_逆刀", "Dual Katana"), ("IID_カムイ_飛刀", "Wakizashi"),
             ("IID_カムイ_夜刀神", "Yato"), ("IID_エイリーク_レイピア", "Rapier (Eirika)"), ("IID_エイリーク_かぜの剣", "Wind Sword"), ("IID_エイリーク_ジークリンデ", "Sieglinde"),
-            ("IID_エフラム_ジークムント", "Siegmund"), ("IID_リュール_オリゴルディア", "Oligoludia"), ("IID_リュール_竜神の法", "Dragon's Fist"), ("IID_リュール_ライラシオン", "Lyrátion"),
-            ("IID_三級長_アイムール", "Aymr (Edelgard)"), ("IID_三級長_アラドヴァル", "Areadbhar (Dimitri)"), ("IID_三級長_フェイルノート", "Failnaught"), ("IID_チキ_つめ", "Eternal Claw"),
+            ("IID_リュール_オリゴルディア", "Oligoludia"), ("IID_リュール_ライラシオン", "Lyrátion"), ("IID_ヘクトル_ルーンソード", "Runesword"),
+            ("IID_ヘクトル_ルーンソード_闇", "Corrupted Runesword"),
+            ("IID_クロム_サンダーソード", "Levin Sword"), ("IID_クロム_神剣ファルシオン", "Falchion (Chrom)")
+        };
+
+        internal static List<(string id, string name)> LanceEngageWeapons { get; } = new()
+        {
+            ("IID_シグルド_ナイトキラー", "Ridersbane"),
+            ("IID_シグルド_ゆうしゃのやり", "Brave Lance"), ("IID_リーフ_マスターランス", "Master Lance"), ("IID_リーフ_マスターランス_M008", "Master Lance (Chapter 8)"),
+            ("IID_ベレト_ルーン", "Lúin"), ("IID_ベレト_ルーン_M010", "Lúin (Chapter 10)"), ("IID_ベレト_アラドヴァル", "Areadbhar (Byleth)"), ("IID_エフラム_ジークムント", "Siegmund"),
+            ("IID_三級長_アラドヴァル", "Areadbhar (Dimitri)"),
+        };
+
+        internal static List<(string id, string name)> AxeEngageWeapons { get; } = new()
+        {
+            ("IID_リーフ_キラーアクス", "Killer Axe"),
+            ("IID_リーフ_キラーアクス_M008", "Killer Axe (Chapter 8)"), ("IID_リーフ_キラーアクス_M011", "Killer Axe (Chapter 11)"), ("IID_アイク_ハンマー", "Hammer"),
+            ("IID_アイク_ウルヴァン", "Urvan"), ("IID_ベレト_アイムール", "Aymr (Byleth)"), ("IID_三級長_アイムール", "Aymr (Edelgard)"), ("IID_ヘクトル_ヴォルフバイル", "Wolf Beil"),
+            ("IID_ヘクトル_アルマーズ", "Armads"), ("IID_カミラ_ボルトアクス", "Bolt Axe"), ("IID_カミラ_カミラの艶斧", "Camilla's Axe"),
+
+        };
+
+        internal static List<(string id, string name)> BowEngageWeapons { get; } = new()
+        {
+            ("IID_リーフ_マスターボウ", "Master Bow"), ("IID_ルキナ_パルティア", "Parthia"), ("IID_リン_キラーボウ", "Killer Bow"), ("IID_リン_キラーボウ_M010", "Killer Bow (Chapter 10)"),
+            ("IID_リン_ミュルグレ", "Mulagir"), ("IID_ベレト_フェイルノート", "Failnaught (Byleth)"), ("IID_三級長_フェイルノート", "Failnaught (Claude)"),
+        };
+
+        internal static List<(string id, string name)> DaggerEngageWeapons { get; } = new()
+        {
+
+        };
+
+        internal static List<(string id, string name)> TomeEngageWeapons { get; } = new()
+        {
+            ("IID_セリカ_エンジェル", "Seraphim"),
+            ("IID_セリカ_ライナロック", "Ragnarok"), ("IID_ミカヤ_シャイン", "Shine"), ("IID_ミカヤ_リザイア", "Nosferatu"), ("IID_ミカヤ_セイニー", "Thani"),
+            ("IID_ヴェロニカ_フリズスキャルヴ", "Hliðskjálf"), ("IID_ヴェロニカ_エリヴァーガル", "Élivágar"), ("IID_セネリオ_サンダーストーム", "Bolting"), ("IID_セネリオ_サンダーストーム_闇", "Corrupted Bolting"),
+            ("IID_セネリオ_レクスカリバー", "Rexcalibur"), ("IID_カミラ_ライトニング", "Lightning"), ("IID_クロム_トロン", "Thoron"),
+        };
+
+        internal static List<(string id, string name)> StaffEngageWeapons { get; } = new()
+        {
+            ("IID_セリカ_リカバー", "Recover"),
+            ("IID_ヴェロニカ_リザーブ＋", "Fortify+"),
+            ("IID_セネリオ_マジックシールド", "Reflect"),
+
+        };
+
+        internal static List<(string id, string name)> ArtEngageWeapons { get; } = new()
+        {
+            ("IID_ベレト_ヴァジュラ", "Vajra-Mushti"),
+            ("IID_リュール_竜神の法", "Dragon's Fist"),
+        };
+
+        internal static List<(string id, string name)> SpecialEngageWeapons { get; } = new()
+        {
+            ("IID_チキ_つめ", "Eternal Claw"),
             ("IID_チキ_つめ_E006", "Eternal Claw (Xenologue 6)"), ("IID_チキ_しっぽ", "Tail Smash"), ("IID_チキ_しっぽ_E006", "Tail Smash (Xenologue 6)"), ("IID_チキ_ブレス", "Fire Breath"),
             ("IID_チキ_ブレス_竜族", "Fog Breath"), ("IID_チキ_ブレス_重装", "Ice Breath"), ("IID_チキ_ブレス_飛行", "Flame Breath"), ("IID_チキ_ブレス_魔法", "Dark Breath"),
-            ("IID_チキ_ブレス_E001", "Fire Breath (Xenologue 1)"), ("IID_チキ_ブレス_E006", "Fire Breath (Xenologue 6)"), ("IID_ヘクトル_ヴォルフバイル", "Wolf Beil"), ("IID_ヘクトル_ルーンソード", "Runesword"),
-            ("IID_ヘクトル_ルーンソード_闇", "Corrupted Runesword"), ("IID_ヘクトル_アルマーズ", "Armads"), ("IID_ヴェロニカ_フリズスキャルヴ", "Hliðskjálf"), ("IID_ヴェロニカ_リザーブ＋", "Fortify+"),
-            ("IID_ヴェロニカ_エリヴァーガル", "Élivágar"), ("IID_セネリオ_サンダーストーム", "Bolting"), ("IID_セネリオ_サンダーストーム_闇", "Corrupted Bolting"), ("IID_セネリオ_マジックシールド", "Reflect"),
-            ("IID_セネリオ_レクスカリバー", "Rexcalibur"), ("IID_カミラ_ボルトアクス", "Bolt Axe"), ("IID_カミラ_ライトニング", "Lightning"), ("IID_カミラ_カミラの艶斧", "Camilla's Axe"),
-            ("IID_クロム_サンダーソード", "Levin Sword"), ("IID_クロム_トロン", "Thoron"), ("IID_クロム_神剣ファルシオン", "Falchion (Chrom)")
+            ("IID_チキ_ブレス_E001", "Fire Breath (Xenologue 1)"), ("IID_チキ_ブレス_E006", "Fire Breath (Xenologue 6)"),
         };
+
+        internal static List<(string id, string name)> ItemEngageWeapons { get; } = new()
+        {
+            ("IID_ベレト_アイギスの盾", "Aegis Shield"),
+            ("IID_ベレト_テュルソスの杖", "Thyrsus"), ("IID_ベレト_ラファイルの宝珠", "Rafail Gem"),
+        };
+
+        internal static List<(string id, string name)> EngageWeapons { get; } = new();
 
         internal static List<(string id, string name)> DSwordWeapons { get; } = new()
         {
@@ -3076,6 +3130,72 @@ namespace ALittleSecretIngredient
 
         internal enum SyncStat { HP, Str, Dex, Spd, Lck, Def, Mag, Res, Bld, Mov, None }
 
+        internal static Dictionary<string, IEnumerable<string>> EngageAttackToEngageWeapons { get; } = new()
+        {
+            { "SID_マルスエンゲージ技", SwordEngageWeapons.GetIDs() }, // Lodestar Rush
+            { "SID_マルスエンゲージ技_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_マルスエンゲージ技_連携", SwordEngageWeapons.GetIDs() },
+            { "SID_マルスエンゲージ技_魔法", SwordEngageWeapons.GetIDs() },
+            { "SID_シグルドエンゲージ技", SwordEngageWeapons.GetIDs().Concat(LanceEngageWeapons.GetIDs()) }, // Override
+            { "SID_シグルドエンゲージ技_竜族", SwordEngageWeapons.GetIDs().Concat(LanceEngageWeapons.GetIDs()) },
+            { "SID_シグルドエンゲージ技_重装", SwordEngageWeapons.GetIDs().Concat(LanceEngageWeapons.GetIDs()) },
+            { "SID_シグルドエンゲージ技_魔法", SwordEngageWeapons.GetIDs().Concat(LanceEngageWeapons.GetIDs()) },
+            { "SID_シグルドエンゲージ技_気功", SwordEngageWeapons.GetIDs().Concat(LanceEngageWeapons.GetIDs()) },
+            { "SID_ロイエンゲージ技", SwordEngageWeapons.GetIDs() }, // Blazing Lion
+            { "SID_ロイエンゲージ技_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_ロイエンゲージ技_魔法", SwordEngageWeapons.GetIDs() },
+            { "SID_ルキナエンゲージ技", SwordEngageWeapons.GetIDs() }, // All for One
+            { "SID_ルキナエンゲージ技_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_ルキナエンゲージ技_連携", SwordEngageWeapons.GetIDs() },
+            { "SID_リンエンゲージ技", BowEngageWeapons.GetIDs() }, // Astra Storm
+            { "SID_リンエンゲージ技_竜族", BowEngageWeapons.GetIDs() },
+            { "SID_リンエンゲージ技_隠密", BowEngageWeapons.GetIDs() },
+            { "SID_リンエンゲージ技_気功", BowEngageWeapons.GetIDs() },
+            { "SID_リンエンゲージ技_威力減", BowEngageWeapons.GetIDs() },
+            { "SID_リンエンゲージ技_闇_気功", BowEngageWeapons.GetIDs() },
+            { "SID_アイクエンゲージ技", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) }, // Great Aether
+            { "SID_アイクエンゲージ技_竜族", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_アイクエンゲージ技_重装", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_アイクエンゲージ技_飛行", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_エイリークエンゲージ技", SwordEngageWeapons.GetIDs() }, // Twin Strike
+            { "SID_エイリークエンゲージ技_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_エイリークエンゲージ技_騎馬", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技", SwordEngageWeapons.GetIDs() }, // Dragon Blast
+            { "SID_リュールエンゲージ技_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技_連携", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技_魔法", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技_気功", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技共同", SwordEngageWeapons.GetIDs() }, // Bond Blast
+            { "SID_リュールエンゲージ技共同_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技共同_連携", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技共同_魔法", SwordEngageWeapons.GetIDs() },
+            { "SID_リュールエンゲージ技共同_気功", SwordEngageWeapons.GetIDs() },
+            { "SID_ヘクトルエンゲージ技", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) }, // Storm's Eye
+            { "SID_ヘクトルエンゲージ技_竜族", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_ヘクトルエンゲージ技_連携", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_ヘクトルエンゲージ技_隠密", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_ヘクトルエンゲージ技＋", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) }, // Storm's Eye+
+            { "SID_ヘクトルエンゲージ技＋_竜族", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_ヘクトルエンゲージ技＋_連携", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_ヘクトルエンゲージ技＋_隠密", SwordEngageWeapons.GetIDs().Concat(AxeEngageWeapons.GetIDs()) },
+            { "SID_カミラエンゲージ技", AxeEngageWeapons.GetIDs() }, // Dark Inferno
+            { "SID_カミラエンゲージ技_竜族", AxeEngageWeapons.GetIDs() },
+            { "SID_カミラエンゲージ技_魔法", AxeEngageWeapons.GetIDs() },
+            { "SID_カミラエンゲージ技_気功", AxeEngageWeapons.GetIDs() },
+            { "SID_カミラエンゲージ技＋", AxeEngageWeapons.GetIDs() }, // Dark Inferno+
+            { "SID_カミラエンゲージ技＋_竜族", AxeEngageWeapons.GetIDs() },
+            { "SID_カミラエンゲージ技＋_魔法", AxeEngageWeapons.GetIDs() },
+            { "SID_カミラエンゲージ技＋_気功", AxeEngageWeapons.GetIDs() },
+            { "SID_クロムエンゲージ技", SwordEngageWeapons.GetIDs() }, // Giga Levin Sword
+            { "SID_クロムエンゲージ技_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_クロムエンゲージ技_飛行", SwordEngageWeapons.GetIDs() },
+            { "SID_クロムエンゲージ技_魔法", SwordEngageWeapons.GetIDs() },
+            { "SID_クロムエンゲージ技＋", SwordEngageWeapons.GetIDs() }, // Giga Levin Sword+
+            { "SID_クロムエンゲージ技＋_竜族", SwordEngageWeapons.GetIDs() },
+            { "SID_クロムエンゲージ技＋_飛行", SwordEngageWeapons.GetIDs() },
+            { "SID_クロムエンゲージ技＋_魔法", SwordEngageWeapons.GetIDs() },
+        };
+
         internal static List<List<string>> SyncStatLookup = new();
         #endregion
         #region Support Category IDs
@@ -3747,6 +3867,16 @@ namespace ALittleSecretIngredient
             SyncableEmblems.AddRange(AllyArenaSyncableEmblems);
             SyncableEmblems.AddRange(EnemySyncableEmblems);
             Emblems.AddRange(SyncableEmblems);
+            EngageWeapons.AddRange(SwordEngageWeapons);
+            EngageWeapons.AddRange(LanceEngageWeapons);
+            EngageWeapons.AddRange(AxeEngageWeapons);
+            EngageWeapons.AddRange(BowEngageWeapons);
+            EngageWeapons.AddRange(DaggerEngageWeapons);
+            EngageWeapons.AddRange(TomeEngageWeapons);
+            EngageWeapons.AddRange(StaffEngageWeapons);
+            EngageWeapons.AddRange(ArtEngageWeapons);
+            EngageWeapons.AddRange(SpecialEngageWeapons);
+            EngageWeapons.AddRange(ItemEngageWeapons);
             NormalCommonWeapons.AddRange(DSwordWeapons);
             NormalCommonWeapons.AddRange(CSwordWeapons);
             NormalCommonWeapons.AddRange(BSwordWeapons);

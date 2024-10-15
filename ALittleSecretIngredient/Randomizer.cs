@@ -800,33 +800,7 @@ namespace ALittleSecretIngredient
             foreach (List<AssetShuffleEntity> list in modelSwapLists)
                 ModelSwap(assets, ggs, individuals, assetShuffleInnertable, list);
             if (modelSwapLists.Count > 0)
-            {
-                List<(string id, DataSet ds)> msbts = GD.GetGroup(DataSetEnum.MsbtMessage, EnglishMsbts());
-                List<string> oldNames = modelSwapLists.SelectMany(l => l).Select(ase => ase.name).ToList();
-                oldNames.Sort((s0, s1) => s1.Length - s0.Length);
-                List<string> newNames = oldNames.Select(s => CharacterNameMapping[s]).ToList();
-                OnStatusUpdate?.Invoke($"Starting name swapping...");
-                List<(string id, DataSet ds)> nameMsbts = msbts.Where(t => t.ds.Params.Cast<MsbtMessage>().Any(mm =>
-                    oldNames.Any(n => mm.Value.Contains(n)))).ToList();
-                List<MsbtMessage> messages = nameMsbts.SelectMany(t => t.ds.Params.Cast<MsbtMessage>()).ToList();
-                OnStatusUpdate?.Invoke($"Filtering messages...");
-                List<MsbtMessage> nameMessages = messages.Where(mm => oldNames.Any(n => mm.Value.Contains(n))).ToList();
-                Dictionary<string, string> xToNew = new();
-                OnStatusUpdate?.Invoke($"Removing old names...");
-                for (int i = 0; i < oldNames.Count; i++)
-                {
-                    string x = $"<name{i}>";
-                    xToNew[x] = newNames[i];
-                    foreach (MsbtMessage mm in messages)
-                        mm.Value = mm.Value.Replace(oldNames[i], x);
-                }
-                OnStatusUpdate?.Invoke($"Inserting new names...");
-                foreach (string x in xToNew.Keys)
-                    foreach (MsbtMessage mm in messages)
-                        mm.Value = mm.Value.Replace(x, xToNew[x]);
-                OnStatusUpdate?.Invoke($"Name swaps complete.");
-                GD.SetDirty(DataSetEnum.MsbtMessage, nameMsbts);
-            }
+                NameSwap(modelSwapLists);
             StringBuilder assetShuffleTable = ApplyTableTitle(assetShuffleInnertable, "Model Swaps");
 
             StringBuilder outfitShuffleInnertable = new();
@@ -887,6 +861,35 @@ namespace ALittleSecretIngredient
                 tables.AppendLine(hubAnimShuffleTable.ToString());
 
             return tables;
+        }
+
+        private void NameSwap(List<List<AssetShuffleEntity>> modelSwapLists)
+        {
+            List<(string id, DataSet ds)> msbts = GD.GetGroup(DataSetEnum.MsbtMessage, EnglishMsbts());
+            List<string> oldNames = modelSwapLists.SelectMany(l => l).Select(ase => ase.name).ToList();
+            oldNames.Sort((s0, s1) => s1.Length - s0.Length);
+            List<string> newNames = oldNames.Select(s => CharacterNameMapping[s]).ToList();
+            OnStatusUpdate?.Invoke($"Starting name swapping...");
+            List<(string id, DataSet ds)> nameMsbts = msbts.Where(t => t.ds.Params.Cast<MsbtMessage>().Any(mm =>
+                oldNames.Any(n => mm.Value.Contains(n)))).ToList();
+            List<MsbtMessage> messages = nameMsbts.SelectMany(t => t.ds.Params.Cast<MsbtMessage>()).ToList();
+            OnStatusUpdate?.Invoke($"Filtering messages...");
+            List<MsbtMessage> nameMessages = messages.Where(mm => oldNames.Any(n => mm.Value.Contains(n))).ToList();
+            Dictionary<string, string> xToNew = new();
+            OnStatusUpdate?.Invoke($"Removing old names...");
+            for (int i = 0; i < oldNames.Count; i++)
+            {
+                string x = $"<name{i}>";
+                xToNew[x] = newNames[i];
+                foreach (MsbtMessage mm in messages)
+                    mm.Value = mm.Value.Replace(oldNames[i], x);
+            }
+            OnStatusUpdate?.Invoke($"Inserting new names...");
+            foreach (string x in xToNew.Keys)
+                foreach (MsbtMessage mm in messages)
+                    mm.Value = mm.Value.Replace(x, xToNew[x]);
+            OnStatusUpdate?.Invoke($"Name swaps complete.");
+            GD.SetDirty(DataSetEnum.MsbtMessage, nameMsbts);
         }
 
         private void RandomizeModelParameters(RandomizerSettings.AssetTableSettings settings, IEnumerable<Asset> assets)

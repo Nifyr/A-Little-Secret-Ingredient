@@ -15,6 +15,7 @@
     internal enum FileGroupEnum
     {
         Dispos,
+        Message,
         Terrains,
     }
 
@@ -41,10 +42,11 @@
         FightingStyle,
         Individual,
         Skill,
-        Arrangement,
-        MapTerrain,
         Terrain,
-        TerrainCost
+        TerrainCost,
+        Arrangement,
+        MsbtMessage,
+        MapTerrain,
     }
 
     internal enum RandomizerDistribution

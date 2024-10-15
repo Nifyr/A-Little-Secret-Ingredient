@@ -7,6 +7,7 @@ namespace ALittleSecretIngredient
         internal FileManager FM { get; }
         internal AssetBundleParser ABP { get; }
         internal XmlParser XP { get; }
+        internal MsbtParser MP { get; }
         internal GameData GD { get; }
         internal Randomizer R { get; }
         internal DefaultDistributionSetup DDS { get; }
@@ -16,12 +17,17 @@ namespace ALittleSecretIngredient
             FM = new();
             ABP = new();
             XP = new();
-            GD = new(XP, ABP, FM);
+            MP = new();
+            GD = new(FM, ABP, XP, MP);
             R = new(GD);
             DDS = new(GD);
         }
 
-        internal void SubscribeToStatusUpdate(Action<string> update) => GD.OnStatusUpdate += update;
+        internal void SubscribeToStatusUpdate(Action<string> update)
+        {
+            GD.OnStatusUpdate += update;
+            R.OnStatusUpdate += update;
+        }
 
         internal ExportResult Export(IEnumerable<ExportFormat> targets)
         {

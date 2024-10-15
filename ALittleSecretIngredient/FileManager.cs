@@ -22,21 +22,28 @@ namespace ALittleSecretIngredient
         {
             ( FileGroupEnum.Dispos, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\dispos\" ),
             ( FileGroupEnum.Terrains, @"\StreamingAssets\aa\Switch\fe_assets_gamedata\terrains\" ),
+            ( FileGroupEnum.Message, @"\StreamingAssets\aa\Switch\fe_assets_message\" ),
         };
         private Dictionary<FileEnum, string> CobaltFilePatches { get; } = new()
         {
-            { FileEnum.AI, "AI.xml" },
-            { FileEnum.AssetTable, "AssetTable.xml" },
-            { FileEnum.God, "God.xml" },
-            { FileEnum.Item, "Item.xml" },
-            { FileEnum.Job, "Job.xml" },
-            { FileEnum.Person, "Person.xml" },
-            { FileEnum.Skill, "Skill.xml" },
-            { FileEnum.Terrain, "Terrain.xml" },
+            { FileEnum.AI, "xml\\AI.xml" },
+            { FileEnum.AssetTable, "xml\\AssetTable.xml" },
+            { FileEnum.God, "xml\\God.xml" },
+            { FileEnum.Item, "xml\\Item.xml" },
+            { FileEnum.Job, "xml\\Job.xml" },
+            { FileEnum.Person, "xml\\Person.xml" },
+            { FileEnum.Skill, "xml\\Skill.xml" },
+            { FileEnum.Terrain, "xml\\Terrain.xml" },
         };
         private Dictionary<FileGroupEnum, string> CobaltFileGroupDirs { get; } = new()
         {
-            { FileGroupEnum.Dispos, "Dispos\\" },
+            { FileGroupEnum.Dispos, "xml\\Dispos\\" },
+            { FileGroupEnum.Message, "msbt\\message\\" },
+        };
+        private Dictionary<FileGroupEnum, string> CobaltFileGroupExtensions { get; } = new()
+        {
+            { FileGroupEnum.Dispos, ".xml" },
+            { FileGroupEnum.Message, ".txt" },
         };
 
         private const string OutputFolderName = "Output";
@@ -95,12 +102,15 @@ namespace ALittleSecretIngredient
                 Files.Add(fe, new(@"Data\" + localPath, dataDir + localPath));
 
             foreach ((FileGroupEnum fge, string localPath) in targetFileGroups)
-                foreach (string filePath in Directory.GetFiles(dataDir + localPath))
+            {
+                string searchPath = dataDir + localPath;
+                foreach (string filePath in Directory.GetFiles(searchPath, "*", SearchOption.AllDirectories))
                 {
-                    string fileName = Path.GetFileName(filePath);
+                    string fileName = filePath[searchPath.Length..];
                     if (Path.GetExtension(fileName) == ".bundle")
                         FileGroups.Add((fge, fileName), new FileData(@"Data\" + localPath + fileName, filePath));
                 }
+            }
 
             return true;
         }
@@ -149,7 +159,7 @@ namespace ALittleSecretIngredient
             string path = $"{GetOutputModDir(ef)}";
             path += ef switch
             {
-                ExportFormat.Cobalt => CobaltFilePatches.TryGetValue(fe, out string? fileName) ? $"patches\\xml\\{fileName}" : Files[fe].OutGamePath,
+                ExportFormat.Cobalt => CobaltFilePatches.TryGetValue(fe, out string? fileName) ? $"patches\\{fileName}" : Files[fe].OutGamePath,
                 ExportFormat.LayeredFS => $"romfs\\{Files[fe].OutGamePath}",
                 _ => throw new NotImplementedException(),
             };
@@ -158,13 +168,22 @@ namespace ALittleSecretIngredient
         private string GetOutputFilePath(FileGroupEnum fge, string fileName, ExportFormat ef)
         {
             string path = $"{GetOutputModDir(ef)}";
-            path += ef switch
+            string localPath = "";
+            switch (ef)
             {
-                ExportFormat.Cobalt => CobaltFileGroupDirs.TryGetValue(fge, out string? dir) ?
-                    $"patches\\xml\\{dir}{fileName.Replace(".xml.bundle", "").ToUpper()}.xml" : FileGroups[(fge, fileName)].OutGamePath,
-                ExportFormat.LayeredFS => $"romfs\\{FileGroups[(fge, fileName)].OutGamePath}",
-                _ => throw new NotImplementedException(),
-            };
+                case ExportFormat.Cobalt:
+                    if (fge == FileGroupEnum.Dispos)
+                        localPath = $"patches\\{CobaltFileGroupDirs[fge]}{fileName.Replace(".xml.bundle", "").ToUpper()}{CobaltFileGroupExtensions[fge]}";
+                    else if (fge == FileGroupEnum.Message)
+                        localPath = $"patches\\{CobaltFileGroupDirs[fge]}{fileName.Replace(".bytes.bundle", "").ToLower()}{CobaltFileGroupExtensions[fge]}";
+                    else
+                        localPath = FileGroups[(fge, fileName)].OutGamePath;
+                    break;
+                case ExportFormat.LayeredFS:
+                    localPath = $"romfs\\{FileGroups[(fge, fileName)].OutGamePath}";
+                    break;
+            }
+            path += localPath;
             return path;
         }
 
@@ -221,8 +240,9 @@ namespace ALittleSecretIngredient
         }
         internal static FileStream CreateTempFile(string fileName)
         {
-            Directory.CreateDirectory(GetTempDir());
-            return File.Create(GetTempFilePath(fileName));
+            string tempFilePath = GetTempFilePath(fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(tempFilePath)!);
+            return File.Create(tempFilePath);
         }
 
         private static string GetIpsPatchOutputPath(ExportFormat ef)

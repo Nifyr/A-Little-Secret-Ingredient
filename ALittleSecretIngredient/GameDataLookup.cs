@@ -1,4 +1,5 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Runtime.CompilerServices;
 
 namespace ALittleSecretIngredient
 {
@@ -137,6 +138,7 @@ namespace ALittleSecretIngredient
         internal static string IdToFileName(this string id, FileGroupEnum fge) => fge switch
         {
             FileGroupEnum.Dispos => id.ToLower() + ".xml.bundle",
+            FileGroupEnum.Message => id.ToLower() + ".bytes.bundle",
             FileGroupEnum.Terrains => "mapterrain_" + id.ToLower() + ".bundle",
             _ => throw new NotImplementedException()
         };
@@ -144,6 +146,7 @@ namespace ALittleSecretIngredient
         internal static string FileNameToId(this string fileName, FileGroupEnum fge) => fge switch
         {
             FileGroupEnum.Dispos => fileName.Replace(".xml.bundle", "").ToUpper(),
+            FileGroupEnum.Message => fileName.Replace(".bytes.bundle", "").ToLower(),
             FileGroupEnum.Terrains => fileName.Replace("mapterrain_", "").Replace(".bundle", "").ToUpper(),
             _ => throw new NotImplementedException()
         };
@@ -163,6 +166,8 @@ namespace ALittleSecretIngredient
             "S" => ProficiencyLevel.S,
             _ => throw new ArgumentException("Unsupported proficiency level: " + s)
         };
+        internal static List<(string id, string name)> EnglishMsbts() =>
+            EnglishMsbtDirectories.SelectMany(d => MsbtNames.Select(n => (d + n, n))).ToList();
 
         internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
         {
@@ -3511,6 +3516,7 @@ namespace ALittleSecretIngredient
                 "513Robin", false, "MGID_Reflet", "Face_Reflet", "Reflet", Color.FromArgb(48, 92, 129), null),
         };
 
+        // This part is no longer used because model swaps can't include corrupted emblems anymore.
         internal static List<AssetShuffleEntity> EnemyEmblemAssetShuffleData { get; } = new()
         {
             new("Corrupted Marth", "GID_M011_敵マルス", new() { "PID_E003_召喚_マルス", "PID_E006_召喚_マルス", "GID_M017_敵マルス",
@@ -3770,6 +3776,67 @@ namespace ALittleSecretIngredient
             "AI_AT_EngageAttackNoGuard", "AI_AT_EngageCSBattle", "AI_AT_RodWarp", "AI_AT_EngageDance",
             "AI_AT_EngageOverlap"
         };
+
+        internal static List<string> EnglishMsbtDirectories { get; } = new()
+        {
+            "eu\\euen\\", "us\\usen\\",
+        };
+
+        internal static List<string> MsbtNames { get; } = new()
+        {
+            "accessories", "achieve", "after", "after_ex", "battlestyle", "battletalk_ex", "bondsring", "cook",
+            "die", "e001", "e002", "e003", "e004", "e005", "e006", "fortune",
+            "friendlist", "friendlist_ex", "g001", "g002", "g003", "g004", "g005", "g006",
+            "g007", "gamedata", "gr_byleth", "gr_byleth_ex", "gr_camilla", "gr_camilla_ex", "gr_celica", "gr_celica_ex",
+            "gr_chrom", "gr_chrom_ex", "gr_edelgard", "gr_edelgard_ex", "gr_eirik", "gr_eirik_ex", "gr_hector", "gr_hector_ex",
+            "gr_ike", "gr_ike_ex", "gr_kamui", "gr_kamui_ex", "gr_leaf", "gr_leaf_ex", "gr_lin", "gr_lin_ex",
+            "gr_lucina", "gr_lucina_ex", "gr_marth", "gr_marth_ex", "gr_micaiah", "gr_micaiah_ex", "gr_roy", "gr_roy_ex",
+            "gr_senerio", "gr_senerio_ex", "gr_siglud", "gr_siglud_ex", "gr_tiki", "gr_tiki_ex", "gr_veronica", "gr_veronica_ex",
+            "hub", "hubcommon", "hubcommon_p0", "hubcommon_p1", "hubcommon_p2", "hubcommon_p3", "hubdinner", "hubdinner_ex",
+            "hubstory", "item", "job", "kizunaresult", "kizunaresult_ex", "kizunastory", "levelup", "m000",
+            "m001", "m002", "m003", "m004", "m005", "m006", "m007", "m008",
+            "m009", "m010", "m011", "m012", "m013", "m014", "m015", "m016",
+            "m017", "m018", "m019", "m020", "m021", "m022", "m023", "m024",
+            "m025", "m026", "maphistory", "moviename", "musicname", "network", "patch0", "patch1",
+            "patch2", "patch3", "person", "profilecard", "r_alfred_bonet", "r_alfred_boucheron", "r_alfred_celine", "r_alfred_diamand",
+            "r_alfred_etie", "r_alfred_ivy", "r_alfred_misutira", "r_alfred_rafale", "r_alfred_umber", "r_alfred_veyre", "r_alfred_yunaka", "r_anna_mauve",
+            "r_bonet_anna", "r_bonet_jean", "r_bonet_mauve", "r_boucheron_etie", "r_boucheron_goldmary", "r_boucheron_kagetsu", "r_boucheron_lapis", "r_boucheron_linden",
+            "r_boucheron_panetone", "r_boucheron_staluke", "r_boucheron_zelkova", "r_celine_chloe", "r_celine_fogato", "r_celine_hortensia", "r_celine_jean", "r_celine_kagetsu",
+            "r_celine_lapis", "r_celine_louis", "r_celine_mauve", "r_celine_staluke", "r_chloe_bonet", "r_chloe_citrinica", "r_chloe_hortensia", "r_chloe_jean",
+            "r_chloe_merin", "r_chloe_seadas", "r_chloe_umber", "r_citrinica_merin", "r_citrinica_seadas", "r_citrinica_veyre", "r_citrinica_yunaka", "r_citrinica_zelkova",
+            "r_clan_citrinica", "r_clan_etie", "r_clan_fogato", "r_clan_fram", "r_clan_hortensia", "r_clan_jean", "r_clan_louis", "r_clan_veyre",
+            "r_clan_zelkova", "r_diamand_citrinica", "r_diamand_el", "r_diamand_ivy", "r_diamand_jade", "r_diamand_kagetsu", "r_diamand_misutira", "r_diamand_saphir",
+            "r_diamand_staluke", "r_diamand_umber", "r_diamand_veyre", "r_el_rafale", "r_el_selestia", "r_etie_celine", "r_etie_fogato", "r_etie_goldmary",
+            "r_etie_jade", "r_etie_lapis", "r_etie_panetone", "r_etie_yunaka", "r_fogato_bonet", "r_fogato_pandoro", "r_fogato_yunaka", "r_fram_anna",
+            "r_fram_boucheron", "r_fram_chloe", "r_fram_diamand", "r_fram_goldmary", "r_fram_kagetsu", "r_fram_lapis", "r_fram_misutira", "r_goldmary_panetone",
+            "r_goldmary_saphir", "r_goldmary_yunaka", "r_gregory_madeline", "r_hortensia_anna", "r_hortensia_fogato", "r_hortensia_goldmary", "r_hortensia_linden", "r_hortensia_rosado",
+            "r_hortensia_veyre", "r_ivy_hortensia", "r_ivy_kagetsu", "r_ivy_mauve", "r_ivy_misutira", "r_ivy_panetone", "r_ivy_rafale", "r_ivy_veyre",
+            "r_ivy_zelkova", "r_jade_bonet", "r_jade_jean", "r_jade_kagetsu", "r_jade_linden", "r_jade_misutira", "r_jade_rosado", "r_jean_linden",
+            "r_kagetsu_bonet", "r_kagetsu_merin", "r_kagetsu_seadas", "r_lapis_anna", "r_lapis_citrinica", "r_lapis_fogato", "r_lapis_goldmary", "r_lapis_rosado",
+            "r_linden_mauve", "r_linden_saphir", "r_louis_chloe", "r_louis_ivy", "r_louis_jade", "r_louis_pandoro", "r_louis_rosado", "r_louis_saphir",
+            "r_louis_yunaka", "r_louis_zelkova", "r_lueur_alfred", "r_lueur_anna", "r_lueur_bonet", "r_lueur_boucheron", "r_lueur_celine", "r_lueur_chloe",
+            "r_lueur_citrinica", "r_lueur_clan", "r_lueur_diamand", "r_lueur_el", "r_lueur_etie", "r_lueur_fogato", "r_lueur_fram", "r_lueur_goldmary",
+            "r_lueur_gregory", "r_lueur_hortensia", "r_lueur_ivy", "r_lueur_jade", "r_lueur_jean", "r_lueur_kagetsu", "r_lueur_lapis", "r_lueur_linden",
+            "r_lueur_louis", "r_lueur_madeline", "r_lueur_mauve", "r_lueur_merin", "r_lueur_misutira", "r_lueur_pandoro", "r_lueur_panetone", "r_lueur_rafale",
+            "r_lueur_rosado", "r_lueur_saphir", "r_lueur_seadas", "r_lueur_selestia", "r_lueur_staluke", "r_lueur_umber", "r_lueur_vandre", "r_lueur_veyre",
+            "r_lueur_yunaka", "r_lueur_zelkova", "r_mauve_gregory", "r_mauve_madeline", "r_mauve_rafale", "r_mauve_selestia", "r_merin_bonet", "r_merin_panetone",
+            "r_merin_veyre", "r_merin_yunaka", "r_misutira_anna", "r_misutira_el", "r_misutira_fogato", "r_misutira_merin", "r_misutira_panetone", "r_misutira_seadas",
+            "r_misutira_veyre", "r_pandoro_bonet", "r_pandoro_mauve", "r_pandoro_seadas", "r_pandoro_veyre", "r_panetone_pandoro", "r_panetone_saphir", "r_panetone_yunaka",
+            "r_rafale_gregory", "r_rosado_fogato", "r_rosado_goldmary", "r_rosado_mauve", "r_rosado_merin", "r_rosado_pandoro", "r_rosado_seadas", "r_seadas_veyre",
+            "r_selestia_gregory", "r_selestia_madeline", "r_staluke_citrinica", "r_staluke_fogato", "r_staluke_hortensia", "r_staluke_ivy", "r_staluke_lapis", "r_staluke_pandoro",
+            "r_staluke_saphir", "r_staluke_seadas", "r_umber_jade", "r_umber_mauve", "r_umber_merin", "r_umber_panetone", "r_umber_seadas", "r_umber_zelkova",
+            "r_vandre_alfred", "r_vandre_clan", "r_vandre_fram", "r_vandre_goldmary", "r_vandre_linden", "r_vandre_mauve", "r_vandre_pandoro", "r_vandre_saphir",
+            "r_vandre_umber", "r_veyre_el", "r_veyre_gregory", "r_veyre_madeline", "r_veyre_mauve", "r_veyre_selestia", "r_yunaka_seadas", "r_zelkova_anna",
+            "r_zelkova_jean", "r_zelkova_kagetsu", "r_zelkova_yunaka", "residentmenu", "s001", "s002", "s003", "s004",
+            "s005", "s006", "s007", "s008", "s009", "s010", "s011", "s012",
+            "s013", "s014", "s015", "savedata", "scenario", "skill", "sortie", "system",
+            "tutorial", "tutorial_p0", "tutorial_p1", "tutorial_p2", "tutorial_p3", "wakeup_alfred", "wakeup_anna", "wakeup_bonet",
+            "wakeup_boucheron", "wakeup_celine", "wakeup_chloe", "wakeup_citrinica", "wakeup_clan", "wakeup_diamand", "wakeup_el", "wakeup_etie",
+            "wakeup_fogato", "wakeup_fram", "wakeup_goldmary", "wakeup_gregory", "wakeup_hortensia", "wakeup_ivy", "wakeup_jade", "wakeup_jean",
+            "wakeup_kagetsu", "wakeup_lapis", "wakeup_linden", "wakeup_louis", "wakeup_madeline", "wakeup_mauve", "wakeup_merin", "wakeup_misutira",
+            "wakeup_pandoro", "wakeup_panetone", "wakeup_rafale", "wakeup_rosado", "wakeup_saphir", "wakeup_seadas", "wakeup_selestia", "wakeup_staluke",
+            "wakeup_umber", "wakeup_vandre", "wakeup_veyre", "wakeup_yunaka", "wakeup_zelkova",
+        };
         #endregion
 
         static GameDataLookup()
@@ -3798,6 +3865,7 @@ namespace ALittleSecretIngredient
             Bind(FileEnum.Terrain, DataSetEnum.Terrain, typeof(Terrain), "地形");
             Bind(FileEnum.Terrain, DataSetEnum.TerrainCost, typeof(TerrainCost), "地形コスト");
             Bind(FileGroupEnum.Dispos, DataSetEnum.Arrangement, typeof(Arrangement), "配置");
+            Bind(FileGroupEnum.Message, DataSetEnum.MsbtMessage, typeof(MsbtMessage), "");
             Bind(FileGroupEnum.Terrains, DataSetEnum.MapTerrain, typeof(MapTerrain), "");
 
             BondLevels.AddRange(BondLevelsFromExp);

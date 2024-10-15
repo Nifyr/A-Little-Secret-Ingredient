@@ -1,4 +1,5 @@
 ﻿using AssetsTools.NET;
+using MsbtLib;
 using System.Reflection;
 using System.Xml;
 
@@ -15,6 +16,12 @@ namespace ALittleSecretIngredient.Structs
         internal DataSet(AssetTypeValueField atvf, Type paramType)
         {
             Params = new() { DataParam.Create(atvf, paramType) };
+            if (GroupedParams())
+                Group();
+        }
+        internal DataSet(MSBT msbt)
+        {
+            Params = msbt.GetTexts().Select(kvp => DataParam.Create(kvp.Key, kvp.Value)).ToList();
             if (GroupedParams())
                 Group();
         }
@@ -123,6 +130,13 @@ namespace ALittleSecretIngredient.Structs
             foreach (PropertyInfo p in GetType().GetRuntimeProperties())
                 atvf[p.Name].ParseFrom(p.GetValue(this)!);
         }
+
+        internal static DataParam Create(string label, MsbtEntry entry) => new MsbtMessage()
+        {
+            Label = label,
+            Attribute = entry.Attribute,
+            Value = entry.Value
+        };
     }
 
     internal abstract class GroupedParam : DataParam

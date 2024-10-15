@@ -1,12 +1,14 @@
 ﻿using ALittleSecretIngredient.Structs;
+using System.Data.SqlTypes;
 
 namespace ALittleSecretIngredient
 {
     internal class GameData
     {
-        private XmlParser XP { get; }
-        private AssetBundleParser ABP { get; }
         private FileManager FM { get; }
+        private AssetBundleParser ABP { get; }
+        private XmlParser XP { get; }
+        private MsbtParser MP { get; }
 
         internal event Action<string>? OnStatusUpdate;
 
@@ -19,12 +21,12 @@ namespace ALittleSecretIngredient
                 if (ds is null)
                 {
                     FileEnum fe = GameDataLookup.DataSetToSheetName[dse].fe;
-                    string? xmlString = ABP.GetXmlString(fe);
+                    string? xmlString = ABP.GetText(fe);
                     if (xmlString is null)
                     {
                         OnStatusUpdate?.Invoke($"Parsing {fe} AssetBundle...");
                         using FileStream fs = FM.ReadFile(fe);
-                        xmlString = ABP.ParseToXmlString(fe, fs);
+                        xmlString = ABP.ParseToText(fe, fs);
                     }
                     OnStatusUpdate?.Invoke($"Parsing {fe} XML...");
                     ds = XP.Parse(dse, xmlString);
@@ -47,7 +49,7 @@ namespace ALittleSecretIngredient
         private void Export(FileEnum fe, IEnumerable<ExportFormat> targets)
         {
             OnStatusUpdate?.Invoke($"Generating {fe} XML...");
-            string xmlString = ABP.GetXmlString(fe)!;
+            string xmlString = ABP.GetText(fe)!;
             byte[] xmlBytes = XP.ExportXml(fe, xmlString);
             foreach (ExportFormat ef in targets)
             {
@@ -64,7 +66,7 @@ namespace ALittleSecretIngredient
                         {
                             OnStatusUpdate?.Invoke($"Saving {fe} AssetBundle...");
                             using FileStream tempFile = FM.CreateTempFile(fe);
-                            ABP.ExportXmlBytes(fe, xmlBytes, tempFile, outputFile);
+                            ABP.ExportTextBytes(fe, xmlBytes, tempFile, outputFile);
                             break;
                         }
                 }
@@ -124,15 +126,32 @@ namespace ALittleSecretIngredient
                             DataSet? ds = GD.XP.GetDataSet(DSE, fileName);
                             if (ds is null)
                             {
-                                string? xmlString = GD.ABP.GetXmlString(FGE, fileName);
+                                string? xmlString = GD.ABP.GetText(FGE, fileName);
                                 if (xmlString is null)
                                 {
                                     GD.OnStatusUpdate?.Invoke($"Parsing {id} AssetBundle...");
                                     using FileStream fs = GD.FM.ReadFile(FGE, fileName);
-                                    xmlString = GD.ABP.ParseToXmlString(FGE, fileName, fs);
+                                    xmlString = GD.ABP.ParseToText(FGE, fileName, fs);
                                 }
                                 GD.OnStatusUpdate?.Invoke($"Parsing {id} XML...");
                                 ds = GD.XP.Parse(DSE, fileName, xmlString);
+                            }
+                            return ds;
+                        }
+                    case FileGroupEnum.Message:
+                        {
+                            DataSet? ds = GD.MP.GetDataSet(FGE, fileName);
+                            if (ds is null)
+                            {
+                                byte[]? bytes = GD.ABP.GetTextBytes(FGE, fileName);
+                                if (bytes is null)
+                                {
+                                    GD.OnStatusUpdate?.Invoke($"Parsing {id} AssetBundle...");
+                                    using FileStream fs = GD.FM.ReadFile(FGE, fileName);
+                                    bytes = GD.ABP.ParseToTextBytes(FGE, fileName, fs);
+                                }
+                                GD.OnStatusUpdate?.Invoke($"Parsing {id} MSBT...");
+                                ds = GD.MP.Parse(FGE, fileName, bytes);
                             }
                             return ds;
                         }
@@ -164,52 +183,91 @@ namespace ALittleSecretIngredient
             switch (fge)
             {
                 case FileGroupEnum.Dispos:
-                    OnStatusUpdate?.Invoke($"Generating {fileName} XML...");
-                    string xmlString = ABP.GetXmlString(fge, fileName)!;
-                    byte[] xmlBytes = XP.ExportXml(fge, fileName, xmlString);
-                    foreach (ExportFormat ef in targets)
                     {
-                        using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
-                        switch (ef)
+                        OnStatusUpdate?.Invoke($"Generating {fileName} XML...");
+                        string xmlString = ABP.GetText(fge, fileName)!;
+                        byte[] xmlBytes = XP.ExportXml(fge, fileName, xmlString);
+                        foreach (ExportFormat ef in targets)
                         {
-                            case ExportFormat.Cobalt:
-                                {
-                                    OnStatusUpdate?.Invoke($"Saving {fileName} XML...");
-                                    outputFile.Write(xmlBytes);
-                                    break;
-                                }
-                            case ExportFormat.LayeredFS:
-                                {
-                                    OnStatusUpdate?.Invoke($"Saving {fileName} AssetBundle...");
-                                    ABP.ExportXmlBytes(fge, fileName, xmlBytes, outputFile);
-                                    break;
-                                }
+                            using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
+                            switch (ef)
+                            {
+                                case ExportFormat.Cobalt:
+                                    {
+                                        OnStatusUpdate?.Invoke($"Saving {fileName} XML...");
+                                        outputFile.Write(xmlBytes);
+                                        break;
+                                    }
+                                case ExportFormat.LayeredFS:
+                                    {
+                                        OnStatusUpdate?.Invoke($"Saving {fileName} AssetBundle...");
+                                        ABP.ExportTextBytes(fge, fileName, xmlBytes, outputFile);
+                                        break;
+                                    }
+                            }
                         }
+                        break;
                     }
-                    break;
-                case FileGroupEnum.Terrains:
-                    foreach (ExportFormat ef in targets)
+                case FileGroupEnum.Message:
                     {
-                        OnStatusUpdate?.Invoke($"Saving {fileName} AssetBundle...");
-                        using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
-                        ABP.ExportDataSet(fge, fileName, DataSetGroups[DataSetEnum.MapTerrain].DataSets[fileName.FileNameToId(fge)], outputFile);
+                        foreach (ExportFormat ef in targets)
+                        {
+                            using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
+                            DataSet ds = DataSetGroups[DataSetEnum.MsbtMessage].DataSets[fileName.FileNameToId(fge)];
+                            switch (ef)
+                            {
+                                case ExportFormat.Cobalt:
+                                    {
+                                        OnStatusUpdate?.Invoke($"Generating {fileName} MSBT patch...");
+                                        byte[] patch = MP.ExportPatch(fge, fileName, ds);
+                                        OnStatusUpdate?.Invoke($"Saving {fileName} MSBT patch...");
+                                        outputFile.Write(patch);
+                                        break;
+                                    }
+                                case ExportFormat.LayeredFS:
+                                    {
+                                        OnStatusUpdate?.Invoke($"Generating {fileName} MSBT...");
+                                        byte[] bytes = MP.ExportMsbt(fge, fileName, ds);
+                                        OnStatusUpdate?.Invoke($"Saving {fileName} AssetBundle...");
+                                        ABP.ExportTextBytes(fge, fileName, bytes, outputFile);
+                                        break;
+                                    }
+                            }
+                        }
+                        break;
                     }
-                    break;
+                case FileGroupEnum.Terrains:
+                    {
+                        foreach (ExportFormat ef in targets)
+                        {
+                            OnStatusUpdate?.Invoke($"Saving {fileName} AssetBundle...");
+                            using FileStream outputFile = FM.CreateOutputFile(fge, fileName, ef);
+                            ABP.ExportDataSet(fge, fileName,
+                                DataSetGroups[DataSetEnum.MapTerrain].DataSets[fileName.FileNameToId(fge)], outputFile);
+                        }
+                        break;
+                    }
             }
         }
 
         internal void SetDirty(DataSetEnum dse) => FM.SetDirty(GameDataLookup.DataSetToSheetName[dse].fe);
+        internal void SetDirty(DataSetEnum dse, (string id, DataSet) t)
+        {
+            FileGroupEnum fge = GameDataLookup.GroupDataSetToSheetName[dse].fge;
+            FM.SetDirty(fge, t.id.IdToFileName(fge));
+        }
         internal void SetDirty(DataSetEnum dse, List<(string id, DataSet)> group)
         {
             FileGroupEnum fge = GameDataLookup.GroupDataSetToSheetName[dse].fge;
             group.ForEach(t => FM.SetDirty(fge, t.id.IdToFileName(fge)));
         }
 
-        internal GameData(XmlParser xp, AssetBundleParser abp, FileManager fm)
+        internal GameData(FileManager fm, AssetBundleParser abp, XmlParser xp, MsbtParser mp)
         {
-            XP = xp;
-            ABP = abp;
             FM = fm;
+            ABP = abp;
+            XP = xp;
+            MP = mp;
         }
     }
 }

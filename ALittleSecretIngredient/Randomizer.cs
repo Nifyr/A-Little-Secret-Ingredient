@@ -3,7 +3,6 @@ using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
 using static ALittleSecretIngredient.GameDataLookup;
-using System.Linq;
 
 namespace ALittleSecretIngredient
 {
@@ -12,6 +11,8 @@ namespace ALittleSecretIngredient
         private GameData GD { get; }
 
         private StringBuilder? _changelog;
+
+        internal event Action<string>? OnStatusUpdate;
 
         private Dictionary<string, string> CharacterNameMapping { get; set; }
         private StringBuilder Changelog
@@ -798,6 +799,34 @@ namespace ALittleSecretIngredient
             List<List<AssetShuffleEntity>> modelSwapLists = GetModelSwapLists(settings.ModelSwap);
             foreach (List<AssetShuffleEntity> list in modelSwapLists)
                 ModelSwap(assets, ggs, individuals, assetShuffleInnertable, list);
+            if (modelSwapLists.Count > 0)
+            {
+                List<(string id, DataSet ds)> msbts = GD.GetGroup(DataSetEnum.MsbtMessage, EnglishMsbts());
+                List<string> oldNames = modelSwapLists.SelectMany(l => l).Select(ase => ase.name).ToList();
+                oldNames.Sort((s0, s1) => s1.Length - s0.Length);
+                List<string> newNames = oldNames.Select(s => CharacterNameMapping[s]).ToList();
+                OnStatusUpdate?.Invoke($"Starting name swapping...");
+                List<(string id, DataSet ds)> nameMsbts = msbts.Where(t => t.ds.Params.Cast<MsbtMessage>().Any(mm =>
+                    oldNames.Any(n => mm.Value.Contains(n)))).ToList();
+                List<MsbtMessage> messages = nameMsbts.SelectMany(t => t.ds.Params.Cast<MsbtMessage>()).ToList();
+                OnStatusUpdate?.Invoke($"Filtering messages...");
+                List<MsbtMessage> nameMessages = messages.Where(mm => oldNames.Any(n => mm.Value.Contains(n))).ToList();
+                Dictionary<string, string> xToNew = new();
+                OnStatusUpdate?.Invoke($"Removing old names...");
+                for (int i = 0; i < oldNames.Count; i++)
+                {
+                    string x = $"<name{i}>";
+                    xToNew[x] = newNames[i];
+                    foreach (MsbtMessage mm in messages)
+                        mm.Value = mm.Value.Replace(oldNames[i], x);
+                }
+                OnStatusUpdate?.Invoke($"Inserting new names...");
+                foreach (string x in xToNew.Keys)
+                    foreach (MsbtMessage mm in messages)
+                        mm.Value = mm.Value.Replace(x, xToNew[x]);
+                OnStatusUpdate?.Invoke($"Name swaps complete.");
+                GD.SetDirty(DataSetEnum.MsbtMessage, nameMsbts);
+            }
             StringBuilder assetShuffleTable = ApplyTableTitle(assetShuffleInnertable, "Model Swaps");
 
             StringBuilder outfitShuffleInnertable = new();
@@ -1165,6 +1194,7 @@ namespace ALittleSecretIngredient
                 AssetShuffleEntity target = entities[distinct[i]];
                 AssetShuffleEntity source = entities[shuffle[i]];
                 conditionsMapping.Add(source.id, target.id);
+                conditionsMapping.Add(source.nameID, target.nameID);
                 for (int j = 0; j < source.alternates.Count; j++)
                     conditionsMapping.Add(source.alternates[j], target.alternates.Count > 0 ? target.alternates.GetRandom() : target.id);
 
@@ -1246,7 +1276,9 @@ namespace ALittleSecretIngredient
                     break;
             }
             ind.UnitIconID = source.iconID;
-            ind.Name = source.nameID;
+
+            // Removed in favor of editing the msbts instead
+            // ind.Name = source.nameID;
         }
 
         private static void CorrectGodGeneral(AssetShuffleEntity source, GodGeneral gg)
@@ -1263,11 +1295,15 @@ namespace ALittleSecretIngredient
             }
             gg.UnitIconID = source.iconID;
             gg.SetCorrupted(source.enemyEmblem);
-            gg.Mid = source.nameID;
+
+            // Removed in favor of editing the msbts instead
+            // gg.Mid = source.nameID;
+
             /* Removed due to messing with ring models and engraving icons
             if (source.thumbnail != null)
                 gg.AsciiName = source.thumbnail;
             */
+
             gg.FaceIconName = source.faceIconID;
             gg.FaceIconNameDarkness = source.faceIconID;
         }

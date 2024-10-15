@@ -14,39 +14,39 @@ namespace ALittleSecretIngredient
         private const int TextAsset = 49;
         private const int MonoBehaviour = 114;
 
-        internal string ParseToXmlString(FileEnum fe, FileStream fs)
+        internal string ParseToText(FileEnum fe, FileStream fs)
         {
             AssetsManager am = new();
             BundleFileInstance bfi = am.LoadBundleFile(fs, false);
             Bundles[fe] = bfi;
             DecompressBundle(bfi);
-            return GetXmlString(bfi);
+            return GetText(bfi);
         }
 
-        internal string? GetXmlString(FileEnum fe)
+        internal string? GetText(FileEnum fe)
         {
             Bundles.TryGetValue(fe, out BundleFileInstance? bfi);
             if (bfi is null) return null;
-            return GetXmlString(bfi);
+            return GetText(bfi);
         }
 
-        internal string ParseToXmlString(FileGroupEnum fge, string fileName, FileStream fs)
+        internal string ParseToText(FileGroupEnum fge, string fileName, FileStream fs)
         {
             AssetsManager am = new();
             BundleFileInstance bfi = am.LoadBundleFile(fs, false);
             GroupBundles[(fge, fileName)] = bfi;
             DecompressBundle(bfi);
-            return GetXmlString(bfi);
+            return GetText(bfi);
         }
 
-        internal string? GetXmlString(FileGroupEnum fge, string fileName)
+        internal string? GetText(FileGroupEnum fge, string fileName)
         {
             GroupBundles.TryGetValue((fge, fileName), out BundleFileInstance? bfi);
             if (bfi is null) return null;
-            return GetXmlString(bfi);
+            return GetText(bfi);
         }
 
-        private static string GetXmlString(BundleFileInstance bfi)
+        private static string GetText(BundleFileInstance bfi)
         {
             AssetsManager am = new();
             AssetsFileInstance afi = am.LoadAssetsFileFromBundle(bfi, 0);
@@ -76,6 +76,29 @@ namespace ALittleSecretIngredient
             return new(am.GetTypeInstance(afi, afi.table.GetAssetsOfType(MonoBehaviour).Single()).GetBaseField(), t);
         }
 
+        internal byte[] ParseToTextBytes(FileGroupEnum fge, string fileName, FileStream fs)
+        {
+            AssetsManager am = new();
+            BundleFileInstance bfi = am.LoadBundleFile(fs, false);
+            GroupBundles[(fge, fileName)] = bfi;
+            DecompressBundle(bfi);
+            return GetTextBytes(bfi);
+        }
+
+        private static byte[] GetTextBytes(BundleFileInstance bfi)
+        {
+            AssetsManager am = new();
+            AssetsFileInstance afi = am.LoadAssetsFileFromBundle(bfi, 0);
+            return am.GetTypeInstance(afi, afi.table.GetAssetsOfType(TextAsset).Single()).GetBaseField()["m_Script"].GetValue().AsStringBytes();
+        }
+
+        internal byte[]? GetTextBytes(FileGroupEnum fge, string fileName)
+        {
+            GroupBundles.TryGetValue((fge, fileName), out BundleFileInstance? bfi);
+            if (bfi is null) return null;
+            return GetTextBytes(bfi);
+        }
+
         private static void DecompressBundle(BundleFileInstance bfi)
         {
             AssetBundleFile abf = bfi.file;
@@ -92,7 +115,7 @@ namespace ALittleSecretIngredient
             bfi.file = newAbf;
         }
 
-        internal void ExportXmlBytes(FileEnum fe, byte[] bytes, FileStream tempFile, FileStream outputFile)
+        internal void ExportTextBytes(FileEnum fe, byte[] bytes, FileStream tempFile, FileStream outputFile)
         {
             AssetsManager am = new();
             BundleFileInstance bfi = Bundles[fe];
@@ -118,7 +141,7 @@ namespace ALittleSecretIngredient
             afw.Dispose();
             bfi.file.Close();
         }
-        internal void ExportXmlBytes(FileGroupEnum fge, string fileName, byte[] bytes, FileStream outputFile)
+        internal void ExportTextBytes(FileGroupEnum fge, string fileName, byte[] bytes, FileStream outputFile)
         {
             AssetsManager am = new();
             BundleFileInstance bfi = GroupBundles[(fge, fileName)];

@@ -97,8 +97,11 @@ namespace ALittleSecretIngredient.Forms
                 };
 
                 rs.AssetTable.ModelSwap = new(false, null!, new object[] { AssetTable.checkBox20.Checked, AssetTable.checkBox1.Checked,
-                    AssetTable.checkBox2.Checked, AssetTable.checkBox3.Checked, AssetTable.checkBox4.Checked, AssetTable.checkBox5.Checked,
-                    AssetTable.checkBox6.Checked });
+                    AssetTable.checkBox2.Checked, AssetTable.checkBox3.Checked,
+                    /* Removed
+                    AssetTable.checkBox4.Checked,
+                    */ false,
+                    AssetTable.checkBox5.Checked, AssetTable.checkBox6.Checked });
                 rs.AssetTable.OutfitSwap = new(false, null!, new object[] { AssetTable.checkBox13.Checked, AssetTable.checkBox7.Checked,
                     AssetTable.checkBox8.Checked, AssetTable.checkBox9.Checked, AssetTable.checkBox10.Checked, AssetTable.checkBox11.Checked,
                     AssetTable.checkBox12.Checked });
@@ -528,7 +531,9 @@ namespace ALittleSecretIngredient.Forms
                 AssetTable.checkBox1.Checked = value.AssetTable.ModelSwap.GetArg<bool>(1);
                 AssetTable.checkBox2.Checked = value.AssetTable.ModelSwap.GetArg<bool>(2);
                 AssetTable.checkBox3.Checked = value.AssetTable.ModelSwap.GetArg<bool>(3);
+                /* Removed
                 AssetTable.checkBox4.Checked = value.AssetTable.ModelSwap.GetArg<bool>(4);
+                */
                 AssetTable.checkBox5.Checked = value.AssetTable.ModelSwap.GetArg<bool>(5);
                 AssetTable.checkBox6.Checked = value.AssetTable.ModelSwap.GetArg<bool>(6);
                 AssetTable.checkBox13.Checked = value.AssetTable.OutfitSwap.GetArg<bool>(0);

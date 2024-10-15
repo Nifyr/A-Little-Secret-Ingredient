@@ -113,4 +113,4 @@ You may have noticed the field named 'Randomization Probability' present in both
 ### Support
 This project is mostly a means of recreation for me, and I don't expect payment. That said, a donation would certainly be a welcome surprise!
 
-https://www.gofundme.com/f/ttsby-appreciation-and-support
+https://ko-fi.com/nifyr

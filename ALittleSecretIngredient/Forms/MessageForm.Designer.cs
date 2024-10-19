@@ -47,9 +47,8 @@
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
-            flowLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(732, 325);
+            flowLayoutPanel1.Size = new Size(837, 433);
             flowLayoutPanel1.TabIndex = 6;
             // 
             // groupBox7
@@ -57,11 +56,13 @@
             groupBox7.AutoSize = true;
             groupBox7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox7.Controls.Add(tableLayoutPanel1);
-            groupBox7.Location = new Point(3, 3);
-            groupBox7.MaximumSize = new Size(180, 0);
-            groupBox7.MinimumSize = new Size(180, 0);
+            groupBox7.Location = new Point(3, 4);
+            groupBox7.Margin = new Padding(3, 4, 3, 4);
+            groupBox7.MaximumSize = new Size(206, 0);
+            groupBox7.MinimumSize = new Size(206, 0);
             groupBox7.Name = "groupBox7";
-            groupBox7.Size = new Size(180, 72);
+            groupBox7.Padding = new Padding(3, 4, 3, 4);
+            groupBox7.Size = new Size(206, 92);
             groupBox7.TabIndex = 13;
             groupBox7.TabStop = false;
             groupBox7.Text = "Text Shuffle";
@@ -75,35 +76,37 @@
             tableLayoutPanel1.Controls.Add(checkBox1, 0, 1);
             tableLayoutPanel1.Controls.Add(checkBox20, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 19);
+            tableLayoutPanel1.Location = new Point(3, 24);
+            tableLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(174, 50);
+            tableLayoutPanel1.Size = new Size(200, 64);
             tableLayoutPanel1.TabIndex = 2;
             // 
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(15, 28);
-            checkBox1.Margin = new Padding(15, 3, 3, 3);
+            checkBox1.Location = new Point(17, 36);
+            checkBox1.Margin = new Padding(17, 4, 3, 4);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(134, 19);
+            checkBox1.Size = new Size(166, 24);
             checkBox1.TabIndex = 1;
             checkBox1.Text = "Retain string lengths";
-            toolTip1.SetToolTip(checkBox1, "This pertains to the amount of experience *required* for each bond level.");
+            toolTip1.SetToolTip(checkBox1, "This will ensure that swapped text entries are of roughly the same length, maintaining a certain degree of *cohesion*.");
             checkBox1.UseVisualStyleBackColor = true;
             // 
             // checkBox20
             // 
             checkBox20.AutoSize = true;
-            checkBox20.Location = new Point(3, 3);
+            checkBox20.Location = new Point(3, 4);
+            checkBox20.Margin = new Padding(3, 4, 3, 4);
             checkBox20.Name = "checkBox20";
-            checkBox20.Size = new Size(132, 19);
+            checkBox20.Size = new Size(162, 24);
             checkBox20.TabIndex = 0;
             checkBox20.Text = "Shuffle *everything*";
-            toolTip1.SetToolTip(checkBox20, "This pertains to the amount of experience *required* for each bond level.");
+            toolTip1.SetToolTip(checkBox20, "This will *shuffle* all of the game's text entries.");
             checkBox20.UseVisualStyleBackColor = true;
             // 
             // toolTip1
@@ -114,12 +117,11 @@
             // 
             // MessageForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(732, 325);
+            ClientSize = new Size(837, 433);
             Controls.Add(flowLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 2, 3, 2);
             Name = "MessageForm";
             Text = "Text Settings";
             flowLayoutPanel1.ResumeLayout(false);

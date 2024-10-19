@@ -50,9 +50,9 @@ namespace ALittleSecretIngredient
             StringBuilder sb = new();
             foreach (MsbtMessage mm in targets)
             {
-                sb.AppendLine($"[{mm.Label}]");
-                sb.AppendLine(ToAstraScript(mm.Value));
-                sb.AppendLine();
+                sb.Append($"[{mm.Label}]" + '\n');
+                sb.Append(ToAstraScript(mm.Value) + '\n');
+                sb.Append('\n');
             }
             return Encoding.UTF8.GetBytes(sb.ToString());
         }

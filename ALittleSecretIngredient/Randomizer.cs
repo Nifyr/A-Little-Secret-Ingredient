@@ -2884,7 +2884,7 @@ namespace ALittleSecretIngredient
         {
             List<int> totalLevels = individuals.Select(i => i.Level + (i.GetTOS(toss).Rank == 1 ? 20 : 0)).ToList();
             individuals.Randomize(i => i.Jid, (i, s) => i.Jid = s, settings.JidAlly.Distribution, PlayableClasses.GetIDs());
-            if (settings.JidEnemy.GetArg<bool>(0))
+            if (settings.JidAlly.GetArg<bool>(0))
                 foreach (Individual i in individuals)
                 {
                     int maxScore = toss.Select(tos => CalcCompatibility(i, tos)).Max();
@@ -2906,7 +2906,7 @@ namespace ALittleSecretIngredient
                     (totalLevels[iIdx] > 20 ? tos.Rank == 1 : tos.Rank == 0)).Select(tos => tos.Jid).ToList();
                 EnsureLegalClass(toss, totalLevels[iIdx], i, tos, legalClassIDs);
                 tos = i.GetTOS(toss);
-                if (retryCounter < 32 && settings.JidEnemy.GetArg<bool>(0) && CalcCompatibility(i, tos) < ushort.MaxValue / 2)
+                if (retryCounter < 32 && settings.JidAlly.GetArg<bool>(0) && CalcCompatibility(i, tos) < ushort.MaxValue / 2)
                 {
                     i.Jid = legalClassIDs.GetRandom();
                     iIdx--;

@@ -46,6 +46,13 @@ namespace ALittleSecretIngredient
                     "To ensure the protagonist receives the correct animations, you must select the *visible option*."))
                     return false;
 
+            // Text shuffle is a bad idea
+            if (settings.Message.ShuffleMessages)
+                if (!continuePrompt("You have enabled *text shuffling*. " +
+                    "This will render all UI and menus *unintelligible*, making navigation *significantly* more difficult. " +
+                    "Such a feature is not recommended if you wish to play the game in a traditional manner."))
+                    return false;
+
             // Janky options warnings
             if (settings.AssetTable.ModelSwap.GetArg<bool>(0) || settings.AssetTable.ModelSwap.GetArg<bool>(2)
                 || settings.AssetTable.ModelSwap.GetArg<bool>(3))
@@ -103,6 +110,14 @@ namespace ALittleSecretIngredient
             if (settings.Arrangement.ItemsWeaponsEnemy.Enabled && !settings.Arrangement.ItemsWeaponsEnemy.GetArg<bool>(0))
                 if (!continuePrompt("You are *randomizing* enemy weapons but not ensuring they remain usable. " +
                     "This will render most enemies *unarmed*. Such a situation is... less than ideal."))
+                    return false;
+
+            // Only english text is edited warning
+            if (settings.AssetTable.ModelSwap.GetArg<bool>(0) || settings.AssetTable.ModelSwap.GetArg<bool>(2)
+                || settings.AssetTable.ModelSwap.GetArg<bool>(3) || settings.Message.ShuffleMessages)
+                if (!continuePrompt("Settings such as *model swaps* or *text shuffling* will modify text files. " +
+                    "However, only English text data is currently supported. " +
+                    "Any changes made will only be visible if the game is played in English."))
                     return false;
 
             return true;

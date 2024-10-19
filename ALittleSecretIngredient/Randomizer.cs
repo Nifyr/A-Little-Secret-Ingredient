@@ -3,10 +3,12 @@ using System.Text;
 using static ALittleSecretIngredient.ColorGenerator;
 using static ALittleSecretIngredient.Probability;
 using static ALittleSecretIngredient.GameDataLookup;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace ALittleSecretIngredient
 {
-    internal class Randomizer
+    internal partial class Randomizer
     {
         private GameData GD { get; }
 
@@ -131,6 +133,8 @@ namespace ALittleSecretIngredient
                 AddTable(innerChangelog, RandomizeIndividual(settings.Individual));
             if (settings.Arrangement.Any())
                 AddTable(innerChangelog, RandomizeArrangement(settings.Arrangement));
+            if (settings.Message.Any())
+                AddTable(innerChangelog, RandomizeMessage(settings.Message));
 
             DataPostAdjustment(settings);
 
@@ -288,6 +292,154 @@ namespace ALittleSecretIngredient
                 ds.Params.Add(pg);
                 GD.SetDirty(DataSetEnum.Command);
             }
+        }
+
+        private StringBuilder RandomizeMessage(RandomizerSettings.MessageSettings settings)
+        {
+            if (settings.ShuffleMessages)
+            {
+                List<(string id, DataSet ds)> msbts = GD.GetGroup(DataSetEnum.MsbtMessage,
+                    SingleMsbtSet(EnglishMsbtDirectories.First()));
+                OnStatusUpdate?.Invoke($"Starting text shuffling...");
+                List<(int idx, MsbtMessage mm)> messages = msbts.SelectMany(t => t.ds.Params.Cast<MsbtMessage>())
+                    .Select((mm, i) => (i, mm)).ToList();
+                List<List<int>> elegibleIndexGroups = new();
+                Dictionary<int, int> indexMapping = new();
+                IEnumerable<(int idx, MsbtMessage mm)> elegibleMessages = messages.Where(t => ElegibleForShuffle(t.mm));
+                if (settings.RetainStringLengths)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        int min = (int)Math.Pow(Math.E, i - 1);
+                        int max = (int)Math.Pow(Math.E, i);
+                        IEnumerable<(int idx, MsbtMessage mm)> lengthGroup =
+                            elegibleMessages.Where(t => IsLengthRange(t.mm.Value, min, max));
+                        elegibleIndexGroups.Add(lengthGroup.Select(t => t.idx).ToList());
+                    }
+                    for (int i = 1; i < 10; i++)
+                    {
+                        int min = (int)Math.Pow(Math.E, i - 1);
+                        int max = (int)Math.Pow(Math.E, i);
+                        IEnumerable<(int idx, MsbtMessage mm)> lengthGroup =
+                            elegibleMessages.Where(t => IsLineCountRange(t.mm.Value, min, max));
+                        elegibleIndexGroups.Add(lengthGroup.Select(t => t.idx).ToList());
+                    }
+                }
+                else
+                    elegibleIndexGroups.Add(elegibleMessages.Select(t => t.idx).ToList());
+                foreach (List<int> elegibleIndices in elegibleIndexGroups)
+                {
+                    List<int> newIndices = new(elegibleIndices);
+                    new Redistribution(100).Randomize(newIndices);
+                    for (int i = 0; i < elegibleIndices.Count; i++)
+                        indexMapping[elegibleIndices[i]] = newIndices[i];
+                }
+                OnStatusUpdate?.Invoke($"Displacing text...");
+                foreach (string msbtDir in EnglishMsbtDirectories)
+                {
+                    List<(string id, DataSet ds)> targetMsbts = GD.GetGroup(DataSetEnum.MsbtMessage,
+                        SingleMsbtSet(msbtDir));
+                    List<MsbtMessage> messageSet = targetMsbts.SelectMany(t => t.ds.Params.Cast<MsbtMessage>()).ToList();
+                    List<string> strings = messageSet.Select(mm => mm.Value).ToList();
+                    for (int i = 0; i < messageSet.Count; i++)
+                    {
+                        MsbtMessage mm = messageSet[i];
+                        if (ElegibleForShuffle(mm))
+                            PlaceMessage(mm, strings[indexMapping[i]]);
+                    }
+                    OnStatusUpdate?.Invoke($"Text shuffle complete.");
+                    GD.SetDirty(DataSetEnum.MsbtMessage, targetMsbts);
+                }
+            }
+
+            return new();
+        }
+
+        private static bool IsLengthRange(string str, int min, int max)
+        {
+            Regex r = RawControlStringRegex();
+            string text = string.Join('\n', str.Split('\n').Where(s => !r.IsMatch(s)));
+            if (text.Contains('\n'))
+                return false;
+            return text.Length > min && text.Length <= max;
+        }
+
+        private static bool IsLineCountRange(string str, int min, int max)
+        {
+            Regex r = RawControlStringRegex();
+            int lineCount = str.Split('\n').Where(s => !r.IsMatch(s)).Count();
+            return min < lineCount && max >= lineCount;
+        }
+
+        private static void PlaceMessage(MsbtMessage mm, string newStr)
+        {
+            Regex control = RawControlStringRegex();
+            Regex waitsuffix = WaitControlSuffixRegex();
+            List<string> oldLines = mm.Value.Split('\n').ToList();
+            List<string> newLines = newStr.Split('\n').ToList();
+            StringBuilder sb = new();
+            while (oldLines.Count + newLines.Count > 0)
+            {
+                while (newLines.Any() && control.IsMatch(newLines.First()))
+                    newLines.RemoveAt(0);
+
+                if (oldLines.Any())
+                {
+                    while (oldLines.Any() && control.IsMatch(oldLines.First()))
+                    {
+                        sb.Append(oldLines.First() + '\n');
+                        oldLines.RemoveAt(0);
+                    }
+                    if (!oldLines.Any())
+                        continue;
+                    while (newLines.Any() && !control.IsMatch(newLines.First()))
+                    {
+                        sb.Append(waitsuffix.Replace(newLines.First(), "") + '\n');
+                        newLines.RemoveAt(0);
+                    }
+                    while (oldLines.Any() && !control.IsMatch(oldLines.First()))
+                    {
+                        Match m = waitsuffix.Match(oldLines.First());
+                        if (m.Success)
+                        {
+                            sb.Remove(sb.Length - 1, 1);
+                            sb.Append(m.Value + '\n');
+                        }
+                        oldLines.RemoveAt(0);
+                    }
+                    continue;
+                }
+
+                while (newLines.Any() && !control.IsMatch(newLines.First()))
+                {
+                    sb.Append(waitsuffix.Replace(newLines.First(), "") + '\n');
+                    newLines.RemoveAt(0);
+                }
+            }
+            sb.Remove(sb.Length - 1, 1);
+            mm.Value = sb.ToString();
+        }
+
+        [GeneratedRegex(@"\A<raw[^>]*>\z")]
+        private static partial Regex RawControlStringRegex();
+
+        [GeneratedRegex(@"<raw group=4[^>]*>\z")]
+        private static partial Regex WaitControlSuffixRegex();
+
+        private static bool ElegibleForShuffle(MsbtMessage mm)
+        {
+            Regex control = RawControlStringRegex();
+            Regex waitSuffix = WaitControlSuffixRegex();
+            if (mm.Value.Length == 0)
+                return false;
+            string[] lines = mm.Value.Split('\n').Where(l => !control.IsMatch(l))
+                .Select(s => waitSuffix.Replace(s, "")).ToArray();
+            if (lines.Length == 0)
+                return false;
+            foreach (string line in lines)
+                if (line.Contains("<raw"))
+                    return false;
+            return true;
         }
 
         private StringBuilder RandomizeArrangement(RandomizerSettings.ArrangementSettings settings)
@@ -2642,7 +2794,7 @@ namespace ALittleSecretIngredient
             if (aptitudes is not null)
                 foreach (int pIdx in aptitudes)
                     proficiencyLevels[pIdx] = proficiencyLevels[pIdx] == ProficiencyLevel.S ? ProficiencyLevel.S :
-                        (ProficiencyLevel)(((int)proficiencyLevels[pIdx]) + 1);
+                        (ProficiencyLevel)((int)proficiencyLevels[pIdx] + 1);
             if (!useLevel || !FixedLevelCharacters.Any(t => t.id == pid))
                 totalLevel = 40;
             for (int pIdx = 0; pIdx < proficiencyLevels.Count; pIdx++)
@@ -3480,8 +3632,8 @@ namespace ALittleSecretIngredient
             List<PairNode<GodGeneral>> unpaired = linkableEmblems.Select(gg => new PairNode<GodGeneral>(gg)).ToList();
             // Set to paired if not linked or if in a loop of 2
             unpaired.Where(pn => pn.value.LinkGid == "" ||
-            (pn.value.Gid == linkableEmblems.First(gg => gg.Gid == pn.value.LinkGid).LinkGid &&
-            pn.value.LinkGid != pn.value.Gid)).ToList().ForEach(pn => pn.paired = true);
+            pn.value.Gid == linkableEmblems.First(gg => gg.Gid == pn.value.LinkGid).LinkGid &&
+            pn.value.LinkGid != pn.value.Gid).ToList().ForEach(pn => pn.paired = true);
             // Get the ones who have yet to be paired
             unpaired = unpaired.Where(t => !t.paired).ToList();
             // If there's only one, leave it without a pair

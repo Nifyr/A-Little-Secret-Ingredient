@@ -18,6 +18,7 @@ namespace ALittleSecretIngredient.Structs
         public TypeOfSoldierSettings TypeOfSoldier { get; set; } = new();
         public IndividualSettings Individual { get; set; } = new();
         public ArrangementSettings Arrangement { get; set; } = new();
+        public MessageSettings Message { get; set; } = new();
 
         public abstract class RandomizerTableSettings
         {
@@ -475,6 +476,12 @@ namespace ALittleSecretIngredient.Structs
             public RandomizerFieldSettings Sid { get; set; } = new();
             public RandomizerFieldSettings Gid { get; set; } = new();
             public RandomizerFieldSettings HpStockCount { get; set; } = new();
+        }
+
+        public class MessageSettings : RandomizerTableSettings
+        {
+            public bool ShuffleMessages { get; set; } = new();
+            public bool RetainStringLengths { get; set; } = new();
         }
     }
 

@@ -14,6 +14,7 @@ namespace ALittleSecretIngredient.Forms
         private BondLevelForm BondLevel { get; set; }
         private IndividualForm Individual { get; set; }
         private ArrangementForm Arrangement { get; set; }
+        private MessageForm Message { get; set; }
         public MainForm()
         {
             GlobalData = new();
@@ -25,6 +26,7 @@ namespace ALittleSecretIngredient.Forms
             TypeOfSoldier = new(GlobalData);
             Individual = new(GlobalData);
             Arrangement = new(GlobalData);
+            Message = new(GlobalData);
             GlobalData.SubscribeToStatusUpdate(StatusUpdate);
         }
         private static DialogResult LoadDumpDialog()
@@ -518,6 +520,9 @@ namespace ALittleSecretIngredient.Forms
                 rs.Arrangement.HpStockCount = new(Arrangement.checkBox30.Checked, Arrangement.HpStockCount.Get(),
                     new object[] { Arrangement.checkBox29.Checked, (double)Arrangement.numericUpDown10.Value, (double)Arrangement.numericUpDown9.Value });
 
+                rs.Message.ShuffleMessages = Message.checkBox20.Checked;
+                rs.Message.RetainStringLengths = Message.checkBox1.Checked;
+
                 return rs;
             }
             set
@@ -1000,6 +1005,9 @@ namespace ALittleSecretIngredient.Forms
                 Arrangement.checkBox29.Checked = value.Arrangement.HpStockCount.GetArg<bool>(0);
                 Arrangement.numericUpDown10.Value = (decimal)value.Arrangement.HpStockCount.GetArg<double>(1);
                 Arrangement.numericUpDown9.Value = (decimal)value.Arrangement.HpStockCount.GetArg<double>(2);
+
+                Message.checkBox20.Checked = value.Message.ShuffleMessages;
+                Message.checkBox1.Checked = value.Message.RetainStringLengths;
             }
         }
 
@@ -1166,6 +1174,12 @@ namespace ALittleSecretIngredient.Forms
         {
             Arrangement.Show();
             Arrangement.Activate();
+        }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            Message.Show();
+            Message.Activate();
         }
     }
 }

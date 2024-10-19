@@ -169,6 +169,9 @@ namespace ALittleSecretIngredient
         internal static List<(string id, string name)> EnglishMsbts() =>
             EnglishMsbtDirectories.SelectMany(d => MsbtNames.Select(n => (d + n, n))).ToList();
 
+        internal static List<(string id, string name)> SingleMsbtSet(string msbtDir) =>
+            MsbtNames.Select(n => (msbtDir + n, n)).ToList();
+
         internal static Dictionary<RandomizerDistribution, DataSetEnum> DistributionToDataSet { get; } = new()
         {
             { RandomizerDistribution.ScaleAll, DataSetEnum.Asset },

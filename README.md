@@ -77,6 +77,7 @@ Made with artistic passion!
 - Map Enemy Counts
 - Map Forced Deployments
 - Map Unit Positions
+- Text
 
 ## About
 You may have noticed that buttons are littered all over the settings windows, all of which open one of two types of windows: a numeric distribution control or a selection distribution control. These windows serve as ways for you to edit the probability distributions of each individual randomization option. If this sounds like a bother to learn and to deal with, know that it is entirely optional. All of them come pre-set with an acceptable - "mid-heat," so to speak - configuration.
